@@ -37,6 +37,12 @@ public:
     */
   static Pointer New(void);
 
+  /** Get the direction in which the filter is to be applied. */
+  itkGetMacro(Direction, unsigned int);
+
+  /** Set the direction in which the filter is to be applied. */
+  itkSetMacro(Direction, unsigned int);
+
 protected:
   FFT1DRealToComplexConjugateImageFilter() {}
   virtual ~FFT1DRealToComplexConjugateImageFilter() {}
@@ -45,6 +51,10 @@ protected:
   virtual void GenerateInputRequestedRegion(); 
   virtual void EnlargeOutputRequestedRegion(DataObject *output); 
   virtual bool FullMatrix() = 0; // must be implemented in child
+
+  /** Direction in which the filter is to be applied
+   * this should be in the range [0,ImageDimension-1]. */
+  unsigned int m_Direction;
 
 private:
   FFT1DRealToComplexConjugateImageFilter( const Self& );
