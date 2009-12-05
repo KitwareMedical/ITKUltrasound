@@ -183,7 +183,7 @@ FFT1DRealToComplexConjugateImageFilter < TPixel , Dimension >
 
   typename TOutputImageType::SizeType enlargedSize   = requestedSize;
   typename TOutputImageType::IndexType enlargedIndex = requestedIndex;
-  enlargedSize[this->m_Direction] = outputLargeSize[this->m_Direction];
+  enlargedSize[this->m_Direction]  = outputLargeSize[this->m_Direction];
   enlargedIndex[this->m_Direction] = outputLargeIndex[this->m_Direction];
 
   typename TOutputImageType::RegionType enlargedRegion;
