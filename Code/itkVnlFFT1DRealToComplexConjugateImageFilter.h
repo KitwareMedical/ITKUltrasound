@@ -39,6 +39,9 @@ public:
   typedef SmartPointer<Self>                                      Pointer;
   typedef SmartPointer<const Self>                                ConstPointer;
 
+  typedef typename Superclass::TInputImageType  TInputImageType;
+  typedef typename Superclass::TOutputImageType TOutputImageType;
+
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
 
@@ -66,7 +69,9 @@ private:
 
   VnlFFT1DRealToComplexConjugateImageFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
-}
+};
+
+} // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkVnlFFT1DRealToComplexConjugateImageFilter.txx"

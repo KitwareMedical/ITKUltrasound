@@ -55,7 +55,6 @@ void
 VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>::
 GenerateData()
 {
-  unsigned int i;
   // get pointers to the input and output
   typename Superclass::TInputImageType::ConstPointer  inputPtr  = this->GetInput();
   typename Superclass::TOutputImageType::Pointer      outputPtr = this->GetOutput();
@@ -67,8 +66,6 @@ GenerateData()
   
   const typename Superclass::TInputImageType::SizeType&   inputSize
     = inputPtr->GetRequestedRegion().GetSize();
-  const typename Superclass::TInputImageType::SizeType&   outputSize
-    = outputPtr->GetRequestedRegion().GetSize();
   unsigned int num_dims = inputPtr->GetImageDimension();
 
   if(num_dims != outputPtr->GetImageDimension())
@@ -88,12 +85,6 @@ GenerateData()
     }
 
 
-  // @todo loop over other dimensions
-  for(i = 0; i < vec_size; i++)
-    {
-    out[i] = signal[i];
-    }
-
   typedef itk::ImageLinearConstIteratorWithIndex< TInputImageType >  InputIteratorType;
   typedef itk::ImageLinearIteratorWithIndex< TOutputImageType >      OutputIteratorType;
   InputIteratorType inputIt( inputPtr, inputPtr->GetRequestedRegion() );
@@ -102,14 +93,11 @@ GenerateData()
   inputIt.SetDirection(this->m_Direction);
   outputIt.SetDirection(this->m_Direction);
 
-  vnl_vector_fixed< vcl_complex<TPixel>, vec_size> inputBuffer;
-  typename vnl_vector_fixed<vcl_complex<TPixel>, vec_size>::iterator inputBufferIt = inputBuffer.begin()
+  vnl_vector< vcl_complex<TPixel> > inputBuffer( vec_size );
+  typename vnl_vector< vcl_complex< TPixel > >::iterator inputBufferIt = inputBuffer.begin();
     // fft is done in-place
-  typename vnl_vector_fixed<vcl_complex<TPixel>, vec_size>::iterator outputBufferIt = inputBuffer.begin()
+  typename vnl_vector< vcl_complex< TPixel > >::iterator outputBufferIt = inputBuffer.begin();
   vnl_fft_1d<TPixel> v1d(vec_size);
-
-  TPixel* inputBufferIt = const_cast<TPixel *>(inputPtr->GetBufferPointer());
-  std::complex<TPixel>* outputBufferIt = outputPtr->GetBufferPointer();
 
   // for every fft line
   for( inputIt.GoToBegin(), outputIt.GoToBegin(); !inputIt.IsAtEnd();
@@ -126,7 +114,7 @@ GenerateData()
       }
 
     // do the transform
-    v1d.bwd_transform(signal);
+    v1d.bwd_transform(inputBuffer);
 
     // copy the output from the buffer into our line
     outputBufferIt = inputBuffer.begin();

@@ -24,7 +24,7 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 
 # where all the executables go
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY
-  ${STREAMING_RESAMPLE_IMAGE_BINARY_DIR}/bin )
+  ${ITK_FFT_EXTENSIONS_BINARY_DIR}/bin )
 
 
 add_subdirectory( Code )

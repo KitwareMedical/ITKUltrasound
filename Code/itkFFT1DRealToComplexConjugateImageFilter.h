@@ -14,9 +14,10 @@ namespace itk
  *
  * @ingroup FourierTransform
  */
-template <class TPixel, unsigned int Dimension = 3>
+template <class TPixel, unsigned int VDimension = 3>
 class ITK_EXPORT FFT1DRealToComplexConjugateImageFilter:
-  public ImageToImageFilter< TPixel, Dimension >
+  public ImageToImageFilter< Image< TPixel, VDimension >,
+			     Image< std::complex< TPixel >, VDimension > >
 {
 public:
   /** Standard class typedefs. */ 
@@ -47,7 +48,7 @@ protected:
   FFT1DRealToComplexConjugateImageFilter() {}
   virtual ~FFT1DRealToComplexConjugateImageFilter() {}
 
-  virtual void GenerateInputRequestedRegion();
+  virtual void GenerateOutputInformation();
   virtual void GenerateInputRequestedRegion(); 
   virtual void EnlargeOutputRequestedRegion(DataObject *output); 
   virtual bool FullMatrix() = 0; // must be implemented in child
