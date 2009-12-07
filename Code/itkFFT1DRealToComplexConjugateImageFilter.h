@@ -23,6 +23,7 @@ public:
   /** Standard class typedefs. */ 
   typedef Image<TPixel,VDimension>                    TInputImageType;
   typedef Image< std::complex< TPixel > , VDimension> TOutputImageType;
+  typedef typename TOutputImageType::RegionType OutputImageRegionType;
 
   typedef FFT1DRealToComplexConjugateImageFilter Self;
   typedef ImageToImageFilter< TInputImageType, TOutputImageType > Superclass;
@@ -53,6 +54,17 @@ protected:
   virtual void GenerateInputRequestedRegion(); 
   virtual void EnlargeOutputRequestedRegion(DataObject *output); 
   virtual bool FullMatrix() = 0; // must be implemented in child
+
+  /** Split the output's RequestedRegion into "num" pieces, returning
+   * region "i" as "splitRegion". This method is called "num" times. The
+   * regions must not overlap. The method returns the number of pieces that
+   * the routine is capable of splitting the output RequestedRegion,
+   * i.e. return value is less than or equal to "num". 
+   *
+   * This method is reimplemented from itk::ImageSource to ensure that the
+   * region does not get split along the direction of the transform. */
+  virtual
+  int SplitRequestedRegion(int i, int num, OutputImageRegionType& splitRegion);
 
   /** Direction in which the filter is to be applied
    * this should be in the range [0,ImageDimension-1]. */

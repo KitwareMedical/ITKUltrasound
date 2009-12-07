@@ -41,6 +41,7 @@ public:
 
   typedef typename Superclass::TInputImageType  TInputImageType;
   typedef typename Superclass::TOutputImageType TOutputImageType;
+  typedef typename TOutputImageType::RegionType OutputImageRegionType;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -50,9 +51,7 @@ public:
                FFT1DRealToComplexConjugateImageFilter);
 
 protected:
-  //
-  // these should be defined in every FFT filter class
-  virtual void GenerateData();  // generates output from input
+  virtual void ThreadedGenerateData( const OutputImageRegionType&, int threadID );  // generates output from input
   virtual bool FullMatrix();
 
   VnlFFT1DRealToComplexConjugateImageFilter() { }

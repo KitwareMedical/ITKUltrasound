@@ -53,7 +53,7 @@ Legaldim(int n)
 template <class TPixel, unsigned int VDimension>
 void
 VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>::
-GenerateData()
+ThreadedGenerateData( const OutputImageRegionType& outputRegion, int threadID )
 {
   // get pointers to the input and output
   typename Superclass::TInputImageType::ConstPointer  inputPtr  = this->GetInput();
@@ -66,14 +66,6 @@ GenerateData()
   
   const typename Superclass::TInputImageType::SizeType&   inputSize
     = inputPtr->GetRequestedRegion().GetSize();
-  unsigned int num_dims = inputPtr->GetImageDimension();
-
-  if(num_dims != outputPtr->GetImageDimension())
-    {
-    return;
-    }
-  outputPtr->SetBufferedRegion( outputPtr->GetRequestedRegion() );
-  outputPtr->Allocate();
 
   unsigned int vec_size = inputSize[this->m_Direction];
   if( !this->Legaldim(vec_size) )
@@ -87,8 +79,8 @@ GenerateData()
 
   typedef itk::ImageLinearConstIteratorWithIndex< TInputImageType >  InputIteratorType;
   typedef itk::ImageLinearIteratorWithIndex< TOutputImageType >      OutputIteratorType;
-  InputIteratorType inputIt( inputPtr, inputPtr->GetRequestedRegion() );
-  OutputIteratorType outputIt( outputPtr, outputPtr->GetRequestedRegion() );
+  InputIteratorType inputIt( inputPtr, outputRegion );
+  OutputIteratorType outputIt( outputPtr, outputRegion );
 
   inputIt.SetDirection(this->m_Direction);
   outputIt.SetDirection(this->m_Direction);
