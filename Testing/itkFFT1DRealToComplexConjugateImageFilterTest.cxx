@@ -32,7 +32,7 @@ int itkFFT1DRealToComplexConjugateImageFilterTest( int argc, char* argv[] )
     return EXIT_FAILURE;
     }
 
-  typedef float PixelType;
+  typedef double PixelType;
   const unsigned int Dimension = 2;
 
   typedef itk::Image< PixelType, Dimension > ImageType;
