@@ -20,3 +20,21 @@ add_test( itkFFT1DRealToComplexConjugateImageFilterTest
     ${ITK_DATA_ROOT}/Input/TreeBarkTexture.png
     itkFFT1DRealToComplexConjugateImageFilterTestOutput
     )
+
+add_executable( itkVnlFFT1DRealToComplexConjugateImageFilterTest
+  itkVnlFFT1DRealToComplexConjugateImageFilterTest.cxx
+  )
+target_link_libraries( itkVnlFFT1DRealToComplexConjugateImageFilterTest
+  ITKCommon
+  ITKIO
+  )
+add_test( itkVnlFFT1DRealToComplexConjugateImageFilterTest
+  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/itkVnlFFT1DRealToComplexConjugateImageFilterTest
+  --compare ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaselineReal.mhd
+	    itkVnlFFT1DRealToComplexConjugateImageFilterTestOutputReal.mha
+  --compare ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaselineImaginary.mhd
+	    itkVnlFFT1DRealToComplexConjugateImageFilterTestOutputImaginary.mha
+  itkVnlFFT1DRealToComplexConjugateImageFilterTest
+    ${ITK_DATA_ROOT}/Input/TreeBarkTexture.png
+    itkVnlFFT1DRealToComplexConjugateImageFilterTestOutput
+    )

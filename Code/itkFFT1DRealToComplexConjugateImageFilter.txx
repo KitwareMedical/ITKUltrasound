@@ -9,6 +9,8 @@
 #include "itkFFT1DRealToComplexConjugateImageFilter.h"
 #endif
 
+#include "itkMetaDataObject.h"
+
 namespace itk
 {
 
