@@ -13,6 +13,7 @@ void RegisterTests()
 }
 
 #include <complex>
+#include <iostream>
 #include <string>
 
 #include "itkComplexToImaginaryImageFilter.h"
@@ -71,6 +72,8 @@ int itkFFT1DRealToComplexConjugateImageFilterTest( int argc, char* argv[] )
     std::cerr << excep << std::endl;
     return EXIT_FAILURE;
     }
+
+  fft.Print( std::cout );
 
   return EXIT_SUCCESS;
 }

@@ -192,6 +192,16 @@ FFT1DRealToComplexConjugateImageFilter < TPixel , Dimension >
 }
 
 
+template < class TPixel , unsigned int Dimension >
+void
+FFT1DRealToComplexConjugateImageFilter < TPixel , Dimension >
+::PrintSelf( std::ostream& os, Indent indent ) const
+{
+  Superclass::PrintSelf( os, indent );
+
+  os << indent << "Direction: " << m_Direction << std::endl;
+}
+
 } // end namespace itk
 
 #endif // __itkFFT1DRealToComplexConjugateImageFilter_txx

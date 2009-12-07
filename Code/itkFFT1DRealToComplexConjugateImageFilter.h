@@ -47,6 +47,7 @@ public:
 protected:
   FFT1DRealToComplexConjugateImageFilter() {}
   virtual ~FFT1DRealToComplexConjugateImageFilter() {}
+  void PrintSelf(std::ostream& os, Indent indent) const;
 
   virtual void GenerateOutputInformation();
   virtual void GenerateInputRequestedRegion(); 
