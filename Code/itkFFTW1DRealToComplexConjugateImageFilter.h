@@ -48,7 +48,7 @@ protected:
   FFTW1DRealToComplexConjugateImageFilter() : m_PlanComputed(false),
                                             m_LastImageSize(0),
                                             m_InputBuffer(0),
-                                            m_OutputBuffer(0),
+                                            m_OutputBuffer(0)
   {
   }
   virtual ~FFTW1DRealToComplexConjugateImageFilter()

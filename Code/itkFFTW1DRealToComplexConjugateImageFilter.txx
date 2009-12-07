@@ -1,6 +1,7 @@
 #ifndef __itkFFTW1DRealToComplexConjugateImageFilter_txx
 #define __itkFFTW1DRealToComplexConjugateImageFilter_txx
 
+#include "itkFFT1DRealToComplexConjugateImageFilter.txx"
 #include "itkFFTW1DRealToComplexConjugateImageFilter.h"
 #include <iostream>
 #include "itkIndent.h"

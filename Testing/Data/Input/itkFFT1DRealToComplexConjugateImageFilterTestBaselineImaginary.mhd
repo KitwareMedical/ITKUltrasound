@@ -1,5 +1,0 @@
-ObjectType = Image
-NDims = 2
-DimSize = 100 100
-ElementType = MET_DOUBLE
-ElementDataFile = itkFFT1DRealToComplexConjugateImageFilterTestBaselineImaginary.raw
