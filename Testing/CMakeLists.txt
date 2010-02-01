@@ -41,21 +41,23 @@ add_test( itkVnlFFT1DRealToComplexConjugateImageFilterTest
     itkVnlFFT1DRealToComplexConjugateImageFilterTestOutput
     )
 
-add_executable( itkFFTW1DRealToComplexConjugateImageFilterTest
-  itkFFTW1DRealToComplexConjugateImageFilterTest.cxx
-  )
-target_link_libraries( itkFFTW1DRealToComplexConjugateImageFilterTest
-  ITKCommon
-  ITKIO
-  ITKAlgorithms
-  )
-add_test( itkFFTW1DRealToComplexConjugateImageFilterTest
-  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/itkFFTW1DRealToComplexConjugateImageFilterTest
-  --compare ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaselineRealNotFull.mhd
-	    itkFFTW1DRealToComplexConjugateImageFilterTestOutputReal.mha
-  --compare ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaselineImaginaryNotFull.mhd
-	    itkFFTW1DRealToComplexConjugateImageFilterTestOutputImaginary.mha
-  itkFFTW1DRealToComplexConjugateImageFilterTest
-    ${ITK_DATA_ROOT}/Input/TreeBarkTexture.png
-    itkFFTW1DRealToComplexConjugateImageFilterTestOutput
+if( USE_FFTWD OR USE_FFTWF )
+  add_executable( itkFFTW1DRealToComplexConjugateImageFilterTest
+    itkFFTW1DRealToComplexConjugateImageFilterTest.cxx
     )
+  target_link_libraries( itkFFTW1DRealToComplexConjugateImageFilterTest
+    ITKCommon
+    ITKIO
+    ITKAlgorithms
+    )
+  add_test( itkFFTW1DRealToComplexConjugateImageFilterTest
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/itkFFTW1DRealToComplexConjugateImageFilterTest
+    --compare ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaselineRealNotFull.mhd
+	      itkFFTW1DRealToComplexConjugateImageFilterTestOutputReal.mha
+    --compare ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaselineImaginaryNotFull.mhd
+	      itkFFTW1DRealToComplexConjugateImageFilterTestOutputImaginary.mha
+    itkFFTW1DRealToComplexConjugateImageFilterTest
+      ${ITK_DATA_ROOT}/Input/TreeBarkTexture.png
+      itkFFTW1DRealToComplexConjugateImageFilterTestOutput
+      )
+endif()

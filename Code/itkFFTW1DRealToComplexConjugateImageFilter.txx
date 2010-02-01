@@ -3,7 +3,10 @@
 
 #include "itkFFT1DRealToComplexConjugateImageFilter.txx"
 #include "itkFFTW1DRealToComplexConjugateImageFilter.h"
+
 #include <iostream>
+
+#include "itkFFTWCommon.h"
 #include "itkIndent.h"
 #include "itkImageLinearConstIteratorWithIndex.h"
 #include "itkImageLinearIteratorWithIndex.h"
