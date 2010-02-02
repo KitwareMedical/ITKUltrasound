@@ -4,24 +4,22 @@ set( DATA_INPUT ${ITK_FFT_EXTENSIONS_SOURCE_DIR}/Testing/Data/Input )
 
 # use a forward fft, then inverse fft for this instead because of the FullMatrix
 # issue
-#add_executable( itkFFT1DRealToComplexConjugateImageFilterTest
-  #itkFFT1DRealToComplexConjugateImageFilterTest.cxx
-  #)
-#target_link_libraries( itkFFT1DRealToComplexConjugateImageFilterTest
-  #ITKCommon
-  #ITKIO
-  #ITKAlgorithms
-  #)
-#add_test( itkFFT1DRealToComplexConjugateImageFilterTest
-  #${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/itkFFT1DRealToComplexConjugateImageFilterTest
-  #--compare ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaselineReal.mhd
-	    #itkFFT1DRealToComplexConjugateImageFilterTestOutputReal.mha
-  #--compare ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaselineImaginary.mhd
-	    #itkFFT1DRealToComplexConjugateImageFilterTestOutputImaginary.mha
-  #itkFFT1DRealToComplexConjugateImageFilterTest
-    #${ITK_DATA_ROOT}/Input/TreeBarkTexture.png
-    #itkFFT1DRealToComplexConjugateImageFilterTestOutput
-    #)
+add_executable( itkFFT1DImageFilterTest
+  itkFFT1DImageFilterTest.cxx
+  )
+target_link_libraries( itkFFT1DImageFilterTest
+  ITKCommon
+  ITKIO
+  ITKAlgorithms
+  )
+add_test( itkFFT1DImageFilterTest
+  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/itkFFT1DImageFilterTest
+  --compare ${ITK_DATA_ROOT}/Input/TreeBarkTexture.png
+	    itkFFT1DImageFilterTestOutput.mha
+  itkFFT1DImageFilterTest
+    ${ITK_DATA_ROOT}/Input/TreeBarkTexture.png
+    itkFFT1DImageFilterTestOutput.mha
+    )
 
 add_executable( itkVnlFFT1DRealToComplexConjugateImageFilterTest
   itkVnlFFT1DRealToComplexConjugateImageFilterTest.cxx
@@ -39,6 +37,21 @@ add_test( itkVnlFFT1DRealToComplexConjugateImageFilterTest
   itkVnlFFT1DRealToComplexConjugateImageFilterTest
     ${ITK_DATA_ROOT}/Input/TreeBarkTexture.png
     itkVnlFFT1DRealToComplexConjugateImageFilterTestOutput
+    )
+add_executable( itkVnlFFT1DComplexConjugateToRealImageFilterTest
+  itkVnlFFT1DComplexConjugateToRealImageFilterTest.cxx
+  )
+target_link_libraries( itkVnlFFT1DComplexConjugateToRealImageFilterTest
+  ITKCommon
+  ITKIO
+  )
+add_test( itkVnlFFT1DComplexConjugateToRealImageFilterTest
+  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/itkVnlFFT1DComplexConjugateToRealImageFilterTest
+  --compare ${ITK_DATA_ROOT}/Input/TreeBarkTexture.png
+	    itkVnlFFT1DComplexConjugateToRealImageFilterTestOutput.mhd
+  itkVnlFFT1DComplexConjugateToRealImageFilterTest
+    ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaseline
+    itkVnlFFT1DComplexConjugateToRealImageFilterTestOutput.mhd
     )
 
 if( USE_FFTW )

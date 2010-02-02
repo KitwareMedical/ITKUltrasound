@@ -1,7 +1,7 @@
 /*=========================================================================
 
 Program:   Insight Segmentation & Registration Toolkit
-Module:    $RCSfile: itkVnlFFT1DRealToComplexConjugateImageFilter.txx,v $
+Module:    $RCSfile: itkVnlFFT1DComplexConjugateToRealImageFilter.txx,v $
 Language:  C++
 Date:      $Date: 2009-01-27 19:30:16 $
 Version:   $Revision: 1.12 $
@@ -14,12 +14,12 @@ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkVnlFFT1DRealToComplexConjugateImageFilter_txx
-#define __itkVnlFFT1DRealToComplexConjugateImageFilter_txx
+#ifndef __itkVnlFFT1DComplexConjugateToRealImageFilter_txx
+#define __itkVnlFFT1DComplexConjugateToRealImageFilter_txx
 
-#include "itkVnlFFT1DRealToComplexConjugateImageFilter.h"
+#include "itkVnlFFT1DComplexConjugateToRealImageFilter.h"
 
-#include "itkFFT1DRealToComplexConjugateImageFilter.txx"
+#include "itkFFT1DComplexConjugateToRealImageFilter.txx"
 #include "itkImageLinearConstIteratorWithIndex.h"
 #include "itkImageLinearIteratorWithIndex.h"
 #include "itkIndent.h"
@@ -32,25 +32,8 @@ namespace itk
 {
 
 template <class TPixel, unsigned int VDimension>
-bool VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>::
-Legaldim(int n)
-{
-  int ifac = 2;
-  for (int l = 1; l <= 3; l++) 
-    {
-    for(; n % ifac == 0;)
-      {
-      n /= ifac;
-      }
-    ifac += l;
-    }
-  return (n == 1); // return false if decomposition failed
-}
-
-
-template <class TPixel, unsigned int VDimension>
 void
-VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>::
+VnlFFT1DComplexConjugateToRealImageFilter<TPixel,VDimension>::
 ThreadedGenerateData( const OutputImageRegionType& outputRegion, int threadID )
 {
   // get pointers to the input and output
@@ -66,14 +49,6 @@ ThreadedGenerateData( const OutputImageRegionType& outputRegion, int threadID )
     = inputPtr->GetRequestedRegion().GetSize();
 
   unsigned int vec_size = inputSize[this->m_Direction];
-  if( !this->Legaldim(vec_size) )
-    {
-    ExceptionObject exception(__FILE__, __LINE__);
-    exception.SetDescription("Illegal Array DIM for FFT");
-    exception.SetLocation(ITK_LOCATION);
-    throw exception;
-    }
-
 
   typedef itk::ImageLinearConstIteratorWithIndex< TInputImageType >  InputIteratorType;
   typedef itk::ImageLinearIteratorWithIndex< TOutputImageType >      OutputIteratorType;
@@ -104,14 +79,14 @@ ThreadedGenerateData( const OutputImageRegionType& outputRegion, int threadID )
       }
 
     // do the transform
-    v1d.bwd_transform(inputBuffer);
+    v1d.fwd_transform(inputBuffer);
 
     // copy the output from the buffer into our line
     outputBufferIt = inputBuffer.begin();
     outputIt.GoToBeginOfLine();
     while( !outputIt.IsAtEndOfLine() )
       {
-      outputIt.Set( *outputBufferIt );
+      outputIt.Set( (*outputBufferIt).real() / vec_size );
       ++outputIt;
       ++outputBufferIt;
       }
@@ -121,7 +96,7 @@ ThreadedGenerateData( const OutputImageRegionType& outputRegion, int threadID )
 
 template <class TPixel, unsigned int VDimension>
 bool
-VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>::
+VnlFFT1DComplexConjugateToRealImageFilter<TPixel,VDimension>::
 FullMatrix()
 {
   return true;

@@ -1,22 +1,23 @@
-#ifndef __itkFFT1DRealToComplexConjugateImageFilter_txx
-#define __itkFFT1DRealToComplexConjugateImageFilter_txx
+#ifndef __itkFFT1DComplexConjugateToRealImageFilter_txx
+#define __itkFFT1DComplexConjugateToRealImageFilter_txx
 
-#include "itkFFT1DRealToComplexConjugateImageFilter.h"
+#include "itkFFT1DComplexConjugateToRealImageFilter.h"
 
-#include "itkVnlFFT1DRealToComplexConjugateImageFilter.h"
+#include "itkVnlFFT1DComplexConjugateToRealImageFilter.h"
 
-#if defined(USE_FFTWD) || defined(USE_FFTWF)
-#include "itkFFTW1DRealToComplexConjugateImageFilter.h"
-#endif
+//#if defined(USE_FFTWD) || defined(USE_FFTWF)
+//#include "itkFFTW1DComplexConjugateToRealImageFilter.h"
+//#endif
 
+#include "itkMetaDataDictionary.h"
 #include "itkMetaDataObject.h"
 
 namespace itk
 {
 
 template < class TPixel, unsigned int VDimension >
-typename FFT1DRealToComplexConjugateImageFilter< TPixel, VDimension >::Pointer
-FFT1DRealToComplexConjugateImageFilter< TPixel, VDimension >
+typename FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >::Pointer
+FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
 ::New()
 {
   Pointer smartPtr = ::itk::ObjectFactory< Self >::Create();
@@ -27,7 +28,7 @@ FFT1DRealToComplexConjugateImageFilter< TPixel, VDimension >
     //if( typeid( TPixel ) == typeid( double ) )
       //{
       //smartPtr = dynamic_cast< Self* >(
-	//FFTW1DRealToComplexConjugateImageFilter< double, VDimension >
+	//FFTW1DComplexConjugateToRealImageFilter< double, VDimension >
 	//::New().GetPointer() );
       //}
     //}
@@ -38,7 +39,7 @@ FFT1DRealToComplexConjugateImageFilter< TPixel, VDimension >
     //if( typeid( TPixel ) == typeid( float ) )
       //{
       //smartPtr = dynamic_cast<Self *>(
-	//FFT1DRealToComplexConjugateImageFilter< float, VDimension >
+	//FFT1DComplexConjugateToRealImageFilter< float, VDimension >
 	//::New().GetPointer() );
       //}
     //}
@@ -46,7 +47,7 @@ FFT1DRealToComplexConjugateImageFilter< TPixel, VDimension >
 
   if( smartPtr.IsNull() )
     {
-    smartPtr = VnlFFT1DRealToComplexConjugateImageFilter< TPixel, VDimension >
+    smartPtr = VnlFFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
       ::New().GetPointer();
     }
 
@@ -55,7 +56,7 @@ FFT1DRealToComplexConjugateImageFilter< TPixel, VDimension >
 
 template < class TPixel, unsigned int VDimension >
 void
-FFT1DRealToComplexConjugateImageFilter< TPixel, VDimension >
+FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
 ::GenerateOutputInformation()
 {
   // call the superclass' implementation of this method
@@ -79,7 +80,9 @@ FFT1DRealToComplexConjugateImageFilter< TPixel, VDimension >
   // 
   // This is all based on the same function in itk::ShrinkImageFilter
   // ShrinkImageFilter also modifies the image spacing, but spacing
-  // has no meaning in the result of an FFT.
+  // has no meaning in the result of an FFT. For an IFFT, since the
+  // spacing is propagated to the complex result, we can use the spacing
+  // from the input to propagate back to the output.
   const typename TInputImageType::SizeType&   inputSize
     = inputPtr->GetLargestPossibleRegion().GetSize();
   const typename TInputImageType::IndexType&  inputStartIndex
@@ -88,25 +91,40 @@ FFT1DRealToComplexConjugateImageFilter< TPixel, VDimension >
   typename TOutputImageType::SizeType     outputSize = inputSize;
   typename TOutputImageType::IndexType    outputStartIndex = inputStartIndex;
   
+  for (unsigned int i = 0; i < TOutputImageType::ImageDimension; i++)
+    {
+    outputSize[i] = inputSize[i];
+    outputStartIndex[i] = inputStartIndex[i];
+    }
+
   //
-  // in 4.3.4 of the FFTW documentation, they indicate the size of
+  // in 4.3.4 of the FFT documentation, they indicate the size of
   // of a real-to-complex FFT is N * N ... + (N /2+1)
   //                              1   2        d
   // complex numbers.
-  // static_cast prob. not necessary but want to make sure integer
-  // division is used.
+  // going from complex to real, you know the output is at least
+  // twice the size in the last dimension as the input, but it might
+  // be 2*size+1.  Consequently, the output of the FFT:R2C operation
+  // 
+  MetaDataDictionary &InputDic = 
+    const_cast<MetaDataDictionary &>(inputPtr->GetMetaDataDictionary());
   unsigned int direction = this->m_Direction;
   outputSize[direction] = static_cast<unsigned int>(inputSize[direction])/2 + 1;
+  if(this->GetActualDimensionIsOdd())
+    {
+    outputSize[direction]++;
+    }
 
-  //
-  // the halving of the input size hides the actual size of the input.
-  // to get the same size image out of the IFFT, need to send it as 
-  // Metadata.
-  typedef typename TOutputImageType::SizeType::SizeValueType SizeScalarType;
-  itk::MetaDataDictionary &OutputDic=outputPtr->GetMetaDataDictionary();
-  itk::EncapsulateMetaData<SizeScalarType>(OutputDic,
-                                       std::string("FFT_Actual_RealImage_Size"),
-                                                     inputSize[direction]);
+  // backwards compatible/deprecated version
+  typedef typename TInputImageType::SizeType::SizeValueType SizeScalarType;
+  SizeScalarType originalSize = 0;
+
+  if(ExposeMetaData < SizeScalarType > 
+          (InputDic,std::string("FFT_Actual_RealImage_Size"),originalSize))
+    {
+    outputSize[direction] = originalSize;
+    }
+
   typename TOutputImageType::RegionType outputLargestPossibleRegion;
   outputLargestPossibleRegion.SetSize( outputSize );
   outputLargestPossibleRegion.SetIndex( outputStartIndex );
@@ -117,7 +135,7 @@ FFT1DRealToComplexConjugateImageFilter< TPixel, VDimension >
 
 template < class TPixel , unsigned int Dimension >
 void
-FFT1DRealToComplexConjugateImageFilter < TPixel , Dimension >
+FFT1DComplexConjugateToRealImageFilter < TPixel , Dimension >
 ::GenerateInputRequestedRegion()
 {
   // call the superclass' implementation of this method
@@ -164,7 +182,7 @@ FFT1DRealToComplexConjugateImageFilter < TPixel , Dimension >
 
 template < class TPixel , unsigned int Dimension >
 void
-FFT1DRealToComplexConjugateImageFilter < TPixel , Dimension >
+FFT1DComplexConjugateToRealImageFilter < TPixel , Dimension >
 ::EnlargeOutputRequestedRegion(DataObject *output)
 {
   TOutputImageType* outputPtr = dynamic_cast<TOutputImageType*>( output );
@@ -196,7 +214,7 @@ FFT1DRealToComplexConjugateImageFilter < TPixel , Dimension >
 
 template < class TPixel , unsigned int Dimension >
 void
-FFT1DRealToComplexConjugateImageFilter < TPixel , Dimension >
+FFT1DComplexConjugateToRealImageFilter < TPixel , Dimension >
 ::PrintSelf( std::ostream& os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
@@ -207,7 +225,7 @@ FFT1DRealToComplexConjugateImageFilter < TPixel , Dimension >
 
 template < class TPixel , unsigned int Dimension >
 int 
-FFT1DRealToComplexConjugateImageFilter < TPixel , Dimension >
+FFT1DComplexConjugateToRealImageFilter < TPixel , Dimension >
 ::SplitRequestedRegion(int i, int num, OutputImageRegionType& splitRegion)
 {
   // Get the output pointer
@@ -275,4 +293,4 @@ FFT1DRealToComplexConjugateImageFilter < TPixel , Dimension >
 
 } // end namespace itk
 
-#endif // __itkFFT1DRealToComplexConjugateImageFilter_txx
+#endif // __itkFFT1DComplexConjugateToRealImageFilter_txx
