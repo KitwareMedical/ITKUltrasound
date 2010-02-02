@@ -51,9 +51,9 @@ int itkFFT1DImageFilterTest( int argc, char* argv[] )
 
   reader->SetFileName( argv[1] );
   fftForward->SetInput( reader->GetOutput() );
-  //fftForward->SetDirection( direction );
+  fftForward->SetDirection( direction );
   fftInverse->SetInput( fftForward->GetOutput() );
-  //fftInverse->SetDirection( direction );
+  fftInverse->SetDirection( direction );
   writer->SetInput( fftInverse->GetOutput() );
   writer->SetFileName( argv[2] );
 
