@@ -41,7 +41,7 @@ add_test( itkVnlFFT1DRealToComplexConjugateImageFilterTest
     itkVnlFFT1DRealToComplexConjugateImageFilterTestOutput
     )
 
-if( USE_FFTWD OR USE_FFTWF )
+if( USE_FFTW )
   add_executable( itkFFTW1DRealToComplexConjugateImageFilterTest
     itkFFTW1DRealToComplexConjugateImageFilterTest.cxx
     )

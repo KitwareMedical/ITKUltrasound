@@ -4,7 +4,7 @@ install( FILES
   DESTINATION ${ITK_INSTALL_PREFIX}/include/InsightToolkit/Algorithms
   )
 
-if( USE_FFTWD OR USE_FFTWF )
+if( USE_FFTW )
   install( FILES
   itkFFT1DRealToComplexConjugateImageFilter.h
   itkFFT1DRealToComplexConjugateImageFilter.txx

@@ -26,6 +26,9 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY
   ${ITK_FFT_EXTENSIONS_BINARY_DIR}/bin )
 
+set( USE_FFTW OFF CACHE BOOL 
+  "Use FFTW.  ITK should be compiled with USE_FFTWF and USE_FFTWD."
+  )
 
 add_subdirectory( Code )
 
