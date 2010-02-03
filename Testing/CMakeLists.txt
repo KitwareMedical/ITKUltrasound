@@ -73,4 +73,20 @@ if( USE_FFTW )
       ${ITK_DATA_ROOT}/Input/TreeBarkTexture.png
       itkFFTW1DRealToComplexConjugateImageFilterTestOutput
       )
+  add_executable( itkFFTW1DComplexConjugateToRealImageFilterTest
+    itkFFTW1DComplexConjugateToRealImageFilterTest.cxx
+    )
+  target_link_libraries( itkFFTW1DComplexConjugateToRealImageFilterTest
+    ITKCommon
+    ITKIO
+    ITKAlgorithms
+    )
+  add_test( itkFFTW1DComplexConjugateToRealImageFilterTest
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/itkFFTW1DComplexConjugateToRealImageFilterTest
+    --compare ${ITK_DATA_ROOT}/Input/TreeBarkTexture.png
+	      itkFFTW1DComplexConjugateToRealImageFilterTestOutput.mha
+    itkFFTW1DComplexConjugateToRealImageFilterTest
+      ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaseline
+      itkFFTW1DComplexConjugateToRealImageFilterTestOutput.mha
+      )
 endif()

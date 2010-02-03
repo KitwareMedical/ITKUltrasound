@@ -21,28 +21,28 @@ FFT1DRealToComplexConjugateImageFilter< TPixel, VDimension >
 {
   Pointer smartPtr = ::itk::ObjectFactory< Self >::Create();
 
-//#ifdef USE_FFTWD
-  //if( smartPtr.IsNull() )
-    //{
-    //if( typeid( TPixel ) == typeid( double ) )
-      //{
-      //smartPtr = dynamic_cast< Self* >(
-	//FFTW1DRealToComplexConjugateImageFilter< double, VDimension >
-	//::New().GetPointer() );
-      //}
-    //}
-//#endif
-//#ifdef USE_FFTWF
-  //if( smartPtr.IsNull() )
-    //{
-    //if( typeid( TPixel ) == typeid( float ) )
-      //{
-      //smartPtr = dynamic_cast<Self *>(
-	//FFT1DRealToComplexConjugateImageFilter< float, VDimension >
-	//::New().GetPointer() );
-      //}
-    //}
-//#endif
+#ifdef USE_FFTWD
+  if( smartPtr.IsNull() )
+    {
+    if( typeid( TPixel ) == typeid( double ) )
+      {
+      smartPtr = dynamic_cast< Self* >(
+	FFTW1DRealToComplexConjugateImageFilter< double, VDimension >
+	::New().GetPointer() );
+      }
+    }
+#endif
+#ifdef USE_FFTWF
+  if( smartPtr.IsNull() )
+    {
+    if( typeid( TPixel ) == typeid( float ) )
+      {
+      smartPtr = dynamic_cast<Self *>(
+	FFT1DRealToComplexConjugateImageFilter< float, VDimension >
+	::New().GetPointer() );
+      }
+    }
+#endif
 
   if( smartPtr.IsNull() )
     {

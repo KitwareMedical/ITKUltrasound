@@ -5,9 +5,9 @@
 
 #include "itkVnlFFT1DComplexConjugateToRealImageFilter.h"
 
-//#if defined(USE_FFTWD) || defined(USE_FFTWF)
-//#include "itkFFTW1DComplexConjugateToRealImageFilter.h"
-//#endif
+#if defined(USE_FFTWD) || defined(USE_FFTWF)
+#include "itkFFTW1DComplexConjugateToRealImageFilter.h"
+#endif
 
 #include "itkMetaDataDictionary.h"
 #include "itkMetaDataObject.h"
@@ -22,28 +22,28 @@ FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
 {
   Pointer smartPtr = ::itk::ObjectFactory< Self >::Create();
 
-//#ifdef USE_FFTWD
-  //if( smartPtr.IsNull() )
-    //{
-    //if( typeid( TPixel ) == typeid( double ) )
-      //{
-      //smartPtr = dynamic_cast< Self* >(
-	//FFTW1DComplexConjugateToRealImageFilter< double, VDimension >
-	//::New().GetPointer() );
-      //}
-    //}
-//#endif
-//#ifdef USE_FFTWF
-  //if( smartPtr.IsNull() )
-    //{
-    //if( typeid( TPixel ) == typeid( float ) )
-      //{
-      //smartPtr = dynamic_cast<Self *>(
-	//FFT1DComplexConjugateToRealImageFilter< float, VDimension >
-	//::New().GetPointer() );
-      //}
-    //}
-//#endif
+#ifdef USE_FFTWD
+  if( smartPtr.IsNull() )
+    {
+    if( typeid( TPixel ) == typeid( double ) )
+      {
+      smartPtr = dynamic_cast< Self* >(
+	FFTW1DComplexConjugateToRealImageFilter< double, VDimension >
+	::New().GetPointer() );
+      }
+    }
+#endif
+#ifdef USE_FFTWF
+  if( smartPtr.IsNull() )
+    {
+    if( typeid( TPixel ) == typeid( float ) )
+      {
+      smartPtr = dynamic_cast<Self *>(
+	FFT1DComplexConjugateToRealImageFilter< float, VDimension >
+	::New().GetPointer() );
+      }
+    }
+#endif
 
   if( smartPtr.IsNull() )
     {
@@ -109,7 +109,7 @@ FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
   MetaDataDictionary &InputDic = 
     const_cast<MetaDataDictionary &>(inputPtr->GetMetaDataDictionary());
   unsigned int direction = this->m_Direction;
-  outputSize[direction] = static_cast<unsigned int>(inputSize[direction])/2 + 1;
+  outputSize[direction] = static_cast<unsigned int>(inputSize[direction] - 1)*2;
   if(this->GetActualDimensionIsOdd())
     {
     outputSize[direction]++;
