@@ -81,7 +81,11 @@ private:
 #ifndef __itkVnlFFT1DRealToComplexConjugateImageFilter_txx
 #ifndef __itkFFTW1DRealToComplexConjugateImageFilter_h
 #ifndef __itkFFTW1DRealToComplexConjugateImageFilter_txx
+#ifndef __itkOpenCL1DRealToComplexConjugateImageFilter_h
+#ifndef __itkOpenCL1DRealToComplexConjugateImageFilter_txx
 #include "itkFFT1DRealToComplexConjugateImageFilter.txx"
+#endif
+#endif
 #endif
 #endif
 #endif

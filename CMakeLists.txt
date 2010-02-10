@@ -6,6 +6,7 @@ endif(COMMAND cmake_policy)
 
 project( ITK_FFT_EXTENSIONS )
 
+set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/CMake )
 
 find_package( ITK REQUIRED )
 include( ${ITK_USE_FILE} )
@@ -29,6 +30,23 @@ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY
 set( USE_FFTW OFF CACHE BOOL 
   "Use FFTW.  ITK should be compiled with USE_FFTWF and USE_FFTWD."
   )
+set( USE_OPENCL OFF CACHE BOOL
+  "Use OpenCL FFT."
+  )
+if( USE_OPENCL )
+  find_package( OpenCL REQUIRED )
+  find_path( OPENCL_FFT_INCLUDE_DIR clFFT.h )
+  # If this is not included in your OpenCL distribution, you can find cl.hpp on
+  # the Khronos website.
+  find_path( OPENCL_CXX_INCLUDE_DIR CL/cl.hpp )
+  find_library( OPENCL_FFT_LIBRARIES OpenCL_FFT )
+  include(FindPackageHandleStandardArgs)
+  find_package_handle_standard_args(OpenCL DEFAULT_MSG
+    OPENCL_FFT_LIBRARIES OPENCL_INCLUDE_DIR OPENCL_CXX_INCLUDE_DIR)
+  include_directories( ${OPENCL_INCLUDE_DIR} ${OPENCL_CXX_INCLUDE_DIR} )
+  add_definitions( -DUSE_OPENCL_FFT )
+  mark_as_advanced( OPENCL_INCLUDE_DIR OPENCL_LIBRARIES OPENCL_CXX_INCLUDE_DIR )
+endif()
 
 add_subdirectory( Code )
 

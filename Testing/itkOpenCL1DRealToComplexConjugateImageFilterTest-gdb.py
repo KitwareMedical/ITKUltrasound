@@ -1,0 +1,29 @@
+import gdb.pretty
+gdb.pretty.register ('itk.v3.text',
+        gdb.current_objfile ())
+gdb.pretty.register ('itk.v3.vv',
+        gdb.current_objfile ())
+gdb.pretty.register ('itk.v3.paraview',
+        gdb.current_objfile ())
+gdb.pretty.register ('itk.v3.mayavi.contour',
+        gdb.current_objfile ())
+gdb.pretty.register ('itk.v3.mayavi.volume',
+        gdb.current_objfile ())
+gdb.pretty.register ('itk.v3.mayavi.surf',
+        gdb.current_objfile ())
+gdb.pretty.register ('itk.v3.mayavi.imshow',
+        gdb.current_objfile ())
+gdb.pretty.register ('itk.v3.mayavi.ipython',
+        gdb.current_objfile ())
+gdb.pretty.register ('itk.v3.mayavi.save',
+        gdb.current_objfile ())
+gdb.pretty.register ('itk.v3.matplotlib.plot_wireframe',
+        gdb.current_objfile ())
+gdb.pretty.register ('itk.v3.matplotlib.plot_surface',
+        gdb.current_objfile ())
+gdb.pretty.register ('itk.v3.matplotlib.imshow',
+        gdb.current_objfile ())
+gdb.pretty.register ('itk.v3.numpy.save',
+        gdb.current_objfile ())
+gdb.pretty.register ('itk.v3.numpy.array',
+        gdb.current_objfile ())

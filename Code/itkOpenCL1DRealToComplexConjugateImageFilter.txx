@@ -1,0 +1,200 @@
+#ifndef __itkOpenCL1DRealToComplexConjugateImageFilter_txx
+#define __itkOpenCL1DRealToComplexConjugateImageFilter_txx
+
+#include "itkFFT1DRealToComplexConjugateImageFilter.txx"
+#include "itkOpenCL1DRealToComplexConjugateImageFilter.h"
+
+#include <vector>
+
+#include "itkIndent.h"
+#include "itkImageLinearConstIteratorWithIndex.h"
+#include "itkImageRegionIterator.h"
+#include "itkMetaDataObject.h"
+
+namespace itk
+{
+
+template <class TPixel, unsigned int VDimension>
+OpenCL1DRealToComplexConjugateImageFilter<TPixel, VDimension>
+::OpenCL1DRealToComplexConjugateImageFilter():
+  m_PlanComputed(false),
+  m_LastImageSize(0),
+  m_Buffer(0)
+{
+  try
+    {
+    m_clContext = new cl::Context( CL_DEVICE_TYPE_ALL );
+    std::vector< cl::Device > devices = m_clContext->getInfo< CL_CONTEXT_DEVICES > ();
+    if( devices.size() < 1 )
+      {
+      itkExceptionMacro( "No OpenCL devices found." );
+      }
+    // @todo: code to select the fastest device, or the device that is
+    // CL_DEVICE_TYPE_ACCELERATOR
+    this->m_clQueue = new cl::CommandQueue( *m_clContext, devices[0] );
+    }
+  catch( const cl::Error& e )
+    {
+    itkExceptionMacro( "Error in OpenCL: " << e.what() << "(" << e.err() << ")" ); 
+    }
+}
+
+template <class TPixel, unsigned int VDimension>
+bool
+OpenCL1DRealToComplexConjugateImageFilter<TPixel,VDimension>::
+Legaldim(int n)
+{
+  int ifac = 2;
+  for(; n % ifac == 0;)
+    {
+    n /= ifac;
+    }
+  return (n == 1); // return false if decomposition failed
+}
+
+template <typename TPixel, unsigned int Dimension>
+void
+OpenCL1DRealToComplexConjugateImageFilter<TPixel,Dimension>::
+GenerateData()
+{
+  // get pointers to the input and output
+  typename TInputImageType::ConstPointer  inputPtr  = this->GetInput();
+  typename TOutputImageType::Pointer      outputPtr = this->GetOutput();
+
+  if ( !inputPtr || !outputPtr )
+    {
+    return;
+    }
+
+  // allocate output buffer memory
+  outputPtr->SetBufferedRegion( outputPtr->GetRequestedRegion() );
+  outputPtr->Allocate();
+
+  const typename TInputImageType::SizeType&   inputSize
+    = inputPtr->GetRequestedRegion().GetSize();
+  const typename TOutputImageType::SizeType&   outputSize
+    = outputPtr->GetRequestedRegion().GetSize();
+
+  unsigned int vec_size = inputSize[this->m_Direction];
+  if( !this->Legaldim(vec_size) )
+    {
+    ExceptionObject exception(__FILE__, __LINE__);
+    exception.SetDescription("Illegal Array DIM for FFT");
+    exception.SetLocation(ITK_LOCATION);
+    throw exception;
+    }
+
+  cl_int batchSize = 1;
+  for( unsigned int i = 0; i < Dimension; i++ )
+    {
+    batchSize *= outputSize[i];
+    }
+  unsigned int totalSize = batchSize;
+  batchSize /= outputSize[this->m_Direction];
+  
+
+  if(this->m_PlanComputed)            // if we've already computed a plan
+    {
+    // if the image sizes aren't the same,
+    // we have to compute the plan again
+    if(this->m_LastImageSize != totalSize)
+      {
+      delete [] this->m_Buffer;
+      clFFT_DestroyPlan(this->m_Plan);
+      this->m_PlanComputed = false;
+      }
+    }
+  if(!this->m_PlanComputed)
+    {
+    try
+      {
+      this->m_Buffer =
+        new OpenCLComplexType[totalSize];
+      }
+    catch( std::bad_alloc & )
+      {
+      itkExceptionMacro("Problem allocating memory for internal computations");
+      }
+    this->m_LastImageSize = totalSize;
+    clFFT_Dim3 n = { inputSize[this->m_Direction], 1, 1 };
+    cl_int error_code;
+    this->m_Plan = clFFT_CreatePlan( (*m_clContext)(),
+      n,
+      clFFT_1D,
+      clFFT_InterleavedComplexFormat,
+      &error_code );
+    if ( ! this->m_Plan || error_code )
+      {
+      itkExceptionMacro( "Could not create OpenCL FFT Plan." );
+      }
+    this->m_PlanComputed = true;
+    }
+
+  typedef itk::ImageLinearConstIteratorWithIndex< TInputImageType >  InputIteratorType;
+  typedef itk::ImageRegionIterator< TOutputImageType > OutputIteratorType;
+  InputIteratorType inputIt( inputPtr, inputPtr->GetRequestedRegion() );
+  // the output region should be the same as the input region in the non-fft directions
+  OutputIteratorType outputIt( outputPtr, outputPtr->GetRequestedRegion() );
+
+  inputIt.SetDirection(this->m_Direction);
+
+  OpenCLComplexType* bufferIt = this->m_Buffer;
+  // for every fft line
+  for( inputIt.GoToBegin(); !inputIt.IsAtEnd(); inputIt.NextLine() )
+    {
+    // copy the input line into our buffer
+    inputIt.GoToBeginOfLine();
+    while( !inputIt.IsAtEndOfLine() )
+      {
+      bufferIt->real = inputIt.Get();
+      ++inputIt;
+      ++bufferIt;
+      }
+    }
+
+  try
+    {
+    // do the transform
+    cl::Buffer clDataBuffer( *m_clContext,
+      CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR,
+      totalSize * sizeof( TPixel ) * 2,
+      m_Buffer
+      );
+    cl_command_queue queue = ( *m_clQueue )();
+    cl_mem data_in = clDataBuffer();
+    cl_mem data_out = clDataBuffer();
+    cl_int err = clFFT_ExecuteInterleaved( queue, this->m_Plan, batchSize, clFFT_Forward, data_in, data_out, 0, NULL, NULL );
+    if( err )
+      {
+      itkExceptionMacro( "Error in clFFT_ExecuteInterleaved(" << err << ")");
+      }
+    m_clQueue->finish();
+
+    err = m_clQueue->enqueueReadBuffer( clDataBuffer, CL_TRUE, 0, totalSize * sizeof( TPixel ) * 2, outputPtr->GetBufferPointer() );
+    }
+  catch( const cl::Error& e )
+    {
+    itkExceptionMacro( "Error in OpenCL: " << e.what() << "(" << e.err() << ")" ); 
+    }
+
+  // Follow the convention of the other FFT implementations.
+  TPixel normalizationFactor = 2 * inputSize[this->m_Direction] - 1;
+  for( outputIt.GoToBegin(); !outputIt.IsAtEnd(); ++outputIt )
+    {
+    outputIt.Value() /= normalizationFactor;
+    }
+    
+}
+
+
+template <typename TPixel,unsigned int Dimension>
+bool
+OpenCL1DRealToComplexConjugateImageFilter<TPixel,Dimension>::
+FullMatrix()
+{
+  return true;
+}
+
+} // namespace itk
+
+#endif //_itkOpenCL1DRealToComplexConjugateImageFilter_txx

@@ -90,3 +90,37 @@ if( USE_FFTW )
       itkFFTW1DComplexConjugateToRealImageFilterTestOutput.mha
       )
 endif()
+
+if( USE_OPENCL )
+  target_link_libraries( itkFFT1DImageFilterTest
+    ${OPENCL_FFT_LIBRARIES}
+    )
+
+  add_executable( itkOpenCL1DRealToComplexConjugateImageFilterTest
+    itkOpenCL1DRealToComplexConjugateImageFilterTest.cxx
+    )
+  target_link_libraries( itkOpenCL1DRealToComplexConjugateImageFilterTest
+    ITKCommon
+    ITKIO
+    ITKAlgorithms
+    ${OPENCL_FFT_LIBRARIES}
+    ${OPENCL_LIBRARIES}
+    )
+  # gdb-pretty http://gitorious.com/gdb-pretty
+  add_custom_command (TARGET itkOpenCL1DRealToComplexConjugateImageFilterTest
+    POST_BUILD
+    COMMAND cmake -E copy
+    ${CMAKE_CURRENT_SOURCE_DIR}/itkOpenCL1DRealToComplexConjugateImageFilterTest-gdb.py
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
+    )
+  add_test( itkOpenCL1DRealToComplexConjugateImageFilterTest
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/itkOpenCL1DRealToComplexConjugateImageFilterTest
+    --compare ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaselineReal128.mhd
+	      itkOpenCL1DRealToComplexConjugateImageFilterTestOutputReal.mha
+    --compare ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaselineImaginary128.mhd
+	      itkOpenCL1DRealToComplexConjugateImageFilterTestOutputImaginary.mha
+    itkOpenCL1DRealToComplexConjugateImageFilterTest
+      ${ITK_DATA_ROOT}/Input/TreeBarkTexture.png
+      itkOpenCL1DRealToComplexConjugateImageFilterTestOutput
+      )
+endif()
