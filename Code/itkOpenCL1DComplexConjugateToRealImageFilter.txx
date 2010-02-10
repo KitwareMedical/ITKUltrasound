@@ -1,25 +1,26 @@
-#ifndef __itkOpenCL1DRealToComplexConjugateImageFilter_txx
-#define __itkOpenCL1DRealToComplexConjugateImageFilter_txx
+#ifndef __itkOpenCL1DComplexConjugateToRealImageFilter_txx
+#define __itkOpenCL1DComplexConjugateToRealImageFilter_txx
 
-#include "itkFFT1DRealToComplexConjugateImageFilter.txx"
-#include "itkOpenCL1DRealToComplexConjugateImageFilter.h"
+#include "itkFFT1DComplexConjugateToRealImageFilter.txx"
+#include "itkOpenCL1DComplexConjugateToRealImageFilter.h"
 
 #include <vector>
 
 #include "itkIndent.h"
 #include "itkImageLinearConstIteratorWithIndex.h"
-#include "itkImageRegionIterator.h"
+#include "itkImageLinearIteratorWithIndex.h"
 #include "itkMetaDataObject.h"
 
 namespace itk
 {
 
 template <class TPixel, unsigned int VDimension>
-OpenCL1DRealToComplexConjugateImageFilter<TPixel, VDimension>
-::OpenCL1DRealToComplexConjugateImageFilter():
+OpenCL1DComplexConjugateToRealImageFilter<TPixel, VDimension>
+::OpenCL1DComplexConjugateToRealImageFilter():
   m_PlanComputed(false),
   m_LastImageSize(0),
-  m_Buffer(0)
+  m_InputBuffer(0),
+  m_OutputBuffer(0)
 {
   try
     {
@@ -41,7 +42,7 @@ OpenCL1DRealToComplexConjugateImageFilter<TPixel, VDimension>
 
 template <class TPixel, unsigned int VDimension>
 bool
-OpenCL1DRealToComplexConjugateImageFilter<TPixel,VDimension>::
+OpenCL1DComplexConjugateToRealImageFilter<TPixel,VDimension>::
 Legaldim(int n)
 {
   int ifac = 2;
@@ -54,7 +55,7 @@ Legaldim(int n)
 
 template <typename TPixel, unsigned int Dimension>
 void
-OpenCL1DRealToComplexConjugateImageFilter<TPixel,Dimension>::
+OpenCL1DComplexConjugateToRealImageFilter<TPixel,Dimension>::
 GenerateData()
 {
   // get pointers to the input and output
@@ -99,7 +100,8 @@ GenerateData()
     // we have to compute the plan again
     if(this->m_LastImageSize != totalSize)
       {
-      delete [] this->m_Buffer;
+      delete [] this->m_InputBuffer;
+      delete [] this->m_OutputBuffer;
       clFFT_DestroyPlan(this->m_Plan);
       this->m_PlanComputed = false;
       }
@@ -108,7 +110,9 @@ GenerateData()
     {
     try
       {
-      this->m_Buffer =
+      this->m_InputBuffer =
+        new OpenCLComplexType[totalSize];
+      this->m_OutputBuffer =
         new OpenCLComplexType[totalSize];
       }
     catch( std::bad_alloc & )
@@ -131,13 +135,14 @@ GenerateData()
     }
 
   typedef itk::ImageLinearConstIteratorWithIndex< TInputImageType >  InputIteratorType;
-  typedef itk::ImageRegionIterator< TOutputImageType > OutputIteratorType;
+  typedef itk::ImageLinearIteratorWithIndex< TOutputImageType > OutputIteratorType;
   InputIteratorType inputIt( inputPtr, inputPtr->GetRequestedRegion() );
   OutputIteratorType outputIt( outputPtr, outputPtr->GetRequestedRegion() );
 
   inputIt.SetDirection(this->m_Direction);
+  outputIt.SetDirection(this->m_Direction);
 
-  OpenCLComplexType* bufferIt = this->m_Buffer;
+  OpenCLComplexType* inputBufferIt = this->m_InputBuffer;
   // for every fft line
   for( inputIt.GoToBegin(); !inputIt.IsAtEnd(); inputIt.NextLine() )
     {
@@ -145,9 +150,10 @@ GenerateData()
     inputIt.GoToBeginOfLine();
     while( !inputIt.IsAtEndOfLine() )
       {
-      bufferIt->real = inputIt.Get();
+      inputBufferIt->real = inputIt.Get().real();
+      inputBufferIt->imag = inputIt.Get().imag();
       ++inputIt;
-      ++bufferIt;
+      ++inputBufferIt;
       }
     }
 
@@ -157,19 +163,19 @@ GenerateData()
     cl::Buffer clDataBuffer( *m_clContext,
       CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR,
       totalSize * sizeof( TPixel ) * 2,
-      m_Buffer
+      m_InputBuffer
       );
     cl_command_queue queue = ( *m_clQueue )();
     cl_mem data_in = clDataBuffer();
     cl_mem data_out = clDataBuffer();
-    cl_int err = clFFT_ExecuteInterleaved( queue, this->m_Plan, batchSize, clFFT_Forward, data_in, data_out, 0, NULL, NULL );
+    cl_int err = clFFT_ExecuteInterleaved( queue, this->m_Plan, batchSize, clFFT_Inverse, data_in, data_out, 0, NULL, NULL );
     if( err )
       {
       itkExceptionMacro( "Error in clFFT_ExecuteInterleaved(" << err << ")");
       }
     m_clQueue->finish();
 
-    err = m_clQueue->enqueueReadBuffer( clDataBuffer, CL_TRUE, 0, totalSize * sizeof( TPixel ) * 2, outputPtr->GetBufferPointer() );
+    err = m_clQueue->enqueueReadBuffer( clDataBuffer, CL_TRUE, 0, totalSize * sizeof( TPixel ) * 2, m_OutputBuffer );
     }
   catch( const cl::Error& e )
     {
@@ -177,18 +183,27 @@ GenerateData()
     }
 
   // Follow the convention of the other FFT implementations.
-  TPixel normalizationFactor = 2 * inputSize[this->m_Direction] - 1;
-  for( outputIt.GoToBegin(); !outputIt.IsAtEnd(); ++outputIt )
+  TPixel normalizationFactor = 1. / 2. ;
+  OpenCLComplexType* outputBufferIt = this->m_OutputBuffer;
+  // for every fft line
+  for( outputIt.GoToBegin(); !outputIt.IsAtEnd(); outputIt.NextLine() )
     {
-    outputIt.Value() /= normalizationFactor;
+    // copy the output line into our buffer
+    outputIt.GoToBeginOfLine();
+    while( !outputIt.IsAtEndOfLine() )
+      {
+      outputIt.Set( outputBufferIt->real / normalizationFactor );
+      ++outputIt;
+      ++outputBufferIt;
+      }
     }
-    
+
 }
 
 
 template <typename TPixel,unsigned int Dimension>
 bool
-OpenCL1DRealToComplexConjugateImageFilter<TPixel,Dimension>::
+OpenCL1DComplexConjugateToRealImageFilter<TPixel,Dimension>::
 FullMatrix()
 {
   return true;
@@ -196,4 +211,4 @@ FullMatrix()
 
 } // namespace itk
 
-#endif //_itkOpenCL1DRealToComplexConjugateImageFilter_txx
+#endif //_itkOpenCL1DComplexConjugateToRealImageFilter_txx
