@@ -1,6 +1,7 @@
 include_directories( ${ITK_FFT_EXTENSIONS_SOURCE_DIR}/Code )
 
 set( DATA_INPUT ${ITK_FFT_EXTENSIONS_SOURCE_DIR}/Testing/Data/Input )
+set( DATA_BASELINE ${ITK_FFT_EXTENSIONS_SOURCE_DIR}/Testing/Data/Baseline )
 
 # use a forward fft, then inverse fft for this instead because of the FullMatrix
 # issue
@@ -142,3 +143,28 @@ if( USE_OPENCL )
       itkOpenCL1DComplexConjugateToRealImageFilterTestOutput.mha
       )
 endif()
+
+#add_executable( itkAnalyticSignalImageFilterTest
+  #itkAnalyticSignalImageFilterTest.cxx
+  #)
+#target_link_libraries( itkAnalyticSignalImageFilterTest
+  #ITKCommon
+  #ITKIO
+  #ITKAlgorithms
+  #)
+#if( USE_OPENCL )
+  #target_link_libraries( itkAnalyticSignalImageFilterTest
+    #${OPENCL_FFT_LIBRARIES}
+    #${OPENCL_LIBRARIES}
+    #)
+#endif()
+#add_test( itkAnalyticSignalImageFilterTest
+  #${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/itkAnalyticSignalImageFilterTest
+  #--compare ${DATA_BASELINE}/itkAnalyticSignalImageFilterReal.mhd
+    #itkAnalyticSignalImageFilterTestOutputReal.mha
+  #--compare ${DATA_BASELINE}/itkAnalyticSignalImageFilterImaginary.mhd
+    #itkAnalyticSignalImageFilterTestOutputImaginary.mha
+  #itkAnalyticSignalImageFilterTest
+    #${ITK_DATA_ROOT}/Input/TreeBarkTexture.png
+    #itkAnalyticSignalImageFilterTestOutput
+    #)

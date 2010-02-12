@@ -1,6 +1,5 @@
 /** 
- * @file itkFFT1DRealToComplexConjugateImageFilterTest.cxx
- * @brief Test for FFT1DRealToComplexConjugateImageFilter
+ * @file itkOpenCL1DRealToComplexConjugateImageFilterTest.cxx
  * @author Matthew McCormick (thewtex) <matt@mmmccormick.com>
  * @date 2010-02-09
  */
