@@ -5,9 +5,9 @@
 
 #include "itkVnlFFT1DComplexToComplexImageFilter.h"
 
-//#if defined(USE_OPENCL_FFT)
-//#include "itkOpenCL1DComplexToComplexImageFilter.h"
-//#endif
+#if defined(USE_OPENCL_FFT)
+#include "itkOpenCL1DComplexToComplexImageFilter.h"
+#endif
 #if defined(USE_FFTWD) || defined(USE_FFTWF)
 #include "itkFFTW1DComplexToComplexImageFilter.h"
 #endif
@@ -25,17 +25,17 @@ FFT1DComplexToComplexImageFilter< TPixel, VDimension >
 {
   Pointer smartPtr = ::itk::ObjectFactory< Self >::Create();
 
-//#ifdef USE_OPENCL_FFT
-  //if( smartPtr.IsNull() )
-    //{
-    //if( typeid( TPixel ) == typeid( float ) )
-      //{
-      //smartPtr = dynamic_cast<Self *>(
-	//OpenCL1DComplexToComplexImageFilter< float, VDimension >
-	//::New().GetPointer() );
-      //}
-    //}
-//#endif
+#ifdef USE_OPENCL_FFT
+  if( smartPtr.IsNull() )
+    {
+    if( typeid( TPixel ) == typeid( float ) )
+      {
+      smartPtr = dynamic_cast<Self *>(
+	OpenCL1DComplexToComplexImageFilter< float, VDimension >
+	::New().GetPointer() );
+      }
+    }
+#endif
 #ifdef USE_FFTWD
   if( smartPtr.IsNull() )
     {

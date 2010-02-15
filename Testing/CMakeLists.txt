@@ -143,6 +143,9 @@ if( USE_OPENCL )
   target_link_libraries( itkFFT1DImageFilterTest
     ${OPENCL_FFT_LIBRARIES}
     )
+  target_link_libraries( itkFFT1DComplexToComplexImageFilterTest
+    ${OPENCL_FFT_LIBRARIES}
+    )
 
   add_executable( itkOpenCL1DRealToComplexConjugateImageFilterTest
     itkOpenCL1DRealToComplexConjugateImageFilterTest.cxx
@@ -188,6 +191,24 @@ if( USE_OPENCL )
     itkOpenCL1DComplexConjugateToRealImageFilterTest
       ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaseline
       itkOpenCL1DComplexConjugateToRealImageFilterTestOutput.mha
+      )
+  add_executable( itkOpenCL1DComplexToComplexImageFilterTest
+    itkOpenCL1DComplexToComplexImageFilterTest.cxx
+    )
+  target_link_libraries( itkOpenCL1DComplexToComplexImageFilterTest
+    ITKCommon
+    ITKIO
+    ITKAlgorithms
+    ${OPENCL_FFT_LIBRARIES}
+    ${OPENCL_LIBRARIES}
+    )
+  add_test( itkOpenCL1DComplexToComplexImageFilterTest
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/itkOpenCL1DComplexToComplexImageFilterTest
+    --compare ${ITK_DATA_ROOT}/Input/TreeBarkTexture.png
+	      itkOpenCL1DComplexToComplexImageFilterTestOutput.mha
+    itkOpenCL1DComplexToComplexImageFilterTest
+      ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaseline
+      itkOpenCL1DComplexToComplexImageFilterTestOutput.mha
       )
 endif()
 
