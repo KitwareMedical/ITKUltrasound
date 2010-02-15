@@ -58,11 +58,6 @@ protected:
   ~VnlFFT1DComplexConjugateToRealImageFilter() { }
 
 private:
-  inline std::complex<TPixel> myConj(const std::complex<TPixel>& __z)
-    {
-    return std::complex<TPixel>(__z.real(), -__z.imag());
-    }
-
   VnlFFT1DComplexConjugateToRealImageFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 };

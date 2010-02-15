@@ -21,6 +21,22 @@ add_test( itkFFT1DImageFilterTest
     ${ITK_DATA_ROOT}/Input/TreeBarkTexture.png
     itkFFT1DImageFilterTestOutput.mha
     )
+add_executable( itkFFT1DComplexToComplexImageFilterTest
+  itkFFT1DComplexToComplexImageFilterTest.cxx
+  )
+target_link_libraries( itkFFT1DComplexToComplexImageFilterTest
+  ITKCommon
+  ITKIO
+  ITKAlgorithms
+  )
+add_test( itkFFT1DComplexToComplexImageFilterTest
+  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/itkFFT1DComplexToComplexImageFilterTest
+  --compare ${ITK_DATA_ROOT}/Input/TreeBarkTexture.png
+	    itkFFT1DComplexToComplexImageFilterTestOutput.mha
+  itkFFT1DComplexToComplexImageFilterTest
+    ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaseline
+    itkFFT1DComplexToComplexImageFilterTestOutput.mha
+    )
 
 add_executable( itkVnlFFT1DRealToComplexConjugateImageFilterTest
   itkVnlFFT1DRealToComplexConjugateImageFilterTest.cxx
@@ -53,6 +69,21 @@ add_test( itkVnlFFT1DComplexConjugateToRealImageFilterTest
   itkVnlFFT1DComplexConjugateToRealImageFilterTest
     ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaseline
     itkVnlFFT1DComplexConjugateToRealImageFilterTestOutput.mhd
+    )
+add_executable( itkVnlFFT1DComplexToComplexImageFilterTest
+  itkVnlFFT1DComplexToComplexImageFilterTest.cxx
+  )
+target_link_libraries( itkVnlFFT1DComplexToComplexImageFilterTest
+  ITKCommon
+  ITKIO
+  )
+add_test( itkVnlFFT1DComplexToComplexImageFilterTest
+  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/itkVnlFFT1DComplexToComplexImageFilterTest
+  --compare ${ITK_DATA_ROOT}/Input/TreeBarkTexture.png
+	    itkVnlFFT1DComplexToComplexImageFilterTestOutput.mhd
+  itkVnlFFT1DComplexToComplexImageFilterTest
+    ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaseline
+    itkVnlFFT1DComplexToComplexImageFilterTestOutput.mhd
     )
 
 if( USE_FFTW )

@@ -56,7 +56,7 @@ public:
   itkBooleanMacro( ActualDimensionIsOdd );
 
 protected:
-  FFT1DComplexConjugateToRealImageFilter() : m_ActualDimensionIsOdd(false) {}
+  FFT1DComplexConjugateToRealImageFilter() : m_Direction(0), m_ActualDimensionIsOdd(false) {}
   virtual ~FFT1DComplexConjugateToRealImageFilter() {}
   void PrintSelf(std::ostream& os, Indent indent) const;
 
