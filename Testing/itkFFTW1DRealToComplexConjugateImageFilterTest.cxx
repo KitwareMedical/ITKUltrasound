@@ -2,7 +2,7 @@
  * @file itkFFT1DRealToComplexConjugateImageFilterTest.cxx
  * @brief Test for FFT1DRealToComplexConjugateImageFilter
  * @author Matthew McCormick (thewtex) <matt@mmmccormick.com>
- * @date 2009-12-06
+ * @date 2010-02-15
  */
 
 #include "itkTestMain.h"
