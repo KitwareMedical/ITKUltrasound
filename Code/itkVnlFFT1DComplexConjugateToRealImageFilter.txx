@@ -93,15 +93,6 @@ ThreadedGenerateData( const OutputImageRegionType& outputRegion, int threadID )
     }
 }
 
-
-template <class TPixel, unsigned int VDimension>
-bool
-VnlFFT1DComplexConjugateToRealImageFilter<TPixel,VDimension>::
-FullMatrix()
-{
-  return true;
-}
-
 }
 
 

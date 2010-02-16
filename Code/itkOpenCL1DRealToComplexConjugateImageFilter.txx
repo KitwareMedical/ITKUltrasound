@@ -197,15 +197,6 @@ GenerateData()
     
 }
 
-
-template <typename TPixel,unsigned int Dimension>
-bool
-OpenCL1DRealToComplexConjugateImageFilter<TPixel,Dimension>::
-FullMatrix()
-{
-  return true;
-}
-
 } // namespace itk
 
 #endif //_itkOpenCL1DRealToComplexConjugateImageFilter_txx

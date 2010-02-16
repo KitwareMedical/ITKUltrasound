@@ -63,7 +63,6 @@ protected:
 
   virtual void GenerateData();  // generates output from input
 
-  virtual bool FullMatrix();
 private:
   FFTW1DRealToComplexConjugateImageFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented

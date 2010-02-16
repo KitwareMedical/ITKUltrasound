@@ -50,10 +50,8 @@ protected:
   virtual ~FFT1DRealToComplexConjugateImageFilter() {}
   void PrintSelf(std::ostream& os, Indent indent) const;
 
-  virtual void GenerateOutputInformation();
   virtual void GenerateInputRequestedRegion(); 
   virtual void EnlargeOutputRequestedRegion(DataObject *output); 
-  virtual bool FullMatrix() = 0; // must be implemented in child
 
   /** Split the output's RequestedRegion into "num" pieces, returning
    * region "i" as "splitRegion". This method is called "num" times. The

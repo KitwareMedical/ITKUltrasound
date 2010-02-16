@@ -66,8 +66,6 @@ protected:
 
   virtual void GenerateData();  // generates output from input
 
-  virtual bool FullMatrix();
-
   ///** Method to check if an array dimension is legal for current OpenCL FFT */
   bool Legaldim(int n); 
 private:

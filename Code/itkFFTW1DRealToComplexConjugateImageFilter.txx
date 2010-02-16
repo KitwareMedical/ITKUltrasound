@@ -121,15 +121,6 @@ GenerateData()
     }
 }
 
-
-template <typename TPixel,unsigned int Dimension>
-bool
-FFTW1DRealToComplexConjugateImageFilter<TPixel,Dimension>::
-FullMatrix()
-{
-  return true;
-}
-
 } // namespace itk
 
 #endif //_itkFFTW1DRealToComplexConjugateImageFilter_txx
