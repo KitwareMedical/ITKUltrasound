@@ -97,9 +97,9 @@ if( USE_FFTW )
     )
   add_test( itkFFTW1DRealToComplexConjugateImageFilterTest
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/itkFFTW1DRealToComplexConjugateImageFilterTest
-    --compare ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaselineRealNotFull.mhd
+    --compare ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaselineRealFull.mhd
 	      itkFFTW1DRealToComplexConjugateImageFilterTestOutputReal.mha
-    --compare ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaselineImaginaryNotFull.mhd
+    --compare ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaselineImaginaryFull.mhd
 	      itkFFTW1DRealToComplexConjugateImageFilterTestOutputImaginary.mha
     itkFFTW1DRealToComplexConjugateImageFilterTest
       ${ITK_DATA_ROOT}/Input/TreeBarkTexture.png
@@ -212,27 +212,34 @@ if( USE_OPENCL )
       )
 endif()
 
-#add_executable( itkAnalyticSignalImageFilterTest
-  #itkAnalyticSignalImageFilterTest.cxx
-  #)
-#target_link_libraries( itkAnalyticSignalImageFilterTest
-  #ITKCommon
-  #ITKIO
-  #ITKAlgorithms
-  #)
-#if( USE_OPENCL )
-  #target_link_libraries( itkAnalyticSignalImageFilterTest
-    #${OPENCL_FFT_LIBRARIES}
-    #${OPENCL_LIBRARIES}
-    #)
-#endif()
-#add_test( itkAnalyticSignalImageFilterTest
-  #${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/itkAnalyticSignalImageFilterTest
-  #--compare ${DATA_BASELINE}/itkAnalyticSignalImageFilterReal.mhd
-    #itkAnalyticSignalImageFilterTestOutputReal.mha
-  #--compare ${DATA_BASELINE}/itkAnalyticSignalImageFilterImaginary.mhd
-    #itkAnalyticSignalImageFilterTestOutputImaginary.mha
-  #itkAnalyticSignalImageFilterTest
-    #${ITK_DATA_ROOT}/Input/TreeBarkTexture.png
-    #itkAnalyticSignalImageFilterTestOutput
-    #)
+add_executable( itkAnalyticSignalImageFilterTest
+  itkAnalyticSignalImageFilterTest.cxx
+  )
+target_link_libraries( itkAnalyticSignalImageFilterTest
+  ITKCommon
+  ITKIO
+  ITKAlgorithms
+  )
+if( USE_OPENCL )
+  target_link_libraries( itkAnalyticSignalImageFilterTest
+    ${OPENCL_FFT_LIBRARIES}
+    ${OPENCL_LIBRARIES}
+    )
+endif()
+add_test( itkAnalyticSignalImageFilterTest
+  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/itkAnalyticSignalImageFilterTest
+  --compare ${DATA_BASELINE}/itkAnalyticSignalImageFilterReal.mhd
+    itkAnalyticSignalImageFilterTestOutputReal.mha
+  --compare ${DATA_BASELINE}/itkAnalyticSignalImageFilterImaginary.mhd
+    itkAnalyticSignalImageFilterTestOutputImaginary.mha
+  itkAnalyticSignalImageFilterTest
+    ${ITK_DATA_ROOT}/Input/TreeBarkTexture.png
+    itkAnalyticSignalImageFilterTestOutput
+    )
+# gdb-pretty http://gitorious.com/gdb-pretty
+add_custom_command (TARGET itkAnalyticSignalImageFilterTest
+  POST_BUILD
+  COMMAND cmake -E copy
+  ${CMAKE_CURRENT_SOURCE_DIR}/itkAnalyticSignalImageFilterTest-gdb.py
+  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
+  )

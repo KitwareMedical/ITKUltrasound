@@ -48,8 +48,8 @@ int itkFFTW1DComplexConjugateToRealImageFilterTest( int argc, char* argv[] )
   JoinFilterType::Pointer joinFilter = JoinFilterType::New();
   WriterType::Pointer writer = WriterType::New();
 
-  readerReal->SetFileName( std::string( argv[1] ) + "RealNotFull.mhd" );
-  readerImag->SetFileName( std::string( argv[1] ) + "ImaginaryNotFull.mhd" );
+  readerReal->SetFileName( std::string( argv[1] ) + "RealFull.mhd" );
+  readerImag->SetFileName( std::string( argv[1] ) + "ImaginaryFull.mhd" );
   joinFilter->SetInput1( readerReal->GetOutput() );
   joinFilter->SetInput2( readerImag->GetOutput() );
   fft->SetInput( joinFilter->GetOutput() );

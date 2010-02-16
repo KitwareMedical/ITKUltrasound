@@ -61,16 +61,18 @@ GenerateData()
       {
       this->m_InputBuffer =
         new typename FFTW1DProxyType::ComplexType[total_inputSize];
-      this->m_OutputBuffer = new TPixel[total_outputSize];
+      this->m_OutputBuffer =
+        new typename FFTW1DProxyType::ComplexType[total_inputSize];
       }
     catch( std::bad_alloc & )
       {
       itkExceptionMacro("Problem allocating memory for internal computations");
       }
     this->m_LastImageSize = total_inputSize;
-    this->m_Plan = FFTW1DProxyType::Plan_dft_c2r_1d(outputSize[this->m_Direction],
+    this->m_Plan = FFTW1DProxyType::Plan_dft_1d(outputSize[this->m_Direction],
                                          this->m_InputBuffer,
                                          this->m_OutputBuffer,
+					 FFTW_BACKWARD,
                                          FFTW_ESTIMATE);
     this->m_PlanComputed = true;
     }
@@ -85,7 +87,7 @@ GenerateData()
   outputIt.SetDirection(this->m_Direction);
 
   typename InputIteratorType::PixelType* inputBufferIt;
-  TPixel* outputBufferIt = this->m_OutputBuffer;
+  typename FFTW1DProxyType::ComplexType* outputBufferIt;
 
   // for every fft line
   for( inputIt.GoToBegin(), outputIt.GoToBegin(); !inputIt.IsAtEnd();
@@ -109,7 +111,7 @@ GenerateData()
     outputIt.GoToBeginOfLine();
     while( !outputIt.IsAtEndOfLine() )
       {
-      outputIt.Set( *outputBufferIt / total_outputSize);
+      outputIt.Set( (*outputBufferIt)[0] / total_outputSize);
       ++outputIt;
       ++outputBufferIt;
       }
@@ -122,7 +124,7 @@ bool
 FFTW1DComplexConjugateToRealImageFilter<TPixel,Dimension>::
 FullMatrix()
 {
-  return false;
+  return true;
 }
 
 } // namespace itk

@@ -71,7 +71,7 @@ private:
   typename FFTW1DProxyType::PlanType m_Plan;
   unsigned int m_LastImageSize;
   typename FFTW1DProxyType::ComplexType *m_InputBuffer;
-  TPixel				*m_OutputBuffer;
+  typename FFTW1DProxyType::ComplexType *m_OutputBuffer;
 
 };
 
