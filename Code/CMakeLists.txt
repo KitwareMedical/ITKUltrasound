@@ -3,10 +3,16 @@ install( FILES
   itkFFT1DRealToComplexConjugateImageFilter.txx
   itkFFT1DComplexConjugateToRealImageFilter.h
   itkFFT1DComplexConjugateToRealImageFilter.txx
-  itkVnl1DRealToComplexConjugateImageFilter.h
-  itkVnl1DRealToComplexConjugateImageFilter.txx
-  itkVnl1DComplexConjugateToRealImageFilter.h
-  itkVnl1DComplexConjugateToRealImageFilter.txx
+  itkFFT1DComplexToComplexImageFilter.h
+  itkFFT1DComplexToComplexImageFilter.txx
+  itkVnlFFT1DRealToComplexConjugateImageFilter.h
+  itkVnlFFT1DRealToComplexConjugateImageFilter.txx
+  itkVnlFFT1DComplexConjugateToRealImageFilter.h
+  itkVnlFFT1DComplexConjugateToRealImageFilter.txx
+  itkVnlFFT1DComplexToComplexImageFilter.h
+  itkVnlFFT1DComplexToComplexImageFilter.txx
+  itkAnalyticSignalImageFilter.h
+  itkAnalyticSignalImageFilter.txx
   DESTINATION ${ITK_INSTALL_PREFIX}/include/InsightToolkit/Algorithms
   )
 
@@ -16,6 +22,8 @@ if( USE_FFTW )
     itkFFTW1DRealToComplexConjugateImageFilter.txx
     itkFFTW1DComplexConjugateToRealImageFilter.h
     itkFFTW1DComplexConjugateToRealImageFilter.txx
+    itkFFTW1DComplexToComplexImageFilter.h
+    itkFFTW1DComplexToComplexImageFilter.txx
   DESTINATION ${ITK_INSTALL_PREFIX}/include/InsightToolkit/Algorithms
   )
 endif()
@@ -26,6 +34,8 @@ if( USE_OPENCL )
     itkOpenCL1DRealToComplexConjugateImageFilter.txx
     itkOpenCL1DComplexConjugateToRealImageFilter.h
     itkOpenCL1DComplexConjugateToRealImageFilter.txx
+    itkOpenCL1DComplexToComplexImageFilter.h
+    itkOpenCL1DComplexToComplexImageFilter.txx
   DESTINATION ${ITK_INSTALL_PREFIX}/include/InsightToolkit/Algorithms
   )
 endif()

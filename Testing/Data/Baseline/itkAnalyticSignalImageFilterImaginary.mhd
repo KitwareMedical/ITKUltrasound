@@ -1,0 +1,5 @@
+ObjectType = Image
+NDims = 2
+DimSize = 100 128
+ElementType = MET_DOUBLE
+ElementDataFile = itkAnalyticSignalImageFilterImaginary.raw
