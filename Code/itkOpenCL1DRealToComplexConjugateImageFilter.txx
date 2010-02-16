@@ -8,7 +8,7 @@
 
 #include "itkIndent.h"
 #include "itkImageLinearConstIteratorWithIndex.h"
-#include "itkImageRegionIterator.h"
+#include "itkImageLinearIteratorWithIndex.h"
 #include "itkMetaDataObject.h"
 
 namespace itk
@@ -19,7 +19,8 @@ OpenCL1DRealToComplexConjugateImageFilter<TPixel, VDimension>
 ::OpenCL1DRealToComplexConjugateImageFilter():
   m_PlanComputed(false),
   m_LastImageSize(0),
-  m_Buffer(0)
+  m_InputBuffer(0),
+  m_OutputBuffer(0)
 {
   try
     {
@@ -99,7 +100,8 @@ GenerateData()
     // we have to compute the plan again
     if(this->m_LastImageSize != totalSize)
       {
-      delete [] this->m_Buffer;
+      delete [] this->m_InputBuffer;
+      delete [] this->m_OutputBuffer;
       clFFT_DestroyPlan(this->m_Plan);
       this->m_PlanComputed = false;
       }
@@ -108,7 +110,9 @@ GenerateData()
     {
     try
       {
-      this->m_Buffer =
+      this->m_InputBuffer =
+        new OpenCLComplexType[totalSize];
+      this->m_OutputBuffer =
         new OpenCLComplexType[totalSize];
       }
     catch( std::bad_alloc & )
@@ -131,13 +135,14 @@ GenerateData()
     }
 
   typedef itk::ImageLinearConstIteratorWithIndex< TInputImageType >  InputIteratorType;
-  typedef itk::ImageRegionIterator< TOutputImageType > OutputIteratorType;
+  typedef itk::ImageLinearIteratorWithIndex< TOutputImageType > OutputIteratorType;
   InputIteratorType inputIt( inputPtr, inputPtr->GetRequestedRegion() );
   OutputIteratorType outputIt( outputPtr, outputPtr->GetRequestedRegion() );
 
   inputIt.SetDirection(this->m_Direction);
+  outputIt.SetDirection(this->m_Direction);
 
-  OpenCLComplexType* bufferIt = this->m_Buffer;
+  OpenCLComplexType* inputBufferIt = this->m_InputBuffer;
   // for every fft line
   for( inputIt.GoToBegin(); !inputIt.IsAtEnd(); inputIt.NextLine() )
     {
@@ -145,9 +150,9 @@ GenerateData()
     inputIt.GoToBeginOfLine();
     while( !inputIt.IsAtEndOfLine() )
       {
-      bufferIt->real = inputIt.Get();
+      inputBufferIt->real = inputIt.Get();
       ++inputIt;
-      ++bufferIt;
+      ++inputBufferIt;
       }
     }
 
@@ -157,7 +162,7 @@ GenerateData()
     cl::Buffer clDataBuffer( *m_clContext,
       CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR,
       totalSize * sizeof( TPixel ) * 2,
-      m_Buffer
+      m_InputBuffer
       );
     cl_command_queue queue = ( *m_clQueue )();
     cl_mem data_in = clDataBuffer();
@@ -169,7 +174,7 @@ GenerateData()
       }
     m_clQueue->finish();
 
-    err = m_clQueue->enqueueReadBuffer( clDataBuffer, CL_TRUE, 0, totalSize * sizeof( TPixel ) * 2, outputPtr->GetBufferPointer() );
+    err = m_clQueue->enqueueReadBuffer( clDataBuffer, CL_TRUE, 0, totalSize * sizeof( TPixel ) * 2, m_OutputBuffer );
     }
   catch( const cl::Error& e )
     {
@@ -178,9 +183,16 @@ GenerateData()
 
   // Follow the convention of the other FFT implementations.
   TPixel normalizationFactor = 2 * inputSize[this->m_Direction] - 1;
-  for( outputIt.GoToBegin(); !outputIt.IsAtEnd(); ++outputIt )
+  OpenCLComplexType* outputBufferIt = this->m_OutputBuffer;
+  for( outputIt.GoToBegin(); !outputIt.IsAtEnd(); outputIt.NextLine() )
     {
-    outputIt.Value() /= normalizationFactor;
+    outputIt.GoToBeginOfLine();
+    while( !outputIt.IsAtEndOfLine() )
+      {
+      outputIt.Set( *reinterpret_cast<typename OutputIteratorType::PixelType*>( outputBufferIt ) / normalizationFactor );
+      ++outputIt;
+      ++outputBufferIt;
+      }
     }
     
 }

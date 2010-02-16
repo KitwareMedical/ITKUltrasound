@@ -57,7 +57,8 @@ protected:
     if(m_PlanComputed)
       {
       clFFT_DestroyPlan(this->m_Plan);
-      delete [] this->m_Buffer;
+      delete [] this->m_InputBuffer;
+      delete [] this->m_OutputBuffer;
       }
     delete m_clQueue;
     delete m_clContext;
@@ -75,7 +76,8 @@ private:
   bool m_PlanComputed;
   clFFT_Plan m_Plan;
   unsigned int m_LastImageSize;
-  OpenCLComplexType *m_Buffer;
+  OpenCLComplexType *m_InputBuffer;
+  OpenCLComplexType *m_OutputBuffer;
   cl::Context *m_clContext;
   cl::CommandQueue *m_clQueue;
 
