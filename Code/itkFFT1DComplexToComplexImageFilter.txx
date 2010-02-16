@@ -53,7 +53,7 @@ FFT1DComplexToComplexImageFilter< TPixel, VDimension >
     if( typeid( TPixel ) == typeid( float ) )
       {
       smartPtr = dynamic_cast<Self *>(
-	FFT1DComplexToComplexImageFilter< float, VDimension >
+	FFTW1DComplexToComplexImageFilter< float, VDimension >
 	::New().GetPointer() );
       }
     }

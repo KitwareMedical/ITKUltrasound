@@ -52,7 +52,7 @@ FFT1DRealToComplexConjugateImageFilter< TPixel, VDimension >
     if( typeid( TPixel ) == typeid( float ) )
       {
       smartPtr = dynamic_cast<Self *>(
-	FFT1DRealToComplexConjugateImageFilter< float, VDimension >
+	FFTW1DRealToComplexConjugateImageFilter< float, VDimension >
 	::New().GetPointer() );
       }
     }
