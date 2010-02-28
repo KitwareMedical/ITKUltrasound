@@ -1,5 +1,3 @@
-include_directories( ${ITK_FFT_EXTENSIONS_SOURCE_DIR}/Code )
-
 set( DATA_INPUT ${ITK_FFT_EXTENSIONS_SOURCE_DIR}/Testing/Data/Input )
 set( DATA_BASELINE ${ITK_FFT_EXTENSIONS_SOURCE_DIR}/Testing/Data/Baseline )
 
