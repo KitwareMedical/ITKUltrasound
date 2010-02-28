@@ -139,10 +139,10 @@ endif()
 
 if( USE_OPENCL )
   target_link_libraries( itkFFT1DImageFilterTest
-    ${OPENCL_FFT_LIBRARIES}
+    OpenCL_FFT
     )
   target_link_libraries( itkFFT1DComplexToComplexImageFilterTest
-    ${OPENCL_FFT_LIBRARIES}
+    OpenCL_FFT
     )
 
   add_executable( itkOpenCL1DRealToComplexConjugateImageFilterTest
@@ -152,7 +152,7 @@ if( USE_OPENCL )
     ITKCommon
     ITKIO
     ITKAlgorithms
-    ${OPENCL_FFT_LIBRARIES}
+    OpenCL_FFT
     ${OPENCL_LIBRARIES}
     )
   # gdb-pretty http://gitorious.com/gdb-pretty
@@ -179,7 +179,7 @@ if( USE_OPENCL )
     ITKCommon
     ITKIO
     ITKAlgorithms
-    ${OPENCL_FFT_LIBRARIES}
+    OpenCL_FFT
     ${OPENCL_LIBRARIES}
     )
   add_test( itkOpenCL1DComplexConjugateToRealImageFilterTest
@@ -197,7 +197,7 @@ if( USE_OPENCL )
     ITKCommon
     ITKIO
     ITKAlgorithms
-    ${OPENCL_FFT_LIBRARIES}
+    OpenCL_FFT
     ${OPENCL_LIBRARIES}
     )
   add_test( itkOpenCL1DComplexToComplexImageFilterTest
@@ -220,7 +220,7 @@ target_link_libraries( itkAnalyticSignalImageFilterTest
   )
 if( USE_OPENCL )
   target_link_libraries( itkAnalyticSignalImageFilterTest
-    ${OPENCL_FFT_LIBRARIES}
+    OpenCL_FFT
     ${OPENCL_LIBRARIES}
     )
 endif()
