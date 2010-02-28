@@ -4,7 +4,7 @@
 #include "itkFFT1DComplexConjugateToRealImageFilter.txx"
 #include "itkFFTW1DComplexConjugateToRealImageFilter.h"
 
-#include "itkFFTWCommon.h"
+#include "itkFFTWCommonExtended.h"
 #include "itkIndent.h"
 #include "itkImageLinearConstIteratorWithIndex.h"
 #include "itkImageLinearIteratorWithIndex.h"

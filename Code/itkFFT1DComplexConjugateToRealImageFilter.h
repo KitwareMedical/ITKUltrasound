@@ -48,15 +48,8 @@ public:
   /** Set the direction in which the filter is to be applied. */
   itkSetMacro(Direction, unsigned int);
 
-  /** Get if the original real image's size was odd. */
-  itkGetConstMacro( ActualDimensionIsOdd, bool );
-
-  /** Set to true if the original real image's size was odd. */
-  itkSetMacro( ActualDimensionIsOdd, bool );
-  itkBooleanMacro( ActualDimensionIsOdd );
-
 protected:
-  FFT1DComplexConjugateToRealImageFilter() : m_Direction(0), m_ActualDimensionIsOdd(false) {}
+  FFT1DComplexConjugateToRealImageFilter() : m_Direction(0) {}
   virtual ~FFT1DComplexConjugateToRealImageFilter() {}
   void PrintSelf(std::ostream& os, Indent indent) const;
 
@@ -78,8 +71,6 @@ protected:
    * this should be in the range [0,ImageDimension-1]. */
   unsigned int m_Direction;
 
-  /** If the original real images Dimension was odd. */
-  bool m_ActualDimensionIsOdd;
 private:
   FFT1DComplexConjugateToRealImageFilter( const Self& );
   void operator=( const Self& );

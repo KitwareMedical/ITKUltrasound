@@ -24,6 +24,7 @@ if( USE_FFTW )
     itkFFTW1DComplexConjugateToRealImageFilter.txx
     itkFFTW1DComplexToComplexImageFilter.h
     itkFFTW1DComplexToComplexImageFilter.txx
+    itkFFTWCommonExtended.h
   DESTINATION ${ITK_INSTALL_PREFIX}/include/InsightToolkit/Algorithms
   )
 endif()

@@ -4,7 +4,7 @@
 #include "itkFFT1DComplexToComplexImageFilter.txx"
 #include "itkFFTW1DComplexToComplexImageFilter.h"
 
-#include "itkFFTWCommon.h"
+#include "itkFFTWCommonExtended.h"
 #include "itkIndent.h"
 #include "itkImageLinearConstIteratorWithIndex.h"
 #include "itkImageLinearIteratorWithIndex.h"

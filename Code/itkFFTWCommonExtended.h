@@ -14,8 +14,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkFFTWCommon_h
-#define __itkFFTWCommon_h
+#ifndef __itkFFTWCommonExtended_h
+#define __itkFFTWCommonExtended_h
 
 #if defined(USE_FFTWF) || defined(USE_FFTWD)
 #include "fftw3.h"
@@ -30,18 +30,18 @@ namespace fftw
  * \brief Wrapper for FFTW API
  */
 template <typename TPixel>
-class  Proxy
+class  ComplexToComplexProxy
 {
   // empty -- only double and float specializations work
 protected:
-  Proxy() {}; 
-  ~Proxy() {};
+  ComplexToComplexProxy() {}; 
+  ~ComplexToComplexProxy() {};
 };
 
 #if defined(USE_FFTWF)
 
 template <>
-class Proxy<float>
+class ComplexToComplexProxy<float>
 {
 public:
   typedef float         PixelType;
@@ -135,7 +135,7 @@ public:
 #endif // USE_FFTWF
 #if defined(USE_FFTWD)
 template <> 
-class Proxy<double>
+class ComplexToComplexProxy<double>
 {
 public:
   typedef double       PixelType;

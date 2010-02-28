@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-#include "itkFFTWCommon.h"
+#include "itkFFTWCommonExtended.h"
 #include "itkIndent.h"
 #include "itkImageLinearConstIteratorWithIndex.h"
 #include "itkImageLinearIteratorWithIndex.h"

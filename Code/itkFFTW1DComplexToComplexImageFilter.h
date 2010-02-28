@@ -2,7 +2,7 @@
 #define __itkFFTW1DComplexToComplexImageFilter_h
 
 #include "itkFFT1DComplexToComplexImageFilter.h"
-#include "itkFFTWCommon.h"
+#include "itkFFTWCommonExtended.h"
 
 
 namespace itk
@@ -34,7 +34,7 @@ public:
    * is trying to use double if only the float FFTW1D version is
    * configured in, or float if only double is configured.
    */
-  typedef typename fftw::Proxy<TPixel> FFTW1DProxyType;
+  typedef typename fftw::ComplexToComplexProxy<TPixel> FFTW1DProxyType;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
