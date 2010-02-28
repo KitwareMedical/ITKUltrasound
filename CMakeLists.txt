@@ -57,13 +57,6 @@ add_subdirectory( Code )
 
 include(CTest)
 if(BUILD_TESTING)
-  find_path( ITK_DATA_ROOT ITKData.readme
-    $ENV{ITK_DATA_ROOT}
-    DOC "Path corresponding to to ${ITK_SOURCE_DIR}/Testing/Data."
-    )
-  if( NOT ITK_DATA_ROOT )
-    message( SEND_ERROR "ITK_DATA_ROOT must be defined to perform tests." )
-  endif()
   enable_testing()
   add_subdirectory( Testing )
 endif(BUILD_TESTING)
