@@ -43,9 +43,9 @@ AnalyticSignalImageFilter < TPixel , Dimension >
   Superclass::GenerateInputRequestedRegion();
 
   // get pointers to the inputs
-  typename TInputImageType::Pointer inputPtr  =
-    const_cast<TInputImageType *> (this->GetInput());
-  typename TOutputImageType::Pointer outputPtr = this->GetOutput();
+  typename InputImageType::Pointer inputPtr  =
+    const_cast<InputImageType *> (this->GetInput());
+  typename OutputImageType::Pointer outputPtr = this->GetOutput();
 
   if ( !inputPtr || !outputPtr )
     {
@@ -53,27 +53,27 @@ AnalyticSignalImageFilter < TPixel , Dimension >
     }
 
   // we need to compute the input requested region (size and start index)
-  typedef const typename TOutputImageType::SizeType& OutputSizeType;
+  typedef const typename OutputImageType::SizeType& OutputSizeType;
   OutputSizeType outputRequestedRegionSize =
     outputPtr->GetRequestedRegion().GetSize();
-  typedef const typename TOutputImageType::IndexType& OutputIndexType;
+  typedef const typename OutputImageType::IndexType& OutputIndexType;
   OutputIndexType outputRequestedRegionStartIndex =
     outputPtr->GetRequestedRegion().GetIndex();
 
   //// the regions other than the fft direction are fine
-  typename TInputImageType::SizeType  inputRequestedRegionSize = outputRequestedRegionSize;
-  typename TInputImageType::IndexType inputRequestedRegionStartIndex = outputRequestedRegionStartIndex;
+  typename InputImageType::SizeType  inputRequestedRegionSize = outputRequestedRegionSize;
+  typename InputImageType::IndexType inputRequestedRegionStartIndex = outputRequestedRegionStartIndex;
 
   // we but need all of the input in the fft direction
   const unsigned int direction = this->GetDirection();
-  const typename TInputImageType::SizeType& inputLargeSize =
+  const typename InputImageType::SizeType& inputLargeSize =
     inputPtr->GetLargestPossibleRegion().GetSize();
   inputRequestedRegionSize[direction] = inputLargeSize[direction];
-  const typename TInputImageType::IndexType& inputLargeIndex =
+  const typename InputImageType::IndexType& inputLargeIndex =
     inputPtr->GetLargestPossibleRegion().GetIndex();
   inputRequestedRegionStartIndex[direction] = inputLargeIndex[direction];
 
-  typename TInputImageType::RegionType inputRequestedRegion;
+  typename InputImageType::RegionType inputRequestedRegion;
   inputRequestedRegion.SetSize( inputRequestedRegionSize );
   inputRequestedRegion.SetIndex( inputRequestedRegionStartIndex );
 
@@ -86,28 +86,28 @@ void
 AnalyticSignalImageFilter < TPixel , Dimension >
 ::EnlargeOutputRequestedRegion(DataObject *output)
 {
-  TOutputImageType* outputPtr = dynamic_cast<TOutputImageType*>( output );
+  OutputImageType* outputPtr = dynamic_cast< OutputImageType* >( output );
 
   // we need to enlarge the region in the fft direction to the
   // largest possible in that direction
-  typedef const typename TOutputImageType::SizeType& ConstOutputSizeType;
+  typedef const typename OutputImageType::SizeType& ConstOutputSizeType;
   ConstOutputSizeType requestedSize =
     outputPtr->GetRequestedRegion().GetSize();
   ConstOutputSizeType outputLargeSize =
     outputPtr->GetLargestPossibleRegion().GetSize();
-  typedef const typename TOutputImageType::IndexType& ConstOutputIndexType;
+  typedef const typename OutputImageType::IndexType& ConstOutputIndexType;
   ConstOutputIndexType requestedIndex =
     outputPtr->GetRequestedRegion().GetIndex();
   ConstOutputIndexType outputLargeIndex =
     outputPtr->GetLargestPossibleRegion().GetIndex();
 
-  typename TOutputImageType::SizeType enlargedSize   = requestedSize;
-  typename TOutputImageType::IndexType enlargedIndex = requestedIndex;
+  typename OutputImageType::SizeType enlargedSize   = requestedSize;
+  typename OutputImageType::IndexType enlargedIndex = requestedIndex;
   const unsigned int direction = this->GetDirection ();
   enlargedSize[direction]  = outputLargeSize[direction];
   enlargedIndex[direction] = outputLargeIndex[direction];
 
-  typename TOutputImageType::RegionType enlargedRegion;
+  typename OutputImageType::RegionType enlargedRegion;
   enlargedRegion.SetSize( enlargedSize );
   enlargedRegion.SetIndex( enlargedIndex );
   outputPtr->SetRequestedRegion( enlargedRegion );
@@ -137,13 +137,13 @@ AnalyticSignalImageFilter < TPixel , Dimension >
 ::SplitRequestedRegion(int i, int num, OutputImageRegionType& splitRegion)
 {
   // Get the output pointer
-  TOutputImageType * outputPtr = this->GetOutput();
-  const typename TOutputImageType::SizeType& requestedRegionSize 
+  OutputImageType * outputPtr = this->GetOutput();
+  const typename OutputImageType::SizeType& requestedRegionSize 
     = outputPtr->GetRequestedRegion().GetSize();
 
   int splitAxis;
-  typename TOutputImageType::IndexType splitIndex;
-  typename TOutputImageType::SizeType splitSize;
+  typename OutputImageType::IndexType splitIndex;
+  typename OutputImageType::SizeType splitSize;
 
   // Initialize the splitRegion to the output requested region
   splitRegion = outputPtr->GetRequestedRegion();
@@ -172,7 +172,7 @@ AnalyticSignalImageFilter < TPixel , Dimension >
     }
 
   // determine the actual number of pieces that will be generated
-  typename TOutputImageType::SizeType::SizeValueType range = requestedRegionSize[splitAxis];
+  typename OutputImageType::SizeType::SizeValueType range = requestedRegionSize[splitAxis];
   int valuesPerThread = (int)::vcl_ceil(range/(double)num);
   int maxThreadIdUsed = (int)::vcl_ceil(range/(double)valuesPerThread) - 1;
 
@@ -217,7 +217,7 @@ AnalyticSignalImageFilter < TPixel , Dimension >
 {
   // get pointers to the input and output
   typename FFTRealToComplexType::OutputImageType::ConstPointer  inputPtr  = m_FFTRealToComplexFilter->GetOutput();
-  typename TOutputImageType::Pointer				outputPtr = this->GetOutput();
+  typename OutputImageType::Pointer				outputPtr = this->GetOutput();
 
   if ( !inputPtr || !outputPtr )
     {
@@ -241,8 +241,8 @@ AnalyticSignalImageFilter < TPixel , Dimension >
     dub_size = (size + 1) / 2 - 1;
     }
 
-  typedef itk::ImageLinearConstIteratorWithIndex< TOutputImageType >  InputIteratorType;
-  typedef itk::ImageLinearIteratorWithIndex< TOutputImageType >      OutputIteratorType;
+  typedef itk::ImageLinearConstIteratorWithIndex< OutputImageType >  InputIteratorType;
+  typedef itk::ImageLinearIteratorWithIndex< OutputImageType >      OutputIteratorType;
   InputIteratorType inputIt( inputPtr, outputRegionForThread );
   OutputIteratorType outputIt( outputPtr, outputRegionForThread );
   inputIt.SetDirection( direction );

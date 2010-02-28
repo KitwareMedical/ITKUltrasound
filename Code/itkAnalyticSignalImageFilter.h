@@ -42,12 +42,12 @@ class ITK_EXPORT AnalyticSignalImageFilter:
 {
 public:
   /** Standard class typedefs. */ 
-  typedef Image<TPixel,VDimension>                    TInputImageType;
-  typedef Image< std::complex< TPixel > , VDimension> TOutputImageType;
-  typedef typename TOutputImageType::RegionType OutputImageRegionType;
+  typedef Image<TPixel,VDimension>                    InputImageType;
+  typedef Image< std::complex< TPixel > , VDimension> OutputImageType;
+  typedef typename OutputImageType::RegionType OutputImageRegionType;
 
   typedef AnalyticSignalImageFilter Self;
-  typedef ImageToImageFilter< TInputImageType, TOutputImageType > Superclass;
+  typedef ImageToImageFilter< InputImageType, OutputImageType > Superclass;
   typedef SmartPointer<Self>                                      Pointer;
   typedef SmartPointer<const Self>                                ConstPointer;
 
