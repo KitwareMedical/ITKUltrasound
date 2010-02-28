@@ -32,10 +32,9 @@ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY
 set( USE_FFTW OFF CACHE BOOL 
   "Use FFTW.  ITK should be compiled with USE_FFTWF and USE_FFTWD."
   )
-set( USE_OPENCL OFF CACHE BOOL
-  "Use OpenCL FFT."
-  )
+set( USE_OPENCL OFF CACHE BOOL "Use OpenCL FFT." )
 if( USE_OPENCL )
+  add_subdirectory( Submodules/OpenCL_FFT )
   set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
     ${CMAKE_CURRENT_SOURCE_DIR}/Submodules/OpenCL_FFT )
   find_package( OpenCL REQUIRED )
