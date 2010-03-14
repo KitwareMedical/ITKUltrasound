@@ -53,7 +53,11 @@ if( USE_OPENCL )
     ${OPENCL_FFT_INCLUDE_DIR}
     )
   add_definitions( -DUSE_OPENCL_FFT )
-  mark_as_advanced( OPENCL_INCLUDE_DIR OPENCL_LIBRARIES OPENCL_CXX_INCLUDE_DIR )
+  mark_as_advanced( OPENCL_INCLUDE_DIR
+    OPENCL_LIBRARIES
+    OPENCL_FFT_LIBRARIES
+    OPENCL_CXX_INCLUDE_DIR
+    )
 endif()
 
 add_subdirectory( Code )
