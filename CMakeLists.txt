@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
-if(COMMAND cmake_policy)
-  cmake_policy(VERSION 2.8)
-endif(COMMAND cmake_policy)
+cmake_policy(VERSION 2.8)
+# If all the submodules are installed and 'git submodule init && git submodule
+# update --recursive' is not called.
+cmake_policy( SET CMP0014 OLD )
 
 
 project( ITK_FFT_EXTENSIONS )
