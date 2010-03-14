@@ -48,7 +48,10 @@ if( USE_OPENCL )
   include(FindPackageHandleStandardArgs)
   find_package_handle_standard_args(OpenCL DEFAULT_MSG
     OPENCL_INCLUDE_DIR OPENCL_CXX_INCLUDE_DIR)
-  include_directories( ${OPENCL_INCLUDE_DIR} ${OPENCL_CXX_INCLUDE_DIR} )
+  include_directories( ${OPENCL_INCLUDE_DIR} 
+    ${OPENCL_CXX_INCLUDE_DIR} 
+    ${OPENCL_FFT_INCLUDE_DIR}
+    )
   add_definitions( -DUSE_OPENCL_FFT )
   mark_as_advanced( OPENCL_INCLUDE_DIR OPENCL_LIBRARIES OPENCL_CXX_INCLUDE_DIR )
 endif()
