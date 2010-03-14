@@ -42,7 +42,8 @@ if( USE_OPENCL )
     ${CMAKE_CURRENT_SOURCE_DIR}/Submodules/OpenCL_FFT )
   # If this is not included in your OpenCL distribution, you can find cl.hpp on
   # the Khronos website.
-  find_path( OPENCL_CXX_INCLUDE_DIR CL/cl.hpp )
+  find_path( OPENCL_CXX_INCLUDE_DIR CL/cl.hpp 
+    ${CMAKE_CURRENT_SOURCE_DIR} )
   find_library( OPENCL_FFT_LIBRARIES OpenCL_FFT )
   include(FindPackageHandleStandardArgs)
   find_package_handle_standard_args(OpenCL DEFAULT_MSG
