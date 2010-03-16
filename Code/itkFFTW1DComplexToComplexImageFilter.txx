@@ -16,7 +16,85 @@ namespace itk
 template <typename TPixel, unsigned int Dimension>
 void
 FFTW1DComplexToComplexImageFilter<TPixel,Dimension>::
-GenerateData()
+DestroyPlans()
+{
+  for( unsigned int i = 0; i < m_PlanArray.size(); i++ )
+    {
+    FFTW1DProxyType::DestroyPlan( m_PlanArray[i]  );
+    delete[] m_InputBufferArray[i];
+    delete[] m_OutputBufferArray[i];
+    this->m_PlanComputed = false;
+    }
+}
+
+template <typename TPixel, unsigned int Dimension>
+void
+FFTW1DComplexToComplexImageFilter<TPixel,Dimension>::
+BeforeThreadedGenerateData()
+{
+  typename OutputImageType::Pointer      outputPtr = this->GetOutput();
+  if ( !outputPtr )
+    {
+    return;
+    }
+  
+  const typename OutputImageType::SizeType& outputSize = outputPtr->GetRequestedRegion().GetSize();
+  const unsigned int lineSize = outputSize[this->m_Direction];
+
+  if( this->m_PlanComputed )
+    {
+    // if the image sizes aren't the same,
+    // we have to comput the plan again
+    if( this->m_LastImageSize != lineSize )
+      {
+      this->DestroyPlans();
+      }
+    }
+  if( ! this->m_PlanComputed )
+    {
+    const int threads = this->GetNumberOfThreads();
+    m_PlanArray.resize( threads );
+    m_InputBufferArray.resize( threads );
+    m_OutputBufferArray.resize( threads );
+    for( int i = 0; i < threads; i++ )
+      {
+      try
+	{
+	m_InputBufferArray[i]  = new typename FFTW1DProxyType::ComplexType[lineSize];
+	m_OutputBufferArray[i] = new typename FFTW1DProxyType::ComplexType[lineSize];
+	}
+      catch( std::bad_alloc & )
+	{
+	itkExceptionMacro("Problem allocating memory for internal computations");
+	}
+      if( this->m_TransformDirection == Superclass::DIRECT )
+	{
+	m_PlanArray[i] = FFTW1DProxyType::Plan_dft_1d( lineSize,
+					 m_InputBufferArray[i],
+					 m_OutputBufferArray[i],
+					 FFTW_FORWARD,
+					 FFTW_ESTIMATE,
+					 threads );
+	}
+      else // m_TransformDirection == INVERSE
+	{
+	m_PlanArray[i] = FFTW1DProxyType::Plan_dft_1d( lineSize,
+					 m_InputBufferArray[i],
+					 m_OutputBufferArray[i],
+					 FFTW_BACKWARD,
+					 FFTW_ESTIMATE,
+					 threads );
+	}
+      }
+    this->m_LastImageSize = lineSize;
+    this->m_PlanComputed = true;
+    }
+}
+
+template <typename TPixel, unsigned int Dimension>
+void
+FFTW1DComplexToComplexImageFilter<TPixel,Dimension>::
+ThreadedGenerateData( const OutputImageRegionType& outputRegion, int threadID )
 {
   // get pointers to the input and output
   typename InputImageType::ConstPointer  inputPtr  = this->GetInput();
@@ -27,71 +105,19 @@ GenerateData()
     return;
     }
 
-  // allocate output buffer memory
-  outputPtr->SetBufferedRegion( outputPtr->GetRequestedRegion() );
-  outputPtr->Allocate();
-
-  const typename InputImageType::SizeType&   inputSize
-    = inputPtr->GetRequestedRegion().GetSize();
-  const typename OutputImageType::SizeType&   outputSize
-    = outputPtr->GetRequestedRegion().GetSize();
-
-  // figure out sizes
-  // size of input and output aren't the same which is handled in the superclass,
-  // sort of.
-  // the input size and output size only differ in the fastest moving dimension
-  unsigned int total_inputSize = inputSize[this->m_Direction];
-  unsigned int total_outputSize = outputSize[this->m_Direction];
-
-  if(this->m_PlanComputed)            // if we've already computed a plan
-    {
-    // if the image sizes aren't the same,
-    // we have to compute the plan again
-    if(this->m_LastImageSize != total_inputSize)
-      {
-      delete [] this->m_InputBuffer;
-      delete [] this->m_OutputBuffer;
-      FFTW1DProxyType::DestroyPlan(this->m_Plan);
-      this->m_PlanComputed = false;
-      }
-    }
-  if(!this->m_PlanComputed)
-    {
-    try
-      {
-      this->m_InputBuffer =
-        new typename FFTW1DProxyType::ComplexType[total_inputSize];
-      this->m_OutputBuffer =
-        new typename FFTW1DProxyType::ComplexType[total_outputSize];
-      }
-    catch( std::bad_alloc & )
-      {
-      itkExceptionMacro("Problem allocating memory for internal computations");
-      }
-    this->m_LastImageSize = total_inputSize;
-    int sign;
-    if( this->m_TransformDirection == Superclass::DIRECT )
-      sign = FFTW_FORWARD;
-    else
-      sign = FFTW_BACKWARD;
-    this->m_Plan = FFTW1DProxyType::Plan_dft_1d(outputSize[this->m_Direction],
-                                         this->m_InputBuffer,
-                                         this->m_OutputBuffer,
-					 sign,
-                                         FFTW_ESTIMATE);
-    this->m_PlanComputed = true;
-    }
+  const typename OutputImageType::SizeType& outputSize = outputPtr->GetRequestedRegion().GetSize();
+  const unsigned int lineSize = outputSize[this->m_Direction];
 
   typedef itk::ImageLinearConstIteratorWithIndex< InputImageType >  InputIteratorType;
   typedef itk::ImageLinearIteratorWithIndex< OutputImageType >      OutputIteratorType;
-  InputIteratorType inputIt( inputPtr, inputPtr->GetRequestedRegion() );
+  InputIteratorType inputIt( inputPtr, outputRegion );
   // the output region should be the same as the input region in the non-fft directions
-  OutputIteratorType outputIt( outputPtr, outputPtr->GetRequestedRegion() );
+  OutputIteratorType outputIt( outputPtr, outputRegion );
 
   inputIt.SetDirection(this->m_Direction);
   outputIt.SetDirection(this->m_Direction);
 
-  typename InputIteratorType::PixelType* inputBufferIt;
+  typename InputIteratorType::PixelType*  inputBufferIt;
   typename OutputIteratorType::PixelType* outputBufferIt;
 
   // for every fft line
@@ -100,7 +126,7 @@ GenerateData()
     {
     // copy the input line into our buffer
     inputIt.GoToBeginOfLine();
-    inputBufferIt = reinterpret_cast< typename InputIteratorType::PixelType* >( this->m_InputBuffer );
+    inputBufferIt = reinterpret_cast< typename InputIteratorType::PixelType* >( m_InputBufferArray[threadID] );
     while( !inputIt.IsAtEndOfLine() )
       {
       *inputBufferIt = inputIt.Get();
@@ -109,12 +135,12 @@ GenerateData()
       }
 
     // do the transform
-    FFTW1DProxyType::Execute(this->m_Plan);
+    FFTW1DProxyType::Execute( m_PlanArray[threadID] );
 
     if( this->m_TransformDirection == Superclass::DIRECT )
       {
       // copy the output from the buffer into our line
-      outputBufferIt = reinterpret_cast< typename OutputIteratorType::PixelType* >( this->m_OutputBuffer );
+      outputBufferIt = reinterpret_cast< typename OutputIteratorType::PixelType* >( m_OutputBufferArray[threadID] );
       outputIt.GoToBeginOfLine();
       while( !outputIt.IsAtEndOfLine() )
 	{
@@ -126,11 +152,11 @@ GenerateData()
     else // m_TransformDirection == INVERSE
       {
       // copy the output from the buffer into our line
-      outputBufferIt = reinterpret_cast< typename OutputIteratorType::PixelType* >( this->m_OutputBuffer );
+      outputBufferIt = reinterpret_cast< typename OutputIteratorType::PixelType* >( m_OutputBufferArray[threadID] );
       outputIt.GoToBeginOfLine();
       while( !outputIt.IsAtEndOfLine() )
 	{
-	outputIt.Set( *outputBufferIt / static_cast< TPixel >( total_outputSize ));
+	outputIt.Set( *outputBufferIt / static_cast< TPixel >( lineSize ));
 	++outputIt;
 	++outputBufferIt;
 	}

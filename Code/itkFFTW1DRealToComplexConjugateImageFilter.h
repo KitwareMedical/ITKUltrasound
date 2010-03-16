@@ -4,11 +4,13 @@
 #include "itkFFT1DRealToComplexConjugateImageFilter.h"
 #include "itkFFTWCommonExtended.h"
 
+#include <vector>
+
 
 namespace itk
 {
-/** /class FFTW1DRealToComplexConjugateImageFilter
- * /brief only do FFT along one dimension using FFTW as a backend.
+/** \class FFTW1DRealToComplexConjugateImageFilter
+ * \brief only do FFT along one dimension using FFTW as a backend.
  *
  * \ingroup
  */
@@ -26,6 +28,7 @@ public:
   /** Standard class typedefs.*/
   typedef typename Superclass::InputImageType InputImageType;
   typedef typename Superclass::OutputImageType OutputImageType;
+  typedef typename OutputImageType::RegionType OutputImageRegionType;
 
   /**
    * the proxy type is a wrapper for the fftw API
@@ -35,6 +38,8 @@ public:
    * configured in, or float if only double is configured.
    */
   typedef typename fftw::ComplexToComplexProxy<TPixel> FFTW1DProxyType;
+  typedef typename std::vector< typename FFTW1DProxyType::PlanType > PlanArrayType;
+  typedef typename std::vector< typename FFTW1DProxyType::ComplexType* > PlanBufferPointerType;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -45,33 +50,32 @@ public:
 
 
 protected:
-  FFTW1DRealToComplexConjugateImageFilter() : m_PlanComputed(false),
-                                            m_LastImageSize(0),
-                                            m_InputBuffer(0),
-                                            m_OutputBuffer(0)
+  FFTW1DRealToComplexConjugateImageFilter(): m_PlanComputed( false ),
+    m_LastImageSize( 0 )
+  {}
+  virtual ~FFTW1DRealToComplexConjugateImageFilter() 
   {
-  }
-  virtual ~FFTW1DRealToComplexConjugateImageFilter()
-  {
-    if(m_PlanComputed)
-      {
-      FFTW1DProxyType::DestroyPlan(this->m_Plan);
-      delete [] this->m_InputBuffer;
-      delete [] this->m_OutputBuffer;
-      }
+  if ( m_PlanComputed )
+    {
+    this->DestroyPlans();
+    }
   }
 
-  virtual void GenerateData();  // generates output from input
+  virtual void BeforeThreadedGenerateData();
+  virtual void ThreadedGenerateData( const OutputImageRegionType&, int threadID );  // generates output from input
 
 private:
   FFTW1DRealToComplexConjugateImageFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
-  bool m_PlanComputed;
-  typename FFTW1DProxyType::PlanType m_Plan;
-  unsigned int m_LastImageSize;
-  typename FFTW1DProxyType::ComplexType *m_InputBuffer;
-  typename FFTW1DProxyType::ComplexType *m_OutputBuffer;
 
+  /** Destroy FFTW Plans and associated buffers. */
+  void DestroyPlans();
+
+  bool m_PlanComputed;
+  PlanArrayType m_PlanArray;
+  unsigned int m_LastImageSize;
+  PlanBufferPointerType m_InputBufferArray;
+  PlanBufferPointerType m_OutputBufferArray;
 };
 
 } // namespace itk
