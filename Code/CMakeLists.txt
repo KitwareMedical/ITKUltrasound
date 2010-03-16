@@ -13,7 +13,7 @@ install( FILES
   itkVnlFFT1DComplexToComplexImageFilter.txx
   itkAnalyticSignalImageFilter.h
   itkAnalyticSignalImageFilter.txx
-  DESTINATION ${ITK_INSTALL_PREFIX}/include/InsightToolkit/Algorithms
+  DESTINATION include/InsightToolkit/Algorithms
   )
 
 if( USE_FFTW )
@@ -25,7 +25,7 @@ if( USE_FFTW )
     itkFFTW1DComplexToComplexImageFilter.h
     itkFFTW1DComplexToComplexImageFilter.txx
     itkFFTWCommonExtended.h
-  DESTINATION ${ITK_INSTALL_PREFIX}/include/InsightToolkit/Algorithms
+  DESTINATION include/InsightToolkit/Algorithms
   )
 endif()
 
@@ -37,7 +37,7 @@ if( USE_OPENCL )
     itkOpenCL1DComplexConjugateToRealImageFilter.txx
     itkOpenCL1DComplexToComplexImageFilter.h
     itkOpenCL1DComplexToComplexImageFilter.txx
-  DESTINATION ${ITK_INSTALL_PREFIX}/include/InsightToolkit/Algorithms
+  DESTINATION include/InsightToolkit/Algorithms
   )
 endif()
 
