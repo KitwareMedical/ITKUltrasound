@@ -33,8 +33,8 @@ public:
   typedef SmartPointer<const Self> ConstPointer;
 
   /** Standard class typedefs.*/
-  typedef typename Superclass::TInputImageType TInputImageType;
-  typedef typename Superclass::TOutputImageType TOutputImageType;
+  typedef typename Superclass::InputImageType InputImageType;
+  typedef typename Superclass::OutputImageType OutputImageType;
 
   struct OpenCLComplexType
   {

@@ -39,9 +39,9 @@ public:
   typedef SmartPointer<Self>                                      Pointer;
   typedef SmartPointer<const Self>                                ConstPointer;
 
-  typedef typename Superclass::TInputImageType  TInputImageType;
-  typedef typename Superclass::TOutputImageType TOutputImageType;
-  typedef typename TOutputImageType::RegionType OutputImageRegionType;
+  typedef typename Superclass::InputImageType  InputImageType;
+  typedef typename Superclass::OutputImageType OutputImageType;
+  typedef typename OutputImageType::RegionType OutputImageRegionType;
 
   typedef typename Superclass::TransformDirectionType TransformDirectionType;
 

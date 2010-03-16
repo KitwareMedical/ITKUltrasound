@@ -19,8 +19,8 @@ FFTW1DComplexConjugateToRealImageFilter<TPixel,Dimension>::
 GenerateData()
 {
   // get pointers to the input and output
-  typename TInputImageType::ConstPointer  inputPtr  = this->GetInput();
-  typename TOutputImageType::Pointer      outputPtr = this->GetOutput();
+  typename InputImageType::ConstPointer  inputPtr  = this->GetInput();
+  typename OutputImageType::Pointer      outputPtr = this->GetOutput();
 
   if ( !inputPtr || !outputPtr )
     {
@@ -31,9 +31,9 @@ GenerateData()
   outputPtr->SetBufferedRegion( outputPtr->GetRequestedRegion() );
   outputPtr->Allocate();
 
-  const typename TInputImageType::SizeType&   inputSize
+  const typename InputImageType::SizeType&   inputSize
     = inputPtr->GetRequestedRegion().GetSize();
-  const typename TOutputImageType::SizeType&   outputSize
+  const typename OutputImageType::SizeType&   outputSize
     = outputPtr->GetRequestedRegion().GetSize();
 
   // figure out sizes
@@ -77,8 +77,8 @@ GenerateData()
     this->m_PlanComputed = true;
     }
 
-  typedef itk::ImageLinearConstIteratorWithIndex< TInputImageType >  InputIteratorType;
-  typedef itk::ImageLinearIteratorWithIndex< TOutputImageType >      OutputIteratorType;
+  typedef itk::ImageLinearConstIteratorWithIndex< InputImageType >  InputIteratorType;
+  typedef itk::ImageLinearIteratorWithIndex< OutputImageType >      OutputIteratorType;
   InputIteratorType inputIt( inputPtr, inputPtr->GetRequestedRegion() );
   // the output region should be the same as the input region in the non-fft directions
   OutputIteratorType outputIt( outputPtr, outputPtr->GetRequestedRegion() );

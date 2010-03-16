@@ -27,17 +27,17 @@ class ITK_EXPORT FFT1DComplexToComplexImageFilter:
 {
 public:
   /** Standard class typedefs. */ 
-  typedef Image< std::complex< TPixel > , VDimension> TInputImageType;
-  typedef Image< std::complex< TPixel > , VDimension> TOutputImageType;
-  typedef typename TOutputImageType::RegionType OutputImageRegionType;
+  typedef Image< std::complex< TPixel > , VDimension> InputImageType;
+  typedef Image< std::complex< TPixel > , VDimension> OutputImageType;
+  typedef typename OutputImageType::RegionType OutputImageRegionType;
 
   typedef FFT1DComplexToComplexImageFilter		  Self;
-  typedef ImageToImageFilter< TInputImageType, TOutputImageType > Superclass;
+  typedef ImageToImageFilter< InputImageType, OutputImageType > Superclass;
   typedef SmartPointer<Self>                                      Pointer;
   typedef SmartPointer<const Self>                                ConstPointer;
 
   itkStaticConstMacro(ImageDimension, unsigned int,
-                      TInputImageType::ImageDimension );
+                      InputImageType::ImageDimension );
 
   itkTypeMacro( FFT1DComplexToComplexImageFilter, ImageToImageFilter );
 

@@ -24,8 +24,8 @@ public:
   typedef SmartPointer<const Self> ConstPointer;
 
   /** Standard class typedefs.*/
-  typedef typename Superclass::TInputImageType TInputImageType;
-  typedef typename Superclass::TOutputImageType TOutputImageType;
+  typedef typename Superclass::InputImageType InputImageType;
+  typedef typename Superclass::OutputImageType OutputImageType;
 
   /**
    * the proxy type is a wrapper for the fftw API

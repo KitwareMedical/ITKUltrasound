@@ -37,21 +37,21 @@ VnlFFT1DComplexToComplexImageFilter<TPixel,VDimension>::
 ThreadedGenerateData( const OutputImageRegionType& outputRegion, int threadID )
 {
   // get pointers to the input and output
-  typename Superclass::TInputImageType::ConstPointer  inputPtr  = this->GetInput();
-  typename Superclass::TOutputImageType::Pointer      outputPtr = this->GetOutput();
+  typename Superclass::InputImageType::ConstPointer  inputPtr  = this->GetInput();
+  typename Superclass::OutputImageType::Pointer      outputPtr = this->GetOutput();
 
   if ( !inputPtr || !outputPtr )
     {
     return;
     }
   
-  const typename Superclass::TInputImageType::SizeType&   inputSize
+  const typename Superclass::InputImageType::SizeType&   inputSize
     = inputPtr->GetRequestedRegion().GetSize();
 
   unsigned int vec_size = inputSize[this->m_Direction];
 
-  typedef itk::ImageLinearConstIteratorWithIndex< TInputImageType >  InputIteratorType;
-  typedef itk::ImageLinearIteratorWithIndex< TOutputImageType >      OutputIteratorType;
+  typedef itk::ImageLinearConstIteratorWithIndex< InputImageType >  InputIteratorType;
+  typedef itk::ImageLinearIteratorWithIndex< OutputImageType >      OutputIteratorType;
   InputIteratorType inputIt( inputPtr, outputRegion );
   OutputIteratorType outputIt( outputPtr, outputRegion );
 

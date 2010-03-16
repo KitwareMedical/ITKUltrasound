@@ -21,17 +21,17 @@ class ITK_EXPORT FFT1DComplexConjugateToRealImageFilter:
 {
 public:
   /** Standard class typedefs. */ 
-  typedef Image< std::complex< TPixel > , VDimension> TInputImageType;
-  typedef Image<TPixel,VDimension>                    TOutputImageType;
-  typedef typename TOutputImageType::RegionType OutputImageRegionType;
+  typedef Image< std::complex< TPixel > , VDimension> InputImageType;
+  typedef Image<TPixel,VDimension>                    OutputImageType;
+  typedef typename OutputImageType::RegionType OutputImageRegionType;
 
   typedef FFT1DComplexConjugateToRealImageFilter		  Self;
-  typedef ImageToImageFilter< TInputImageType, TOutputImageType > Superclass;
+  typedef ImageToImageFilter< InputImageType, OutputImageType > Superclass;
   typedef SmartPointer<Self>                                      Pointer;
   typedef SmartPointer<const Self>                                ConstPointer;
 
   itkStaticConstMacro(ImageDimension, unsigned int,
-                      TInputImageType::ImageDimension );
+                      InputImageType::ImageDimension );
 
   itkTypeMacro( FFT1DComplexConjugateToRealImageFilter, ImageToImageFilter );
 
