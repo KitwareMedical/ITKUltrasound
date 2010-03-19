@@ -33,9 +33,16 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY
   ${ITK_FFT_EXTENSIONS_BINARY_DIR}/bin )
 
-set( USE_FFTW OFF CACHE BOOL 
-  "Use FFTW.  ITK should be compiled with USE_FFTWF and USE_FFTWD."
+file( STRINGS "${ITK_LIBRARY_DEPENDS_FILE}" ITK_BUILT_WITH_FFTW REGEX "fftw" )
+if( "${ITK_BUILT_WITH_FFTW}" MATCHES "fftw" )
+set( USE_FFTW ON CACHE BOOL
+  "Use FFTW.  ITK should be compiled with USE_FFTWF and USE_FFTWD." FORCE
   )
+else()
+set( USE_FFTW OFF CACHE BOOL 
+  "Use FFTW.  ITK should be compiled with USE_FFTWF and USE_FFTWD." FORCE
+  )
+endif()
 set( USE_OPENCL OFF CACHE BOOL "Use OpenCL FFT." )
 if( USE_OPENCL )
   add_subdirectory( Submodules/OpenCL_FFT )
