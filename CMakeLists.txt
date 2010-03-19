@@ -13,6 +13,9 @@ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/CMake )
 
 find_package( ITK REQUIRED )
 include( ${ITK_USE_FILE} )
+if( NOT ITK_USE_REVIEW )
+  message( SEND_ERROR "ITK must be configured with ITK_USE_REVIEW set to ON." )
+endif()
 
 
 if(CMAKE_COMPILER_IS_GNUCXX)
