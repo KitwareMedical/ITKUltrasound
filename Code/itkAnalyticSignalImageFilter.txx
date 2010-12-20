@@ -206,6 +206,7 @@ AnalyticSignalImageFilter < TPixel , Dimension >
   m_FFTRealToComplexFilter->SetInput( this->GetInput() );
   m_FFTRealToComplexFilter->GetOutput()->SetRequestedRegion( this->GetOutput()->GetRequestedRegion() );
   m_FFTRealToComplexFilter->GetOutput()->SetLargestPossibleRegion( this->GetOutput()->GetLargestPossibleRegion() );
+  m_FFTRealToComplexFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
   m_FFTRealToComplexFilter->Update ();
 }
 
@@ -290,6 +291,7 @@ AnalyticSignalImageFilter < TPixel , Dimension >
   m_FFTComplexToComplexFilter->SetInput( this->GetOutput() );
   m_FFTComplexToComplexFilter->GetOutput()->SetRequestedRegion( this->GetOutput()->GetRequestedRegion() );
   m_FFTComplexToComplexFilter->GetOutput()->SetLargestPossibleRegion( this->GetOutput()->GetLargestPossibleRegion() );
+  m_FFTComplexToComplexFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
   m_FFTComplexToComplexFilter->Update ();
   this->GraftOutput( m_FFTComplexToComplexFilter->GetOutput() );
 }
