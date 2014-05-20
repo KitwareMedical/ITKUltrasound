@@ -13,8 +13,8 @@ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/CMake )
 
 find_package( ITK REQUIRED )
 include( ${ITK_USE_FILE} )
-if( NOT ITK_USE_REVIEW )
-  message( SEND_ERROR "ITK must be configured with ITK_USE_REVIEW set to ON." )
+if( NOT ITK_USE_REVIEW AND NOT ITKReview_LOADED )
+  message( SEND_ERROR "ITK must be configured with Module_ITKReview set to ON." )
 endif()
 
 
