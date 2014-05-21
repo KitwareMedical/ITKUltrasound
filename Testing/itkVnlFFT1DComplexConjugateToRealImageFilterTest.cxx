@@ -4,18 +4,11 @@
  * @date 2010-02-02
  */
 
-#include "itkTestMain.h"
-
-void RegisterTests()
-{
-  REGISTER_TEST( itkVnlFFT1DComplexConjugateToRealImageFilterTest );
-}
-
 #include <complex>
 #include <iostream>
 #include <string>
 
-#include "itkRealAndImaginaryToComplexImageFilter.h"
+#include "itkComposeImageFilter.h"
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 
@@ -34,13 +27,13 @@ int itkVnlFFT1DComplexConjugateToRealImageFilterTest( int argc, char* argv[] )
   typedef double PixelType;
   const unsigned int Dimension = 2;
 
-  typedef itk::Image< PixelType, Dimension > ImageType;
-  typedef itk::Image< std::complex< PixelType >, Dimension > ComplexImageType;
+  typedef itk::Image< PixelType, Dimension >                                     ImageType;
+  typedef itk::Image< std::complex< PixelType >, Dimension >                     ComplexImageType;
 
-  typedef itk::ImageFileReader< ImageType > ReaderType;
+  typedef itk::ImageFileReader< ImageType >                                      ReaderType;
   typedef itk::VnlFFT1DComplexConjugateToRealImageFilter< PixelType, Dimension > FFTType;
-  typedef itk::RealAndImaginaryToComplexImageFilter< PixelType, PixelType, PixelType, Dimension > JoinFilterType;
-  typedef itk::ImageFileWriter< ImageType > WriterType;
+  typedef itk::ComposeImageFilter< ImageType, ComplexImageType >                 JoinFilterType;
+  typedef itk::ImageFileWriter< ImageType >                                      WriterType;
 
   ReaderType::Pointer readerReal = ReaderType::New();
   ReaderType::Pointer readerImag = ReaderType::New();

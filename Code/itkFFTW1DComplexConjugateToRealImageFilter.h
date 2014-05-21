@@ -61,7 +61,7 @@ protected:
   }
 
   virtual void BeforeThreadedGenerateData();
-  virtual void ThreadedGenerateData( const OutputImageRegionType&, int threadID );  // generates output from input
+  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID );  // generates output from input
 
 private:
   FFTW1DComplexConjugateToRealImageFilter(const Self&); //purposely not implemented

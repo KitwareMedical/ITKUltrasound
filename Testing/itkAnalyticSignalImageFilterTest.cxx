@@ -4,13 +4,6 @@
  * @date 2010-02-11
  */
 
-#include "itkTestMain.h"
-
-void RegisterTests()
-{
-  REGISTER_TEST( itkAnalyticSignalImageFilterTest );
-}
-
 #include <complex>
 #include <iostream>
 #include <string>

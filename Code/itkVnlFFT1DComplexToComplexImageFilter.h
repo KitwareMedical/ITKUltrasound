@@ -53,7 +53,7 @@ public:
                FFT1DComplexToComplexImageFilter);
 
 protected:
-  virtual void ThreadedGenerateData( const OutputImageRegionType&, int threadID );  // generates output from input
+  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID );  // generates output from input
 
   VnlFFT1DComplexToComplexImageFilter() { }
   ~VnlFFT1DComplexToComplexImageFilter() { }

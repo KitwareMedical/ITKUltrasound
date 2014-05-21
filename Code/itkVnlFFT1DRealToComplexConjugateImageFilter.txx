@@ -31,12 +31,13 @@ PURPOSE.  See the above copyright notices for more information.
 namespace itk
 {
 
+
 template <class TPixel, unsigned int VDimension>
-bool VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>::
-Legaldim(int n)
+bool VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>
+::Legaldim(int n)
 {
   int ifac = 2;
-  for (int l = 1; l <= 3; l++) 
+  for (int l = 1; l <= 3; l++)
     {
     for(; n % ifac == 0;)
       {
@@ -50,8 +51,8 @@ Legaldim(int n)
 
 template <class TPixel, unsigned int VDimension>
 void
-VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>::
-ThreadedGenerateData( const OutputImageRegionType& outputRegion, int threadID )
+VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>
+::ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType threadID )
 {
   // get pointers to the input and output
   typename Superclass::InputImageType::ConstPointer  inputPtr  = this->GetInput();
@@ -61,12 +62,14 @@ ThreadedGenerateData( const OutputImageRegionType& outputRegion, int threadID )
     {
     return;
     }
-  
+
   const typename Superclass::InputImageType::SizeType&   inputSize
     = inputPtr->GetRequestedRegion().GetSize();
 
-  unsigned int vec_size = inputSize[this->m_Direction];
-  if( !this->Legaldim(vec_size) )
+  std::cout << "***direction: " << this->m_Direction << std::endl;
+  unsigned int vecSize = inputSize[this->m_Direction];
+  std::cout << "***vecSize: " << vecSize << std::endl;
+  if( !this->Legaldim(vecSize) )
     {
     ExceptionObject exception(__FILE__, __LINE__);
     exception.SetDescription("Illegal Array DIM for FFT");
@@ -83,11 +86,11 @@ ThreadedGenerateData( const OutputImageRegionType& outputRegion, int threadID )
   inputIt.SetDirection(this->m_Direction);
   outputIt.SetDirection(this->m_Direction);
 
-  vnl_vector< vcl_complex<TPixel> > inputBuffer( vec_size );
+  vnl_vector< vcl_complex<TPixel> > inputBuffer( vecSize );
   typename vnl_vector< vcl_complex< TPixel > >::iterator inputBufferIt = inputBuffer.begin();
     // fft is done in-place
   typename vnl_vector< vcl_complex< TPixel > >::iterator outputBufferIt = inputBuffer.begin();
-  vnl_fft_1d<TPixel> v1d(vec_size);
+  vnl_fft_1d<TPixel> v1d(vecSize);
 
   // for every fft line
   for( inputIt.GoToBegin(), outputIt.GoToBegin(); !inputIt.IsAtEnd();

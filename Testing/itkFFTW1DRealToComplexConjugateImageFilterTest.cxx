@@ -5,13 +5,6 @@
  * @date 2010-02-15
  */
 
-#include "itkTestMain.h"
-
-void RegisterTests()
-{
-  REGISTER_TEST( itkFFTW1DRealToComplexConjugateImageFilterTest );
-}
-
 #include <complex>
 #include <iostream>
 #include <string>

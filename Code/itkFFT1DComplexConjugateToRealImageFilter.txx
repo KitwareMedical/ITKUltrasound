@@ -68,6 +68,34 @@ FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
   return smartPtr;
 }
 
+
+template < class TPixel, unsigned int VDimension >
+FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
+::FFT1DComplexConjugateToRealImageFilter():
+  m_Direction( 0 )
+{
+  this->m_ImageRegionSplitter = ImageRegionSplitterDirection::New();
+}
+
+
+template <class TPixel, unsigned int VDimension>
+const ImageRegionSplitterBase*
+FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
+::GetImageRegionSplitter(void) const
+{
+  return this->m_ImageRegionSplitter.GetPointer();
+}
+
+
+template<class TPixel, unsigned int VDimension >
+void
+FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
+::BeforeThreadedGenerateData()
+{
+  this->m_ImageRegionSplitter->SetDirection( this->GetDirection() );
+}
+
+
 template < class TPixel , unsigned int Dimension >
 void
 FFT1DComplexConjugateToRealImageFilter < TPixel , Dimension >
@@ -156,75 +184,6 @@ FFT1DComplexConjugateToRealImageFilter < TPixel , Dimension >
 
   os << indent << "Direction: " << m_Direction << std::endl;
 }
-
-
-template < class TPixel , unsigned int Dimension >
-int 
-FFT1DComplexConjugateToRealImageFilter < TPixel , Dimension >
-::SplitRequestedRegion(int i, int num, OutputImageRegionType& splitRegion)
-{
-  // Get the output pointer
-  OutputImageType * outputPtr = this->GetOutput();
-  const typename OutputImageType::SizeType& requestedRegionSize 
-    = outputPtr->GetRequestedRegion().GetSize();
-
-  int splitAxis;
-  typename OutputImageType::IndexType splitIndex;
-  typename OutputImageType::SizeType splitSize;
-
-  // Initialize the splitRegion to the output requested region
-  splitRegion = outputPtr->GetRequestedRegion();
-  splitIndex = splitRegion.GetIndex();
-  splitSize = splitRegion.GetSize();
-
-  // split on the outermost dimension available
-  splitAxis = outputPtr->GetImageDimension() - 1;
-  while (requestedRegionSize[splitAxis] == 1)
-    {
-    --splitAxis;
-    if (splitAxis < 0)
-      { // cannot split
-      itkDebugMacro("  Cannot Split");
-      return 1;
-      }
-    }
-  if( splitAxis == static_cast< int >( this->m_Direction ) )
-    {
-    --splitAxis;
-    if (splitAxis < 0)
-      { // cannot split
-      itkDebugMacro("  Cannot Split");
-      return 1;
-      }
-    }
-
-  // determine the actual number of pieces that will be generated
-  typename OutputImageType::SizeType::SizeValueType range = requestedRegionSize[splitAxis];
-  int valuesPerThread = (int)::vcl_ceil(range/(double)num);
-  int maxThreadIdUsed = (int)::vcl_ceil(range/(double)valuesPerThread) - 1;
-
-  // Split the region
-  if (i < maxThreadIdUsed)
-    {
-    splitIndex[splitAxis] += i*valuesPerThread;
-    splitSize[splitAxis] = valuesPerThread;
-    }
-  if (i == maxThreadIdUsed)
-    {
-    splitIndex[splitAxis] += i*valuesPerThread;
-    // last thread needs to process the "rest" dimension being split
-    splitSize[splitAxis] = splitSize[splitAxis] - i*valuesPerThread;
-    }
-  
-  // set the split region ivars
-  splitRegion.SetIndex( splitIndex );
-  splitRegion.SetSize( splitSize );
-
-  itkDebugMacro("  Split Piece: " << splitRegion );
-
-  return maxThreadIdUsed + 1;
-}
-
 
 } // end namespace itk
 

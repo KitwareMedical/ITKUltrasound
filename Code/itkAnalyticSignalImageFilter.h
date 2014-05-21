@@ -5,14 +5,14 @@
 
 #include "itkFFT1DComplexToComplexImageFilter.h"
 #include "itkFFT1DRealToComplexConjugateImageFilter.h"
-#include "itkImage.h"
 #include "itkImageToImageFilter.h"
+#include "itkImageRegionSplitterDirection.h"
 
 namespace itk
 {
 /** @class itkAnalyticSignalImageFilter
  * @brief Generates the analytic signal from one direction of an image.
- * 
+ *
  * This filter generates the complex valued analytic signal along one direction
  * of an image.  This input is a real valued image, and the output is a complex
  * image.
@@ -41,15 +41,15 @@ class ITK_EXPORT AnalyticSignalImageFilter:
 			     Image< std::complex< TPixel >, VDimension > >
 {
 public:
-  /** Standard class typedefs. */ 
-  typedef Image<TPixel,VDimension>                    InputImageType;
-  typedef Image< std::complex< TPixel > , VDimension> OutputImageType;
-  typedef typename OutputImageType::RegionType OutputImageRegionType;
+  /** Standard class typedefs. */
+  typedef Image<TPixel,VDimension>                              InputImageType;
+  typedef Image< std::complex< TPixel > , VDimension>           OutputImageType;
+  typedef typename OutputImageType::RegionType                  OutputImageRegionType;
 
-  typedef AnalyticSignalImageFilter Self;
+  typedef AnalyticSignalImageFilter                             Self;
   typedef ImageToImageFilter< InputImageType, OutputImageType > Superclass;
-  typedef SmartPointer<Self>                                      Pointer;
-  typedef SmartPointer<const Self>                                ConstPointer;
+  typedef SmartPointer<Self>                                    Pointer;
+  typedef SmartPointer<const Self>                              ConstPointer;
 
   itkTypeMacro( AnalyticSignalImageFilter, ImageToImageFilter );
   itkNewMacro( Self );
@@ -77,22 +77,11 @@ protected:
   void PrintSelf(std::ostream& os, Indent indent) const;
 
   // These behave like their analogs in FFT1DRealToComplexConjugateImageFilter.
-  virtual void GenerateInputRequestedRegion(); 
-  virtual void EnlargeOutputRequestedRegion(DataObject *output); 
-
-  /** Split the output's RequestedRegion into "num" pieces, returning
-   * region "i" as "splitRegion". This method is called "num" times. The
-   * regions must not overlap. The method returns the number of pieces that
-   * the routine is capable of splitting the output RequestedRegion,
-   * i.e. return value is less than or equal to "num". 
-   *
-   * This method is reimplemented from itk::ImageSource to ensure that the
-   * region does not get split along the direction of the filter. */
-  virtual
-  int SplitRequestedRegion(int i, int num, OutputImageRegionType& splitRegion);
+  virtual void GenerateInputRequestedRegion();
+  virtual void EnlargeOutputRequestedRegion(DataObject *output);
 
   virtual void BeforeThreadedGenerateData ();
-  virtual void ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread, int threadId );
+  virtual void ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread, ThreadIdType threadId );
   virtual void AfterThreadedGenerateData ();
 
   typedef FFT1DRealToComplexConjugateImageFilter< TPixel, VDimension > FFTRealToComplexType;
@@ -101,9 +90,15 @@ protected:
   typename FFTRealToComplexType::Pointer m_FFTRealToComplexFilter;
   typename FFTComplexToComplexType::Pointer m_FFTComplexToComplexFilter;
 
+  /** Override to return a splitter that does not split along the direction we
+   * are performing the transform. */
+  virtual const ImageRegionSplitterBase* GetImageRegionSplitter(void) const;
+
 private:
-  AnalyticSignalImageFilter( const Self& );
-  void operator=( const Self& );
+  AnalyticSignalImageFilter( const Self& ); // purposely not implemented
+  void operator=( const Self& ); // purposely not implemented
+
+  ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;
 };
 }
 

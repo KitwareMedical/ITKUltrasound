@@ -5,6 +5,7 @@
 
 #include "itkImage.h"
 #include "itkImageToImageFilter.h"
+#include "itkImageRegionSplitterDirection.h"
 
 namespace itk
 {
@@ -66,23 +67,12 @@ public:
   itkSetMacro(Direction, unsigned int);
 
 protected:
-  FFT1DComplexToComplexImageFilter() : m_Direction(0), m_TransformDirection( DIRECT ) {}
+  FFT1DComplexToComplexImageFilter();
   virtual ~FFT1DComplexToComplexImageFilter() {}
   void PrintSelf(std::ostream& os, Indent indent) const;
 
-  virtual void GenerateInputRequestedRegion(); 
-  virtual void EnlargeOutputRequestedRegion(DataObject *output); 
-
-  /** Split the output's RequestedRegion into "num" pieces, returning
-   * region "i" as "splitRegion". This method is called "num" times. The
-   * regions must not overlap. The method returns the number of pieces that
-   * the routine is capable of splitting the output RequestedRegion,
-   * i.e. return value is less than or equal to "num". 
-   *
-   * This method is reimplemented from itk::ImageSource to ensure that the
-   * region does not get split along the direction of the transform. */
-  virtual
-  int SplitRequestedRegion(int i, int num, OutputImageRegionType& splitRegion);
+  virtual void GenerateInputRequestedRegion();
+  virtual void EnlargeOutputRequestedRegion(DataObject *output);
 
   /** Direction in which the filter is to be applied
    * this should be in the range [0,ImageDimension-1]. */
@@ -90,9 +80,18 @@ protected:
 
   /** Direction to apply the transform (forward/inverse). */
   TransformDirectionType m_TransformDirection;
+
+  virtual void BeforeThreadedGenerateData();
+
+  /** Override to return a splitter that does not split along the direction we
+   * are performing the transform. */
+  virtual const ImageRegionSplitterBase* GetImageRegionSplitter(void) const;
+
 private:
   FFT1DComplexToComplexImageFilter( const Self& );
   void operator=( const Self& );
+
+  ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;
 };
 }
 

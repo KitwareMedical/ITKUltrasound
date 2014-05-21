@@ -32,6 +32,8 @@ AnalyticSignalImageFilter< TPixel, VDimension >
   m_FFTComplexToComplexFilter->SetTransformDirection( FFTComplexToComplexType::INVERSE );
 
   this->SetDirection( 0 );
+
+  this->m_ImageRegionSplitter = ImageRegionSplitterDirection::New();
 }
 
 template < class TPixel , unsigned int Dimension >
@@ -131,78 +133,22 @@ AnalyticSignalImageFilter < TPixel , Dimension >
 }
 
 
-template < class TPixel , unsigned int Dimension >
-int 
-AnalyticSignalImageFilter < TPixel , Dimension >
-::SplitRequestedRegion(int i, int num, OutputImageRegionType& splitRegion)
+template <class TPixel, unsigned int VDimension>
+const ImageRegionSplitterBase*
+AnalyticSignalImageFilter< TPixel, VDimension >
+::GetImageRegionSplitter(void) const
 {
-  // Get the output pointer
-  OutputImageType * outputPtr = this->GetOutput();
-  const typename OutputImageType::SizeType& requestedRegionSize 
-    = outputPtr->GetRequestedRegion().GetSize();
-
-  int splitAxis;
-  typename OutputImageType::IndexType splitIndex;
-  typename OutputImageType::SizeType splitSize;
-
-  // Initialize the splitRegion to the output requested region
-  splitRegion = outputPtr->GetRequestedRegion();
-  splitIndex = splitRegion.GetIndex();
-  splitSize = splitRegion.GetSize();
-
-  // split on the outermost dimension available
-  splitAxis = outputPtr->GetImageDimension() - 1;
-  while (requestedRegionSize[splitAxis] == 1)
-    {
-    --splitAxis;
-    if (splitAxis < 0)
-      { // cannot split
-      itkDebugMacro("  Cannot Split");
-      return 1;
-      }
-    }
-  if( splitAxis == static_cast< int >( this->GetDirection() ) )
-    {
-    --splitAxis;
-    if (splitAxis < 0)
-      { // cannot split
-      itkDebugMacro("  Cannot Split");
-      return 1;
-      }
-    }
-
-  // determine the actual number of pieces that will be generated
-  typename OutputImageType::SizeType::SizeValueType range = requestedRegionSize[splitAxis];
-  int valuesPerThread = (int)::vcl_ceil(range/(double)num);
-  int maxThreadIdUsed = (int)::vcl_ceil(range/(double)valuesPerThread) - 1;
-
-  // Split the region
-  if (i < maxThreadIdUsed)
-    {
-    splitIndex[splitAxis] += i*valuesPerThread;
-    splitSize[splitAxis] = valuesPerThread;
-    }
-  if (i == maxThreadIdUsed)
-    {
-    splitIndex[splitAxis] += i*valuesPerThread;
-    // last thread needs to process the "rest" dimension being split
-    splitSize[splitAxis] = splitSize[splitAxis] - i*valuesPerThread;
-    }
-  
-  // set the split region ivars
-  splitRegion.SetIndex( splitIndex );
-  splitRegion.SetSize( splitSize );
-
-  itkDebugMacro("  Split Piece: " << splitRegion );
-
-  return maxThreadIdUsed + 1;
+  return this->m_ImageRegionSplitter.GetPointer();
 }
 
+
 template < class TPixel , unsigned int Dimension >
-void 
+void
 AnalyticSignalImageFilter < TPixel , Dimension >
 ::BeforeThreadedGenerateData()
 {
+  this->m_ImageRegionSplitter->SetDirection( this->GetDirection() );
+
   m_FFTRealToComplexFilter->SetInput( this->GetInput() );
   m_FFTRealToComplexFilter->GetOutput()->SetRequestedRegion( this->GetOutput()->GetRequestedRegion() );
   m_FFTRealToComplexFilter->GetOutput()->SetLargestPossibleRegion( this->GetOutput()->GetLargestPossibleRegion() );
@@ -211,10 +157,10 @@ AnalyticSignalImageFilter < TPixel , Dimension >
 }
 
 template < class TPixel , unsigned int Dimension >
-void 
+void
 AnalyticSignalImageFilter < TPixel , Dimension >
 ::ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread,
-  int threadId )
+  ThreadIdType threadId )
 {
   // get pointers to the input and output
   typename FFTRealToComplexType::OutputImageType::ConstPointer  inputPtr  = m_FFTRealToComplexFilter->GetOutput();

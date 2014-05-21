@@ -24,7 +24,7 @@ namespace itk
 {
 
 /** \class VnlFFT1DRealToComplexConjugateImageFilter
- * 
+ *
  * \brief Perform the FFT along one dimension of an image using Vnl as a
  * backend.
  */
@@ -33,11 +33,11 @@ class VnlFFT1DRealToComplexConjugateImageFilter :
     public FFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>
 {
 public:
-  /** Standard class typedefs. */ 
+  /** Standard class typedefs. */
   typedef VnlFFT1DRealToComplexConjugateImageFilter                 Self;
   typedef FFT1DRealToComplexConjugateImageFilter<TPixel,VDimension> Superclass;
-  typedef SmartPointer<Self>                                      Pointer;
-  typedef SmartPointer<const Self>                                ConstPointer;
+  typedef SmartPointer<Self>                                        Pointer;
+  typedef SmartPointer<const Self>                                  ConstPointer;
 
   typedef typename Superclass::InputImageType  InputImageType;
   typedef typename Superclass::OutputImageType OutputImageType;
@@ -51,12 +51,13 @@ public:
                FFT1DRealToComplexConjugateImageFilter);
 
 protected:
-  virtual void ThreadedGenerateData( const OutputImageRegionType&, int threadID );  // generates output from input
+  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID );
 
   VnlFFT1DRealToComplexConjugateImageFilter() { }
   ~VnlFFT1DRealToComplexConjugateImageFilter() { }
+
   ///** Method to check if an array dimension is legal for PFA FFT */
-  bool Legaldim(int n); 
+  bool Legaldim(int n);
 
 private:
   VnlFFT1DRealToComplexConjugateImageFilter(const Self&); //purposely not implemented

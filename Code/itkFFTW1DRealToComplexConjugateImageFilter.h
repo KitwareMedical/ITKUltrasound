@@ -53,7 +53,7 @@ protected:
   FFTW1DRealToComplexConjugateImageFilter(): m_PlanComputed( false ),
     m_LastImageSize( 0 )
   {}
-  virtual ~FFTW1DRealToComplexConjugateImageFilter() 
+  virtual ~FFTW1DRealToComplexConjugateImageFilter()
   {
   if ( m_PlanComputed )
     {
@@ -62,7 +62,7 @@ protected:
   }
 
   virtual void BeforeThreadedGenerateData();
-  virtual void ThreadedGenerateData( const OutputImageRegionType&, int threadID );  // generates output from input
+  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID );  // generates output from input
 
 private:
   FFTW1DRealToComplexConjugateImageFilter(const Self&); //purposely not implemented

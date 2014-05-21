@@ -51,7 +51,7 @@ public:
                FFT1DComplexConjugateToRealImageFilter);
 
 protected:
-  virtual void ThreadedGenerateData( const OutputImageRegionType&, int threadID );  // generates output from input
+  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID );  // generates output from input
 
   VnlFFT1DComplexConjugateToRealImageFilter() { }
   ~VnlFFT1DComplexConjugateToRealImageFilter() { }

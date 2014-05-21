@@ -10,6 +10,8 @@
 #include "itkImageLinearIteratorWithIndex.h"
 #include "itkMetaDataObject.h"
 
+#include "fftw3.h"
+
 namespace itk
 {
 
@@ -82,7 +84,7 @@ BeforeThreadedGenerateData()
 template <typename TPixel, unsigned int Dimension>
 void
 FFTW1DRealToComplexConjugateImageFilter<TPixel,Dimension>::
-ThreadedGenerateData( const OutputImageRegionType& outputRegion, int threadID )
+ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType threadID )
 {
   // get pointers to the input and output
   typename InputImageType::ConstPointer  inputPtr  = this->GetInput();

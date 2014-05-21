@@ -94,7 +94,7 @@ BeforeThreadedGenerateData()
 template <typename TPixel, unsigned int Dimension>
 void
 FFTW1DComplexToComplexImageFilter<TPixel,Dimension>::
-ThreadedGenerateData( const OutputImageRegionType& outputRegion, int threadID )
+ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType threadID )
 {
   // get pointers to the input and output
   typename InputImageType::ConstPointer  inputPtr  = this->GetInput();

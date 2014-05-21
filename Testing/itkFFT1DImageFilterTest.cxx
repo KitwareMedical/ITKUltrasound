@@ -5,13 +5,6 @@
  * @date 2009-12-06
  */
 
-#include "itkTestMain.h"
-
-void RegisterTests()
-{
-  REGISTER_TEST( itkFFT1DImageFilterTest );
-}
-
 #include <complex>
 #include <iostream>
 #include <string>
@@ -36,13 +29,13 @@ int itkFFT1DImageFilterTest( int argc, char* argv[] )
   const unsigned int Dimension = 2;
   const unsigned int direction = 1;
 
-  typedef itk::Image< PixelType, Dimension > ImageType;
-  typedef itk::Image< std::complex< PixelType >, Dimension > ComplexImageType;
+  typedef itk::Image< PixelType, Dimension >                                  ImageType;
+  typedef itk::Image< std::complex< PixelType >, Dimension >                  ComplexImageType;
 
-  typedef itk::ImageFileReader< ImageType > ReaderType;
+  typedef itk::ImageFileReader< ImageType >                                   ReaderType;
   typedef itk::FFT1DRealToComplexConjugateImageFilter< PixelType, Dimension > FFTForwardType;
   typedef itk::FFT1DComplexConjugateToRealImageFilter< PixelType, Dimension > FFTInverseType;
-  typedef itk::ImageFileWriter< ImageType > WriterType;
+  typedef itk::ImageFileWriter< ImageType >                                   WriterType;
 
   ReaderType::Pointer reader = ReaderType::New();
   FFTForwardType::Pointer fftForward = FFTForwardType::New();
