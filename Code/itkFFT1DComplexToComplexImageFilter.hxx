@@ -1,5 +1,5 @@
-#ifndef __itkFFT1DComplexToComplexImageFilter_txx
-#define __itkFFT1DComplexToComplexImageFilter_txx
+#ifndef __itkFFT1DComplexToComplexImageFilter_hxx
+#define __itkFFT1DComplexToComplexImageFilter_hxx
 
 #include "itkFFT1DComplexToComplexImageFilter.h"
 
@@ -189,4 +189,4 @@ FFT1DComplexToComplexImageFilter < TPixel , Dimension >
 
 } // end namespace itk
 
-#endif // __itkFFT1DComplexToComplexImageFilter_txx
+#endif // __itkFFT1DComplexToComplexImageFilter_hxx

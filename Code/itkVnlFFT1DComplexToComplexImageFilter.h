@@ -66,7 +66,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkVnlFFT1DComplexToComplexImageFilter.txx"
+#include "itkVnlFFT1DComplexToComplexImageFilter.hxx"
 #endif
 
 #endif

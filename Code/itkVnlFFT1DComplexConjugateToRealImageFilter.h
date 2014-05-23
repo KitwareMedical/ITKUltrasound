@@ -64,7 +64,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkVnlFFT1DComplexConjugateToRealImageFilter.txx"
+#include "itkVnlFFT1DComplexConjugateToRealImageFilter.hxx"
 #endif
 
 #endif

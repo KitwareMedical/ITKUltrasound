@@ -103,7 +103,7 @@ private:
 }
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAnalyticSignalImageFilter.txx"
+#include "itkAnalyticSignalImageFilter.hxx"
 #endif
 
 #endif // __itkAnalyticSignalImageFilter_h

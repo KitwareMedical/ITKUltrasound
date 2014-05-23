@@ -1,7 +1,7 @@
-#ifndef __itkFFTW1DComplexToComplexImageFilter_txx
-#define __itkFFTW1DComplexToComplexImageFilter_txx
+#ifndef __itkFFTW1DComplexToComplexImageFilter_hxx
+#define __itkFFTW1DComplexToComplexImageFilter_hxx
 
-#include "itkFFT1DComplexToComplexImageFilter.txx"
+#include "itkFFT1DComplexToComplexImageFilter.hxx"
 #include "itkFFTW1DComplexToComplexImageFilter.h"
 
 #include "itkFFTWCommonExtended.h"
@@ -166,4 +166,4 @@ ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType th
 
 } // namespace itk
 
-#endif //_itkFFTW1DComplexToComplexImageFilter_txx
+#endif //_itkFFTW1DComplexToComplexImageFilter_hxx

@@ -1,7 +1,7 @@
-#ifndef __itkFFTW1DRealToComplexConjugateImageFilter_txx
-#define __itkFFTW1DRealToComplexConjugateImageFilter_txx
+#ifndef __itkFFTW1DRealToComplexConjugateImageFilter_hxx
+#define __itkFFTW1DRealToComplexConjugateImageFilter_hxx
 
-#include "itkFFT1DRealToComplexConjugateImageFilter.txx"
+#include "itkFFT1DRealToComplexConjugateImageFilter.hxx"
 #include "itkFFTW1DRealToComplexConjugateImageFilter.h"
 
 #include "itkFFTWCommonExtended.h"
@@ -138,4 +138,4 @@ ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType th
 
 } // namespace itk
 
-#endif //_itkFFTW1DRealToComplexConjugateImageFilter_txx
+#endif //_itkFFTW1DRealToComplexConjugateImageFilter_hxx

@@ -1,5 +1,5 @@
-#ifndef __itkAnalyticSignalImageFilter_txx
-#define __itkAnalyticSignalImageFilter_txx
+#ifndef __itkAnalyticSignalImageFilter_hxx
+#define __itkAnalyticSignalImageFilter_hxx
 
 #include "itkAnalyticSignalImageFilter.h"
 
@@ -244,4 +244,4 @@ AnalyticSignalImageFilter < TPixel , Dimension >
 
 } // end namespace itk
 
-#endif // __itkAnalyticSignalImageFilter_txx
+#endif // __itkAnalyticSignalImageFilter_hxx

@@ -84,7 +84,7 @@ private:
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkOpenCL1DComplexConjugateToRealImageFilter.txx"
+#include "itkOpenCL1DComplexConjugateToRealImageFilter.hxx"
 #endif
 
 #endif //__itkOpenCL1DComplexConjugateToRealImageFilter_h

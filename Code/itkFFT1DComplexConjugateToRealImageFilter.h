@@ -76,12 +76,12 @@ private:
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #ifndef __itkVnlFFT1DComplexConjugateToRealImageFilter_h
-#ifndef __itkVnlFFT1DComplexConjugateToRealImageFilter_txx
+#ifndef __itkVnlFFT1DComplexConjugateToRealImageFilter_hxx
 #ifndef __itkFFTW1DComplexConjugateToRealImageFilter_h
-#ifndef __itkFFTW1DComplexConjugateToRealImageFilter_txx
+#ifndef __itkFFTW1DComplexConjugateToRealImageFilter_hxx
 #ifndef __itkOpenCL1DComplexConjugateToRealImageFilter_h
-#ifndef __itkOpenCL1DComplexConjugateToRealImageFilter_txx
-#include "itkFFT1DComplexConjugateToRealImageFilter.txx"
+#ifndef __itkOpenCL1DComplexConjugateToRealImageFilter_hxx
+#include "itkFFT1DComplexConjugateToRealImageFilter.hxx"
 #endif
 #endif
 #endif

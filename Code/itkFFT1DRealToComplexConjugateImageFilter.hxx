@@ -1,26 +1,25 @@
-#ifndef __itkFFT1DComplexConjugateToRealImageFilter_txx
-#define __itkFFT1DComplexConjugateToRealImageFilter_txx
+#ifndef __itkFFT1DRealToComplexConjugateImageFilter_hxx
+#define __itkFFT1DRealToComplexConjugateImageFilter_hxx
 
-#include "itkFFT1DComplexConjugateToRealImageFilter.h"
+#include "itkFFT1DRealToComplexConjugateImageFilter.h"
 
-#include "itkVnlFFT1DComplexConjugateToRealImageFilter.h"
+#include "itkVnlFFT1DRealToComplexConjugateImageFilter.h"
 
 #if defined(USE_OPENCL_FFT)
-#include "itkOpenCL1DComplexConjugateToRealImageFilter.h"
+#include "itkOpenCL1DRealToComplexConjugateImageFilter.h"
 #endif
 #if defined(USE_FFTWD) || defined(USE_FFTWF)
-#include "itkFFTW1DComplexConjugateToRealImageFilter.h"
+#include "itkFFTW1DRealToComplexConjugateImageFilter.h"
 #endif
 
-#include "itkMetaDataDictionary.h"
 #include "itkMetaDataObject.h"
 
 namespace itk
 {
 
 template < class TPixel, unsigned int VDimension >
-typename FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >::Pointer
-FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
+typename FFT1DRealToComplexConjugateImageFilter< TPixel, VDimension >::Pointer
+FFT1DRealToComplexConjugateImageFilter< TPixel, VDimension >
 ::New()
 {
   Pointer smartPtr = ::itk::ObjectFactory< Self >::Create();
@@ -31,7 +30,7 @@ FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
     if( typeid( TPixel ) == typeid( float ) )
       {
       smartPtr = dynamic_cast<Self *>(
-	OpenCL1DComplexConjugateToRealImageFilter< float, VDimension >
+	OpenCL1DRealToComplexConjugateImageFilter< float, VDimension >
 	::New().GetPointer() );
       }
     }
@@ -42,7 +41,7 @@ FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
     if( typeid( TPixel ) == typeid( double ) )
       {
       smartPtr = dynamic_cast< Self* >(
-	FFTW1DComplexConjugateToRealImageFilter< double, VDimension >
+	FFTW1DRealToComplexConjugateImageFilter< double, VDimension >
 	::New().GetPointer() );
       }
     }
@@ -53,7 +52,7 @@ FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
     if( typeid( TPixel ) == typeid( float ) )
       {
       smartPtr = dynamic_cast<Self *>(
-	FFTW1DComplexConjugateToRealImageFilter< float, VDimension >
+	FFTW1DRealToComplexConjugateImageFilter< float, VDimension >
 	::New().GetPointer() );
       }
     }
@@ -61,7 +60,7 @@ FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
 
   if( smartPtr.IsNull() )
     {
-    smartPtr = VnlFFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
+    smartPtr = VnlFFT1DRealToComplexConjugateImageFilter< TPixel, VDimension >
       ::New().GetPointer();
     }
 
@@ -69,9 +68,9 @@ FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
 }
 
 
-template < class TPixel, unsigned int VDimension >
-FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
-::FFT1DComplexConjugateToRealImageFilter():
+template<class TPixel, unsigned int VDimension >
+FFT1DRealToComplexConjugateImageFilter<TPixel, VDimension>
+::FFT1DRealToComplexConjugateImageFilter():
   m_Direction( 0 )
 {
   this->m_ImageRegionSplitter = ImageRegionSplitterDirection::New();
@@ -80,7 +79,7 @@ FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
 
 template <class TPixel, unsigned int VDimension>
 const ImageRegionSplitterBase*
-FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
+FFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>
 ::GetImageRegionSplitter(void) const
 {
   return this->m_ImageRegionSplitter.GetPointer();
@@ -89,7 +88,7 @@ FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
 
 template<class TPixel, unsigned int VDimension >
 void
-FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
+FFT1DRealToComplexConjugateImageFilter<TPixel, VDimension>
 ::BeforeThreadedGenerateData()
 {
   this->m_ImageRegionSplitter->SetDirection( this->GetDirection() );
@@ -98,7 +97,7 @@ FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
 
 template < class TPixel , unsigned int Dimension >
 void
-FFT1DComplexConjugateToRealImageFilter < TPixel , Dimension >
+FFT1DRealToComplexConjugateImageFilter < TPixel , Dimension >
 ::GenerateInputRequestedRegion()
 {
   // call the superclass' implementation of this method
@@ -145,7 +144,7 @@ FFT1DComplexConjugateToRealImageFilter < TPixel , Dimension >
 
 template < class TPixel , unsigned int Dimension >
 void
-FFT1DComplexConjugateToRealImageFilter < TPixel , Dimension >
+FFT1DRealToComplexConjugateImageFilter < TPixel , Dimension >
 ::EnlargeOutputRequestedRegion(DataObject *output)
 {
   OutputImageType* outputPtr = dynamic_cast<OutputImageType*>( output );
@@ -177,7 +176,7 @@ FFT1DComplexConjugateToRealImageFilter < TPixel , Dimension >
 
 template < class TPixel , unsigned int Dimension >
 void
-FFT1DComplexConjugateToRealImageFilter < TPixel , Dimension >
+FFT1DRealToComplexConjugateImageFilter < TPixel , Dimension >
 ::PrintSelf( std::ostream& os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
@@ -187,4 +186,4 @@ FFT1DComplexConjugateToRealImageFilter < TPixel , Dimension >
 
 } // end namespace itk
 
-#endif // __itkFFT1DComplexConjugateToRealImageFilter_txx
+#endif // __itkFFT1DRealToComplexConjugateImageFilter_hxx

@@ -1,29 +1,29 @@
 install( FILES
   itkFFT1DRealToComplexConjugateImageFilter.h
-  itkFFT1DRealToComplexConjugateImageFilter.txx
+  itkFFT1DRealToComplexConjugateImageFilter.hxx
   itkFFT1DComplexConjugateToRealImageFilter.h
-  itkFFT1DComplexConjugateToRealImageFilter.txx
+  itkFFT1DComplexConjugateToRealImageFilter.hxx
   itkFFT1DComplexToComplexImageFilter.h
-  itkFFT1DComplexToComplexImageFilter.txx
+  itkFFT1DComplexToComplexImageFilter.hxx
   itkVnlFFT1DRealToComplexConjugateImageFilter.h
-  itkVnlFFT1DRealToComplexConjugateImageFilter.txx
+  itkVnlFFT1DRealToComplexConjugateImageFilter.hxx
   itkVnlFFT1DComplexConjugateToRealImageFilter.h
-  itkVnlFFT1DComplexConjugateToRealImageFilter.txx
+  itkVnlFFT1DComplexConjugateToRealImageFilter.hxx
   itkVnlFFT1DComplexToComplexImageFilter.h
-  itkVnlFFT1DComplexToComplexImageFilter.txx
+  itkVnlFFT1DComplexToComplexImageFilter.hxx
   itkAnalyticSignalImageFilter.h
-  itkAnalyticSignalImageFilter.txx
+  itkAnalyticSignalImageFilter.hxx
   DESTINATION include/InsightToolkit/Algorithms
   )
 
 if( USE_FFTW )
   install( FILES
     itkFFTW1DRealToComplexConjugateImageFilter.h
-    itkFFTW1DRealToComplexConjugateImageFilter.txx
+    itkFFTW1DRealToComplexConjugateImageFilter.hxx
     itkFFTW1DComplexConjugateToRealImageFilter.h
-    itkFFTW1DComplexConjugateToRealImageFilter.txx
+    itkFFTW1DComplexConjugateToRealImageFilter.hxx
     itkFFTW1DComplexToComplexImageFilter.h
-    itkFFTW1DComplexToComplexImageFilter.txx
+    itkFFTW1DComplexToComplexImageFilter.hxx
     itkFFTWCommonExtended.h
   DESTINATION include/InsightToolkit/Algorithms
   )
@@ -32,11 +32,11 @@ endif()
 if( USE_OPENCL )
   install( FILES
     itkOpenCL1DRealToComplexConjugateImageFilter.h
-    itkOpenCL1DRealToComplexConjugateImageFilter.txx
+    itkOpenCL1DRealToComplexConjugateImageFilter.hxx
     itkOpenCL1DComplexConjugateToRealImageFilter.h
-    itkOpenCL1DComplexConjugateToRealImageFilter.txx
+    itkOpenCL1DComplexConjugateToRealImageFilter.hxx
     itkOpenCL1DComplexToComplexImageFilter.h
-    itkOpenCL1DComplexToComplexImageFilter.txx
+    itkOpenCL1DComplexToComplexImageFilter.hxx
   DESTINATION include/InsightToolkit/Algorithms
   )
 endif()

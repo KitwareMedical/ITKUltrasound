@@ -1,7 +1,7 @@
 /*=========================================================================
 
 Program:   Insight Segmentation & Registration Toolkit
-Module:    $RCSfile: itkVnlFFT1DRealToComplexConjugateImageFilter.txx,v $
+Module:    $RCSfile: itkVnlFFT1DRealToComplexConjugateImageFilter.hxx,v $
 Language:  C++
 Date:      $Date: 2009-01-27 19:30:16 $
 Version:   $Revision: 1.12 $
@@ -14,12 +14,12 @@ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkVnlFFT1DRealToComplexConjugateImageFilter_txx
-#define __itkVnlFFT1DRealToComplexConjugateImageFilter_txx
+#ifndef __itkVnlFFT1DRealToComplexConjugateImageFilter_hxx
+#define __itkVnlFFT1DRealToComplexConjugateImageFilter_hxx
 
 #include "itkVnlFFT1DRealToComplexConjugateImageFilter.h"
 
-#include "itkFFT1DRealToComplexConjugateImageFilter.txx"
+#include "itkFFT1DRealToComplexConjugateImageFilter.hxx"
 #include "itkImageLinearConstIteratorWithIndex.h"
 #include "itkImageLinearIteratorWithIndex.h"
 #include "itkIndent.h"

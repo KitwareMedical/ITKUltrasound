@@ -97,12 +97,12 @@ private:
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #ifndef __itkVnlFFT1DComplexToComplexImageFilter_h
-#ifndef __itkVnlFFT1DComplexToComplexImageFilter_txx
+#ifndef __itkVnlFFT1DComplexToComplexImageFilter_hxx
 #ifndef __itkFFTW1DComplexToComplexImageFilter_h
-#ifndef __itkFFTW1DComplexToComplexImageFilter_txx
+#ifndef __itkFFTW1DComplexToComplexImageFilter_hxx
 #ifndef __itkOpenCL1DComplexToComplexImageFilter_h
-#ifndef __itkOpenCL1DComplexToComplexImageFilter_txx
-#include "itkFFT1DComplexToComplexImageFilter.txx"
+#ifndef __itkOpenCL1DComplexToComplexImageFilter_hxx
+#include "itkFFT1DComplexToComplexImageFilter.hxx"
 #endif
 #endif
 #endif
