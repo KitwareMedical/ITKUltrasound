@@ -12,7 +12,7 @@ namespace itk
 /** \class FFTW1DComplexToComplexImageFilter
  * \brief only do FFT along one dimension using FFTW as a backend.
  *
- * \ingroup
+ * \ingroup FFT1D
  */
 
 template <class TPixel, unsigned int Dimension = 3>

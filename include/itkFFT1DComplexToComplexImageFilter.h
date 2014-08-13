@@ -9,8 +9,8 @@
 
 namespace itk
 {
-/** @class itkFFT1DComplexToComplexImageFilter
- * @brief Perform the Fast Fourier Transform, complex input to complex output,
+/** \class itkFFT1DComplexToComplexImageFilter
+ * \brief Perform the Fast Fourier Transform, complex input to complex output,
  * but only along one dimension.
  *
  * The direction of the transform, 'Forward' or 'Inverse', can be set with
@@ -19,7 +19,8 @@ namespace itk
  * The dimension along which to apply to filter can be specified with
  * SetDirection() and GetDirection().
  *
- * @ingroup FourierTransform
+ * \ingroup FourierTransform
+ * \ingroup FFT1D
  */
 template <class TPixel, unsigned int VDimension = 3>
 class ITK_EXPORT FFT1DComplexToComplexImageFilter:

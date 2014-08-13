@@ -24,9 +24,11 @@ namespace itk
 {
 
 /** \class VnlFFT1DComplexConjugateToRealImageFilter
- * 
+ *
  * \brief Perform the FFT along one dimension of an image using Vnl as a
  * backend.
+ *
+ * \ingroup FFT1D
  */
 template <class TPixel, unsigned int VDimension = 3>
 class VnlFFT1DComplexConjugateToRealImageFilter :

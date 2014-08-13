@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkVnlFFT1DRealToComplexConjugateImageFilter.h,v $
+  Module:    $RCSfile: itkVnlFFT1DComplexToComplexImageFilter.h,v $
   Language:  C++
   Date:      $Date: 2009-01-27 19:30:16 $
   Version:   $Revision: 1.8 $
@@ -14,60 +14,61 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkVnlFFT1DRealToComplexConjugateImageFilter_h
-#define __itkVnlFFT1DRealToComplexConjugateImageFilter_h
+#ifndef __itkVnlFFT1DComplexToComplexImageFilter_h
+#define __itkVnlFFT1DComplexToComplexImageFilter_h
 
-#include "itkFFT1DRealToComplexConjugateImageFilter.h"
+#include "itkFFT1DComplexToComplexImageFilter.h"
 #include <complex>
 
 namespace itk
 {
 
-/** \class VnlFFT1DRealToComplexConjugateImageFilter
+/** \class VnlFFT1DComplexToComplexImageFilter
  *
  * \brief Perform the FFT along one dimension of an image using Vnl as a
  * backend.
+ *
+ * \ingroup FFT1D
  */
 template <class TPixel, unsigned int VDimension = 3>
-class VnlFFT1DRealToComplexConjugateImageFilter :
-    public FFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>
+class VnlFFT1DComplexToComplexImageFilter :
+    public FFT1DComplexToComplexImageFilter<TPixel,VDimension>
 {
 public:
   /** Standard class typedefs. */
-  typedef VnlFFT1DRealToComplexConjugateImageFilter                 Self;
-  typedef FFT1DRealToComplexConjugateImageFilter<TPixel,VDimension> Superclass;
-  typedef SmartPointer<Self>                                        Pointer;
-  typedef SmartPointer<const Self>                                  ConstPointer;
+  typedef VnlFFT1DComplexToComplexImageFilter                 Self;
+  typedef FFT1DComplexToComplexImageFilter<TPixel,VDimension> Superclass;
+  typedef SmartPointer<Self>                                      Pointer;
+  typedef SmartPointer<const Self>                                ConstPointer;
 
   typedef typename Superclass::InputImageType  InputImageType;
   typedef typename Superclass::OutputImageType OutputImageType;
   typedef typename OutputImageType::RegionType OutputImageRegionType;
 
+  typedef typename Superclass::TransformDirectionType TransformDirectionType;
+
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(VnlFFT1DRealToComplexConjugateImageFilter,
-               FFT1DRealToComplexConjugateImageFilter);
+  itkTypeMacro(VnlFFT1DComplexToComplexImageFilter,
+               FFT1DComplexToComplexImageFilter);
 
 protected:
-  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID );
+  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID );  // generates output from input
 
-  VnlFFT1DRealToComplexConjugateImageFilter() { }
-  ~VnlFFT1DRealToComplexConjugateImageFilter() { }
-
-  ///** Method to check if an array dimension is legal for PFA FFT */
-  bool Legaldim(int n);
+  VnlFFT1DComplexToComplexImageFilter() { }
+  ~VnlFFT1DComplexToComplexImageFilter() { }
 
 private:
-  VnlFFT1DRealToComplexConjugateImageFilter(const Self&); //purposely not implemented
+  VnlFFT1DComplexToComplexImageFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkVnlFFT1DRealToComplexConjugateImageFilter.hxx"
+#include "itkVnlFFT1DComplexToComplexImageFilter.hxx"
 #endif
 
 #endif

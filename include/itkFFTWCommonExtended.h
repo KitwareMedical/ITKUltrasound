@@ -32,6 +32,8 @@ namespace fftw
 /**
  * \class Interface
  * \brief Wrapper for FFTW API
+ *
+ * \ingroup FFT1D
  */
 template <typename TPixel>
 class  ComplexToComplexProxy

@@ -10,8 +10,8 @@
 
 namespace itk
 {
-/** @class itkAnalyticSignalImageFilter
- * @brief Generates the analytic signal from one direction of an image.
+/** \class itkAnalyticSignalImageFilter
+ * \brief Generates the analytic signal from one direction of an image.
  *
  * This filter generates the complex valued analytic signal along one direction
  * of an image.  This input is a real valued image, and the output is a complex
@@ -33,7 +33,8 @@ namespace itk
  *
  * where U(k) is the unit step function.
  *
- * @ingroup FourierTransform
+ * \ingroup FourierTransform
+ * \ingroup FFT1D
  */
 template <class TPixel, unsigned int VDimension = 3>
 class ITK_EXPORT AnalyticSignalImageFilter:
