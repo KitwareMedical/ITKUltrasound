@@ -6,10 +6,6 @@
 #include "itkVnlFFT1DRealToComplexConjugateImageFilter.h"
 #include "itkVnlFFT1DComplexToComplexImageFilter.h"
 
-#if defined(USE_OPENCL_FFT)
-#include "itkOpenCL1DRealToComplexConjugateImageFilter.h"
-#include "itkOpenCL1DComplexToComplexImageFilter.h"
-#endif
 #if defined(USE_FFTWD) || defined(USE_FFTWF)
 #include "itkFFTW1DRealToComplexConjugateImageFilter.h"
 #include "itkFFTW1DComplexToComplexImageFilter.h"
@@ -229,7 +225,7 @@ AnalyticSignalImageFilter < TPixel , Dimension >
 }
 
 template < class TPixel , unsigned int Dimension >
-void 
+void
 AnalyticSignalImageFilter < TPixel , Dimension >
 ::AfterThreadedGenerateData()
 {

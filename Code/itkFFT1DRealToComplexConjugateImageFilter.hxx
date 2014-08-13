@@ -5,9 +5,6 @@
 
 #include "itkVnlFFT1DRealToComplexConjugateImageFilter.h"
 
-#if defined(USE_OPENCL_FFT)
-#include "itkOpenCL1DRealToComplexConjugateImageFilter.h"
-#endif
 #if defined(USE_FFTWD) || defined(USE_FFTWF)
 #include "itkFFTW1DRealToComplexConjugateImageFilter.h"
 #endif
@@ -24,17 +21,6 @@ FFT1DRealToComplexConjugateImageFilter< TPixel, VDimension >
 {
   Pointer smartPtr = ::itk::ObjectFactory< Self >::Create();
 
-#ifdef USE_OPENCL_FFT
-  if( smartPtr.IsNull() )
-    {
-    if( typeid( TPixel ) == typeid( float ) )
-      {
-      smartPtr = dynamic_cast<Self *>(
-	OpenCL1DRealToComplexConjugateImageFilter< float, VDimension >
-	::New().GetPointer() );
-      }
-    }
-#endif
 #ifdef USE_FFTWD
   if( smartPtr.IsNull() )
     {

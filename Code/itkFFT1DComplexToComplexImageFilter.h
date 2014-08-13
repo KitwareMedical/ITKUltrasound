@@ -100,11 +100,7 @@ private:
 #ifndef __itkVnlFFT1DComplexToComplexImageFilter_hxx
 #ifndef __itkFFTW1DComplexToComplexImageFilter_h
 #ifndef __itkFFTW1DComplexToComplexImageFilter_hxx
-#ifndef __itkOpenCL1DComplexToComplexImageFilter_h
-#ifndef __itkOpenCL1DComplexToComplexImageFilter_hxx
 #include "itkFFT1DComplexToComplexImageFilter.hxx"
-#endif
-#endif
 #endif
 #endif
 #endif

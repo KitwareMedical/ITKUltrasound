@@ -1,3 +1,0 @@
-[submodule "Submodules/OpenCL_FFT"]
-	path = Submodules/OpenCL_FFT
-	url = git://gitorious.org/ultrasound-b-mode/opencl_fft.git

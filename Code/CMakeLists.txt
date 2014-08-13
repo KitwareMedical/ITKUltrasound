@@ -28,16 +28,3 @@ if( USE_FFTW )
   DESTINATION include/InsightToolkit/Algorithms
   )
 endif()
-
-if( USE_OPENCL )
-  install( FILES
-    itkOpenCL1DRealToComplexConjugateImageFilter.h
-    itkOpenCL1DRealToComplexConjugateImageFilter.hxx
-    itkOpenCL1DComplexConjugateToRealImageFilter.h
-    itkOpenCL1DComplexConjugateToRealImageFilter.hxx
-    itkOpenCL1DComplexToComplexImageFilter.h
-    itkOpenCL1DComplexToComplexImageFilter.hxx
-  DESTINATION include/InsightToolkit/Algorithms
-  )
-endif()
-
