@@ -10,6 +10,8 @@
 #include "itkImageLinearIteratorWithIndex.h"
 #include "itkMetaDataObject.h"
 
+#if defined( ITK_USE_FFTWF ) || defined( ITK_USE_FFTWD )
+
 namespace itk
 {
 
@@ -37,7 +39,7 @@ BeforeThreadedGenerateData()
     {
     return;
     }
-  
+
   const typename OutputImageType::SizeType& outputSize = outputPtr->GetRequestedRegion().GetSize();
   const unsigned int lineSize = outputSize[this->m_Direction];
 
@@ -138,5 +140,7 @@ ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType th
 }
 
 } // namespace itk
+
+#endif // defined( ITK_USE_FFTWF ) || defined( ITK_USE_FFTWD )
 
 #endif //_itkFFTW1DComplexConjugateToRealImageFilter_hxx
