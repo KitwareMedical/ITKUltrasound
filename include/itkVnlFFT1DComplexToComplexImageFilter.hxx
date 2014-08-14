@@ -33,8 +33,8 @@ namespace itk
 
 template <class TPixel, unsigned int VDimension>
 void
-VnlFFT1DComplexToComplexImageFilter<TPixel,VDimension>::
-ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType threadID )
+VnlFFT1DComplexToComplexImageFilter<TPixel,VDimension>
+::ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType itkNotUsed( threadID ) )
 {
   // get pointers to the input and output
   typename Superclass::InputImageType::ConstPointer  inputPtr  = this->GetInput();
@@ -44,7 +44,7 @@ ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType th
     {
     return;
     }
-  
+
   const typename Superclass::InputImageType::SizeType&   inputSize
     = inputPtr->GetRequestedRegion().GetSize();
 

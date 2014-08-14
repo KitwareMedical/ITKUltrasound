@@ -156,7 +156,7 @@ template < class TPixel , unsigned int Dimension >
 void
 AnalyticSignalImageFilter < TPixel , Dimension >
 ::ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread,
-  ThreadIdType threadId )
+  ThreadIdType itkNotUsed( threadId ) )
 {
   // get pointers to the input and output
   typename FFTRealToComplexType::OutputImageType::ConstPointer  inputPtr  = m_FFTRealToComplexFilter->GetOutput();

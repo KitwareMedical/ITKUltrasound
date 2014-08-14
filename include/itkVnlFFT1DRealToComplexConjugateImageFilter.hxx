@@ -52,7 +52,7 @@ bool VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>
 template <class TPixel, unsigned int VDimension>
 void
 VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>
-::ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType threadID )
+::ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType itkNotUsed( threadID ) )
 {
   // get pointers to the input and output
   typename Superclass::InputImageType::ConstPointer  inputPtr  = this->GetInput();
