@@ -54,7 +54,7 @@ namespace itk
  * \ingroup FFT1D
  */
 template <class TPixel, unsigned int VDimension = 3>
-class ITK_EXPORT AnalyticSignalImageFilter:
+class AnalyticSignalImageFilter:
   public ImageToImageFilter< Image< TPixel, VDimension >,
 			     Image< std::complex< TPixel >, VDimension > >
 {

@@ -33,7 +33,7 @@ namespace itk
  */
 
 template <class TPixel, unsigned int Dimension = 3>
-class ITK_EXPORT FFTW1DComplexToComplexImageFilter :
+class FFTW1DComplexToComplexImageFilter :
     public FFT1DComplexToComplexImageFilter<TPixel,Dimension>
 {
 public:

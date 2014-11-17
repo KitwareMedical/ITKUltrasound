@@ -40,7 +40,7 @@ namespace itk
  * \ingroup FFT1D
  */
 template <class TPixel, unsigned int VDimension = 3>
-class ITK_EXPORT FFT1DComplexToComplexImageFilter:
+class FFT1DComplexToComplexImageFilter:
   public ImageToImageFilter< Image< std::complex< TPixel >, VDimension >,
 			     Image< std::complex< TPixel >, VDimension > >
 {
