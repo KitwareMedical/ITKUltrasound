@@ -10,6 +10,7 @@ set( FFT1DTests
   itkAnalyticSignalImageFilterTest.cxx
   itkFFT1DImageFilterTest.cxx
   itkFFT1DComplexToComplexImageFilterTest.cxx
+  itkSpectra1DImageFilterTest.cxx
   itkVnlFFT1DComplexConjugateToRealImageFilterTest.cxx
   itkVnlFFT1DComplexToComplexImageFilterTest.cxx
   itkVnlFFT1DRealToComplexConjugateImageFilterTest.cxx
@@ -77,6 +78,12 @@ itk_add_test( NAME itkVnlFFT1DComplexConjugateToRealImageFilterTest
   itkVnlFFT1DComplexConjugateToRealImageFilterTest
     ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkFFT1DRealToComplexConjugateImageFilterTestBaseline
     itkVnlFFT1DComplexConjugateToRealImageFilterTestOutput.mhd
+    )
+itk_add_test( NAME itkSpectra1DImageFilterTest
+  COMMAND FFT1DTestDriver
+  itkSpectra1DImageFilterTest
+    ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkSpectra1DImageFilterTestBaseline
+    itkSpectra1DImageFilterTest
     )
 
 if( USE_FFTW )
