@@ -35,7 +35,7 @@
 namespace itk
 {
 
-template < class TPixel, unsigned int VDimension >
+template< class TPixel, unsigned int VDimension >
 AnalyticSignalImageFilter< TPixel, VDimension >
 ::AnalyticSignalImageFilter()
 {
@@ -49,7 +49,7 @@ AnalyticSignalImageFilter< TPixel, VDimension >
   this->m_ImageRegionSplitter = ImageRegionSplitterDirection::New();
 }
 
-template < class TPixel , unsigned int Dimension >
+template< typename TPixel, unsigned int Dimension >
 void
 AnalyticSignalImageFilter < TPixel , Dimension >
 ::GenerateInputRequestedRegion()
@@ -96,7 +96,7 @@ AnalyticSignalImageFilter < TPixel , Dimension >
 }
 
 
-template < class TPixel , unsigned int Dimension >
+template< typename TPixel, unsigned int Dimension >
 void
 AnalyticSignalImageFilter < TPixel , Dimension >
 ::EnlargeOutputRequestedRegion(DataObject *output)
@@ -129,7 +129,7 @@ AnalyticSignalImageFilter < TPixel , Dimension >
 }
 
 
-template < class TPixel , unsigned int Dimension >
+template< typename TPixel, unsigned int Dimension >
 void
 AnalyticSignalImageFilter < TPixel , Dimension >
 ::PrintSelf( std::ostream& os, Indent indent ) const
@@ -155,7 +155,7 @@ AnalyticSignalImageFilter< TPixel, VDimension >
 }
 
 
-template < class TPixel , unsigned int Dimension >
+template< typename TPixel, unsigned int Dimension >
 void
 AnalyticSignalImageFilter < TPixel , Dimension >
 ::BeforeThreadedGenerateData()
@@ -169,7 +169,7 @@ AnalyticSignalImageFilter < TPixel , Dimension >
   m_FFTRealToComplexFilter->Update ();
 }
 
-template < class TPixel , unsigned int Dimension >
+template< typename TPixel, unsigned int Dimension >
 void
 AnalyticSignalImageFilter < TPixel , Dimension >
 ::ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread,
@@ -241,7 +241,7 @@ AnalyticSignalImageFilter < TPixel , Dimension >
     }
 }
 
-template < class TPixel , unsigned int Dimension >
+template< typename TPixel, unsigned int Dimension >
 void
 AnalyticSignalImageFilter < TPixel , Dimension >
 ::AfterThreadedGenerateData()

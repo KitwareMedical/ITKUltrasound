@@ -72,7 +72,7 @@ FFT1DComplexToComplexImageFilter< TPixel, VDimension >
 }
 
 
-template < class TPixel , unsigned int VDimension >
+template< typename TPixel, unsigned int VDimension >
 FFT1DComplexToComplexImageFilter < TPixel , VDimension >
 ::FFT1DComplexToComplexImageFilter():
  m_Direction(0), m_TransformDirection( DIRECT )
@@ -99,7 +99,7 @@ FFT1DComplexToComplexImageFilter < TPixel , VDimension >
 }
 
 
-template < class TPixel , unsigned int Dimension >
+template< typename TPixel, unsigned int Dimension >
 void
 FFT1DComplexToComplexImageFilter < TPixel , Dimension >
 ::GenerateInputRequestedRegion()
@@ -146,7 +146,7 @@ FFT1DComplexToComplexImageFilter < TPixel , Dimension >
 }
 
 
-template < class TPixel , unsigned int Dimension >
+template< typename TPixel, unsigned int Dimension >
 void
 FFT1DComplexToComplexImageFilter < TPixel , Dimension >
 ::EnlargeOutputRequestedRegion(DataObject *output)
@@ -178,7 +178,7 @@ FFT1DComplexToComplexImageFilter < TPixel , Dimension >
 }
 
 
-template < class TPixel , unsigned int Dimension >
+template< typename TPixel, unsigned int Dimension >
 void
 FFT1DComplexToComplexImageFilter < TPixel , Dimension >
 ::PrintSelf( std::ostream& os, Indent indent ) const

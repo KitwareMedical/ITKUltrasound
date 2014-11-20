@@ -26,13 +26,13 @@
 
 namespace itk
 {
+
 /** \class FFTW1DRealToComplexConjugateImageFilter
  * \brief only do FFT along one dimension using FFTW as a backend.
  *
  * \ingroup FFT1D
  */
-
-template <class TPixel, unsigned int Dimension = 3>
+template< typename TPixel, unsigned int Dimension = 3 >
 class FFTW1DRealToComplexConjugateImageFilter :
     public FFT1DRealToComplexConjugateImageFilter<TPixel,Dimension>
 {

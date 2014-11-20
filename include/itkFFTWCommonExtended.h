@@ -28,6 +28,7 @@
 
 namespace itk
 {
+
 namespace fftw
 {
 /**

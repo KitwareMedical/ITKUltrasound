@@ -32,7 +32,7 @@ namespace itk
  * \ingroup FourierTransform
  * \ingroup FFT1D
  */
-template <class TPixel, unsigned int VDimension = 3>
+template< typename TPixel, unsigned int VDimension = 3 >
 class FFT1DRealToComplexConjugateImageFilter:
   public ImageToImageFilter< Image< TPixel, VDimension >,
 			     Image< std::complex< TPixel >, VDimension > >

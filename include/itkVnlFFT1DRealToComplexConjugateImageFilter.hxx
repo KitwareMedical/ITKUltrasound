@@ -32,8 +32,7 @@
 namespace itk
 {
 
-
-template <class TPixel, unsigned int VDimension>
+template< typename TPixel, unsigned int VDimension>
 bool VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>
 ::Legaldim(int n)
 {
@@ -50,7 +49,7 @@ bool VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>
 }
 
 
-template <class TPixel, unsigned int VDimension>
+template< typename TPixel, unsigned int VDimension>
 void
 VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>
 ::ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType itkNotUsed( threadID ) )
@@ -122,7 +121,6 @@ VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>
     }
 }
 
-}
-
+} // end namespace itk
 
 #endif

@@ -31,7 +31,7 @@ namespace itk
  *
  * \ingroup FFT1D
  */
-template <class TPixel, unsigned int VDimension = 3>
+template< typename TPixel, unsigned int VDimension = 3 >
 class VnlFFT1DRealToComplexConjugateImageFilter :
     public FFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>
 {

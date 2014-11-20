@@ -32,9 +32,9 @@
 namespace itk
 {
 
-template <class TPixel, unsigned int VDimension>
+template< typename TPixel, unsigned int VDimension >
 void
-VnlFFT1DComplexToComplexImageFilter<TPixel,VDimension>
+VnlFFT1DComplexToComplexImageFilter<TPixel, VDimension>
 ::ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType itkNotUsed( threadID ) )
 {
   // get pointers to the input and output

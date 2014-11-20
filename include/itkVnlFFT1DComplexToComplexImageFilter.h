@@ -31,20 +31,20 @@ namespace itk
  *
  * \ingroup FFT1D
  */
-template <class TPixel, unsigned int VDimension = 3>
+template< typename TPixel, unsigned int VDimension = 3 >
 class VnlFFT1DComplexToComplexImageFilter :
-    public FFT1DComplexToComplexImageFilter<TPixel,VDimension>
+    public FFT1DComplexToComplexImageFilter<TPixel, VDimension>
 {
 public:
   /** Standard class typedefs. */
-  typedef VnlFFT1DComplexToComplexImageFilter                 Self;
-  typedef FFT1DComplexToComplexImageFilter<TPixel,VDimension> Superclass;
-  typedef SmartPointer<Self>                                      Pointer;
-  typedef SmartPointer<const Self>                                ConstPointer;
+  typedef VnlFFT1DComplexToComplexImageFilter                    Self;
+  typedef FFT1DComplexToComplexImageFilter< TPixel, VDimension > Superclass;
+  typedef SmartPointer< Self >                                   Pointer;
+  typedef SmartPointer< const Self >                             ConstPointer;
 
-  typedef typename Superclass::InputImageType  InputImageType;
-  typedef typename Superclass::OutputImageType OutputImageType;
-  typedef typename OutputImageType::RegionType OutputImageRegionType;
+  typedef typename Superclass::InputImageType                    InputImageType;
+  typedef typename Superclass::OutputImageType                   OutputImageType;
+  typedef typename OutputImageType::RegionType                   OutputImageRegionType;
 
   typedef typename Superclass::TransformDirectionType TransformDirectionType;
 
@@ -59,7 +59,7 @@ protected:
   virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID );  // generates output from input
 
   VnlFFT1DComplexToComplexImageFilter() { }
-  ~VnlFFT1DComplexToComplexImageFilter() { }
+  virtual ~VnlFFT1DComplexToComplexImageFilter() { }
 
 private:
   VnlFFT1DComplexToComplexImageFilter(const Self&); //purposely not implemented

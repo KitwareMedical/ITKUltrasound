@@ -98,7 +98,7 @@ FFT1DRealToComplexConjugateImageFilter<TPixel, VDimension>
 }
 
 
-template < class TPixel , unsigned int Dimension >
+template< typename TPixel, unsigned int Dimension >
 void
 FFT1DRealToComplexConjugateImageFilter < TPixel , Dimension >
 ::GenerateInputRequestedRegion()
@@ -145,7 +145,7 @@ FFT1DRealToComplexConjugateImageFilter < TPixel , Dimension >
 }
 
 
-template < class TPixel , unsigned int Dimension >
+template< typename TPixel, unsigned int Dimension >
 void
 FFT1DRealToComplexConjugateImageFilter < TPixel , Dimension >
 ::EnlargeOutputRequestedRegion(DataObject *output)
@@ -177,7 +177,7 @@ FFT1DRealToComplexConjugateImageFilter < TPixel , Dimension >
 }
 
 
-template < class TPixel , unsigned int Dimension >
+template< typename TPixel, unsigned int Dimension >
 void
 FFT1DRealToComplexConjugateImageFilter < TPixel , Dimension >
 ::PrintSelf( std::ostream& os, Indent indent ) const

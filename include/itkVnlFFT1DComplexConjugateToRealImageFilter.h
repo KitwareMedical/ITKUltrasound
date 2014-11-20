@@ -31,20 +31,20 @@ namespace itk
  *
  * \ingroup FFT1D
  */
-template <class TPixel, unsigned int VDimension = 3>
+template< typename TPixel, unsigned int VDimension = 3 >
 class VnlFFT1DComplexConjugateToRealImageFilter :
-    public FFT1DComplexConjugateToRealImageFilter<TPixel,VDimension>
+    public FFT1DComplexConjugateToRealImageFilter<TPixel, VDimension>
 {
 public:
-  /** Standard class typedefs. */ 
-  typedef VnlFFT1DComplexConjugateToRealImageFilter                 Self;
-  typedef FFT1DComplexConjugateToRealImageFilter<TPixel,VDimension> Superclass;
-  typedef SmartPointer<Self>                                      Pointer;
-  typedef SmartPointer<const Self>                                ConstPointer;
+  /** Standard class typedefs. */
+  typedef VnlFFT1DComplexConjugateToRealImageFilter                  Self;
+  typedef FFT1DComplexConjugateToRealImageFilter<TPixel, VDimension> Superclass;
+  typedef SmartPointer< Self >                                       Pointer;
+  typedef SmartPointer< const Self >                                 ConstPointer;
 
-  typedef typename Superclass::InputImageType  InputImageType;
-  typedef typename Superclass::OutputImageType OutputImageType;
-  typedef typename OutputImageType::RegionType OutputImageRegionType;
+  typedef typename Superclass::InputImageType                        InputImageType;
+  typedef typename Superclass::OutputImageType                       OutputImageType;
+  typedef typename OutputImageType::RegionType                       OutputImageRegionType;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -57,7 +57,7 @@ protected:
   virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID );  // generates output from input
 
   VnlFFT1DComplexConjugateToRealImageFilter() { }
-  ~VnlFFT1DComplexConjugateToRealImageFilter() { }
+  virtual ~VnlFFT1DComplexConjugateToRealImageFilter() { }
 
 private:
   VnlFFT1DComplexConjugateToRealImageFilter(const Self&); //purposely not implemented

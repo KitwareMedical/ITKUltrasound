@@ -32,10 +32,10 @@
 namespace itk
 {
 
-template <class TPixel, unsigned int VDimension>
+template< typename TPixel, unsigned int VDimension >
 void
-VnlFFT1DComplexConjugateToRealImageFilter<TPixel,VDimension>::
-ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType itkNotUsed( threadID ) )
+VnlFFT1DComplexConjugateToRealImageFilter<TPixel,VDimension>
+::ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType itkNotUsed( threadID ) )
 {
   // get pointers to the input and output
   typename Superclass::InputImageType::ConstPointer  inputPtr  = this->GetInput();
@@ -94,7 +94,6 @@ ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType it
     }
 }
 
-}
-
+} // end namespace itk
 
 #endif
