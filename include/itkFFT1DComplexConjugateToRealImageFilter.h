@@ -38,7 +38,7 @@ class FFT1DComplexConjugateToRealImageFilter:
 			     Image< TPixel, VDimension > >
 {
 public:
-  /** Standard class typedefs. */ 
+  /** Standard class typedefs. */
   typedef Image< std::complex< TPixel > , VDimension> InputImageType;
   typedef Image<TPixel,VDimension>                    OutputImageType;
   typedef typename OutputImageType::RegionType OutputImageRegionType;
@@ -53,7 +53,7 @@ public:
 
   itkTypeMacro( FFT1DComplexConjugateToRealImageFilter, ImageToImageFilter );
 
-  /** Customized object creation methods that support configuration-based 
+  /** Customized object creation methods that support configuration-based
     * selection of FFT implementation.
     *
     * Default implementation is VnlFFT1D.
@@ -64,15 +64,15 @@ public:
   itkGetMacro(Direction, unsigned int);
 
   /** Set the direction in which the filter is to be applied. */
-  itkSetMacro(Direction, unsigned int);
+  itkSetClampMacro(Direction, unsigned int, 0, ImageDimension - 1);
 
 protected:
   FFT1DComplexConjugateToRealImageFilter();
   virtual ~FFT1DComplexConjugateToRealImageFilter() {}
   void PrintSelf(std::ostream& os, Indent indent) const;
 
-  virtual void GenerateInputRequestedRegion(); 
-  virtual void EnlargeOutputRequestedRegion(DataObject *output); 
+  virtual void GenerateInputRequestedRegion();
+  virtual void EnlargeOutputRequestedRegion(DataObject *output);
 
   /** Direction in which the filter is to be applied
    * this should be in the range [0,ImageDimension-1]. */

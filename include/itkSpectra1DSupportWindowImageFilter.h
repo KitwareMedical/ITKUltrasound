@@ -25,6 +25,16 @@
 namespace itk
 {
 
+/** Use to identify to location where a 1D FFT is computed. */
+template< typename TIndex >
+struct FFT1DRegion
+{
+  typedef TIndex IndexType;
+
+  IndexType     Index;
+  SizeValueType Size;
+};
+
 /** \class Spectra1DSupportWindowImageFilter
  * \brief Generate an image of local spectra computation support windows.
  *
@@ -32,20 +42,16 @@ namespace itk
  */
 template< class TInputImage >
 class Spectra1DSupportWindowImageFilter:
-  public ImageToImageFilter< TInputImage, TInputImage >
+  public ImageToImageFilter< TInputImage,
+                             Image< std::list< FFT1DRegion< typename TInputImage::IndexType > >, TInputImage::ImageDimension > >
 {
 public:
-  itkStaticConstMacro(ImageDimension, unsigned int,
-                      TInputImage::ImageDimension );
+  itkStaticConstMacro( ImageDimension, unsigned int, TInputImage::ImageDimension );
 
-  typedef TInputImage                        InputImageType;
+  typedef TInputImage                              InputImageType;
+  typedef typename InputImageType::IndexType       IndexType;
+  typedef FFT1DRegion< IndexType >                 FFT1DRegionType;
 
-  typedef typename InputImageType::IndexType IndexType;
-  struct FFT1DRegionType
-    {
-    IndexType     Index;
-    SizeValueType Size;
-    };
   typedef std::list< FFT1DRegionType >             OutputPixelType;
   typedef Image< OutputPixelType, ImageDimension > OutputImageType;
 
@@ -58,14 +64,23 @@ public:
   itkTypeMacro( Spectra1DSupportWindowImageFilter, ImageToImageFilter );
   itkNewMacro( Self );
 
+  /** Set/Get the size of the FFT. */
+  itkGetConstMacro( FFTSize, SizeValueType );
+  itkSetMacro( FFTSize, SizeValueType );
 
 protected:
   Spectra1DSupportWindowImageFilter();
   virtual ~Spectra1DSupportWindowImageFilter() {};
 
+  typedef typename OutputImageType::RegionType OutputImageRegionType;
+
+  virtual void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId );
+
 private:
   Spectra1DSupportWindowImageFilter( const Self & ); // purposely not implemented
   void operator=( const Self & ); // purposely not implemented
+
+  SizeValueType m_FFTSize;
 };
 
 } // end namespace itk

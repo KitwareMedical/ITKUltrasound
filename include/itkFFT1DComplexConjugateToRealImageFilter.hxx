@@ -84,7 +84,7 @@ FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
 template <class TPixel, unsigned int VDimension>
 const ImageRegionSplitterBase*
 FFT1DComplexConjugateToRealImageFilter< TPixel, VDimension >
-::GetImageRegionSplitter(void) const
+::GetImageRegionSplitter() const
 {
   return this->m_ImageRegionSplitter.GetPointer();
 }

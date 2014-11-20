@@ -25,8 +25,22 @@ namespace itk
 
 template< typename TInputImage >
 Spectra1DSupportWindowImageFilter< TInputImage >
-::Spectra1DSupportWindowImageFilter()
+::Spectra1DSupportWindowImageFilter():
+  m_FFTSize( 32 )
 {
+}
+
+
+template< typename TInputImage >
+void
+Spectra1DSupportWindowImageFilter< TInputImage >
+::ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType itkNotUsed( threadId ) )
+{
+  OutputImageType * output = this->GetOutput();
+
+  // TODO
+  (void) output;
+  (void) outputRegionForThread;
 }
 
 } // end namespace itk

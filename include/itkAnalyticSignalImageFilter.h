@@ -97,9 +97,9 @@ protected:
   virtual void GenerateInputRequestedRegion();
   virtual void EnlargeOutputRequestedRegion(DataObject *output);
 
-  virtual void BeforeThreadedGenerateData ();
+  virtual void BeforeThreadedGenerateData();
   virtual void ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread, ThreadIdType threadId );
-  virtual void AfterThreadedGenerateData ();
+  virtual void AfterThreadedGenerateData();
 
   typedef FFT1DRealToComplexConjugateImageFilter< TPixel, VDimension > FFTRealToComplexType;
   typedef FFT1DComplexToComplexImageFilter< TPixel, VDimension > FFTComplexToComplexType;

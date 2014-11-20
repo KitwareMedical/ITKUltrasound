@@ -82,7 +82,7 @@ public:
   itkGetMacro(Direction, unsigned int);
 
   /** Set the direction in which the filter is to be applied. */
-  itkSetMacro(Direction, unsigned int);
+  itkSetClampMacro(Direction, unsigned int, 0, ImageDimension - 1);
 
 protected:
   FFT1DComplexToComplexImageFilter();

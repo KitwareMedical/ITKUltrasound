@@ -146,10 +146,10 @@ AnalyticSignalImageFilter < TPixel , Dimension >
 }
 
 
-template <class TPixel, unsigned int VDimension>
-const ImageRegionSplitterBase*
+template< typename TPixel, unsigned int VDimension >
+const ImageRegionSplitterBase *
 AnalyticSignalImageFilter< TPixel, VDimension >
-::GetImageRegionSplitter(void) const
+::GetImageRegionSplitter() const
 {
   return this->m_ImageRegionSplitter.GetPointer();
 }
@@ -172,20 +172,13 @@ AnalyticSignalImageFilter < TPixel , Dimension >
 template< typename TPixel, unsigned int Dimension >
 void
 AnalyticSignalImageFilter < TPixel , Dimension >
-::ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread,
-  ThreadIdType itkNotUsed( threadId ) )
+::ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread, ThreadIdType itkNotUsed( threadId ) )
 {
   // get pointers to the input and output
-  typename FFTRealToComplexType::OutputImageType::ConstPointer  inputPtr  = m_FFTRealToComplexFilter->GetOutput();
-  typename OutputImageType::Pointer				outputPtr = this->GetOutput();
+  const typename FFTRealToComplexType::OutputImageType * inputPtr = m_FFTRealToComplexFilter->GetOutput();
+  OutputImageType * outputPtr = this->GetOutput();
 
-  if ( !inputPtr || !outputPtr )
-    {
-    return;
-    }
-
-  const typename FFTRealToComplexType::OutputImageType::SizeType&   inputSize
-    = inputPtr->GetRequestedRegion().GetSize();
+  const typename FFTRealToComplexType::OutputImageType::SizeType & inputSize = inputPtr->GetRequestedRegion().GetSize();
   const unsigned int direction = this->GetDirection ();
   const unsigned int size = inputSize[direction];
   unsigned int dub_size;
@@ -201,8 +194,8 @@ AnalyticSignalImageFilter < TPixel , Dimension >
     dub_size = (size + 1) / 2 - 1;
     }
 
-  typedef itk::ImageLinearConstIteratorWithIndex< OutputImageType >  InputIteratorType;
-  typedef itk::ImageLinearIteratorWithIndex< OutputImageType >      OutputIteratorType;
+  typedef ImageLinearConstIteratorWithIndex< OutputImageType > InputIteratorType;
+  typedef ImageLinearIteratorWithIndex< OutputImageType >      OutputIteratorType;
   InputIteratorType inputIt( inputPtr, outputRegionForThread );
   OutputIteratorType outputIt( outputPtr, outputRegionForThread );
   inputIt.SetDirection( direction );
