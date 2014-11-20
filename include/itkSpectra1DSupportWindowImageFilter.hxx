@@ -15,4 +15,20 @@
  *  limitations under the License.
  *
  *=========================================================================*/
+#ifndef __itkSpectra1DSupportWindowImageFilter_hxx
+#define __itkSpectra1DSupportWindowImageFilter_hxx
 
+#include "itkSpectra1DSupportWindowImageFilter.h"
+
+namespace itk
+{
+
+template< typename TInputImage >
+Spectra1DSupportWindowImageFilter< TInputImage >
+::Spectra1DSupportWindowImageFilter()
+{
+}
+
+} // end namespace itk
+
+#endif

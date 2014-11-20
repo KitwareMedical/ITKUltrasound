@@ -22,7 +22,6 @@
 
 #include "itkFFT1DComplexToComplexImageFilter.h"
 #include "itkFFT1DRealToComplexConjugateImageFilter.h"
-#include "itkImageToImageFilter.h"
 #include "itkImageRegionSplitterDirection.h"
 
 namespace itk
@@ -60,14 +59,14 @@ class AnalyticSignalImageFilter:
 {
 public:
   /** Standard class typedefs. */
-  typedef Image<TPixel,VDimension>                              InputImageType;
-  typedef Image< std::complex< TPixel > , VDimension>           OutputImageType;
+  typedef Image< TPixel, VDimension >                           InputImageType;
+  typedef Image< std::complex< TPixel > , VDimension >          OutputImageType;
   typedef typename OutputImageType::RegionType                  OutputImageRegionType;
 
   typedef AnalyticSignalImageFilter                             Self;
   typedef ImageToImageFilter< InputImageType, OutputImageType > Superclass;
-  typedef SmartPointer<Self>                                    Pointer;
-  typedef SmartPointer<const Self>                              ConstPointer;
+  typedef SmartPointer< Self >                                  Pointer;
+  typedef SmartPointer< const Self >                            ConstPointer;
 
   itkTypeMacro( AnalyticSignalImageFilter, ImageToImageFilter );
   itkNewMacro( Self );

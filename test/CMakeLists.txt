@@ -90,7 +90,6 @@ itk_add_test( NAME itkSpectra1DSupportWindowImageFilterTest
   COMMAND FFT1DTestDriver
   itkSpectra1DSupportWindowImageFilterTest
     ${CMAKE_CURRENT_SOURCE_DIR}/Input/uniform_phantom_8.9_MHz.mha
-    itkSpectra1DSupportWindowImageFilterTestOutput.mha
     )
 
 if( USE_FFTW )

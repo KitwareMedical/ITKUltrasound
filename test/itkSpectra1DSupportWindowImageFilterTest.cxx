@@ -16,12 +16,14 @@
  *
  *=========================================================================*/
 
+#include "itkSpectra1DSupportWindowImageFilter.h"
+
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 
 int itkSpectra1DSupportWindowImageFilterTest( int argc, char* argv[] )
 {
-  if( argc < 3 )
+  if( argc < 2 )
     {
     std::cerr << "Usage: " << argv[0];
     std::cerr << " inputImage outputImage";
@@ -29,7 +31,6 @@ int itkSpectra1DSupportWindowImageFilterTest( int argc, char* argv[] )
     return EXIT_FAILURE;
     }
   const char * inputImageFileName = argv[1];
-  const char * outputImageFileName = argv[2];
 
   const unsigned int Dimension = 2;
   typedef short PixelType;
@@ -39,6 +40,19 @@ int itkSpectra1DSupportWindowImageFilterTest( int argc, char* argv[] )
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
 
+  typedef itk::Spectra1DSupportWindowImageFilter< ImageType > SpectraSupportWindowFilterType;
+  SpectraSupportWindowFilterType::Pointer spectraSupportWindowFilter = SpectraSupportWindowFilterType::New();
+  spectraSupportWindowFilter->SetInput( reader->GetOutput() );
+
+  try
+    {
+    spectraSupportWindowFilter->Update();
+    }
+  catch( itk::ExceptionObject & error )
+    {
+    std::cout << "Error: " << error << std::endl;
+    return EXIT_FAILURE;
+    }
 
   return EXIT_SUCCESS;
 }
