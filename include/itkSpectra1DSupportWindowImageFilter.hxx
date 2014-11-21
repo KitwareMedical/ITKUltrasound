@@ -19,6 +19,7 @@
 #define __itkSpectra1DSupportWindowImageFilter_hxx
 
 #include "itkSpectra1DSupportWindowImageFilter.h"
+#include "itkImageRegionIterator.h"
 
 namespace itk
 {
@@ -38,9 +39,15 @@ Spectra1DSupportWindowImageFilter< TInputImage >
 {
   OutputImageType * output = this->GetOutput();
 
-  // TODO
-  (void) output;
-  (void) outputRegionForThread;
+  const OutputImageRegionType outputLargestRegion = output->GetLargestPossibleRegion();
+
+  typedef ImageRegionIterator< OutputImageType > ImageIteratorType;
+  ImageIteratorType imageIt( output, outputRegionForThread );
+  for( imageIt.GoToBegin(); !imageIt.IsAtEnd(); ++imageIt )
+    {
+    OutputPixelType & supportWindow = imageIt.Value();
+    supportWindow.clear();
+    }
 }
 
 } // end namespace itk
