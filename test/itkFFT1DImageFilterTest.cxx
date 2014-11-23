@@ -40,7 +40,6 @@ int itkFFT1DImageFilterTest( int argc, char* argv[] )
   const unsigned int direction = 1;
 
   typedef itk::Image< PixelType, Dimension >                                  ImageType;
-  typedef itk::Image< std::complex< PixelType >, Dimension >                  ComplexImageType;
 
   typedef itk::ImageFileReader< ImageType >                                   ReaderType;
   typedef itk::FFT1DRealToComplexConjugateImageFilter< PixelType, Dimension > FFTForwardType;
