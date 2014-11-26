@@ -30,7 +30,7 @@ namespace itk
  * real inputs, but only along one dimension.
  *
  * \ingroup FourierTransform
- * \ingroup FFT1D
+ * \ingroup Ultrasound
  */
 template< typename TPixel, unsigned int VDimension = 3 >
 class FFT1DRealToComplexConjugateImageFilter:

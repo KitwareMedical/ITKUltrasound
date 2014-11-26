@@ -1,3 +1,3 @@
-project(FFT1D)
+project(Ultrasound)
 
 itk_module_impl()

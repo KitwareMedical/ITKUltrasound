@@ -37,7 +37,7 @@ namespace itk
  * SetDirection() and GetDirection().
  *
  * \ingroup FourierTransform
- * \ingroup FFT1D
+ * \ingroup Ultrasound
  */
 template< typename TPixel, unsigned int VDimension = 3 >
 class FFT1DComplexToComplexImageFilter:

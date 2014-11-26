@@ -1,12 +1,11 @@
 ==================
-itk-fft-extensions
+ITKUltrasound
 ==================
 
 Purpose
 =======
 
-This projects contains additional Fast Fourier Transform filters for use with
-the `Insight Toolkit`_ (ITK).  It contains filters that only operate on one
-dimension.
+This module contains filters for use with the `Insight Toolkit`_ (ITK) that
+may be particularly useful for the reconstruction and analysis of ultrasound.
 
 .. _Insight Toolkit: http://www.itk.org/

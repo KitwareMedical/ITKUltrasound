@@ -50,7 +50,7 @@ namespace itk
  * where U(k) is the unit step function.
  *
  * \ingroup FourierTransform
- * \ingroup FFT1D
+ * \ingroup Ultrasound
  */
 template< typename TPixel, unsigned int VDimension = 3 >
 class AnalyticSignalImageFilter:

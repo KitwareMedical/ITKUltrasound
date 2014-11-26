@@ -30,7 +30,7 @@ namespace itk
 /** \class FFTW1DRealToComplexConjugateImageFilter
  * \brief only do FFT along one dimension using FFTW as a backend.
  *
- * \ingroup FFT1D
+ * \ingroup Ultrasound
  */
 template< typename TPixel, unsigned int Dimension = 3 >
 class FFTW1DRealToComplexConjugateImageFilter :

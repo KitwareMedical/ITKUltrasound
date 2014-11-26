@@ -1,7 +1,7 @@
-set(DOCUMENTATION "The modules provides FFT filters that operate only in one
-direction of an image.  They may be particularly useful for ultrasound.")
+set(DOCUMENTATION "The modules provides filters may be particularly useful for
+ultrasound image reconstruction and analysis.")
 
-itk_module(FFT1D
+itk_module(Ultrasound
   DEPENDS
     ITKFFT
     ITKImageCompose

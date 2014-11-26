@@ -38,7 +38,7 @@ struct FFT1DRegion
 /** \class Spectra1DSupportWindowImageFilter
  * \brief Generate an image of local spectra computation support windows.
  *
- * \ingroup FFT1D
+ * \ingroup Ultrasound
  */
 template< class TInputImage >
 class Spectra1DSupportWindowImageFilter:
