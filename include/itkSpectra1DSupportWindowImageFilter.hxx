@@ -20,6 +20,7 @@
 
 #include "itkSpectra1DSupportWindowImageFilter.h"
 #include "itkImageRegionIterator.h"
+#include "itkImageRegionConstIterator.h"
 
 namespace itk
 {
@@ -38,14 +39,18 @@ Spectra1DSupportWindowImageFilter< TInputImage >
 ::ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType itkNotUsed( threadId ) )
 {
   OutputImageType * output = this->GetOutput();
+  const InputImageType * input = this->GetInput();
 
   const OutputImageRegionType outputLargestRegion = output->GetLargestPossibleRegion();
+  const typename OutputImageType::IndexType largestIndex = outputLargestRegion.GetIndex();
 
-  typedef ImageRegionIterator< OutputImageType > ImageIteratorType;
-  ImageIteratorType imageIt( output, outputRegionForThread );
-  for( imageIt.GoToBegin(); !imageIt.IsAtEnd(); ++imageIt )
+  typedef ImageRegionConstIterator< InputImageType > InputIteratorType;
+  InputIteratorType inputIt( input, outputRegionForThread );
+  typedef ImageRegionIterator< OutputImageType > OutputIteratorType;
+  OutputIteratorType outputIt( output, outputRegionForThread );
+  for( inputIt.GoToBegin(), outputIt.GoToBegin(); !outputIt.IsAtEnd(); ++inputIt, ++outputIt )
     {
-    OutputPixelType & supportWindow = imageIt.Value();
+    OutputPixelType & supportWindow = outputIt.Value();
     supportWindow.clear();
     }
 }

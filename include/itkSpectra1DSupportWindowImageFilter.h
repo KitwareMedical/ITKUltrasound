@@ -38,6 +38,11 @@ struct FFT1DRegion
 /** \class Spectra1DSupportWindowImageFilter
  * \brief Generate an image of local spectra computation support windows.
  *
+ * The information from the input image is used to determine the output image
+ * information. The pixel value of the input image is used to specify the
+ * nominal number of lines on either side of the central FFT line to add to
+ * the window. The nominal size of the 1D FFT is specified with SetFFTSize()
+ *
  * \ingroup Ultrasound
  */
 template< class TInputImage >
@@ -64,7 +69,8 @@ public:
   itkTypeMacro( Spectra1DSupportWindowImageFilter, ImageToImageFilter );
   itkNewMacro( Self );
 
-  /** Set/Get the size of the FFT. */
+  /** Set/Get the nominal size of the FFT.  This will be truncated at the
+   * boundary of image. */
   itkGetConstMacro( FFTSize, SizeValueType );
   itkSetMacro( FFTSize, SizeValueType );
 

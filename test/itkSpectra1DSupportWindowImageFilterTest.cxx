@@ -20,6 +20,7 @@
 
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
+#include "itkPermuteAxesImageFilter.h"
 
 int itkSpectra1DSupportWindowImageFilterTest( int argc, char* argv[] )
 {
@@ -40,9 +41,34 @@ int itkSpectra1DSupportWindowImageFilterTest( int argc, char* argv[] )
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
 
+  // Want RF to be along direction 0
+  typedef itk::PermuteAxesImageFilter< ImageType > PermuteAxesFilterType;
+  PermuteAxesFilterType::Pointer permuteAxesFilter = PermuteAxesFilterType::New();
+  PermuteAxesFilterType::PermuteOrderArrayType permuteOrder;
+  permuteOrder[0] = 1;
+  permuteOrder[1] = 0;
+  permuteAxesFilter->SetOrder( permuteOrder );
+  permuteAxesFilter->SetInput( reader->GetOutput() );
+  try
+    {
+    permuteAxesFilter->UpdateOutputInformation();
+    }
+  catch( itk::ExceptionObject & error )
+    {
+    std::cout << "Error: " << error << std::endl;
+    return EXIT_FAILURE;
+    }
+  ImageType::ConstPointer rfImage = permuteAxesFilter->GetOutput();
+
+  ImageType::Pointer sideLines = ImageType::New();
+  sideLines->CopyInformation( rfImage );
+  sideLines->SetRegions( rfImage->GetLargestPossibleRegion() );
+  sideLines->Allocate();
+  sideLines->FillBuffer( 5 );
+
   typedef itk::Spectra1DSupportWindowImageFilter< ImageType > SpectraSupportWindowFilterType;
   SpectraSupportWindowFilterType::Pointer spectraSupportWindowFilter = SpectraSupportWindowFilterType::New();
-  spectraSupportWindowFilter->SetInput( reader->GetOutput() );
+  spectraSupportWindowFilter->SetInput( sideLines );
 
   try
     {
