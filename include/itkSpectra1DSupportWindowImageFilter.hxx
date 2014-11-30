@@ -20,7 +20,8 @@
 
 #include "itkSpectra1DSupportWindowImageFilter.h"
 #include "itkImageRegionIterator.h"
-#include "itkImageRegionConstIterator.h"
+#include "itkImageRegionConstIteratorWithIndex.h"
+#include "itkMetaDataObject.h"
 
 namespace itk
 {
@@ -28,7 +29,7 @@ namespace itk
 template< typename TInputImage >
 Spectra1DSupportWindowImageFilter< TInputImage >
 ::Spectra1DSupportWindowImageFilter():
-  m_FFTSize( 32 )
+  m_FFT1DSize( 32 )
 {
 }
 
@@ -42,17 +43,62 @@ Spectra1DSupportWindowImageFilter< TInputImage >
   const InputImageType * input = this->GetInput();
 
   const OutputImageRegionType outputLargestRegion = output->GetLargestPossibleRegion();
-  const typename OutputImageType::IndexType largestIndex = outputLargestRegion.GetIndex();
+  typedef typename OutputImageType::IndexType IndexType;
+  const IndexType largestIndexStart = outputLargestRegion.GetIndex();
+  const IndexType largestIndexStop = largestIndexStart + outputLargestRegion.GetSize();
 
-  typedef ImageRegionConstIterator< InputImageType > InputIteratorType;
+  typedef ImageRegionConstIteratorWithIndex< InputImageType > InputIteratorType;
   InputIteratorType inputIt( input, outputRegionForThread );
   typedef ImageRegionIterator< OutputImageType > OutputIteratorType;
   OutputIteratorType outputIt( output, outputRegionForThread );
+  const FFT1DSizeType fftSize = this->GetFFT1DSize();
+  if( outputLargestRegion.GetSize()[0] < fftSize )
+    {
+    itkExceptionMacro( "Insufficient size in the FFT direction." );
+    }
   for( inputIt.GoToBegin(), outputIt.GoToBegin(); !outputIt.IsAtEnd(); ++inputIt, ++outputIt )
     {
     OutputPixelType & supportWindow = outputIt.Value();
     supportWindow.clear();
+
+    const IndexType inputIndex = inputIt.GetIndex();
+
+    IndexType lineIndex;
+    lineIndex[0] = inputIndex[0] - fftSize;
+    if( lineIndex[0] < largestIndexStart[0] )
+      {
+      lineIndex[0] = largestIndexStart[0];
+      }
+
+    if( lineIndex[0] + fftSize > largestIndexStop[0] )
+      {
+      lineIndex[0] = largestIndexStop[0] - fftSize;
+      }
+
+    const FFT1DSizeType sideLines = static_cast< FFT1DSizeType >( inputIt.Get() );
+    for( FFT1DSizeType line = inputIndex[1] - sideLines;
+         line < inputIndex[1] + sideLines;
+         ++line )
+      {
+      if( line < largestIndexStart[1] || line > largestIndexStop[1] )
+        {
+        continue;
+        }
+      lineIndex[1] = line;
+      supportWindow.push_back( lineIndex );
+      }
     }
+}
+
+
+template< typename TInputImage >
+void
+Spectra1DSupportWindowImageFilter< TInputImage >
+::AfterThreadedGenerateData()
+{
+  OutputImageType * output = this->GetOutput();
+  MetaDataDictionary & dict = output->GetMetaDataDictionary();
+  EncapsulateMetaData< FFT1DSizeType >( dict, "FFT1DSize", this->GetFFT1DSize() );
 }
 
 } // end namespace itk

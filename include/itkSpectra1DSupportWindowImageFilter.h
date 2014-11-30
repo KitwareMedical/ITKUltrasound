@@ -25,16 +25,6 @@
 namespace itk
 {
 
-/** Use to identify to location where a 1D FFT is computed. */
-template< typename TIndex >
-struct FFT1DRegion
-{
-  typedef TIndex IndexType;
-
-  IndexType     Index;
-  SizeValueType Size;
-};
-
 /** \class Spectra1DSupportWindowImageFilter
  * \brief Generate an image of local spectra computation support windows.
  *
@@ -48,17 +38,18 @@ struct FFT1DRegion
 template< class TInputImage >
 class Spectra1DSupportWindowImageFilter:
   public ImageToImageFilter< TInputImage,
-                             Image< std::list< FFT1DRegion< typename TInputImage::IndexType > >, TInputImage::ImageDimension > >
+                             Image< std::list< typename TInputImage::IndexType >, TInputImage::ImageDimension > >
 {
 public:
   itkStaticConstMacro( ImageDimension, unsigned int, TInputImage::ImageDimension );
 
   typedef TInputImage                              InputImageType;
   typedef typename InputImageType::IndexType       IndexType;
-  typedef FFT1DRegion< IndexType >                 FFT1DRegionType;
 
-  typedef std::list< FFT1DRegionType >             OutputPixelType;
+  typedef std::list< IndexType >                   OutputPixelType;
   typedef Image< OutputPixelType, ImageDimension > OutputImageType;
+
+  typedef unsigned int                             FFT1DSizeType;
 
   /** Standard class typedefs. */
   typedef Spectra1DSupportWindowImageFilter                     Self;
@@ -71,8 +62,8 @@ public:
 
   /** Set/Get the nominal size of the FFT.  This will be truncated at the
    * boundary of image. */
-  itkGetConstMacro( FFTSize, SizeValueType );
-  itkSetMacro( FFTSize, SizeValueType );
+  itkGetConstMacro( FFT1DSize, FFT1DSizeType );
+  itkSetMacro( FFT1DSize, FFT1DSizeType );
 
 protected:
   Spectra1DSupportWindowImageFilter();
@@ -80,13 +71,15 @@ protected:
 
   typedef typename OutputImageType::RegionType OutputImageRegionType;
 
-  virtual void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId );
+  virtual void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId ) ITK_OVERRIDE;
+
+  virtual void AfterThreadedGenerateData() ITK_OVERRIDE;
 
 private:
   Spectra1DSupportWindowImageFilter( const Self & ); // purposely not implemented
   void operator=( const Self & ); // purposely not implemented
 
-  SizeValueType m_FFTSize;
+  FFT1DSizeType m_FFT1DSize;
 };
 
 } // end namespace itk
