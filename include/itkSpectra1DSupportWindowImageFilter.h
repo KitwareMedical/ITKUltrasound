@@ -18,7 +18,7 @@
 #ifndef __itkSpectra1DSupportWindowImageFilter_h
 #define __itkSpectra1DSupportWindowImageFilter_h
 
-#include <list>
+#include <deque>
 
 #include "itkImageToImageFilter.h"
 
@@ -38,7 +38,7 @@ namespace itk
 template< typename TInputImage >
 class Spectra1DSupportWindowImageFilter:
   public ImageToImageFilter< TInputImage,
-                             Image< std::list< typename TInputImage::IndexType >, TInputImage::ImageDimension > >
+                             Image< std::deque< typename TInputImage::IndexType >, TInputImage::ImageDimension > >
 {
 public:
   itkStaticConstMacro( ImageDimension, unsigned int, TInputImage::ImageDimension );
@@ -46,7 +46,7 @@ public:
   typedef TInputImage                              InputImageType;
   typedef typename InputImageType::IndexType       IndexType;
 
-  typedef std::list< IndexType >                   OutputPixelType;
+  typedef std::deque< IndexType >                   OutputPixelType;
   typedef Image< OutputPixelType, ImageDimension > OutputImageType;
 
   typedef unsigned int                             FFT1DSizeType;
