@@ -94,6 +94,9 @@ itk_add_test( NAME itkSpectra1DSupportWindowImageFilterTest
     )
 itk_add_test( NAME itkSpectra1DSupportWindowToMaskImageFilterTest1
   COMMAND UltrasoundTestDriver
+  --compare
+    ${ITK_TEST_OUTPUT_DIR}/itkSpectra1DSupportWindowToMaskImageFilterTest1.mha
+    DATA{Baseline/itkSpectra1DSupportWindowToMaskImageFilterTest1.mha}
   itkSpectra1DSupportWindowToMaskImageFilterTest
     DATA{${CMAKE_CURRENT_SOURCE_DIR}/Input/uniform_phantom_8.9_MHz.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkSpectra1DSupportWindowToMaskImageFilterTest1.mha
@@ -101,6 +104,9 @@ itk_add_test( NAME itkSpectra1DSupportWindowToMaskImageFilterTest1
     )
 itk_add_test( NAME itkSpectra1DSupportWindowToMaskImageFilterTest2
   COMMAND UltrasoundTestDriver
+  --compare
+    ${ITK_TEST_OUTPUT_DIR}/itkSpectra1DSupportWindowToMaskImageFilterTest2.mha
+    DATA{Baseline/itkSpectra1DSupportWindowToMaskImageFilterTest2.mha}
   itkSpectra1DSupportWindowToMaskImageFilterTest
     DATA{${CMAKE_CURRENT_SOURCE_DIR}/Input/uniform_phantom_8.9_MHz.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkSpectra1DSupportWindowToMaskImageFilterTest2.mha
