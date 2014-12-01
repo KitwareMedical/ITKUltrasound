@@ -59,9 +59,6 @@ protected:
   VnlFFT1DRealToComplexConjugateImageFilter() { }
   ~VnlFFT1DRealToComplexConjugateImageFilter() { }
 
-  ///** Method to check if an array dimension is legal for PFA FFT */
-  bool Legaldim(int n);
-
 private:
   VnlFFT1DRealToComplexConjugateImageFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented

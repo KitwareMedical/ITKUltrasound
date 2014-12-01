@@ -26,28 +26,12 @@
 #include "itkIndent.h"
 #include "itkMetaDataObject.h"
 #include "itkExceptionObject.h"
+#include "itkVnlFFTCommon.h"
 #include "vnl/algo/vnl_fft_base.h"
 #include "vnl/algo/vnl_fft_1d.h"
 
 namespace itk
 {
-
-template< typename TPixel, unsigned int VDimension>
-bool VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>
-::Legaldim(int n)
-{
-  int ifac = 2;
-  for (int l = 1; l <= 3; l++)
-    {
-    for(; n % ifac == 0;)
-      {
-      n /= ifac;
-      }
-    ifac += l;
-    }
-  return (n == 1); // return false if decomposition failed
-}
-
 
 template< typename TPixel, unsigned int VDimension>
 void
@@ -67,7 +51,7 @@ VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>
     = inputPtr->GetRequestedRegion().GetSize();
 
   unsigned int vecSize = inputSize[this->m_Direction];
-  if( !this->Legaldim(vecSize) )
+  if( ! VnlFFTCommon::IsDimensionSizeLegal(vecSize) )
     {
     ExceptionObject exception(__FILE__, __LINE__);
     exception.SetDescription("Illegal Array DIM for FFT");
