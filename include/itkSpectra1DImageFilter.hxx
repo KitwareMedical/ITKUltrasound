@@ -41,8 +41,9 @@ void
 Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
 ::ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType itkNotUsed( threadId ) )
 {
-  //OutputImageType * output = this->GetOutput();
-  //const InputImageType * input = this->GetInput();
+  OutputImageType * output = this->GetOutput();
+  const InputImageType * input = this->GetInputImage();
+  const SupportWindowImageType * supportWindow = this->GetSupportWindowImage();
 
   //const OutputImageRegionType outputLargestRegion = output->GetLargestPossibleRegion();
   //typedef typename OutputImageType::IndexType IndexType;
