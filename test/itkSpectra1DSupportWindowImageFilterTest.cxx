@@ -80,7 +80,7 @@ int itkSpectra1DSupportWindowImageFilterTest( int argc, char* argv[] )
     return EXIT_FAILURE;
     }
 
-  std::cout << *spectraSupportWindowFilter << std::endl;
+  spectraSupportWindowFilter->Print( std::cout );
   spectraSupportWindowFilter->GetOutput()->GetMetaDataDictionary().Print(std::cout);
 
   return EXIT_SUCCESS;

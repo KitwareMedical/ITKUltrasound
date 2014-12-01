@@ -84,8 +84,8 @@ itk_add_test( NAME itkVnlFFT1DComplexConjugateToRealImageFilterTest
 itk_add_test( NAME itkSpectra1DImageFilterTest
   COMMAND UltrasoundTestDriver
   itkSpectra1DImageFilterTest
-    ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkSpectra1DImageFilterTestBaseline
-    itkSpectra1DImageFilterTest
+    DATA{${CMAKE_CURRENT_SOURCE_DIR}/Input/uniform_phantom_8.9_MHz.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkSpectra1DImageFilterTest.mha
     )
 itk_add_test( NAME itkSpectra1DSupportWindowImageFilterTest
   COMMAND UltrasoundTestDriver
