@@ -22,7 +22,7 @@
 
 #include "itkVnlFFT1DRealToComplexConjugateImageFilter.h"
 
-#if defined(USE_FFTWD) || defined(USE_FFTWF)
+#if defined(ITK_USE_FFTWD) || defined(ITK_USE_FFTWF)
 #include "itkFFTW1DRealToComplexConjugateImageFilter.h"
 #endif
 
@@ -38,7 +38,7 @@ FFT1DRealToComplexConjugateImageFilter< TPixel, VDimension >
 {
   Pointer smartPtr = ::itk::ObjectFactory< Self >::Create();
 
-#ifdef USE_FFTWD
+#ifdef ITK_USE_FFTWD
   if( smartPtr.IsNull() )
     {
     if( typeid( TPixel ) == typeid( double ) )
@@ -49,7 +49,7 @@ FFT1DRealToComplexConjugateImageFilter< TPixel, VDimension >
       }
     }
 #endif
-#ifdef USE_FFTWF
+#ifdef ITK_USE_FFTWF
   if( smartPtr.IsNull() )
     {
     if( typeid( TPixel ) == typeid( float ) )

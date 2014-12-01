@@ -23,7 +23,7 @@
 #include "itkVnlFFT1DRealToComplexConjugateImageFilter.h"
 #include "itkVnlFFT1DComplexToComplexImageFilter.h"
 
-#if defined(USE_FFTWD) || defined(USE_FFTWF)
+#if defined(ITK_USE_FFTWD) || defined(ITK_USE_FFTWF)
 #include "itkFFTW1DRealToComplexConjugateImageFilter.h"
 #include "itkFFTW1DComplexToComplexImageFilter.h"
 #endif
