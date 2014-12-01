@@ -35,7 +35,7 @@ namespace itk
  *
  * \ingroup Ultrasound
  */
-template< class TInputImage >
+template< typename TInputImage >
 class Spectra1DSupportWindowImageFilter:
   public ImageToImageFilter< TInputImage,
                              Image< std::list< typename TInputImage::IndexType >, TInputImage::ImageDimension > >

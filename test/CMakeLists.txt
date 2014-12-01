@@ -12,6 +12,7 @@ set( UltrasoundTests
   itkFFT1DComplexToComplexImageFilterTest.cxx
   itkSpectra1DImageFilterTest.cxx
   itkSpectra1DSupportWindowImageFilterTest.cxx
+  itkSpectra1DSupportWindowToMaskImageFilterTest.cxx
   itkVnlFFT1DComplexConjugateToRealImageFilterTest.cxx
   itkVnlFFT1DComplexToComplexImageFilterTest.cxx
   itkVnlFFT1DRealToComplexConjugateImageFilterTest.cxx
@@ -90,6 +91,20 @@ itk_add_test( NAME itkSpectra1DSupportWindowImageFilterTest
   COMMAND UltrasoundTestDriver
   itkSpectra1DSupportWindowImageFilterTest
     DATA{${CMAKE_CURRENT_SOURCE_DIR}/Input/uniform_phantom_8.9_MHz.mha}
+    )
+itk_add_test( NAME itkSpectra1DSupportWindowToMaskImageFilterTest1
+  COMMAND UltrasoundTestDriver
+  itkSpectra1DSupportWindowToMaskImageFilterTest
+    DATA{${CMAKE_CURRENT_SOURCE_DIR}/Input/uniform_phantom_8.9_MHz.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkSpectra1DSupportWindowToMaskImageFilterTest1.mha
+    0 0
+    )
+itk_add_test( NAME itkSpectra1DSupportWindowToMaskImageFilterTest2
+  COMMAND UltrasoundTestDriver
+  itkSpectra1DSupportWindowToMaskImageFilterTest
+    DATA{${CMAKE_CURRENT_SOURCE_DIR}/Input/uniform_phantom_8.9_MHz.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkSpectra1DSupportWindowToMaskImageFilterTest2.mha
+    100 100
     )
 
 if( USE_FFTW )
