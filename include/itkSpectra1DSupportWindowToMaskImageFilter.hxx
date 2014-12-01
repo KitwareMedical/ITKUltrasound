@@ -65,7 +65,6 @@ Spectra1DSupportWindowToMaskImageFilter< TInputImage, TOutputImage >
     for( FFT1DSizeType sampleIndex = 0; sampleIndex < fft1DSize; ++sampleIndex )
       {
       index[0] = startIndex[0] + sampleIndex;
-      std::cout << "index: " << index << std::endl;
       output->SetPixel( index, this->GetForegroundValue() );
       }
     }

@@ -66,9 +66,7 @@ VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>
   const typename Superclass::InputImageType::SizeType&   inputSize
     = inputPtr->GetRequestedRegion().GetSize();
 
-  std::cout << "***direction: " << this->m_Direction << std::endl;
   unsigned int vecSize = inputSize[this->m_Direction];
-  std::cout << "***vecSize: " << vecSize << std::endl;
   if( !this->Legaldim(vecSize) )
     {
     ExceptionObject exception(__FILE__, __LINE__);

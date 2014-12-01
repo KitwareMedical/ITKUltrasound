@@ -75,8 +75,8 @@ Spectra1DSupportWindowImageFilter< TInputImage >
       lineIndex[0] = largestIndexStop[0] - fftSize;
       }
 
-    const FFT1DSizeType sideLines = static_cast< FFT1DSizeType >( inputIt.Get() );
-    for( FFT1DSizeType line = inputIndex[1] - sideLines;
+    const IndexValueType sideLines = static_cast< IndexValueType >( inputIt.Get() );
+    for( IndexValueType line = inputIndex[1] - sideLines;
          line < inputIndex[1] + sideLines;
          ++line )
       {
