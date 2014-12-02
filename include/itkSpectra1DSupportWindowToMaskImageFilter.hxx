@@ -52,7 +52,7 @@ Spectra1DSupportWindowToMaskImageFilter< TInputImage, TOutputImage >
   typedef typename Spectra1DSupportWindowFilterType::FFT1DSizeType FFT1DSizeType;
 
   const MetaDataDictionary & dict = input->GetMetaDataDictionary();
-  FFT1DSizeType fft1DSize = 8;
+  FFT1DSizeType fft1DSize = 32;
   ExposeMetaData< FFT1DSizeType >( dict, "FFT1DSize", fft1DSize );
 
   OutputImageType * output = this->GetOutput();

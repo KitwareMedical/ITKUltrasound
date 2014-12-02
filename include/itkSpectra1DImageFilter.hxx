@@ -19,9 +19,18 @@
 #define __itkSpectra1DImageFilter_hxx
 
 #include "itkSpectra1DImageFilter.h"
-#include "itkImageRegionIterator.h"
-#include "itkImageRegionConstIteratorWithIndex.h"
+
+#include "itkImageLinearConstIteratorWithIndex.h"
+#include "itkImageLinearIteratorWithIndex.h"
+#include "itkImageRegionConstIterator.h"
 #include "itkMetaDataObject.h"
+
+#include "vnl/algo/vnl_fft_base.h"
+#include "vnl/algo/vnl_fft_1d.h"
+
+#include "itkSpectra1DSupportWindowImageFilter.h"
+
+#include <utility>
 
 namespace itk
 {
@@ -30,8 +39,6 @@ template< typename TInputImage, typename TSupportWindowImage, typename TOutputIm
 Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
 ::Spectra1DImageFilter()
 {
-  this->AddRequiredInputName( "InputImage" );
-  this->SetPrimaryInputName( "InputImage" );
   this->AddRequiredInputName( "SupportWindowImage" );
 }
 
@@ -42,19 +49,70 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
 ::ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType itkNotUsed( threadId ) )
 {
   OutputImageType * output = this->GetOutput();
-  const InputImageType * input = this->GetInputImage();
-  const SupportWindowImageType * supportWindow = this->GetSupportWindowImage();
+  const InputImageType * input = this->GetInput();
+  const SupportWindowImageType * supportWindowImage = this->GetSupportWindowImage();
 
-  //const OutputImageRegionType outputLargestRegion = output->GetLargestPossibleRegion();
-  //typedef typename OutputImageType::IndexType IndexType;
-  //const IndexType largestIndexStart = outputLargestRegion.GetIndex();
-  //const IndexType largestIndexStop = largestIndexStart + outputLargestRegion.GetSize();
+  typedef ImageLinearIteratorWithIndex< OutputImageType > OutputIteratorType;
+  OutputIteratorType outputIt( output, outputRegionForThread );
+  outputIt.SetDirection( 1 );
 
-  //typedef ImageRegionConstIteratorWithIndex< InputImageType > InputIteratorType;
-  //InputIteratorType inputIt( input, outputRegionForThread );
-  //typedef ImageRegionIterator< OutputImageType > OutputIteratorType;
-  //OutputIteratorType outputIt( output, outputRegionForThread );
+  typedef Spectra1DSupportWindowImageFilter< OutputImageType > Spectra1DSupportWindowFilterType;
+  typedef typename Spectra1DSupportWindowFilterType::FFT1DSizeType FFT1DSizeType;
+  const MetaDataDictionary & dict = supportWindowImage->GetMetaDataDictionary();
+  FFT1DSizeType fft1DSize = 32;
+  ExposeMetaData< FFT1DSizeType >( dict, "FFT1DSize", fft1DSize );
+
+  typedef vcl_complex< ScalarType >                  ComplexType;
+  typedef vnl_vector< ComplexType >                  ComplexVectorType;
+  typedef vnl_vector< ScalarType >                   SpectraVectorType;
+  typedef typename InputImageType::IndexType         IndexType;
+  typedef std::pair< IndexType, SpectraVectorType >  SpectraLineType;
+  typedef std::deque< SpectraLineType >              SpectraLinesContainerType;
+  typedef typename SupportWindowImageType::PixelType SupportWindowType;
+  typedef ImageRegionConstIterator< InputImageType > InputImageIteratorType;
+
+  ComplexVectorType complexVector( fft1DSize );
+  SpectraLinesContainerType spectraLines;
+  typename InputImageType::SizeType lineImageRegionSize;
+  lineImageRegionSize.Fill( 1 );
+  lineImageRegionSize[0] = fft1DSize;
+
+  typedef ImageLinearConstIteratorWithIndex< SupportWindowImageType > SupportWindowIteratorType;
+  SupportWindowIteratorType supportWindowIt( supportWindowImage, outputRegionForThread );
+  supportWindowIt.SetDirection( 1 );
+
+
+  for( outputIt.GoToBegin(), supportWindowIt.GoToBegin();
+       !outputIt.IsAtEnd();
+       outputIt.NextLine(), supportWindowIt.NextLine() )
+    {
+    spectraLines.clear();
+    while( ! outputIt.IsAtEndOfLine() )
+      {
+      const SupportWindowType & supportWindow = supportWindowIt.Value();
+      if( spectraLines.size() == 0 ) // first window
+        {
+        const typename SupportWindowType::const_iterator windowLineEnd = supportWindow.end();
+        for( typename SupportWindowType::const_iterator windowLine = supportWindow.begin();
+             windowLine != windowLineEnd;
+             ++windowLine )
+          {
+          const IndexType & lineIndex = *windowLine;
+          const typename InputImageType::RegionType lineRegion( lineIndex, lineImageRegionSize );
+          InputImageIteratorType inputIt( input, lineRegion );
+          inputIt.GoToBegin();
+          }
+        }
+      else
+        {
+        // todo
+        }
+      ++outputIt;
+      ++supportWindowIt;
+      }
+    }
 }
+
 
 } // end namespace itk
 

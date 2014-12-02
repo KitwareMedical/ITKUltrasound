@@ -78,7 +78,7 @@ int itkSpectra1DImageFilterTest( int argc, char* argv[] )
   typedef itk::VectorImage< SpectraComponentType, Dimension > SpectraImageType;
   typedef itk::Spectra1DImageFilter< ImageType, SupportWindowImageType, SpectraImageType > SpectraFilterType;
   SpectraFilterType::Pointer spectraFilter = SpectraFilterType::New();
-  spectraFilter->SetInputImage( rfImage );
+  spectraFilter->SetInput( rfImage );
   spectraFilter->SetSupportWindowImage( spectraSupportWindowFilter->GetOutput() );
 
   typedef itk::ImageFileWriter< SpectraImageType > WriterType;
@@ -88,7 +88,7 @@ int itkSpectra1DImageFilterTest( int argc, char* argv[] )
 
   try
     {
-    writer->Update();
+    writer->UpdateLargestPossibleRegion();
     }
   catch( itk::ExceptionObject & error )
     {

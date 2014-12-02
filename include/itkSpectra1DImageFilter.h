@@ -19,6 +19,7 @@
 #define __itkSpectra1DImageFilter_h
 
 #include "itkImageToImageFilter.h"
+#include "itkDefaultConvertPixelTraits.h"
 
 namespace itk
 {
@@ -45,6 +46,9 @@ public:
   typedef TSupportWindowImage                      SupportWindowImageType;
   typedef TOutputImage                             OutputImageType;
 
+  typedef typename DefaultConvertPixelTraits< typename OutputImageType::PixelType >::ComponentType
+    ScalarType;
+
   /** Standard class typedefs. */
   typedef Spectra1DImageFilter                                  Self;
   typedef ImageToImageFilter< InputImageType, OutputImageType > Superclass;
@@ -53,10 +57,6 @@ public:
 
   itkTypeMacro( Spectra1DImageFilter, ImageToImageFilter );
   itkNewMacro( Self );
-
-  /** Set the input image from which the spectra is to be computed. */
-  itkSetInputMacro( InputImage, InputImageType );
-  itkGetInputMacro( InputImage, InputImageType );
 
   /** Set/get the input image containning the support window for local spectra
    * computation. */

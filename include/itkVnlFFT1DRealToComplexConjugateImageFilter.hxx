@@ -44,8 +44,8 @@ VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>
 
   const typename Superclass::InputImageType::SizeType & inputSize = inputPtr->GetRequestedRegion().GetSize();
 
-  unsigned int vecSize = inputSize[this->m_Direction];
-  if( ! VnlFFTCommon::IsDimensionSizeLegal(vecSize) )
+  unsigned int vectorSize = inputSize[this->m_Direction];
+  if( ! VnlFFTCommon::IsDimensionSizeLegal(vectorSize) )
     {
     itkExceptionMacro("Illegal Array DIM for FFT");
     }
@@ -59,15 +59,18 @@ VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>
   inputIt.SetDirection(this->m_Direction);
   outputIt.SetDirection(this->m_Direction);
 
-  vnl_vector< vcl_complex<TPixel> > inputBuffer( vecSize );
-  typename vnl_vector< vcl_complex< TPixel > >::iterator inputBufferIt = inputBuffer.begin();
+  typedef vcl_complex< TPixel > ComplexType;
+  typedef vnl_vector< ComplexType > ComplexVectorType;
+  ComplexVectorType inputBuffer( vectorSize );
+  typename ComplexVectorType::iterator inputBufferIt = inputBuffer.begin();
     // fft is done in-place
-  typename vnl_vector< vcl_complex< TPixel > >::iterator outputBufferIt = inputBuffer.begin();
-  vnl_fft_1d<TPixel> v1d(vecSize);
+  typename ComplexVectorType::iterator outputBufferIt = inputBuffer.begin();
+  vnl_fft_1d< TPixel > v1d( vectorSize );
 
   // for every fft line
-  for( inputIt.GoToBegin(), outputIt.GoToBegin(); !inputIt.IsAtEnd();
-    outputIt.NextLine(), inputIt.NextLine() )
+  for( inputIt.GoToBegin(), outputIt.GoToBegin();
+       !inputIt.IsAtEnd();
+       outputIt.NextLine(), inputIt.NextLine() )
     {
     // copy the input line into our buffer
     inputIt.GoToBeginOfLine();
@@ -80,7 +83,7 @@ VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>
       }
 
     // do the transform
-    v1d.bwd_transform(inputBuffer);
+    v1d.bwd_transform( inputBuffer );
 
     // copy the output from the buffer into our line
     outputBufferIt = inputBuffer.begin();
