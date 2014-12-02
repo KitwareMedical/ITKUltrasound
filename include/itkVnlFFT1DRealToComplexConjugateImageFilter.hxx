@@ -77,7 +77,7 @@ VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>
     inputBufferIt = inputBuffer.begin();
     while( !inputIt.IsAtEndOfLine() )
       {
-      *inputBufferIt = inputIt.Get();
+      *inputBufferIt = inputIt.Value();
       ++inputIt;
       ++inputBufferIt;
       }

@@ -72,10 +72,12 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
   typedef ImageRegionConstIterator< InputImageType > InputImageIteratorType;
 
   ComplexVectorType complexVector( fft1DSize );
+  SpectraVectorType spectraVector( fft1DSize );
   SpectraLinesContainerType spectraLines;
   typename InputImageType::SizeType lineImageRegionSize;
   lineImageRegionSize.Fill( 1 );
   lineImageRegionSize[0] = fft1DSize;
+  vnl_fft_1d< ScalarType > fft1D( fft1DSize );
 
   typedef ImageLinearConstIteratorWithIndex< SupportWindowImageType > SupportWindowIteratorType;
   SupportWindowIteratorType supportWindowIt( supportWindowImage, outputRegionForThread );
@@ -90,7 +92,7 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
     while( ! outputIt.IsAtEndOfLine() )
       {
       const SupportWindowType & supportWindow = supportWindowIt.Value();
-      if( spectraLines.size() == 0 ) // first window
+      if( spectraLines.size() == 0 ) // first window in this lateral direction
         {
         const typename SupportWindowType::const_iterator windowLineEnd = supportWindow.end();
         for( typename SupportWindowType::const_iterator windowLine = supportWindow.begin();
@@ -101,6 +103,26 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
           const typename InputImageType::RegionType lineRegion( lineIndex, lineImageRegionSize );
           InputImageIteratorType inputIt( input, lineRegion );
           inputIt.GoToBegin();
+          complexVector.fill( 0 );
+          typename ComplexVectorType::iterator complexVectorIt = complexVector.begin();
+          while( !inputIt.IsAtEnd() )
+            {
+            *complexVectorIt = inputIt.Value();
+            ++inputIt;
+            ++complexVectorIt;
+            }
+          fft1D.bwd_transform( complexVector );
+          typename ComplexVectorType::const_iterator complexVectorConstIt = complexVector.begin();
+          typename SpectraVectorType::iterator spectraVectorIt = spectraVector.begin();
+          const typename SpectraVectorType::iterator spectraVectorItEnd = spectraVector.end();
+          while( spectraVectorIt != spectraVectorItEnd )
+            {
+            *spectraVectorIt = std::real(*complexVectorConstIt * std::conj(*complexVectorConstIt));
+            ++spectraVectorIt;
+            ++complexVectorConstIt;
+            }
+          const SpectraLineType spectraLine = std::make_pair( lineIndex, spectraVector );
+          spectraLines.push_back( spectraLine );
           }
         }
       else
