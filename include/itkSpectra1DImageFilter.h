@@ -21,6 +21,13 @@
 #include "itkImageToImageFilter.h"
 #include "itkDefaultConvertPixelTraits.h"
 
+#include "vnl/algo/vnl_fft_base.h"
+#include "vnl/algo/vnl_fft_1d.h"
+
+#include <utility>
+
+#include "itkSpectra1DSupportWindowImageFilter.h"
+
 namespace itk
 {
 
@@ -69,12 +76,36 @@ protected:
 
   typedef typename OutputImageType::RegionType OutputImageRegionType;
 
+  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
   virtual void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId ) ITK_OVERRIDE;
 
 private:
   Spectra1DImageFilter( const Self & ); // purposely not implemented
   void operator=( const Self & ); // purposely not implemented
 
+  typedef vcl_complex< ScalarType >                  ComplexType;
+  typedef vnl_vector< ComplexType >                  ComplexVectorType;
+  typedef vnl_vector< ScalarType >                   SpectraVectorType;
+  typedef typename InputImageType::IndexType         IndexType;
+  typedef std::pair< IndexType, SpectraVectorType >  SpectraLineType;
+  typedef std::deque< SpectraLineType >              SpectraLinesContainerType;
+  typedef typename SupportWindowImageType::PixelType SupportWindowType;
+  typedef ImageRegionConstIterator< InputImageType > InputImageIteratorType;
+  typedef vnl_fft_1d< ScalarType >                   FFT1DType;
+
+  typedef Spectra1DSupportWindowImageFilter< OutputImageType >     Spectra1DSupportWindowFilterType;
+  typedef typename Spectra1DSupportWindowFilterType::FFT1DSizeType FFT1DSizeType;
+
+  struct PerThreadData
+    {
+    ComplexVectorType                 ComplexVector;
+    SpectraVectorType                 SpectraVector;
+    typename InputImageType::SizeType LineImageRegionSize;
+    };
+  typedef std::vector< PerThreadData > PerThreadDataContainerType;
+  PerThreadDataContainerType m_PerThreadDataContainer;
+
+  SpectraLineType ComputeSpectra( const IndexType & lineIndex, ThreadIdType threadId );
 };
 
 } // end namespace itk
