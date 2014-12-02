@@ -39,24 +39,15 @@ VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>
 ::ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType itkNotUsed( threadID ) )
 {
   // get pointers to the input and output
-  typename Superclass::InputImageType::ConstPointer  inputPtr  = this->GetInput();
-  typename Superclass::OutputImageType::Pointer      outputPtr = this->GetOutput();
+  const typename Superclass::InputImageType * inputPtr = this->GetInput();
+  typename Superclass::OutputImageType * outputPtr = this->GetOutput();
 
-  if ( !inputPtr || !outputPtr )
-    {
-    return;
-    }
-
-  const typename Superclass::InputImageType::SizeType&   inputSize
-    = inputPtr->GetRequestedRegion().GetSize();
+  const typename Superclass::InputImageType::SizeType & inputSize = inputPtr->GetRequestedRegion().GetSize();
 
   unsigned int vecSize = inputSize[this->m_Direction];
   if( ! VnlFFTCommon::IsDimensionSizeLegal(vecSize) )
     {
-    ExceptionObject exception(__FILE__, __LINE__);
-    exception.SetDescription("Illegal Array DIM for FFT");
-    exception.SetLocation(ITK_LOCATION);
-    throw exception;
+    itkExceptionMacro("Illegal Array DIM for FFT");
     }
 
 
