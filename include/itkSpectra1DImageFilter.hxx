@@ -152,31 +152,38 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
         }
       else
         {
-        //const IndexValueType desiredFirstLine = supportWindow[0][1];
-        //while( spectraLines[0].first[1] < desiredFirstLine )
-          //{
-          //spectraLines.pop_front();
-          //}
-        //const typename SupportWindowType::const_iterator windowLineEnd = supportWindow.end();
-        //typename SpectraLinesContainerType::iterator spectraLinesIt = spectraLines.begin();
-        //const typename SpectraLinesContainerType::iterator spectraLinesEnd = spectraLines.end();
-        //for( typename SupportWindowType::const_iterator windowLine = supportWindow.begin();
-             //windowLine != windowLineEnd;
-             //++windowLine )
-          //{
-          //const IndexType & lineIndex = *windowLine;
-          //if( spectraLinesIt == spectraLinesEnd ) // past the end of the previously processed lines
-            //{
-            //}
-          //else if( lineIndex[1] == (spectraLinesIt->first)[1] ) // one of the same lines that was previously computed
-            //{
-            //++spectraLinesIt;
-            //}
-          //else
-            //{
-            //itkExceptionMacro( "Unexpected line" );
-            //}
-          //}
+        const IndexValueType desiredFirstLine = supportWindow[0][1];
+        while( spectraLines[0].first[1] < desiredFirstLine )
+          {
+          spectraLines.pop_front();
+          }
+        const typename SupportWindowType::const_iterator windowLineEnd = supportWindow.end();
+        typename SpectraLinesContainerType::iterator spectraLinesIt = spectraLines.begin();
+        const typename SpectraLinesContainerType::iterator spectraLinesEnd = spectraLines.end();
+        for( typename SupportWindowType::const_iterator windowLine = supportWindow.begin();
+             windowLine != windowLineEnd;
+             ++windowLine )
+          {
+          const IndexType & lineIndex = *windowLine;
+          if( spectraLinesIt == spectraLinesEnd ) // past the end of the previously processed lines
+            {
+            const SpectraLineType & spectraLine = this->ComputeSpectra( lineIndex, threadId );
+            spectraLines.push_back( spectraLine );
+            }
+          else if( lineIndex[1] == (spectraLinesIt->first)[1] ) // one of the same lines that was previously computed
+            {
+            if( lineIndex[0] != (spectraLinesIt->first)[0] )
+              {
+              const SpectraLineType & spectraLine = this->ComputeSpectra( lineIndex, threadId );
+              *spectraLinesIt = spectraLine;
+              }
+            ++spectraLinesIt;
+            }
+          else
+            {
+            itkExceptionMacro( "Unexpected line" );
+            }
+          }
         }
       ++outputIt;
       ++supportWindowIt;
