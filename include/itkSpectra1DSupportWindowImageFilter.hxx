@@ -45,7 +45,11 @@ Spectra1DSupportWindowImageFilter< TInputImage >
   const OutputImageRegionType outputLargestRegion = output->GetLargestPossibleRegion();
   typedef typename OutputImageType::IndexType IndexType;
   const IndexType largestIndexStart = outputLargestRegion.GetIndex();
-  const IndexType largestIndexStop = largestIndexStart + outputLargestRegion.GetSize();
+  IndexType largestIndexStop = largestIndexStart + outputLargestRegion.GetSize();
+  for( unsigned int dim = 0; dim < ImageDimension; ++dim )
+    {
+    largestIndexStop[dim] -= 1;
+    }
 
   typedef ImageRegionConstIteratorWithIndex< InputImageType > InputIteratorType;
   InputIteratorType inputIt( input, outputRegionForThread );
