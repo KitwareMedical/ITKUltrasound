@@ -23,7 +23,7 @@ BModeImageFilter< TInputImage, TOutputImage >
 
   // Avoid taking the log of zero.  Assuming that the original input is coming
   // from a digitizer that outputs integer types, so 1 is small.
-  m_AddConstantFilter->SetConstant( 1 );
+  m_AddConstantFilter->SetConstant2( 1 );
   m_PadFilter->SetConstant( 0. );
 
   m_ComplexToModulusFilter->SetInput( m_AnalyticFilter->GetOutput() );
@@ -139,12 +139,16 @@ BModeImageFilter< TInputImage, TOutputImage >
   unsigned int n = size[direction];
   while( n % 2 == 0 )
     n /= 2;
-  bool padSize;
+  bool doPadding;
   if( n == 1 )
-    padSize = false;
+    {
+    doPadding = false;
+    }
   else
-    padSize = true;
-  if( padSize )
+    {
+    doPadding = true;
+    }
+  if( doPadding )
     {
     n = size[direction];
     unsigned int newSizeDirection = 1;

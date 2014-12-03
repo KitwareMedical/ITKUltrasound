@@ -8,6 +8,7 @@ endif()
 
 set( UltrasoundTests
   itkAnalyticSignalImageFilterTest.cxx
+  itkBModeImageFilterTestTiming.cxx
   itkFFT1DImageFilterTest.cxx
   itkFFT1DComplexToComplexImageFilterTest.cxx
   itkSpectra1DImageFilterTest.cxx
@@ -37,6 +38,14 @@ itk_add_test( NAME itkAnalyticSignalImageFilterTest
     ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
     itkAnalyticSignalImageFilterTestOutput
     )
+itk_add_test( NAME itkBModeImageFilterTestTiming
+  COMMAND UltrasoundTestDriver
+  itkBModeImageFilterTestTiming
+    DATA{${CMAKE_CURRENT_SOURCE_DIR}/Input/uniform_phantom_8.9_MHz.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkBModeImageFilterTestTiming.mha
+    )
+
+
 itk_add_test( NAME itkFFT1DComplexToComplexImageFilterTest
   COMMAND UltrasoundTestDriver
   --compare ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png

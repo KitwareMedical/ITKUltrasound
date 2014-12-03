@@ -1,7 +1,7 @@
 #ifndef __itkBModeImageFilter_h
 #define __itkBModeImageFilter_h
 
-#include "itkAddConstantToImageFilter.h"
+#include "itkAddImageFilter.h"
 #include "itkComplexToModulusImageFilter.h"
 #include "itkConstantPadImageFilter.h"
 #include "itkRegionFromReferenceImageFilter.h"
@@ -96,7 +96,7 @@ protected:
   typedef itk::AnalyticSignalImageFilter< OutputPixelType, ImageDimension > AnalyticType;
   typedef itk::ComplexToModulusImageFilter< typename AnalyticType::OutputImageType, OutputImageType > ComplexToModulusType;
   typedef itk::ConstantPadImageFilter< InputImageType, InputImageType > PadType;
-  typedef itk::AddConstantToImageFilter< InputImageType, InputPixelType, InputImageType > AddConstantType;
+  typedef itk::AddImageFilter< InputImageType, InputImageType > AddConstantType;
   typedef itk::Log10ImageFilter< InputImageType, OutputImageType > LogType;
   typedef itk::RegionFromReferenceImageFilter< OutputImageType, OutputImageType > ROIType;
 
