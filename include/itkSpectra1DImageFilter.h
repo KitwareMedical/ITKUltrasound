@@ -25,6 +25,7 @@
 #include "vnl/algo/vnl_fft_1d.h"
 
 #include <utility>
+#include <map>
 
 #include "itkSpectra1DSupportWindowImageFilter.h"
 
@@ -96,16 +97,20 @@ private:
   typedef Spectra1DSupportWindowImageFilter< OutputImageType >     Spectra1DSupportWindowFilterType;
   typedef typename Spectra1DSupportWindowFilterType::FFT1DSizeType FFT1DSizeType;
 
+  typedef std::map< FFT1DSizeType, SpectraVectorType > LineWindowMapType;
+
   struct PerThreadData
     {
     ComplexVectorType                 ComplexVector;
     SpectraVectorType                 SpectraVector;
     typename InputImageType::SizeType LineImageRegionSize;
+    LineWindowMapType                 LineWindowMap;
     };
   typedef std::vector< PerThreadData > PerThreadDataContainerType;
   PerThreadDataContainerType m_PerThreadDataContainer;
 
   SpectraLineType ComputeSpectra( const IndexType & lineIndex, ThreadIdType threadId );
+  void AddLineWindow( FFT1DSizeType length, LineWindowMapType & lineWindowMap );
 };
 
 } // end namespace itk

@@ -64,6 +64,32 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
 
 
 template< typename TInputImage, typename TSupportWindowImage, typename TOutputImage >
+void
+Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
+::AddLineWindow( FFT1DSizeType length, LineWindowMapType & lineWindowMap )
+{
+  if( lineWindowMap.count( length ) == 1 )
+    {
+    return;
+    }
+  // Currently using a Hamming Window
+  SpectraVectorType window( length );
+  ScalarType sum = NumericTraits< ScalarType >::ZeroValue();
+  const ScalarType twopi = 2 * vnl_math::pi;
+  for( FFT1DSizeType sample = 0; sample < length; ++sample )
+    {
+    window[sample] = 0.54 + 0.46 * std::cos( (twopi * sample) / (length - 1) );
+    sum += window[sample];
+    }
+  for( FFT1DSizeType sample = 0; sample < length; ++sample )
+    {
+    window[sample] /= sum;
+    }
+  lineWindowMap[length] = window;
+}
+
+
+template< typename TInputImage, typename TSupportWindowImage, typename TOutputImage >
 typename Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >::SpectraLineType
 Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
 ::ComputeSpectra( const IndexType & lineIndex, ThreadIdType threadId )
@@ -78,11 +104,13 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
   inputIt.GoToBegin();
   perThreadData.ComplexVector.fill( 0 );
   typename ComplexVectorType::iterator complexVectorIt = perThreadData.ComplexVector.begin();
+  typename SpectraVectorType::const_iterator windowIt = perThreadData.LineWindowMap[fft1DSize].begin();
   while( !inputIt.IsAtEnd() )
     {
-    *complexVectorIt = inputIt.Value();
+    *complexVectorIt = inputIt.Value() * *windowIt;
     ++inputIt;
     ++complexVectorIt;
+    ++windowIt;
     }
   FFT1DType fft1D( fft1DSize );
   fft1D.bwd_transform( perThreadData.ComplexVector );
@@ -116,6 +144,8 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
   const MetaDataDictionary & dict = supportWindowImage->GetMetaDataDictionary();
   FFT1DSizeType fft1DSize = 32;
   ExposeMetaData< FFT1DSizeType >( dict, "FFT1DSize", fft1DSize );
+  PerThreadData & perThreadData = this->m_PerThreadDataContainer[threadId];
+  this->AddLineWindow( fft1DSize, perThreadData.LineWindowMap );
 
   ComplexVectorType complexVector( fft1DSize );
   SpectraVectorType spectraVector( fft1DSize );
@@ -129,7 +159,6 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
   SupportWindowIteratorType supportWindowIt( supportWindowImage, outputRegionForThread );
   supportWindowIt.SetDirection( 1 );
 
-
   for( outputIt.GoToBegin(), supportWindowIt.GoToBegin();
        !outputIt.IsAtEnd();
        outputIt.NextLine(), supportWindowIt.NextLine() )
@@ -137,6 +166,7 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
     spectraLines.clear();
     while( ! outputIt.IsAtEndOfLine() )
       {
+      // Compute the per line spectra.
       const SupportWindowType & supportWindow = supportWindowIt.Value();
       if( spectraLines.size() == 0 ) // first window in this lateral direction
         {
@@ -150,7 +180,7 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
           spectraLines.push_back( spectraLine );
           }
         }
-      else
+      else // subsequent window along a line
         {
         const IndexValueType desiredFirstLine = supportWindow[0][1];
         while( spectraLines[0].first[1] < desiredFirstLine )
@@ -185,6 +215,11 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
             }
           }
         }
+
+      const size_t spectraLinesCount = spectraLines.size();
+      this->AddLineWindow( spectraLinesCount, perThreadData.LineWindowMap );
+
+
       ++outputIt;
       ++supportWindowIt;
       }
