@@ -1,5 +1,23 @@
-#ifndef __itkBModeImageFilter_txx
-#define __itkBModeImageFilter_txx
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
+#ifndef __itkBModeImageFilter_hxx
+#define __itkBModeImageFilter_hxx
+
 #include "itkBModeImageFilter.h"
 
 #include "itkMetaDataDictionary.h"
@@ -10,7 +28,8 @@
 
 namespace itk
 {
-template < class TInputImage, class TOutputImage >
+
+template < typename TInputImage, typename TOutputImage >
 BModeImageFilter< TInputImage, TOutputImage >
 ::BModeImageFilter()
 {
@@ -31,7 +50,8 @@ BModeImageFilter< TInputImage, TOutputImage >
   m_LogFilter->SetInput( m_AddConstantFilter->GetOutput() );
 }
 
-template < class TInputImage, class TOutputImage >
+
+template < typename TInputImage, typename TOutputImage >
 void
 BModeImageFilter< TInputImage, TOutputImage >
 ::PrintSelf( std::ostream& os, Indent indent ) const
@@ -39,7 +59,8 @@ BModeImageFilter< TInputImage, TOutputImage >
   Superclass::PrintSelf( os, indent );
 }
 
-template < class TInputImage, class TOutputImage >
+
+template < typename TInputImage, typename TOutputImage >
 void
 BModeImageFilter< TInputImage, TOutputImage >
 ::GenerateInputRequestedRegion()
@@ -48,14 +69,8 @@ BModeImageFilter< TInputImage, TOutputImage >
   Superclass::GenerateInputRequestedRegion();
 
   // get pointers to the inputs
-  typename InputImageType::Pointer inputPtr  =
-    const_cast<InputImageType *> (this->GetInput());
+  typename InputImageType::Pointer inputPtr = const_cast<InputImageType *> (this->GetInput());
   typename OutputImageType::Pointer outputPtr = this->GetOutput();
-
-  if ( !inputPtr || !outputPtr )
-    {
-    return;
-    }
 
   // we need to compute the input requested region (size and start index)
   typedef const typename OutputImageType::SizeType& OutputSizeType;
@@ -86,7 +101,7 @@ BModeImageFilter< TInputImage, TOutputImage >
 }
 
 
-template < class TInputImage, class TOutputImage >
+template < typename TInputImage, typename TOutputImage >
 void
 BModeImageFilter< TInputImage, TOutputImage >
 ::EnlargeOutputRequestedRegion(DataObject *output)
@@ -118,18 +133,14 @@ BModeImageFilter< TInputImage, TOutputImage >
   outputPtr->SetRequestedRegion( enlargedRegion );
 }
 
-template < class TInputImage, class TOutputImage >
+
+template < typename TInputImage, typename TOutputImage >
 void
 BModeImageFilter< TInputImage, TOutputImage >
 ::GenerateData()
 {
   typename InputImageType::ConstPointer  inputPtr  = this->GetInput();
   typename OutputImageType::Pointer      outputPtr = this->GetOutput();
-
-  if ( !inputPtr || !outputPtr )
-    {
-    return;
-    }
 
   const unsigned int direction = m_AnalyticFilter->GetDirection();
   typename InputImageType::SizeType size = inputPtr->GetLargestPossibleRegion().GetSize();
@@ -138,7 +149,9 @@ BModeImageFilter< TInputImage, TOutputImage >
   // implementations to work.
   unsigned int n = size[direction];
   while( n % 2 == 0 )
+    {
     n /= 2;
+    }
   bool doPadding;
   if( n == 1 )
     {

@@ -1,28 +1,29 @@
 /*=========================================================================
-
-  Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkRegionFromReferenceImageFilter.txx,v $
-  Language:  C++
-  Date:      $Date: 2008-10-13 18:54:28 $
-  Version:   $Revision: 1.4 $
-
-  Copyright (c) Insight Software Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-     PURPOSE.  See the above copyright notices for more information.
-
-=========================================================================*/
-#ifndef __itkRegionFromReferenceImageFilter_txx
-#define __itkRegionFromReferenceImageFilter_txx
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
+#ifndef __itkRegionFromReferenceImageFilter_hxx
+#define __itkRegionFromReferenceImageFilter_hxx
 
 #include "itkRegionFromReferenceImageFilter.h"
 
 namespace itk
 {
 
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 void
 RegionFromReferenceImageFilter<TInputImage, TOutputImage>
 ::GenerateOutputInformation()
@@ -36,12 +37,10 @@ RegionFromReferenceImageFilter<TInputImage, TOutputImage>
   this->SetExtractionRegion( this->GetReferenceImage()->GetLargestPossibleRegion() );
   Superclass::GenerateOutputInformation();
 }
-  
-/**
- *
- */
-template <class TInputImage, class TOutputImage>
-void 
+
+
+template <typename TInputImage, typename TOutputImage>
+void
 RegionFromReferenceImageFilter<TInputImage,TOutputImage>
 ::SetReferenceImage ( const ReferenceImageType *image )
 {
@@ -52,11 +51,9 @@ RegionFromReferenceImageFilter<TInputImage,TOutputImage>
     this->Modified();
     }
 }
-  
-/**
- *
- */
-template <class TInputImage, class TOutputImage>
+
+
+template <typename TInputImage, typename TOutputImage>
 const typename RegionFromReferenceImageFilter<TInputImage,TOutputImage>::ReferenceImageType *
 RegionFromReferenceImageFilter<TInputImage,TOutputImage>
 ::GetReferenceImage() const
@@ -66,7 +63,7 @@ RegionFromReferenceImageFilter<TInputImage,TOutputImage>
   const DataObject * input = surrogate->ProcessObject::GetInput(1);
 
   const ReferenceImageType * referenceImage = static_cast<const ReferenceImageType *>( input );
-  
+
   return referenceImage;
 }
 

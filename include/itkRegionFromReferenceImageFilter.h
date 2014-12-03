@@ -1,19 +1,20 @@
 /*=========================================================================
-
-  Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkRegionFromReferenceImageFilter.h,v $
-  Language:  C++
-  Date:      $Date: 2009-04-25 12:27:20 $
-  Version:   $Revision: 1.10 $
-
-  Copyright (c) Insight Software Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-     PURPOSE.  See the above copyright notices for more information.
-
-=========================================================================*/
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef __itkRegionFromReferenceImageFilter_h
 #define __itkRegionFromReferenceImageFilter_h
 
@@ -26,7 +27,7 @@ namespace itk
  * \brief Decrease the image size by cropping the image by an itk::Size at
  * both the upper and lower bounds of the largest possible region.
  *
- * RegionFromReferenceImageFilter changes the image boundary of an image by removing 
+ * RegionFromReferenceImageFilter changes the image boundary of an image by removing
  * pixels outside the target region.  The target region is not specified in
  * advance, but calculated in BeforeThreadedGenerateData().
  *
@@ -35,19 +36,19 @@ namespace itk
  * \ingroup GeometricTransforms
  * \ingroup Ultrasound
  */
-template <class TInputImage, class TOutputImage=TInputImage>
-class ITK_EXPORT RegionFromReferenceImageFilter:
+template< typename TInputImage, typename TOutputImage=TInputImage >
+class RegionFromReferenceImageFilter:
     public ExtractImageFilter<TInputImage,TOutputImage>
 {
 public:
   /** Standard class typedefs. */
-  typedef RegionFromReferenceImageFilter                               Self;
-  typedef ExtractImageFilter<TInputImage,TOutputImage>  Superclass;
-  typedef SmartPointer<Self>                            Pointer;
-  typedef SmartPointer<const Self>                      ConstPointer;
+  typedef RegionFromReferenceImageFilter               Self;
+  typedef ExtractImageFilter<TInputImage,TOutputImage> Superclass;
+  typedef SmartPointer<Self>                           Pointer;
+  typedef SmartPointer<const Self>                     ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro(Self);  
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(RegionFromReferenceImageFilter, ExtractImageFilter);
@@ -79,7 +80,7 @@ public:
 
   /** Copy the output information from another Image. */
   void SetReferenceImage ( const ReferenceImageType *image );
-  
+
   const ReferenceImageType * GetReferenceImage() const;
 
   /** Set the input image */
@@ -111,18 +112,17 @@ protected:
     }
   ~RegionFromReferenceImageFilter() {}
 
-  void GenerateOutputInformation();
-  
+  virtual void GenerateOutputInformation() ITK_OVERRIDE;
+
 private:
   RegionFromReferenceImageFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 };
 
-  
 } // end namespace itk
-  
+
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkRegionFromReferenceImageFilter.txx"
+#include "itkRegionFromReferenceImageFilter.hxx"
 #endif
-  
+
 #endif
