@@ -77,6 +77,7 @@ protected:
 
   typedef typename OutputImageType::RegionType OutputImageRegionType;
 
+  virtual void GenerateOutputInformation() ITK_OVERRIDE;
   virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
   virtual void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId ) ITK_OVERRIDE;
 

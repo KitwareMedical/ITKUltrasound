@@ -41,11 +41,26 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
 template< typename TInputImage, typename TSupportWindowImage, typename TOutputImage >
 void
 Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
+::GenerateOutputInformation()
+{
+  Superclass::GenerateOutputInformation();
+
+  const SupportWindowImageType * supportWindowImage = this->GetSupportWindowImage();
+  const MetaDataDictionary & dict = supportWindowImage->GetMetaDataDictionary();
+  FFT1DSizeType fft1DSize = 32;
+  ExposeMetaData< FFT1DSizeType >( dict, "FFT1DSize", fft1DSize );
+
+  OutputImageType * output = this->GetOutput();
+  output->SetVectorLength( fft1DSize );
+}
+
+
+template< typename TInputImage, typename TSupportWindowImage, typename TOutputImage >
+void
+Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
 ::BeforeThreadedGenerateData()
 {
   const SupportWindowImageType * supportWindowImage = this->GetSupportWindowImage();
-  typedef Spectra1DSupportWindowImageFilter< OutputImageType > Spectra1DSupportWindowFilterType;
-  typedef typename Spectra1DSupportWindowFilterType::FFT1DSizeType FFT1DSizeType;
   const MetaDataDictionary & dict = supportWindowImage->GetMetaDataDictionary();
   FFT1DSizeType fft1DSize = 32;
   ExposeMetaData< FFT1DSizeType >( dict, "FFT1DSize", fft1DSize );
@@ -139,8 +154,6 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
   OutputIteratorType outputIt( output, outputRegionForThread );
   outputIt.SetDirection( 1 );
 
-  typedef Spectra1DSupportWindowImageFilter< OutputImageType > Spectra1DSupportWindowFilterType;
-  typedef typename Spectra1DSupportWindowFilterType::FFT1DSizeType FFT1DSizeType;
   const MetaDataDictionary & dict = supportWindowImage->GetMetaDataDictionary();
   FFT1DSizeType fft1DSize = 32;
   ExposeMetaData< FFT1DSizeType >( dict, "FFT1DSize", fft1DSize );
@@ -218,7 +231,21 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
 
       const size_t spectraLinesCount = spectraLines.size();
       this->AddLineWindow( spectraLinesCount, perThreadData.LineWindowMap );
-
+      typename OutputImageType::PixelType outputPixel;
+      outputPixel.SetSize( fft1DSize );
+      outputPixel.Fill( NumericTraits< ScalarType >::ZeroValue() );
+      typename SpectraVectorType::const_iterator windowIt = perThreadData.LineWindowMap[spectraLinesCount].begin();
+      for( size_t line = 0; line < spectraLinesCount; ++line )
+        {
+        typename SpectraVectorType::const_iterator spectraIt = spectraLines[line].second.begin();
+        for( FFT1DSizeType sample = 0; sample < fft1DSize; ++sample )
+          {
+          outputPixel[sample] += *windowIt * *spectraIt;
+          ++spectraIt;
+          }
+        ++windowIt;
+        }
+      outputIt.Set( outputPixel );
 
       ++outputIt;
       ++supportWindowIt;
