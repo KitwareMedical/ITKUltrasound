@@ -40,6 +40,9 @@ itk_add_test( NAME itkAnalyticSignalImageFilterTest
     )
 itk_add_test( NAME itkBModeImageFilterTestTiming
   COMMAND UltrasoundTestDriver
+  --compare
+    ${ITK_TEST_OUTPUT_DIR}/itkBModeImageFilterTestTiming.mha
+    DATA{Baseline/itkBModeImageFilterTestTimingBaseline.mha}
   itkBModeImageFilterTestTiming
     DATA{${CMAKE_CURRENT_SOURCE_DIR}/Input/uniform_phantom_8.9_MHz.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkBModeImageFilterTestTiming.mha
