@@ -31,8 +31,9 @@ namespace itk
  * advance, but calculated in BeforeThreadedGenerateData().
  *
  * This filter uses ExtractImageFilter to perform the cropping.
- * 
+ *
  * \ingroup GeometricTransforms
+ * \ingroup Ultrasound
  */
 template <class TInputImage, class TOutputImage=TInputImage>
 class ITK_EXPORT RegionFromReferenceImageFilter:

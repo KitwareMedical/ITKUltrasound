@@ -22,6 +22,8 @@ namespace itk
    *
    * Use SetDirection() to define the axis of propagation. 
    *
+   * \ingroup Ultrasound
+   *
    * \sa ResampleRThetaToCartesianImageFilter
    *
    */
