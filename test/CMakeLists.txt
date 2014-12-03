@@ -30,13 +30,15 @@ CreateTestDriver( Ultrasound "${Ultrasound-Test_LIBRARIES}" "${UltrasoundTests}"
 
 itk_add_test( NAME itkAnalyticSignalImageFilterTest
   COMMAND UltrasoundTestDriver
-  --compare ${CMAKE_CURRENT_SOURCE_DIR}/Baseline/itkAnalyticSignalImageFilterReal.mhd
-    itkAnalyticSignalImageFilterTestOutputReal.mha
-  --compare ${CMAKE_CURRENT_SOURCE_DIR}/Baseline/itkAnalyticSignalImageFilterImaginary.mhd
-    itkAnalyticSignalImageFilterTestOutputImaginary.mha
+  --compare
+    ${CMAKE_CURRENT_SOURCE_DIR}/Baseline/itkAnalyticSignalImageFilterReal.mhd
+    ${ITK_TEST_OUTPUT_DIR}/itkAnalyticSignalImageFilterTestOutputReal.mha
+  --compare
+    ${CMAKE_CURRENT_SOURCE_DIR}/Baseline/itkAnalyticSignalImageFilterImaginary.mhd
+    ${ITK_TEST_OUTPUT_DIR}/itkAnalyticSignalImageFilterTestOutputImaginary.mha
   itkAnalyticSignalImageFilterTest
     ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-    itkAnalyticSignalImageFilterTestOutput
+    ${ITK_TEST_OUTPUT_DIR}/itkAnalyticSignalImageFilterTestOutput
     )
 itk_add_test( NAME itkBModeImageFilterTestTiming
   COMMAND UltrasoundTestDriver
@@ -51,47 +53,53 @@ itk_add_test( NAME itkBModeImageFilterTestTiming
 
 itk_add_test( NAME itkFFT1DComplexToComplexImageFilterTest
   COMMAND UltrasoundTestDriver
-  --compare ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-            itkFFT1DComplexToComplexImageFilterTestOutput.mha
+  --compare
+    ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
+    ${ITK_TEST_OUTPUT_DIR}/itkFFT1DComplexToComplexImageFilterTestOutput.mha
   itkFFT1DComplexToComplexImageFilterTest
     ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkFFT1DRealToComplexConjugateImageFilterTestBaseline
-    itkFFT1DComplexToComplexImageFilterTestOutput.mha
+    ${ITK_TEST_OUTPUT_DIR}/itkFFT1DComplexToComplexImageFilterTestOutput.mha
     )
 # use a forward fft, then inverse fft for this instead because of the FullMatrix
 # issue
 itk_add_test( NAME itkFFT1DImageFilterTest
   COMMAND UltrasoundTestDriver
-  --compare ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-            itkFFT1DImageFilterTestOutput.mha
+  --compare
+    ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
+    ${ITK_TEST_OUTPUT_DIR}/itkFFT1DImageFilterTestOutput.mha
   itkFFT1DImageFilterTest
     ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-    itkFFT1DImageFilterTestOutput.mha
+    ${ITK_TEST_OUTPUT_DIR}/itkFFT1DImageFilterTestOutput.mha
     )
 itk_add_test( NAME itkVnlFFT1DComplexToComplexImageFilterTest
   COMMAND UltrasoundTestDriver
-  --compare ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-            itkVnlFFT1DComplexToComplexImageFilterTestOutput.mhd
+  --compare
+    ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
+    ${ITK_TEST_OUTPUT_DIR}/itkVnlFFT1DComplexToComplexImageFilterTestOutput.mhd
   itkVnlFFT1DComplexToComplexImageFilterTest
     ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkFFT1DRealToComplexConjugateImageFilterTestBaseline
-    itkVnlFFT1DComplexToComplexImageFilterTestOutput.mhd
+    ${ITK_TEST_OUTPUT_DIR}/itkVnlFFT1DComplexToComplexImageFilterTestOutput.mhd
     )
 itk_add_test( NAME itkVnlFFT1DRealToComplexConjugateImageFilterTest
   COMMAND UltrasoundTestDriver
-  --compare ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkFFT1DRealToComplexConjugateImageFilterTestBaselineRealFull.mhd
-            itkVnlFFT1DRealToComplexConjugateImageFilterTestOutputReal.mha
-  --compare ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkFFT1DRealToComplexConjugateImageFilterTestBaselineImaginaryFull.mhd
-            itkVnlFFT1DRealToComplexConjugateImageFilterTestOutputImaginary.mha
+  --compare
+    ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkFFT1DRealToComplexConjugateImageFilterTestBaselineRealFull.mhd
+    ${ITK_TEST_OUTPUT_DIR}/itkVnlFFT1DRealToComplexConjugateImageFilterTestOutputReal.mha
+  --compare
+    ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkFFT1DRealToComplexConjugateImageFilterTestBaselineImaginaryFull.mhd
+    ${ITK_TEST_OUTPUT_DIR}/itkVnlFFT1DRealToComplexConjugateImageFilterTestOutputImaginary.mha
   itkVnlFFT1DRealToComplexConjugateImageFilterTest
     ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-    itkVnlFFT1DRealToComplexConjugateImageFilterTestOutput
+    ${ITK_TEST_OUTPUT_DIR}/itkVnlFFT1DRealToComplexConjugateImageFilterTestOutput
     )
 itk_add_test( NAME itkVnlFFT1DComplexConjugateToRealImageFilterTest
   COMMAND UltrasoundTestDriver
-  --compare ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-            itkVnlFFT1DComplexConjugateToRealImageFilterTestOutput.mhd
+  --compare
+    ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
+    ${ITK_TEST_OUTPUT_DIR}/itkVnlFFT1DComplexConjugateToRealImageFilterTestOutput.mhd
   itkVnlFFT1DComplexConjugateToRealImageFilterTest
     ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkFFT1DRealToComplexConjugateImageFilterTestBaseline
-    itkVnlFFT1DComplexConjugateToRealImageFilterTestOutput.mhd
+    ${ITK_TEST_OUTPUT_DIR}/itkVnlFFT1DComplexConjugateToRealImageFilterTestOutput.mhd
     )
 itk_add_test( NAME itkSpectra1DImageFilterTest
   COMMAND UltrasoundTestDriver
@@ -128,28 +136,32 @@ itk_add_test( NAME itkSpectra1DSupportWindowToMaskImageFilterTest2
 if( USE_FFTW )
   itk_add_test( NAME itkFFTW1DRealToComplexConjugateImageFilterTest
     COMMAND UltrasoundTestDriver
-    --compare ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkFFT1DRealToComplexConjugateImageFilterTestBaselineRealFull.mhd
-              itkFFTW1DRealToComplexConjugateImageFilterTestOutputReal.mha
-    --compare ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkFFT1DRealToComplexConjugateImageFilterTestBaselineImaginaryFull.mhd
-              itkFFTW1DRealToComplexConjugateImageFilterTestOutputImaginary.mha
+    --compare
+      ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkFFT1DRealToComplexConjugateImageFilterTestBaselineRealFull.mhd
+      ${ITK_TEST_OUTPUT_DIR}/itkFFTW1DRealToComplexConjugateImageFilterTestOutputReal.mha
+    --compare
+      ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkFFT1DRealToComplexConjugateImageFilterTestBaselineImaginaryFull.mhd
+      ${ITK_TEST_OUTPUT_DIR}/itkFFTW1DRealToComplexConjugateImageFilterTestOutputImaginary.mha
     itkFFTW1DRealToComplexConjugateImageFilterTest
       ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-      itkFFTW1DRealToComplexConjugateImageFilterTestOutput
+      ${ITK_TEST_OUTPUT_DIR}/itkFFTW1DRealToComplexConjugateImageFilterTestOutput
       )
   itk_add_test( NAME itkFFTW1DComplexConjugateToRealImageFilterTest
     COMMAND UltrasoundTestDriver
-    --compare ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-              itkFFTW1DComplexConjugateToRealImageFilterTestOutput.mha
+    --compare
+      ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
+      ${ITK_TEST_OUTPUT_DIR}/itkFFTW1DComplexConjugateToRealImageFilterTestOutput.mha
     itkFFTW1DComplexConjugateToRealImageFilterTest
       ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkFFT1DRealToComplexConjugateImageFilterTestBaseline
-      itkFFTW1DComplexConjugateToRealImageFilterTestOutput.mha
+      ${ITK_TEST_OUTPUT_DIR}/itkFFTW1DComplexConjugateToRealImageFilterTestOutput.mha
       )
   itk_add_test( NAME itkFFTW1DComplexToComplexImageFilterTest
     COMMAND UltrasoundTestDriver
-    --compare ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-              itkFFTW1DComplexToComplexImageFilterTestOutput.mha
+    --compare
+      ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
+      ${ITK_TEST_OUTPUT_DIR}/itkFFTW1DComplexToComplexImageFilterTestOutput.mha
     itkFFTW1DComplexToComplexImageFilterTest
       ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkFFT1DRealToComplexConjugateImageFilterTestBaseline
-      itkFFTW1DComplexToComplexImageFilterTestOutput.mha
+      ${ITK_TEST_OUTPUT_DIR}/itkFFTW1DComplexToComplexImageFilterTestOutput.mha
       )
 endif()
