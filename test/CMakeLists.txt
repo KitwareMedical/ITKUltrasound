@@ -9,6 +9,7 @@ endif()
 set( UltrasoundTests
   itkAnalyticSignalImageFilterTest.cxx
   itkBModeImageFilterTestTiming.cxx
+  itkCurvilinearArraySpecialCoordinatesImageTest.cxx
   itkFFT1DImageFilterTest.cxx
   itkFFT1DComplexToComplexImageFilterTest.cxx
   itkSpectra1DImageFilterTest.cxx
@@ -46,11 +47,15 @@ itk_add_test( NAME itkBModeImageFilterTestTiming
     ${ITK_TEST_OUTPUT_DIR}/itkBModeImageFilterTestTiming.mha
     DATA{Baseline/itkBModeImageFilterTestTimingBaseline.mha}
   itkBModeImageFilterTestTiming
-    DATA{${CMAKE_CURRENT_SOURCE_DIR}/Input/uniform_phantom_8.9_MHz.mha}
+    DATA{Input/uniform_phantom_8.9_MHz.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkBModeImageFilterTestTiming.mha
     )
-
-
+itk_add_test( NAME itkCurvilinearArraySpecialCoordinatesImageTest
+  COMMAND UltrasoundTestDriver
+  itkCurvilinearArraySpecialCoordinatesImageTest
+    DATA{Input/curvilinear_envelope.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkCurvilinearArraySpecialCoordinatesImageTest.mha
+    )
 itk_add_test( NAME itkFFT1DComplexToComplexImageFilterTest
   COMMAND UltrasoundTestDriver
   --compare
@@ -104,13 +109,13 @@ itk_add_test( NAME itkVnlFFT1DComplexConjugateToRealImageFilterTest
 itk_add_test( NAME itkSpectra1DImageFilterTest
   COMMAND UltrasoundTestDriver
   itkSpectra1DImageFilterTest
-    DATA{${CMAKE_CURRENT_SOURCE_DIR}/Input/uniform_phantom_8.9_MHz.mha}
+    DATA{Input/uniform_phantom_8.9_MHz.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkSpectra1DImageFilterTest.mha
     )
 itk_add_test( NAME itkSpectra1DSupportWindowImageFilterTest
   COMMAND UltrasoundTestDriver
   itkSpectra1DSupportWindowImageFilterTest
-    DATA{${CMAKE_CURRENT_SOURCE_DIR}/Input/uniform_phantom_8.9_MHz.mha}
+    DATA{Input/uniform_phantom_8.9_MHz.mha}
     )
 itk_add_test( NAME itkSpectra1DSupportWindowToMaskImageFilterTest1
   COMMAND UltrasoundTestDriver
@@ -118,7 +123,7 @@ itk_add_test( NAME itkSpectra1DSupportWindowToMaskImageFilterTest1
     ${ITK_TEST_OUTPUT_DIR}/itkSpectra1DSupportWindowToMaskImageFilterTest1.mha
     DATA{Baseline/itkSpectra1DSupportWindowToMaskImageFilterTest1.mha}
   itkSpectra1DSupportWindowToMaskImageFilterTest
-    DATA{${CMAKE_CURRENT_SOURCE_DIR}/Input/uniform_phantom_8.9_MHz.mha}
+    DATA{Input/uniform_phantom_8.9_MHz.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkSpectra1DSupportWindowToMaskImageFilterTest1.mha
     0 0
     )
@@ -128,7 +133,7 @@ itk_add_test( NAME itkSpectra1DSupportWindowToMaskImageFilterTest2
     ${ITK_TEST_OUTPUT_DIR}/itkSpectra1DSupportWindowToMaskImageFilterTest2.mha
     DATA{Baseline/itkSpectra1DSupportWindowToMaskImageFilterTest2.mha}
   itkSpectra1DSupportWindowToMaskImageFilterTest
-    DATA{${CMAKE_CURRENT_SOURCE_DIR}/Input/uniform_phantom_8.9_MHz.mha}
+    DATA{Input/uniform_phantom_8.9_MHz.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkSpectra1DSupportWindowToMaskImageFilterTest2.mha
     100 100
     )
