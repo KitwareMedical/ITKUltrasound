@@ -16,8 +16,12 @@
  *
  *=========================================================================*/
 
+#include "itkCurvilinearArraySpecialCoordinatesImage.h"
+
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
+
+#include "itkResampleImageFilter.h"
 
 int itkCurvilinearArraySpecialCoordinatesImageTest( int argc, char * argv[] )
 {
@@ -32,12 +36,26 @@ int itkCurvilinearArraySpecialCoordinatesImageTest( int argc, char * argv[] )
   const char * outputImageFileName = argv[2];
 
   typedef unsigned char PixelType;
-  const unsigned int Dimension = 3;
+  const unsigned int Dimension = 2;
   typedef itk::Image< PixelType, Dimension > ImageType;
 
-  typedef itk::ImageFileReader < ImageType > ReaderType;
+  typedef itk::CurvilinearArraySpecialCoordinatesImage< PixelType, Dimension > SpecialCoordinatesImageType;
+
+  //typedef itk::ImageFileReader < ImageType > ReaderType;
+  typedef itk::ImageFileReader < SpecialCoordinatesImageType > ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
+  try
+    {
+    reader->UpdateOutputInformation();
+    }
+  catch( itk::ExceptionObject & error )
+    {
+    std::cerr << "Error: " << error << std::endl;
+    return EXIT_FAILURE;
+    }
+  reader->GetOutput()->Print( std::cout );
+
 
   typedef itk::ImageFileWriter< ImageType > WriterType;
   WriterType::Pointer writer = WriterType::New();
