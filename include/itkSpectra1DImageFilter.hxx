@@ -49,9 +49,10 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
   const MetaDataDictionary & dict = supportWindowImage->GetMetaDataDictionary();
   FFT1DSizeType fft1DSize = 32;
   ExposeMetaData< FFT1DSizeType >( dict, "FFT1DSize", fft1DSize );
+  const FFT1DSizeType spectraComponents = fft1DSize / 2 - 1;
 
   OutputImageType * output = this->GetOutput();
-  output->SetVectorLength( fft1DSize );
+  output->SetVectorLength( spectraComponents );
 }
 
 
@@ -64,6 +65,7 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
   const MetaDataDictionary & dict = supportWindowImage->GetMetaDataDictionary();
   FFT1DSizeType fft1DSize = 32;
   ExposeMetaData< FFT1DSizeType >( dict, "FFT1DSize", fft1DSize );
+  const FFT1DSizeType spectraComponents = fft1DSize / 2 - 1;
 
   const ThreadIdType numberOfThreads = this->GetNumberOfThreads();
   this->m_PerThreadDataContainer.resize( numberOfThreads );
@@ -71,7 +73,7 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
     {
     PerThreadData & perThreadData = this->m_PerThreadDataContainer[threadId];
     perThreadData.ComplexVector.set_size( fft1DSize );
-    perThreadData.SpectraVector.set_size( fft1DSize );
+    perThreadData.SpectraVector.set_size( spectraComponents );
     perThreadData.LineImageRegionSize.Fill( 1 );
     perThreadData.LineImageRegionSize[0] = fft1DSize;
     }
@@ -112,7 +114,7 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
   const InputImageType * input = this->GetInput();
   PerThreadData & perThreadData = this->m_PerThreadDataContainer[threadId];
 
-  const FFT1DSizeType fft1DSize = static_cast< FFT1DSizeType >( perThreadData.SpectraVector.size() );
+  const FFT1DSizeType fft1DSize = static_cast< FFT1DSizeType >( perThreadData.ComplexVector.size() );
 
   const typename InputImageType::RegionType lineRegion( lineIndex, perThreadData.LineImageRegionSize );
   InputImageIteratorType inputIt( input, lineRegion );
@@ -131,11 +133,12 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
   fft1D.bwd_transform( perThreadData.ComplexVector );
   typename ComplexVectorType::const_iterator complexVectorConstIt = perThreadData.ComplexVector.begin();
   typename SpectraVectorType::iterator spectraVectorIt = perThreadData.SpectraVector.begin();
-  const typename SpectraVectorType::iterator spectraVectorItEnd = perThreadData.SpectraVector.end();
-  while( spectraVectorIt != spectraVectorItEnd )
+  // drop DC component
+  ++complexVectorConstIt;
+  const size_t highFreq = perThreadData.SpectraVector.size();
+  for( size_t freq = 0; freq < highFreq; ++freq )
     {
-    *spectraVectorIt = std::real(*complexVectorConstIt * std::conj(*complexVectorConstIt));
-    ++spectraVectorIt;
+    spectraVectorIt[freq] = std::real(*complexVectorConstIt * std::conj(*complexVectorConstIt));
     ++complexVectorConstIt;
     }
   return std::make_pair( lineIndex, perThreadData.SpectraVector );
