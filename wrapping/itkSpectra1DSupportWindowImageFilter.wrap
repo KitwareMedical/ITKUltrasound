@@ -1,3 +1,5 @@
+itk_wrap_include("deque")
+
 itk_wrap_class("itk::Spectra1DSupportWindowImageFilter" POINTER_WITH_2_SUPERCLASSES)
   itk_wrap_image_filter("${WRAP_ITK_INT}" 1)
 itk_end_wrap_class()
