@@ -20,6 +20,7 @@
 
 #include "itkImageToImageFilter.h"
 #include "itkDefaultConvertPixelTraits.h"
+#include "itkImageRegionConstIterator.h"
 
 #include "vnl/algo/vnl_fft_base.h"
 #include "vnl/algo/vnl_fft_1d.h"
