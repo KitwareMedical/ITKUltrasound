@@ -41,26 +41,49 @@ int itkCurvilinearArraySpecialCoordinatesImageTest( int argc, char * argv[] )
 
   typedef itk::CurvilinearArraySpecialCoordinatesImage< PixelType, Dimension > SpecialCoordinatesImageType;
 
-  //typedef itk::ImageFileReader < ImageType > ReaderType;
   typedef itk::ImageFileReader < SpecialCoordinatesImageType > ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
   try
     {
-    reader->UpdateOutputInformation();
+    reader->Update();
     }
   catch( itk::ExceptionObject & error )
     {
     std::cerr << "Error: " << error << std::endl;
     return EXIT_FAILURE;
     }
-  reader->GetOutput()->Print( std::cout );
+  SpecialCoordinatesImageType::Pointer curvilinearArrayImage = reader->GetOutput();
+  const SpecialCoordinatesImageType::SizeType inputSize = curvilinearArrayImage->GetLargestPossibleRegion().GetSize();
+  const double lateralAngularSeparation = vnl_math::pi / 2.0 /
+    (inputSize[1] - 1);
+  curvilinearArrayImage->SetLateralAngularSeparation( lateralAngularSeparation );
+  const double radiusStart = 26.4;
+  const double radiusStop = 131.5;
+  curvilinearArrayImage->SetFirstSampleDistance( radiusStart );
+  curvilinearArrayImage->SetRadiusSampleSize( (radiusStop - radiusStart) / (inputSize[0] -1) );
 
+  curvilinearArrayImage->Print( std::cout );
+
+  typedef itk::ResampleImageFilter< SpecialCoordinatesImageType, ImageType > ResamplerType;
+  ResamplerType::Pointer resampler = ResamplerType::New();
+  resampler->SetInput( reader->GetOutput() );
+  SpecialCoordinatesImageType::SizeType outputSize;
+  outputSize[0] = 800;
+  outputSize[1] = 800;
+  resampler->SetSize( outputSize );
+  SpecialCoordinatesImageType::SpacingType outputSpacing;
+  outputSpacing.Fill( 0.15 );
+  resampler->SetOutputSpacing( outputSpacing );
+  SpecialCoordinatesImageType::PointType outputOrigin;
+  outputOrigin[0] = -1 * outputSize[0] * outputSpacing[0];
+  outputOrigin[1] = -1 * radiusStart * std::cos( vnl_math::pi / 4.0 );
+  resampler->SetOutputOrigin( outputOrigin );
 
   typedef itk::ImageFileWriter< ImageType > WriterType;
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFileName );
-  // writer->SetInput resampler->GetOutput() );
+  writer->SetInput( resampler->GetOutput() );
   try
     {
     }
