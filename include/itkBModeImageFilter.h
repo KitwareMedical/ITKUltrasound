@@ -45,7 +45,7 @@ namespace itk
  * \sa ResampleRThetaToCartesianImageFilter
  *
  */
-template < typename TInputImage, typename TOutputImage >
+template < typename TInputImage, typename TOutputImage=TInputImage >
 class BModeImageFilter :
   public ImageToImageFilter< TInputImage, TOutputImage >
 {
