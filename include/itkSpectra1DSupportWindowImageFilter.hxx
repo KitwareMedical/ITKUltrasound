@@ -68,7 +68,7 @@ Spectra1DSupportWindowImageFilter< TInputImage >
     const IndexType inputIndex = inputIt.GetIndex();
 
     IndexType lineIndex;
-    lineIndex[0] = inputIndex[0] - fftSize;
+    lineIndex[0] = inputIndex[0] - fftSize / 2;
     if( lineIndex[0] < largestIndexStart[0] )
       {
       lineIndex[0] = largestIndexStart[0];
