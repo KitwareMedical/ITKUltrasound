@@ -76,8 +76,8 @@ int itkCurvilinearArraySpecialCoordinatesImageTest( int argc, char * argv[] )
   outputSpacing.Fill( 0.15 );
   resampler->SetOutputSpacing( outputSpacing );
   SpecialCoordinatesImageType::PointType outputOrigin;
-  outputOrigin[0] = -1 * outputSize[0] * outputSpacing[0];
-  outputOrigin[1] = -1 * radiusStart * std::cos( vnl_math::pi / 4.0 );
+  outputOrigin[0] = outputSize[0] * outputSpacing[0] / -2.0;
+  outputOrigin[1] = radiusStart * std::cos( vnl_math::pi / 4.0 );
   resampler->SetOutputOrigin( outputOrigin );
 
   typedef itk::ImageFileWriter< ImageType > WriterType;
@@ -86,6 +86,7 @@ int itkCurvilinearArraySpecialCoordinatesImageTest( int argc, char * argv[] )
   writer->SetInput( resampler->GetOutput() );
   try
     {
+    writer->Update();
     }
   catch( itk::ExceptionObject & error )
     {

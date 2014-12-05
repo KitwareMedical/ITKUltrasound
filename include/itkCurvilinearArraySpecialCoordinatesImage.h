@@ -31,38 +31,34 @@ namespace itk
  *
  * \verbatim
  *
- * y-axis <--------------------+
+ *                             +---------------------> x-axis
  *                             |\
  *                          /  | \
- *                          `~-|  \
+ *                             |-~\
  *                       /     |   \
  *                             |    \
  *                    /        |     \
- *                     lateral |
+ *                             | lateral
  *                             |
- *                             v x-axis
+ *                             v y-axis
  *
  * \endverbatim
  *
  * The equations form performing the conversion from Cartesian coordinates to
- * 3D phased array coordinates are as follows:
+ * curvilinear/phased array coordinates are as follows:
  *
- * \todo: update
- * azimuth = arctan(x/y)
- * elevation = arctan(y/z)
- * radius = std::sqrt(x^2 + y^2 + z^2)
+ * lateral = arctan(x/y)
+ * radius = std::sqrt(x^2 + y^2)
  *
  * The reversed transforms are:
  *
- * \todo: update
- * z = radius / std::sqrt(1 + (tan(azimuth))^2 + (tan(elevation))^2 );
- * x = z * std::tan(azimuth)
- * y = z * std::tan(elevation)
+ * x = radius * std::sin(lateral)
+ * y = radius * std::cos(lateral)
  *
  * CurvilinearArraySpecialCoordinatesImages are templated over a pixel
  * type and follow the SpecialCoordinatesImage interface.  The data in
  * an image is  arranged in a 1D array as
- * [radius-index][lateral-index] with radius-index
+ * [lateral-index][radius-index] with radius-index
  * varying most rapidly.  The Index type reverses the order so that
  * Index[0] = radius-index, Index[1] = lateral-index.
  *
@@ -181,30 +177,23 @@ public:
     const Point< TCoordRep, VDimension > & point,
     ContinuousIndex< TCoordRep, VDimension > & index) const
   {
-    //RegionType region = this->GetLargestPossibleRegion();
-    //double     maxAzimuth =    region.GetSize(0) - 1;
-    //double     maxElevation =  region.GetSize(1) - 1;
+    const RegionType & region = this->GetLargestPossibleRegion();
+    const double maxLateral = region.GetSize(1) - 1;
 
-    //// Convert Cartesian coordinates into angular coordinates
-    //TCoordRep azimuth   = std::atan(point[0] / point[2]);
-    //TCoordRep elevation = std::atan(point[1] / point[2]);
-    //TCoordRep radius    = std::sqrt(point[0] * point[0]
-                                   //+ point[1] * point[1]
-                                   //+ point[2] * point[2]);
+    // Convert Cartesian coordinates into angular coordinates
+    const TCoordRep lateral = std::atan(point[0] / point[1]);
+    const TCoordRep radius  = std::sqrt(point[0] * point[0] + point[1] * point[1] );
 
-    //// Convert the "proper" angular coordinates into index format
-    //index[0] = static_cast< TCoordRep >( ( azimuth / m_AzimuthAngularSeparation )
-                                         //+ ( maxAzimuth / 2.0 ) );
-    //index[1] = static_cast< TCoordRep >( ( elevation / m_ElevationAngularSeparation )
-                                         //+ ( maxElevation / 2.0 ) );
-    //index[2] = static_cast< TCoordRep >( ( ( radius - m_FirstSampleDistance )
-                                           /// m_RadiusSampleSize ) );
+    // Convert the "proper" angular coordinates into index format
+    index[0] = static_cast< TCoordRep >( ( ( radius - m_FirstSampleDistance )
+                                           / m_RadiusSampleSize ) );
+    index[1] = static_cast< TCoordRep >( ( lateral / m_LateralAngularSeparation )
+                                         + ( maxLateral / 2.0 ) );
 
-    //// Now, check to see if the index is within allowed bounds
-    //const bool isInside = region.IsInside(index);
+    // Now, check to see if the index is within allowed bounds
+    const bool isInside = region.IsInside(index);
 
-    //return isInside;
-    return true;
+    return isInside;
   }
 
   /** Get the index (discrete) from a physical point.
@@ -216,33 +205,23 @@ public:
     const Point< TCoordRep, VDimension > & point,
     IndexType & index) const
   {
-    //RegionType region = this->GetLargestPossibleRegion();
-    //double     maxAzimuth =    region.GetSize(0) - 1;
-    //double     maxElevation =  region.GetSize(1) - 1;
+    const RegionType & region = this->GetLargestPossibleRegion();
+    const double maxLateral = region.GetSize(1) - 1;
 
-    //// Convert Cartesian coordinates into angular coordinates
-    //TCoordRep azimuth   = std::atan(point[0] / point[2]);
-    //TCoordRep elevation = std::atan(point[1] / point[2]);
-    //TCoordRep radius    = std::sqrt(point[0] * point[0]
-                                   //+ point[1] * point[1]
-                                   //+ point[2] * point[2]);
+    // Convert Cartesian coordinates into angular coordinates
+    const TCoordRep lateral = std::atan(point[0] / point[1]);
+    const TCoordRep radius  = std::sqrt(point[0] * point[0] + point[1] * point[1] );
 
-    //// Convert the "proper" angular coordinates into index format
-    //index[0] = static_cast< IndexValueType >(
-      //( azimuth / m_AzimuthAngularSeparation )
-      //+ ( maxAzimuth / 2.0 ) );
-    //index[1] = static_cast< IndexValueType >(
-      //( elevation / m_ElevationAngularSeparation )
-      //+ ( maxElevation / 2.0 ) );
-    //index[2] = static_cast< IndexValueType >(
-      //( ( radius - m_FirstSampleDistance )
-        /// m_RadiusSampleSize ) );
+    // Convert the "proper" angular coordinates into index format
+    index[0] = static_cast< IndexValueType >( ( ( radius - m_FirstSampleDistance )
+                                           / m_RadiusSampleSize ) );
+    index[1] = static_cast< IndexValueType >( ( lateral / m_LateralAngularSeparation )
+                                         + ( maxLateral / 2.0 ) );
 
-    //// Now, check to see if the index is within allowed bounds
-    //const bool isInside = region.IsInside(index);
+    // Now, check to see if the index is within allowed bounds
+    const bool isInside = region.IsInside(index);
 
-    //return isInside;
-    return true;
+    return isInside;
   }
 
   /** Get a physical point (in the space which
@@ -254,27 +233,16 @@ public:
     const ContinuousIndex< TCoordRep, VDimension > & index,
     Point< TCoordRep, VDimension > & point) const
   {
-    //RegionType region = this->GetLargestPossibleRegion();
-    //double     maxAzimuth =    region.GetSize(0) - 1;
-    //double     maxElevation =  region.GetSize(1) - 1;
+    const RegionType & region = this->GetLargestPossibleRegion();
+    const double maxLateral = region.GetSize(1) - 1;
 
-    //// Convert the index into proper angular coordinates
-    //TCoordRep azimuth   = ( index[0] - ( maxAzimuth / 2.0 ) )
-                          //* m_AzimuthAngularSeparation;
-    //TCoordRep elevation = ( index[1] - ( maxElevation / 2.0 ) )
-                          //* m_ElevationAngularSeparation;
-    //TCoordRep radius    = ( index[2] * m_RadiusSampleSize ) + m_FirstSampleDistance;
+    // Convert the index into proper angular coordinates
+    const TCoordRep radius  = ( index[0] * m_RadiusSampleSize ) + m_FirstSampleDistance;
+    const TCoordRep lateral = ( index[1] - ( maxLateral / 2.0 ) ) * m_LateralAngularSeparation;
 
-    //// Convert the angular coordinates into Cartesian coordinates
-    //TCoordRep tanOfAzimuth    = std::tan(azimuth);
-    //TCoordRep tanOfElevation  = std::tan(elevation);
-
-    //point[2] = static_cast< TCoordRep >( radius
-                                         /// std::sqrt(1
-                                                    //+ tanOfAzimuth * tanOfAzimuth
-                                                    //+ tanOfElevation * tanOfElevation) );
-    //point[1] = static_cast< TCoordRep >( point[2] * tanOfElevation );
-    //point[0] = static_cast< TCoordRep >( point[2] * tanOfAzimuth );
+    // Convert the angular coordinates into Cartesian coordinates
+    point[0] = static_cast< TCoordRep >( radius * std::sin(lateral) );
+    point[1] = static_cast< TCoordRep >( radius * std::cos(lateral) );
   }
 
   /** Get a physical point (in the space which
@@ -287,30 +255,16 @@ public:
     const IndexType & index,
     Point< TCoordRep, VDimension > & point) const
   {
-    //RegionType region = this->GetLargestPossibleRegion();
-    //double     maxAzimuth =    region.GetSize(0) - 1;
-    //double     maxElevation =  region.GetSize(1) - 1;
+    const RegionType & region = this->GetLargestPossibleRegion();
+    const double maxLateral = region.GetSize(1) - 1;
 
-    //// Convert the index into proper angular coordinates
-    //TCoordRep azimuth =
-      //( static_cast< double >( index[0] ) - ( maxAzimuth / 2.0 ) )
-      //* m_AzimuthAngularSeparation;
-    //TCoordRep elevation =
-      //( static_cast< double >( index[1] ) - ( maxElevation / 2.0 ) )
-      //* m_ElevationAngularSeparation;
-    //TCoordRep radius =
-      //( static_cast< double >( index[2] ) * m_RadiusSampleSize )
-      //+ m_FirstSampleDistance;
+    // Convert the index into proper angular coordinates
+    const TCoordRep radius  = ( index[0] * m_RadiusSampleSize ) + m_FirstSampleDistance;
+    const TCoordRep lateral = ( index[1] - ( maxLateral / 2.0 ) ) * m_LateralAngularSeparation;
 
-    //// Convert the angular coordinates into Cartesian coordinates
-    //TCoordRep tanOfAzimuth    = std::tan(azimuth);
-    //TCoordRep tanOfElevation  = std::tan(elevation);
-
-    //point[2] = static_cast< TCoordRep >(
-      //radius / std::sqrt(
-        //1.0 + tanOfAzimuth * tanOfAzimuth + tanOfElevation * tanOfElevation) );
-    //point[1] = static_cast< TCoordRep >( point[2] * tanOfElevation );
-    //point[0] = static_cast< TCoordRep >( point[2] * tanOfAzimuth );
+    // Convert the angular coordinates into Cartesian coordinates
+    point[0] = static_cast< TCoordRep >( radius * std::sin(lateral) );
+    point[1] = static_cast< TCoordRep >( radius * std::cos(lateral) );
   }
 
   /** Set/Get the number of radians between each lateral unit.   */
@@ -350,7 +304,7 @@ protected:
 
 private:
   CurvilinearArraySpecialCoordinatesImage(const Self &); // purposely not implemented
-  void operator=(const Self &);                   // purposely not implemented
+  void operator=(const Self &);                          // purposely not implemented
 
   double m_LateralAngularSeparation;    // in radians
   double m_RadiusSampleSize;
