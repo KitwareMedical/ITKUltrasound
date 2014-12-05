@@ -52,6 +52,9 @@ itk_add_test( NAME itkBModeImageFilterTestTiming
     )
 itk_add_test( NAME itkCurvilinearArraySpecialCoordinatesImageTest
   COMMAND UltrasoundTestDriver
+  --compare
+    ${ITK_TEST_OUTPUT_DIR}/itkCurvilinearArraySpecialCoordinatesImageTest.mha
+    DATA{Baseline/itkCurvilinearArraySpecialCoordinatesImageTest.mha}
   itkCurvilinearArraySpecialCoordinatesImageTest
     DATA{Input/curvilinear_envelope.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkCurvilinearArraySpecialCoordinatesImageTest.mha

@@ -55,7 +55,7 @@ int itkCurvilinearArraySpecialCoordinatesImageTest( int argc, char * argv[] )
     }
   SpecialCoordinatesImageType::Pointer curvilinearArrayImage = reader->GetOutput();
   const SpecialCoordinatesImageType::SizeType inputSize = curvilinearArrayImage->GetLargestPossibleRegion().GetSize();
-  const double lateralAngularSeparation = vnl_math::pi / 2.0 /
+  const double lateralAngularSeparation = (vnl_math::pi / 2.0 + 0.5) /
     (inputSize[1] - 1);
   curvilinearArrayImage->SetLateralAngularSeparation( lateralAngularSeparation );
   const double radiusStart = 26.4;
