@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkSpectra1DSupportWindowToMaskImageFilter_hxx
-#define __itkSpectra1DSupportWindowToMaskImageFilter_hxx
+#ifndef itkSpectra1DSupportWindowToMaskImageFilter_hxx
+#define itkSpectra1DSupportWindowToMaskImageFilter_hxx
 
 #include "itkSpectra1DSupportWindowToMaskImageFilter.h"
 #include "itkSpectra1DSupportWindowImageFilter.h"

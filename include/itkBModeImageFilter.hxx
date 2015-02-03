@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkBModeImageFilter_hxx
-#define __itkBModeImageFilter_hxx
+#ifndef itkBModeImageFilter_hxx
+#define itkBModeImageFilter_hxx
 
 #include "itkBModeImageFilter.h"
 

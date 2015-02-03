@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkFFT1DComplexToComplexImageFilter_hxx
-#define __itkFFT1DComplexToComplexImageFilter_hxx
+#ifndef itkFFT1DComplexToComplexImageFilter_hxx
+#define itkFFT1DComplexToComplexImageFilter_hxx
 
 #include "itkFFT1DComplexToComplexImageFilter.h"
 
@@ -192,4 +192,4 @@ FFT1DComplexToComplexImageFilter < TPixel , Dimension >
 
 } // end namespace itk
 
-#endif // __itkFFT1DComplexToComplexImageFilter_hxx
+#endif // itkFFT1DComplexToComplexImageFilter_hxx

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkAnalyticSignalImageFilter_hxx
-#define __itkAnalyticSignalImageFilter_hxx
+#ifndef itkAnalyticSignalImageFilter_hxx
+#define itkAnalyticSignalImageFilter_hxx
 
 #include "itkAnalyticSignalImageFilter.h"
 
@@ -250,4 +250,4 @@ AnalyticSignalImageFilter < TPixel , Dimension >
 
 } // end namespace itk
 
-#endif // __itkAnalyticSignalImageFilter_hxx
+#endif // itkAnalyticSignalImageFilter_hxx

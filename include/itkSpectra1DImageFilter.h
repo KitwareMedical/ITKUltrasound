@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkSpectra1DImageFilter_h
-#define __itkSpectra1DImageFilter_h
+#ifndef itkSpectra1DImageFilter_h
+#define itkSpectra1DImageFilter_h
 
 #include "itkImageToImageFilter.h"
 #include "itkDefaultConvertPixelTraits.h"
@@ -121,4 +121,4 @@ private:
 #include "itkSpectra1DImageFilter.hxx"
 #endif
 
-#endif // __itkSpectra1DImageFilter_h
+#endif // itkSpectra1DImageFilter_h

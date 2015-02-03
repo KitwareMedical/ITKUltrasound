@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkSpectra1DSupportWindowImageFilter_h
-#define __itkSpectra1DSupportWindowImageFilter_h
+#ifndef itkSpectra1DSupportWindowImageFilter_h
+#define itkSpectra1DSupportWindowImageFilter_h
 
 #include <deque>
 
@@ -88,4 +88,4 @@ private:
 #include "itkSpectra1DSupportWindowImageFilter.hxx"
 #endif
 
-#endif // __itkSpectra1DSupportWindowImageFilter_h
+#endif // itkSpectra1DSupportWindowImageFilter_h

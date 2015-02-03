@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkCurvilinearArraySpecialCoordinatesImage_h
-#define __itkCurvilinearArraySpecialCoordinatesImage_h
+#ifndef itkCurvilinearArraySpecialCoordinatesImage_h
+#define itkCurvilinearArraySpecialCoordinatesImage_h
 
 #include "itkSpecialCoordinatesImage.h"
 #include "itkPoint.h"

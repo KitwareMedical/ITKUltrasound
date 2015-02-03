@@ -25,8 +25,8 @@
  *  please refer to the NOTICE file at the top of the ITK source tree.
  *
  *=========================================================================*/
-#ifndef __itkCurvilinearArraySpecialCoordinatesImage_hxx
-#define __itkCurvilinearArraySpecialCoordinatesImage_hxx
+#ifndef itkCurvilinearArraySpecialCoordinatesImage_hxx
+#define itkCurvilinearArraySpecialCoordinatesImage_hxx
 #include "itkCurvilinearArraySpecialCoordinatesImage.h"
 
 namespace itk

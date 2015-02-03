@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkFFTWCommonExtended_h
-#define __itkFFTWCommonExtended_h
+#ifndef itkFFTWCommonExtended_h
+#define itkFFTWCommonExtended_h
 
 #include "itkFFTWGlobalConfiguration.h"
 

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkSpectra1DImageFilter_hxx
-#define __itkSpectra1DImageFilter_hxx
+#ifndef itkSpectra1DImageFilter_hxx
+#define itkSpectra1DImageFilter_hxx
 
 #include "itkSpectra1DImageFilter.h"
 

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkSpectra1DSupportWindowImageFilter_hxx
-#define __itkSpectra1DSupportWindowImageFilter_hxx
+#ifndef itkSpectra1DSupportWindowImageFilter_hxx
+#define itkSpectra1DSupportWindowImageFilter_hxx
 
 #include "itkSpectra1DSupportWindowImageFilter.h"
 #include "itkImageRegionIterator.h"

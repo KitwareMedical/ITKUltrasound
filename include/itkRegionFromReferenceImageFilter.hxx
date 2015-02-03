@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkRegionFromReferenceImageFilter_hxx
-#define __itkRegionFromReferenceImageFilter_hxx
+#ifndef itkRegionFromReferenceImageFilter_hxx
+#define itkRegionFromReferenceImageFilter_hxx
 
 #include "itkRegionFromReferenceImageFilter.h"
 

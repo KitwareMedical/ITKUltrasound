@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkBModeImageFilter_h
-#define __itkBModeImageFilter_h
+#ifndef itkBModeImageFilter_h
+#define itkBModeImageFilter_h
 
 #include "itkAddImageFilter.h"
 #include "itkComplexToModulusImageFilter.h"
@@ -138,4 +138,4 @@ private:
 #include "itkBModeImageFilter.hxx"
 #endif
 
-#endif // __itkBModeImageFilter_h
+#endif // itkBModeImageFilter_h

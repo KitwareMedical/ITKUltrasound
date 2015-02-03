@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkAnalyticSignalImageFilter_h
-#define __itkAnalyticSignalImageFilter_h
+#ifndef itkAnalyticSignalImageFilter_h
+#define itkAnalyticSignalImageFilter_h
 
 #include <complex>
 
@@ -123,4 +123,4 @@ private:
 #include "itkAnalyticSignalImageFilter.hxx"
 #endif
 
-#endif // __itkAnalyticSignalImageFilter_h
+#endif // itkAnalyticSignalImageFilter_h

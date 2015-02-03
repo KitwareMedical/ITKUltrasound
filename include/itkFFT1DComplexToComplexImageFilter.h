@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkFFT1DComplexToComplexImageFilter_h
-#define __itkFFT1DComplexToComplexImageFilter_h
+#ifndef itkFFT1DComplexToComplexImageFilter_h
+#define itkFFT1DComplexToComplexImageFilter_h
 
 #include <complex>
 
@@ -114,10 +114,10 @@ private:
 }
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#ifndef __itkVnlFFT1DComplexToComplexImageFilter_h
-#ifndef __itkVnlFFT1DComplexToComplexImageFilter_hxx
-#ifndef __itkFFTW1DComplexToComplexImageFilter_h
-#ifndef __itkFFTW1DComplexToComplexImageFilter_hxx
+#ifndef itkVnlFFT1DComplexToComplexImageFilter_h
+#ifndef itkVnlFFT1DComplexToComplexImageFilter_hxx
+#ifndef itkFFTW1DComplexToComplexImageFilter_h
+#ifndef itkFFTW1DComplexToComplexImageFilter_hxx
 #include "itkFFT1DComplexToComplexImageFilter.hxx"
 #endif
 #endif
@@ -125,4 +125,4 @@ private:
 #endif
 #endif
 
-#endif // __itkFFT1DComplexToComplexImageFilter_h
+#endif // itkFFT1DComplexToComplexImageFilter_h

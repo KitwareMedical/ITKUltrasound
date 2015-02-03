@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkFFT1DComplexConjugateToRealImageFilter_hxx
-#define __itkFFT1DComplexConjugateToRealImageFilter_hxx
+#ifndef itkFFT1DComplexConjugateToRealImageFilter_hxx
+#define itkFFT1DComplexConjugateToRealImageFilter_hxx
 
 #include "itkFFT1DComplexConjugateToRealImageFilter.h"
 
@@ -190,4 +190,4 @@ FFT1DComplexConjugateToRealImageFilter < TPixel , Dimension >
 
 } // end namespace itk
 
-#endif // __itkFFT1DComplexConjugateToRealImageFilter_hxx
+#endif // itkFFT1DComplexConjugateToRealImageFilter_hxx

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkVnlFFT1DRealToComplexConjugateImageFilter_hxx
-#define __itkVnlFFT1DRealToComplexConjugateImageFilter_hxx
+#ifndef itkVnlFFT1DRealToComplexConjugateImageFilter_hxx
+#define itkVnlFFT1DRealToComplexConjugateImageFilter_hxx
 
 #include "itkVnlFFT1DRealToComplexConjugateImageFilter.h"
 
