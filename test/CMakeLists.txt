@@ -15,6 +15,7 @@ set( UltrasoundTests
   itkSpectra1DImageFilterTest.cxx
   itkSpectra1DSupportWindowImageFilterTest.cxx
   itkSpectra1DSupportWindowToMaskImageFilterTest.cxx
+  itkTimeGainCompensationImageFilterTest.cxx
   itkVnlFFT1DComplexConjugateToRealImageFilterTest.cxx
   itkVnlFFT1DComplexToComplexImageFilterTest.cxx
   itkVnlFFT1DRealToComplexConjugateImageFilterTest.cxx
@@ -139,6 +140,12 @@ itk_add_test( NAME itkSpectra1DSupportWindowToMaskImageFilterTest2
     DATA{Input/uniform_phantom_8.9_MHz.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkSpectra1DSupportWindowToMaskImageFilterTest2.mha
     100 100
+    )
+itk_add_test( NAME itkTimeGainCompensationImageFilterTest
+  COMMAND UltrasoundTestDriver
+  itkTimeGainCompensationImageFilterTest
+    DATA{Input/EyeRoundOverChuck_5.0MHz_20V.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkTimeGainCompensationImageFilterTest.mha
     )
 
 if( USE_FFTW )
