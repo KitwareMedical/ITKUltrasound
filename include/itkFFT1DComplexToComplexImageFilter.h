@@ -26,7 +26,7 @@
 
 namespace itk
 {
-/** \class itkFFT1DComplexToComplexImageFilter
+/** \class FFT1DComplexToComplexImageFilter
  * \brief Perform the Fast Fourier Transform, complex input to complex output,
  * but only along one dimension.
  *

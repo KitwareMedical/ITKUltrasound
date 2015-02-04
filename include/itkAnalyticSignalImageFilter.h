@@ -26,7 +26,7 @@
 
 namespace itk
 {
-/** \class itkAnalyticSignalImageFilter
+/** \class AnalyticSignalImageFilter
  * \brief Generates the analytic signal from one direction of an image.
  *
  * This filter generates the complex valued analytic signal along one direction

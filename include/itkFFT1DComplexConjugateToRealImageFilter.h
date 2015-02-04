@@ -25,7 +25,7 @@
 
 namespace itk
 {
-/** \class itkFFT1DComplexConjugateToRealImageFilter
+/** \class FFT1DComplexConjugateToRealImageFilter
  * \brief Perform the Fast Fourier Transform, in the reverse direction, with
  * real output, but only along one dimension.
  *

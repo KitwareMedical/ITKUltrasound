@@ -53,7 +53,7 @@ int itkTimeGainCompensationImageFilterTest( int argc, char * argv[] )
     return EXIT_FAILURE;
     }
 
-  typedef itk::CurvilinearArraySpecialCoordinatesImage< PixelType, Dimension > SpecialCoordinatesImageType;
+  //typedef itk::CurvilinearArraySpecialCoordinatesImage< PixelType, Dimension > SpecialCoordinatesImageType;
   //SpecialCoordinatesImageType::Pointer curvilinearArrayImage = reader->GetOutput();
   //const SpecialCoordinatesImageType::SizeType inputSize = curvilinearArrayImage->GetLargestPossibleRegion().GetSize();
   //const double lateralAngularSeparation = (vnl_math::pi / 2.0 + 0.5) /
@@ -81,18 +81,19 @@ int itkTimeGainCompensationImageFilterTest( int argc, char * argv[] )
   //outputOrigin[1] = radiusStart * std::cos( vnl_math::pi / 4.0 );
   //resampler->SetOutputOrigin( outputOrigin );
 
-  //typedef itk::ImageFileWriter< ImageType > WriterType;
-  //WriterType::Pointer writer = WriterType::New();
-  //writer->SetFileName( outputImageFileName );
+  typedef itk::ImageFileWriter< ImageType > WriterType;
+  WriterType::Pointer writer = WriterType::New();
+  writer->SetFileName( outputImageFileName );
   //writer->SetInput( resampler->GetOutput() );
-  //try
-    //{
+  try
+    {
     //writer->Update();
-    //}
-  //catch( itk::ExceptionObject & error )
-    //{
-    //std::cerr << "Error: " << error << std::endl;
-    //return EXIT_FAILURE;
-    //}
+    }
+  catch( itk::ExceptionObject & error )
+    {
+    std::cerr << "Error: " << error << std::endl;
+    return EXIT_FAILURE;
+    }
+
   return EXIT_SUCCESS;
 }
