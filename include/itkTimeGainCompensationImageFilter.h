@@ -32,7 +32,7 @@ namespace itk
  *
  * \ingroup Ultrasound
  * */
-template< typename TInputImage, typename TOutputImage >
+template< typename TInputImage, typename TOutputImage = TInputImage >
 class TimeGainCompensationImageFilter:
   public ImageToImageFilter< TInputImage, TOutputImage >
 {
@@ -51,8 +51,12 @@ public:
   itkNewMacro( Self );
 
 protected:
-  TimeGainCompensationImageFilter() {}
+  typedef typename OutputImageType::RegionType                  OutputImageRegionType;
+
+  TimeGainCompensationImageFilter();
   virtual ~TimeGainCompensationImageFilter() {}
+
+  virtual void ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread, ThreadIdType threadId ) ITK_OVERRIDE;
 
 private:
   TimeGainCompensationImageFilter( const Self& ); // purposely not implemented

@@ -20,8 +20,50 @@
 
 #include "itkTimeGainCompensationImageFilter.h"
 
+#include "itkImageLinearConstIteratorWithIndex.h"
+#include "itkImageLinearIteratorWithIndex.h"
+
 namespace itk
 {
+
+template< typename TInputImage, typename TOutputImage >
+TimeGainCompensationImageFilter< TInputImage, TOutputImage >
+::TimeGainCompensationImageFilter()
+{
+}
+
+template< typename TInputImage, typename TOutputImage >
+void
+TimeGainCompensationImageFilter< TInputImage, TOutputImage >
+::ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType itkNotUsed( threadId ) )
+{
+  const InputImageType * inputImage = this->GetInput();
+  OutputImageType * outputImage = this->GetOutput();
+
+  typedef ImageLinearConstIteratorWithIndex< InputImageType > InputIteratorType;
+  InputIteratorType inputIt( inputImage, outputRegionForThread );
+  inputIt.SetDirection( 0 );
+  inputIt.GoToBegin();
+
+  typedef ImageLinearIteratorWithIndex< OutputImageType > OutputIteratorType;
+  OutputIteratorType outputIt( outputImage, outputRegionForThread );
+  outputIt.SetDirection( 0 );
+  outputIt.GoToBegin();
+
+  for( inputIt.GoToBegin(), outputIt.GoToBegin();
+       !outputIt.IsAtEnd();
+       inputIt.NextLine(), outputIt.NextLine() )
+    {
+    inputIt.GoToBeginOfLine();
+    outputIt.GoToBeginOfLine();
+    while( ! outputIt.IsAtEndOfLine() )
+      {
+      outputIt.Set( inputIt.Value() );
+      ++inputIt;
+      ++outputIt;
+      }
+    }
+}
 
 } // end namespace itk
 

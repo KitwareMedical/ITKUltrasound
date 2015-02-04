@@ -35,7 +35,7 @@
 namespace itk
 {
 
-template< class TPixel, unsigned int VDimension >
+template< typename TPixel, unsigned int VDimension >
 AnalyticSignalImageFilter< TPixel, VDimension >
 ::AnalyticSignalImageFilter()
 {
