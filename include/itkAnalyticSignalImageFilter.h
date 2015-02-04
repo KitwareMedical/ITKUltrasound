@@ -91,15 +91,16 @@ public:
 protected:
   AnalyticSignalImageFilter();
   virtual ~AnalyticSignalImageFilter() {}
-  void PrintSelf(std::ostream& os, Indent indent) const;
+
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
 
   // These behave like their analogs in FFT1DRealToComplexConjugateImageFilter.
-  virtual void GenerateInputRequestedRegion();
-  virtual void EnlargeOutputRequestedRegion(DataObject *output);
+  virtual void GenerateInputRequestedRegion() ITK_OVERRIDE;
+  virtual void EnlargeOutputRequestedRegion(DataObject *output) ITK_OVERRIDE;
 
-  virtual void BeforeThreadedGenerateData();
-  virtual void ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread, ThreadIdType threadId );
-  virtual void AfterThreadedGenerateData();
+  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
+  virtual void ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread, ThreadIdType threadId ) ITK_OVERRIDE;
+  virtual void AfterThreadedGenerateData() ITK_OVERRIDE;
 
   typedef FFT1DRealToComplexConjugateImageFilter< TPixel, VDimension > FFTRealToComplexType;
   typedef FFT1DComplexToComplexImageFilter< TPixel, VDimension > FFTComplexToComplexType;
