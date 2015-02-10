@@ -1,0 +1,10 @@
+itk_wrap_include("itkCurvilinearArraySpecialCoordinatesImage.h")
+
+itk_wrap_class("itk::TimeGainCompensationImageFilter" POINTER)
+  foreach(d ${ITK_WRAP_DIMS})
+    foreach(scalar_t ${WRAP_ITK_SCALAR})
+      itk_wrap_template("CASCI${ITKM_${scalar_t}}${d}"
+        "itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${scalar_t}}, ${d} >")
+    endforeach(scalar_t)
+  endforeach(d)
+itk_end_wrap_class()

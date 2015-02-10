@@ -69,8 +69,8 @@ BModeImageFilter< TInputImage, TOutputImage >
   Superclass::GenerateInputRequestedRegion();
 
   // get pointers to the inputs
-  typename InputImageType::Pointer inputPtr = const_cast<InputImageType *> (this->GetInput());
-  typename OutputImageType::Pointer outputPtr = this->GetOutput();
+  InputImageType * inputPtr = const_cast<InputImageType *> (this->GetInput());
+  OutputImageType * outputPtr = this->GetOutput();
 
   // we need to compute the input requested region (size and start index)
   typedef const typename OutputImageType::SizeType& OutputSizeType;

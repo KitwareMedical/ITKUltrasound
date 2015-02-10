@@ -42,7 +42,7 @@ namespace itk
  *
  * \ingroup Ultrasound
  *
- * \sa ResampleRThetaToCartesianImageFilter
+ * \sa AnalyticSignalImageFilter
  *
  */
 template < typename TInputImage, typename TOutputImage=TInputImage >
