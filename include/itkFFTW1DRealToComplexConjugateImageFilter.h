@@ -32,20 +32,20 @@ namespace itk
  *
  * \ingroup Ultrasound
  */
-template< typename TPixel, unsigned int Dimension = 3 >
+template< typename TInputImage, typename TOutputImage=Image< std::complex< typename TInputImage::PixelType >, TInputImage::ImageDimension > >
 class FFTW1DRealToComplexConjugateImageFilter :
-    public FFT1DRealToComplexConjugateImageFilter<TPixel,Dimension>
+    public FFT1DRealToComplexConjugateImageFilter< TInputImage, TOutputImage >
 {
 public:
-  typedef FFTW1DRealToComplexConjugateImageFilter Self;
-  typedef FFT1DRealToComplexConjugateImageFilter<TPixel,Dimension> Superclass;
-  typedef SmartPointer<Self> Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  typedef FFTW1DRealToComplexConjugateImageFilter                             Self;
+  typedef FFT1DRealToComplexConjugateImageFilter< TInputImage, TOutputImage > Superclass;
+  typedef SmartPointer< Self >                                                Pointer;
+  typedef SmartPointer< const Self >                                          ConstPointer;
 
   /** Standard class typedefs.*/
-  typedef typename Superclass::InputImageType InputImageType;
-  typedef typename Superclass::OutputImageType OutputImageType;
-  typedef typename OutputImageType::RegionType OutputImageRegionType;
+  typedef typename Superclass::InputImageType                                 InputImageType;
+  typedef typename Superclass::OutputImageType                                OutputImageType;
+  typedef typename OutputImageType::RegionType                                OutputImageRegionType;
 
   /**
    * the proxy type is a wrapper for the fftw API
@@ -54,16 +54,15 @@ public:
    * is trying to use double if only the float FFTW1D version is
    * configured in, or float if only double is configured.
    */
-  typedef typename fftw::ComplexToComplexProxy<TPixel> FFTW1DProxyType;
+  typedef typename fftw::ComplexToComplexProxy< typename TOutputImage::PixelType > FFTW1DProxyType;
   typedef typename std::vector< typename FFTW1DProxyType::PlanType > PlanArrayType;
   typedef typename std::vector< typename FFTW1DProxyType::ComplexType* > PlanBufferPointerType;
 
   /** Method for creation through the object factory. */
-  itkNewMacro(Self);
+  itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(FFTW1DRealToComplexConjugateImageFilter,
-               FFT1DRealToComplexConjugateImageFilter);
+  itkTypeMacro( FFTW1DRealToComplexConjugateImageFilter, FFT1DRealToComplexConjugateImageFilter );
 
 
 protected:
@@ -78,8 +77,8 @@ protected:
     }
   }
 
-  virtual void BeforeThreadedGenerateData();
-  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID );  // generates output from input
+  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
+  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) ITK_OVERRIDE;  // generates output from input
 
 private:
   FFTW1DRealToComplexConjugateImageFilter(const Self&); //purposely not implemented

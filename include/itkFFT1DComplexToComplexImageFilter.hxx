@@ -32,9 +32,9 @@
 namespace itk
 {
 
-template < class TPixel, unsigned int VDimension >
-typename FFT1DComplexToComplexImageFilter< TPixel, VDimension >::Pointer
-FFT1DComplexToComplexImageFilter< TPixel, VDimension >
+template < typename TInputImage, typename TOutputImage >
+typename FFT1DComplexToComplexImageFilter< TInputImage, TOutputImage >::Pointer
+FFT1DComplexToComplexImageFilter< TInputImage, TOutputImage >
 ::New()
 {
   Pointer smartPtr = ::itk::ObjectFactory< Self >::Create();
@@ -64,7 +64,7 @@ FFT1DComplexToComplexImageFilter< TPixel, VDimension >
 
   if( smartPtr.IsNull() )
     {
-    smartPtr = VnlFFT1DComplexToComplexImageFilter< TPixel, VDimension >
+    smartPtr = VnlFFT1DComplexToComplexImageFilter< TInputImage, TOutputImage >
       ::New().GetPointer();
     }
 
@@ -72,8 +72,8 @@ FFT1DComplexToComplexImageFilter< TPixel, VDimension >
 }
 
 
-template< typename TPixel, unsigned int VDimension >
-FFT1DComplexToComplexImageFilter < TPixel , VDimension >
+template< typename TInputImage, typename TOutputImage >
+FFT1DComplexToComplexImageFilter< TInputImage, TOutputImage >
 ::FFT1DComplexToComplexImageFilter():
  m_Direction(0), m_TransformDirection( DIRECT )
 {
@@ -81,27 +81,27 @@ FFT1DComplexToComplexImageFilter < TPixel , VDimension >
 }
 
 
-template <class TPixel, unsigned int VDimension>
+template <typename TInputImage, typename TOutputImage>
 const ImageRegionSplitterBase*
-FFT1DComplexToComplexImageFilter < TPixel , VDimension >
+FFT1DComplexToComplexImageFilter < TInputImage, TOutputImage >
 ::GetImageRegionSplitter(void) const
 {
   return this->m_ImageRegionSplitter.GetPointer();
 }
 
 
-template<class TPixel, unsigned int VDimension >
+template<typename TInputImage, typename TOutputImage >
 void
-FFT1DComplexToComplexImageFilter < TPixel , VDimension >
+FFT1DComplexToComplexImageFilter < TInputImage, TOutputImage >
 ::BeforeThreadedGenerateData()
 {
   this->m_ImageRegionSplitter->SetDirection( this->GetDirection() );
 }
 
 
-template< typename TPixel, unsigned int Dimension >
+template< typename TInputImage, typename TOutputImage >
 void
-FFT1DComplexToComplexImageFilter < TPixel , Dimension >
+FFT1DComplexToComplexImageFilter< TInputImage, TOutputImage >
 ::GenerateInputRequestedRegion()
 {
   // call the superclass' implementation of this method
@@ -146,9 +146,9 @@ FFT1DComplexToComplexImageFilter < TPixel , Dimension >
 }
 
 
-template< typename TPixel, unsigned int Dimension >
+template< typename TInputImage, typename TOutputImage >
 void
-FFT1DComplexToComplexImageFilter < TPixel , Dimension >
+FFT1DComplexToComplexImageFilter< TInputImage, TOutputImage >
 ::EnlargeOutputRequestedRegion(DataObject *output)
 {
   OutputImageType* outputPtr = dynamic_cast<OutputImageType*>( output );
@@ -178,9 +178,9 @@ FFT1DComplexToComplexImageFilter < TPixel , Dimension >
 }
 
 
-template< typename TPixel, unsigned int Dimension >
+template< typename TInputImage, typename TOutputImage >
 void
-FFT1DComplexToComplexImageFilter < TPixel , Dimension >
+FFT1DComplexToComplexImageFilter< TInputImage, TOutputImage >
 ::PrintSelf( std::ostream& os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );

@@ -32,9 +32,9 @@
 namespace itk
 {
 
-template< typename TPixel, unsigned int Dimension >
+template< typename TInputImage, typename TOutputImage >
 void
-FFTW1DComplexConjugateToRealImageFilter<TPixel,Dimension>
+FFTW1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
 ::DestroyPlans()
 {
   for( unsigned int i = 0; i < m_PlanArray.size(); i++ )
@@ -46,9 +46,9 @@ FFTW1DComplexConjugateToRealImageFilter<TPixel,Dimension>
     }
 }
 
-template< typename TPixel, unsigned int Dimension >
+template< typename TInputImage, typename TOutputImage >
 void
-FFTW1DComplexConjugateToRealImageFilter<TPixel,Dimension>
+FFTW1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
 ::BeforeThreadedGenerateData()
 {
   typename OutputImageType::Pointer      outputPtr = this->GetOutput();
@@ -99,14 +99,14 @@ FFTW1DComplexConjugateToRealImageFilter<TPixel,Dimension>
 }
 
 
-template< typename TPixel, unsigned int Dimension >
+template< typename TInputImage, typename TOutputImage >
 void
-FFTW1DComplexConjugateToRealImageFilter<TPixel,Dimension>
+FFTW1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
 ::ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType threadID )
 {
   // get pointers to the input and output
-  typename InputImageType::ConstPointer  inputPtr  = this->GetInput();
-  typename OutputImageType::Pointer      outputPtr = this->GetOutput();
+  const InputImageType * inputPtr  = this->GetInput();
+  OutputImageType * outputPtr = this->GetOutput();
 
   if ( !inputPtr || !outputPtr )
     {

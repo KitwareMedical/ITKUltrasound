@@ -31,15 +31,15 @@ namespace itk
  * \ingroup Ultrasound
  */
 
-template< typename TPixel, unsigned int Dimension = 3 >
-class FFTW1DComplexConjugateToRealImageFilter :
-    public FFT1DComplexConjugateToRealImageFilter<TPixel,Dimension>
+template< typename TInputImage, typename TOutputImage=Image< typename NumericTraits< typename TInputImage::PixelType >::ValueType, TInputImage::ImageDimension > >
+class FFTW1DComplexConjugateToRealImageFilter:
+  public FFT1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
 {
 public:
-  typedef FFTW1DComplexConjugateToRealImageFilter Self;
-  typedef FFT1DComplexConjugateToRealImageFilter<TPixel,Dimension> Superclass;
-  typedef SmartPointer<Self> Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  typedef FFTW1DComplexConjugateToRealImageFilter                             Self;
+  typedef FFT1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage > Superclass;
+  typedef SmartPointer< Self >                                                Pointer;
+  typedef SmartPointer< const Self >                                          ConstPointer;
 
   /** Standard class typedefs.*/
   typedef typename Superclass::InputImageType InputImageType;
@@ -53,7 +53,7 @@ public:
    * is trying to use double if only the float FFTW1D version is
    * configured in, or float if only double is configured.
    */
-  typedef typename fftw::ComplexToComplexProxy<TPixel> FFTW1DProxyType;
+  typedef typename fftw::ComplexToComplexProxy< typename TInputImage::PixelType > FFTW1DProxyType;
   typedef typename std::vector< typename FFTW1DProxyType::PlanType > PlanArrayType;
   typedef typename std::vector< typename FFTW1DProxyType::ComplexType* > PlanBufferPointerType;
 
@@ -77,8 +77,8 @@ protected:
     }
   }
 
-  virtual void BeforeThreadedGenerateData();
-  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID );  // generates output from input
+  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
+  virtual void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadID ) ITK_OVERRIDE;
 
 private:
   FFTW1DComplexConjugateToRealImageFilter(const Self&); //purposely not implemented

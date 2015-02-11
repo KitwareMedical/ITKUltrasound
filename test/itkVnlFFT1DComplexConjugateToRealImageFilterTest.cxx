@@ -41,10 +41,10 @@ int itkVnlFFT1DComplexConjugateToRealImageFilterTest( int argc, char* argv[] )
   typedef itk::Image< PixelType, Dimension >                                     ImageType;
   typedef itk::Image< std::complex< PixelType >, Dimension >                     ComplexImageType;
 
-  typedef itk::ImageFileReader< ImageType >                                      ReaderType;
-  typedef itk::VnlFFT1DComplexConjugateToRealImageFilter< PixelType, Dimension > FFTType;
-  typedef itk::ComposeImageFilter< ImageType, ComplexImageType >                 JoinFilterType;
-  typedef itk::ImageFileWriter< ImageType >                                      WriterType;
+  typedef itk::ImageFileReader< ImageType >                                             ReaderType;
+  typedef itk::VnlFFT1DComplexConjugateToRealImageFilter< ComplexImageType, ImageType > FFTType;
+  typedef itk::ComposeImageFilter< ImageType, ComplexImageType >                        JoinFilterType;
+  typedef itk::ImageFileWriter< ImageType >                                             WriterType;
 
   ReaderType::Pointer readerReal = ReaderType::New();
   ReaderType::Pointer readerImag = ReaderType::New();

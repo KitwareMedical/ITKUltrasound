@@ -39,33 +39,31 @@ namespace itk
  * \ingroup FourierTransform
  * \ingroup Ultrasound
  */
-template< typename TPixel, unsigned int VDimension = 3 >
+template< typename TInputImage, typename TOutputImage=TInputImage >
 class FFT1DComplexToComplexImageFilter:
-  public ImageToImageFilter< Image< std::complex< TPixel >, VDimension >,
-			     Image< std::complex< TPixel >, VDimension > >
+  public ImageToImageFilter< TInputImage, TOutputImage >
 {
 public:
-  /** Standard class typedefs. */ 
-  typedef Image< std::complex< TPixel > , VDimension> InputImageType;
-  typedef Image< std::complex< TPixel > , VDimension> OutputImageType;
+  /** Standard class typedefs. */
+  typedef TInputImage                          InputImageType;
+  typedef TOutputImage                         OutputImageType;
   typedef typename OutputImageType::RegionType OutputImageRegionType;
 
-  typedef FFT1DComplexToComplexImageFilter		  Self;
+  typedef FFT1DComplexToComplexImageFilter                      Self;
   typedef ImageToImageFilter< InputImageType, OutputImageType > Superclass;
-  typedef SmartPointer<Self>                                      Pointer;
-  typedef SmartPointer<const Self>                                ConstPointer;
+  typedef SmartPointer< Self >                                  Pointer;
+  typedef SmartPointer< const Self >                            ConstPointer;
 
-  itkStaticConstMacro(ImageDimension, unsigned int,
-                      InputImageType::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, InputImageType::ImageDimension );
 
   itkTypeMacro( FFT1DComplexToComplexImageFilter, ImageToImageFilter );
 
-  /** Customized object creation methods that support configuration-based 
+  /** Customized object creation methods that support configuration-based
     * selection of FFT implementation.
     *
     * Default implementation is VnlFFT1D.
     */
-  static Pointer New(void);
+  static Pointer New();
 
   /** Transform direction. */
   typedef enum { DIRECT = 1, INVERSE } TransformDirectionType;
@@ -87,10 +85,17 @@ public:
 protected:
   FFT1DComplexToComplexImageFilter();
   virtual ~FFT1DComplexToComplexImageFilter() {}
-  void PrintSelf(std::ostream& os, Indent indent) const;
 
-  virtual void GenerateInputRequestedRegion();
-  virtual void EnlargeOutputRequestedRegion(DataObject *output);
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
+
+  virtual void GenerateInputRequestedRegion() ITK_OVERRIDE;
+  virtual void EnlargeOutputRequestedRegion(DataObject *output) ITK_OVERRIDE;
+
+  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
+
+  /** Override to return a splitter that does not split along the direction we
+   * are performing the transform. */
+  virtual const ImageRegionSplitterBase* GetImageRegionSplitter() const ITK_OVERRIDE;
 
   /** Direction in which the filter is to be applied
    * this should be in the range [0,ImageDimension-1]. */
@@ -98,12 +103,6 @@ protected:
 
   /** Direction to apply the transform (forward/inverse). */
   TransformDirectionType m_TransformDirection;
-
-  virtual void BeforeThreadedGenerateData();
-
-  /** Override to return a splitter that does not split along the direction we
-   * are performing the transform. */
-  virtual const ImageRegionSplitterBase* GetImageRegionSplitter(void) const;
 
 private:
   FFT1DComplexToComplexImageFilter( const Self& );

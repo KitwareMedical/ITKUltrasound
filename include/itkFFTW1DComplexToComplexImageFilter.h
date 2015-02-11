@@ -32,18 +32,18 @@ namespace itk
  *
  * \ingroup Ultrasound
  */
-template< typename TPixel, unsigned int Dimension = 3 >
+template< typename TInputImage, typename TOutputImage >
 class FFTW1DComplexToComplexImageFilter :
-    public FFT1DComplexToComplexImageFilter<TPixel,Dimension>
+    public FFT1DComplexToComplexImageFilter< TInputImage, TOutputImage >
 {
 public:
-  typedef FFTW1DComplexToComplexImageFilter Self;
-  typedef FFT1DComplexToComplexImageFilter<TPixel,Dimension> Superclass;
-  typedef SmartPointer<Self> Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  typedef FFTW1DComplexToComplexImageFilter                             Self;
+  typedef FFT1DComplexToComplexImageFilter< TInputImage, TOutputImage > Superclass;
+  typedef SmartPointer< Self >                                          Pointer;
+  typedef SmartPointer< const Self >                                    ConstPointer;
 
   /** Standard class typedefs.*/
-  typedef typename Superclass::InputImageType InputImageType;
+  typedef typename Superclass::InputImageType  InputImageType;
   typedef typename Superclass::OutputImageType OutputImageType;
   typedef typename OutputImageType::RegionType OutputImageRegionType;
 
@@ -54,16 +54,15 @@ public:
    * is trying to use double if only the float FFTW1D version is
    * configured in, or float if only double is configured.
    */
-  typedef typename fftw::ComplexToComplexProxy<TPixel> FFTW1DProxyType;
+  typedef typename fftw::ComplexToComplexProxy< typename TInputImage::PixelType > FFTW1DProxyType;
   typedef typename std::vector< typename FFTW1DProxyType::PlanType > PlanArrayType;
   typedef typename std::vector< typename FFTW1DProxyType::ComplexType* > PlanBufferPointerType;
 
   /** Method for creation through the object factory. */
-  itkNewMacro(Self);
+  itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(FFTW1DComplexToComplexImageFilter,
-               FFT1DComplexToComplexImageFilter);
+  itkTypeMacro( FFTW1DComplexToComplexImageFilter, FFT1DComplexToComplexImageFilter );
 
 
 protected:
@@ -78,8 +77,8 @@ protected:
     }
   }
 
-  virtual void BeforeThreadedGenerateData();
-  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID );  // generates output from input
+  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
+  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) ITK_OVERRIDE;
 
 private:
   FFTW1DComplexToComplexImageFilter(const Self&); //purposely not implemented

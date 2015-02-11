@@ -33,9 +33,9 @@
 namespace itk
 {
 
-template< typename TPixel, unsigned int VDimension>
+template< typename TInputImage, typename TOutputImage >
 void
-VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>
+VnlFFT1DRealToComplexConjugateImageFilter< TInputImage, TOutputImage >
 ::ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType itkNotUsed( threadID ) )
 {
   // get pointers to the input and output
@@ -44,28 +44,30 @@ VnlFFT1DRealToComplexConjugateImageFilter<TPixel,VDimension>
 
   const typename Superclass::InputImageType::SizeType & inputSize = inputPtr->GetRequestedRegion().GetSize();
 
-  unsigned int vectorSize = inputSize[this->m_Direction];
+  const unsigned int direction = this->GetDirection();
+  unsigned int vectorSize = inputSize[direction];
   if( ! VnlFFTCommon::IsDimensionSizeLegal(vectorSize) )
     {
     itkExceptionMacro("Illegal Array DIM for FFT");
     }
 
 
-  typedef itk::ImageLinearConstIteratorWithIndex< InputImageType >  InputIteratorType;
-  typedef itk::ImageLinearIteratorWithIndex< OutputImageType >      OutputIteratorType;
+  typedef ImageLinearConstIteratorWithIndex< InputImageType >  InputIteratorType;
+  typedef ImageLinearIteratorWithIndex< OutputImageType >      OutputIteratorType;
   InputIteratorType inputIt( inputPtr, outputRegion );
   OutputIteratorType outputIt( outputPtr, outputRegion );
 
-  inputIt.SetDirection(this->m_Direction);
-  outputIt.SetDirection(this->m_Direction);
+  inputIt.SetDirection( direction );
+  outputIt.SetDirection( direction );
 
-  typedef vcl_complex< TPixel > ComplexType;
-  typedef vnl_vector< ComplexType > ComplexVectorType;
+  typedef typename TInputImage::PixelType PixelType;
+  typedef vcl_complex< PixelType >        ComplexType;
+  typedef vnl_vector< ComplexType >       ComplexVectorType;
   ComplexVectorType inputBuffer( vectorSize );
   typename ComplexVectorType::iterator inputBufferIt = inputBuffer.begin();
     // fft is done in-place
   typename ComplexVectorType::iterator outputBufferIt = inputBuffer.begin();
-  vnl_fft_1d< TPixel > v1d( vectorSize );
+  vnl_fft_1d< PixelType > v1d( vectorSize );
 
   // for every fft line
   for( inputIt.GoToBegin(), outputIt.GoToBegin();

@@ -32,22 +32,21 @@
 namespace itk
 {
 
-template< typename TPixel, unsigned int VDimension >
+template< typename TInputImage, typename TOutputImage >
 void
-VnlFFT1DComplexToComplexImageFilter<TPixel, VDimension>
+VnlFFT1DComplexToComplexImageFilter< TInputImage, TOutputImage >
 ::ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType itkNotUsed( threadID ) )
 {
   // get pointers to the input and output
-  typename Superclass::InputImageType::ConstPointer  inputPtr  = this->GetInput();
-  typename Superclass::OutputImageType::Pointer      outputPtr = this->GetOutput();
+  const typename Superclass::InputImageType * inputPtr = this->GetInput();
+  typename Superclass::OutputImageType * outputPtr = this->GetOutput();
 
   if ( !inputPtr || !outputPtr )
     {
     return;
     }
 
-  const typename Superclass::InputImageType::SizeType&   inputSize
-    = inputPtr->GetRequestedRegion().GetSize();
+  const typename Superclass::InputImageType::SizeType & inputSize = inputPtr->GetRequestedRegion().GetSize();
 
   unsigned int vec_size = inputSize[this->m_Direction];
 
@@ -59,11 +58,13 @@ VnlFFT1DComplexToComplexImageFilter<TPixel, VDimension>
   inputIt.SetDirection(this->m_Direction);
   outputIt.SetDirection(this->m_Direction);
 
-  vnl_vector< vcl_complex<TPixel> > inputBuffer( vec_size );
-  typename vnl_vector< vcl_complex< TPixel > >::iterator inputBufferIt  = inputBuffer.begin();
+  typedef typename TInputImage::PixelType PixelType;
+  typedef vnl_vector< PixelType >         VNLVectorType;
+  VNLVectorType inputBuffer( vec_size );
+  typename VNLVectorType::iterator inputBufferIt  = inputBuffer.begin();
     // fft is done in-place
-  typename vnl_vector< vcl_complex< TPixel > >::iterator outputBufferIt = inputBuffer.begin();
-  vnl_fft_1d<TPixel> v1d(vec_size);
+  typename VNLVectorType::iterator outputBufferIt = inputBuffer.begin();
+  vnl_fft_1d< typename NumericTraits< PixelType >::ValueType > v1d(vec_size);
 
   // for every fft line
   for( inputIt.GoToBegin(), outputIt.GoToBegin(); !inputIt.IsAtEnd();
@@ -101,7 +102,7 @@ VnlFFT1DComplexToComplexImageFilter<TPixel, VDimension>
       outputIt.GoToBeginOfLine();
       while( !outputIt.IsAtEndOfLine() )
 	{
-	outputIt.Set( (*outputBufferIt) / static_cast< TPixel >( vec_size ));
+	outputIt.Set( (*outputBufferIt) / static_cast< PixelType >( vec_size ));
 	++outputIt;
 	++outputBufferIt;
 	}

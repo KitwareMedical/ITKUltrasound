@@ -45,7 +45,7 @@ namespace itk
  * \sa AnalyticSignalImageFilter
  *
  */
-template < typename TInputImage, typename TOutputImage=TInputImage >
+template < typename TInputImage, typename TOutputImage=TInputImage, typename TComplexImage=Image< std::complex< typename TInputImage::PixelType >, TInputImage::ImageDimension > >
 class BModeImageFilter :
   public ImageToImageFilter< TInputImage, TOutputImage >
 {
@@ -68,6 +68,10 @@ public:
 
   /** Typedef support for the output image scalar value type. */
   typedef typename OutputImageType::PixelType OutputPixelType;
+
+  /** Typedef of the image used for internal computations that has
+   * std::complex pixels. */
+  typedef TComplexImage ComplexImageType;
 
   /** Other convenient typedefs   */
   typedef typename InputImageType::RegionType InputRegionType;
@@ -113,7 +117,7 @@ protected:
   virtual void EnlargeOutputRequestedRegion(DataObject *output) ITK_OVERRIDE;
 
   /** Component filters. */
-  typedef AnalyticSignalImageFilter< OutputPixelType, ImageDimension >                           AnalyticType;
+  typedef AnalyticSignalImageFilter< InputImageType, ComplexImageType >                          AnalyticType;
   typedef ComplexToModulusImageFilter< typename AnalyticType::OutputImageType, OutputImageType > ComplexToModulusType;
   typedef ConstantPadImageFilter< InputImageType, InputImageType >                               PadType;
   typedef AddImageFilter< InputImageType, InputImageType >                                       AddConstantType;

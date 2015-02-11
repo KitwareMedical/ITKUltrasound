@@ -29,8 +29,8 @@
 namespace itk
 {
 
-template < typename TInputImage, typename TOutputImage >
-BModeImageFilter< TInputImage, TOutputImage >
+template < typename TInputImage, typename TOutputImage, typename TComplexImage >
+BModeImageFilter< TInputImage, TOutputImage, TComplexImage >
 ::BModeImageFilter()
 {
   m_AnalyticFilter = AnalyticType::New();
@@ -51,18 +51,18 @@ BModeImageFilter< TInputImage, TOutputImage >
 }
 
 
-template < typename TInputImage, typename TOutputImage >
+template < typename TInputImage, typename TOutputImage, typename TComplexImage >
 void
-BModeImageFilter< TInputImage, TOutputImage >
+BModeImageFilter< TInputImage, TOutputImage, TComplexImage >
 ::PrintSelf( std::ostream& os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
 }
 
 
-template < typename TInputImage, typename TOutputImage >
+template < typename TInputImage, typename TOutputImage, typename TComplexImage >
 void
-BModeImageFilter< TInputImage, TOutputImage >
+BModeImageFilter< TInputImage, TOutputImage, TComplexImage >
 ::GenerateInputRequestedRegion()
 {
   // call the superclass' implementation of this method
@@ -101,9 +101,9 @@ BModeImageFilter< TInputImage, TOutputImage >
 }
 
 
-template < typename TInputImage, typename TOutputImage >
+template < typename TInputImage, typename TOutputImage, typename TComplexImage >
 void
-BModeImageFilter< TInputImage, TOutputImage >
+BModeImageFilter< TInputImage, TOutputImage, TComplexImage >
 ::EnlargeOutputRequestedRegion(DataObject *output)
 {
   OutputImageType* outputPtr = dynamic_cast< OutputImageType* >( output );
@@ -134,9 +134,9 @@ BModeImageFilter< TInputImage, TOutputImage >
 }
 
 
-template < typename TInputImage, typename TOutputImage >
+template < typename TInputImage, typename TOutputImage, typename TComplexImage >
 void
-BModeImageFilter< TInputImage, TOutputImage >
+BModeImageFilter< TInputImage, TOutputImage, TComplexImage >
 ::GenerateData()
 {
   typename InputImageType::ConstPointer  inputPtr  = this->GetInput();

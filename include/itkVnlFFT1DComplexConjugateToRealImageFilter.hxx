@@ -32,22 +32,21 @@
 namespace itk
 {
 
-template< typename TPixel, unsigned int VDimension >
+template< typename TInputImage, typename TOutputImage >
 void
-VnlFFT1DComplexConjugateToRealImageFilter<TPixel,VDimension>
+VnlFFT1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
 ::ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType itkNotUsed( threadID ) )
 {
   // get pointers to the input and output
-  typename Superclass::InputImageType::ConstPointer  inputPtr  = this->GetInput();
-  typename Superclass::OutputImageType::Pointer      outputPtr = this->GetOutput();
+  const typename Superclass::InputImageType * inputPtr  = this->GetInput();
+  typename Superclass::OutputImageType * outputPtr = this->GetOutput();
 
   if ( !inputPtr || !outputPtr )
     {
     return;
     }
 
-  const typename Superclass::InputImageType::SizeType&   inputSize
-    = inputPtr->GetRequestedRegion().GetSize();
+  const typename Superclass::InputImageType::SizeType & inputSize = inputPtr->GetRequestedRegion().GetSize();
 
   unsigned int vec_size = inputSize[this->m_Direction];
 
@@ -59,11 +58,12 @@ VnlFFT1DComplexConjugateToRealImageFilter<TPixel,VDimension>
   inputIt.SetDirection(this->m_Direction);
   outputIt.SetDirection(this->m_Direction);
 
-  vnl_vector< vcl_complex<TPixel> > inputBuffer( vec_size );
-  typename vnl_vector< vcl_complex< TPixel > >::iterator inputBufferIt = inputBuffer.begin();
+  typedef typename TOutputImage::PixelType OutputPixelType;
+  vnl_vector< vcl_complex< OutputPixelType > > inputBuffer( vec_size );
+  typename vnl_vector< vcl_complex< OutputPixelType > >::iterator inputBufferIt = inputBuffer.begin();
     // fft is done in-place
-  typename vnl_vector< vcl_complex< TPixel > >::iterator outputBufferIt = inputBuffer.begin();
-  vnl_fft_1d<TPixel> v1d(vec_size);
+  typename vnl_vector< vcl_complex< OutputPixelType > >::iterator outputBufferIt = inputBuffer.begin();
+  vnl_fft_1d< OutputPixelType > v1d(vec_size);
 
   // for every fft line
   for( inputIt.GoToBegin(), outputIt.GoToBegin(); !inputIt.IsAtEnd();

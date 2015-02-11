@@ -52,16 +52,17 @@ namespace itk
  * \ingroup FourierTransform
  * \ingroup Ultrasound
  */
-template< typename TPixel, unsigned int VDimension = 3 >
+template< typename TInputImage, typename TOutputImage >
 class AnalyticSignalImageFilter:
-  public ImageToImageFilter< Image< TPixel, VDimension >,
-			     Image< std::complex< TPixel >, VDimension > >
+  public ImageToImageFilter< TInputImage, TOutputImage >
 {
 public:
   /** Standard class typedefs. */
-  typedef Image< TPixel, VDimension >                           InputImageType;
-  typedef Image< std::complex< TPixel > , VDimension >          OutputImageType;
-  typedef typename OutputImageType::RegionType                  OutputImageRegionType;
+  typedef TInputImage                                         InputImageType;
+  typedef TOutputImage                                        OutputImageType;
+  typedef typename OutputImageType::RegionType                OutputImageRegionType;
+
+  itkStaticConstMacro(ImageDimension, unsigned int, InputImageType::ImageDimension);
 
   typedef AnalyticSignalImageFilter                             Self;
   typedef ImageToImageFilter< InputImageType, OutputImageType > Superclass;
@@ -102,15 +103,15 @@ protected:
   virtual void ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread, ThreadIdType threadId ) ITK_OVERRIDE;
   virtual void AfterThreadedGenerateData() ITK_OVERRIDE;
 
-  typedef FFT1DRealToComplexConjugateImageFilter< TPixel, VDimension > FFTRealToComplexType;
-  typedef FFT1DComplexToComplexImageFilter< TPixel, VDimension > FFTComplexToComplexType;
+  typedef FFT1DRealToComplexConjugateImageFilter< InputImageType, OutputImageType > FFTRealToComplexType;
+  typedef FFT1DComplexToComplexImageFilter< OutputImageType, OutputImageType >      FFTComplexToComplexType;
 
   typename FFTRealToComplexType::Pointer m_FFTRealToComplexFilter;
   typename FFTComplexToComplexType::Pointer m_FFTComplexToComplexFilter;
 
   /** Override to return a splitter that does not split along the direction we
    * are performing the transform. */
-  virtual const ImageRegionSplitterBase* GetImageRegionSplitter(void) const;
+  virtual const ImageRegionSplitterBase* GetImageRegionSplitter() const ITK_OVERRIDE;
 
 private:
   AnalyticSignalImageFilter( const Self& ); // purposely not implemented

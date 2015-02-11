@@ -32,9 +32,9 @@
 namespace itk
 {
 
-template< typename TPixel, unsigned int Dimension >
+template< typename TInputImage, typename TOutputImage >
 void
-FFTW1DComplexToComplexImageFilter<TPixel,Dimension>
+FFTW1DComplexToComplexImageFilter< TInputImage, TOutputImage >
 ::DestroyPlans()
 {
   for( unsigned int i = 0; i < m_PlanArray.size(); i++ )
@@ -47,9 +47,9 @@ FFTW1DComplexToComplexImageFilter<TPixel,Dimension>
 }
 
 
-template< typename TPixel, unsigned int Dimension >
+template< typename TInputImage, typename TOutputImage >
 void
-FFTW1DComplexToComplexImageFilter<TPixel,Dimension>
+FFTW1DComplexToComplexImageFilter< TInputImage, TOutputImage >
 ::BeforeThreadedGenerateData()
 {
   typename OutputImageType::Pointer      outputPtr = this->GetOutput();
@@ -112,9 +112,9 @@ FFTW1DComplexToComplexImageFilter<TPixel,Dimension>
 }
 
 
-template <typename TPixel, unsigned int Dimension>
+template <typename TInputImage, typename TOutputImage>
 void
-FFTW1DComplexToComplexImageFilter<TPixel,Dimension>
+FFTW1DComplexToComplexImageFilter< TInputImage, TOutputImage >
 ::ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType threadID )
 {
   // get pointers to the input and output

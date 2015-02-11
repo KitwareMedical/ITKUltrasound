@@ -37,7 +37,7 @@ namespace fftw
  *
  * \ingroup Ultrasound
  */
-template <typename TPixel>
+template< typename TPixel >
 class  ComplexToComplexProxy
 {
   // empty -- only double and float specializations work

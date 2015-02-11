@@ -43,16 +43,16 @@ int itkAnalyticSignalImageFilterTest( int argc, char* argv[] )
   typedef itk::Image< PixelType, Dimension > ImageType;
   typedef itk::Image< std::complex< PixelType >, Dimension > ComplexImageType;
 
-  typedef itk::ImageFileReader< ImageType > ReaderType;
-  typedef itk::ConstantPadImageFilter< ImageType, ImageType > PadType;
-  typedef itk::AnalyticSignalImageFilter< PixelType, Dimension > AnalyticType;
-  typedef itk::ComplexToRealImageFilter< ComplexImageType, ImageType > RealFilterType;
+  typedef itk::ImageFileReader< ImageType >                                 ReaderType;
+  typedef itk::ConstantPadImageFilter< ImageType, ImageType >               PadType;
+  typedef itk::AnalyticSignalImageFilter< ImageType, ComplexImageType >     AnalyticType;
+  typedef itk::ComplexToRealImageFilter< ComplexImageType, ImageType >      RealFilterType;
   typedef itk::ComplexToImaginaryImageFilter< ComplexImageType, ImageType > ImaginaryFilterType;
-  typedef itk::ImageFileWriter< ImageType > WriterType;
+  typedef itk::ImageFileWriter< ImageType >                                 WriterType;
 
   ReaderType::Pointer reader = ReaderType::New();
   PadType::Pointer    pad    = PadType::New();
-  AnalyticType::Pointer    analytic    = AnalyticType::New();
+  AnalyticType::Pointer analytic     = AnalyticType::New();
   RealFilterType::Pointer realFilter = RealFilterType::New();
   ImaginaryFilterType::Pointer imaginaryFilter = ImaginaryFilterType::New();
   WriterType::Pointer writer = WriterType::New();

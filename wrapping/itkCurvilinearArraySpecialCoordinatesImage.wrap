@@ -1,4 +1,3 @@
-itk_wrap_include("itkBModeImageFilter.h")
 itk_wrap_include("deque")
 
 itk_wrap_class("itk::CurvilinearArraySpecialCoordinatesImage" POINTER_WITH_SUPERCLASS)

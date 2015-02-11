@@ -31,35 +31,34 @@ namespace itk
  *
  * \ingroup Ultrasound
  */
-template< typename TPixel, unsigned int VDimension = 3 >
-class VnlFFT1DComplexToComplexImageFilter :
-    public FFT1DComplexToComplexImageFilter<TPixel, VDimension>
+template< typename TInputImage, typename TOutputImage >
+class VnlFFT1DComplexToComplexImageFilter:
+    public FFT1DComplexToComplexImageFilter< TInputImage, TOutputImage >
 {
 public:
   /** Standard class typedefs. */
-  typedef VnlFFT1DComplexToComplexImageFilter                    Self;
-  typedef FFT1DComplexToComplexImageFilter< TPixel, VDimension > Superclass;
-  typedef SmartPointer< Self >                                   Pointer;
-  typedef SmartPointer< const Self >                             ConstPointer;
+  typedef VnlFFT1DComplexToComplexImageFilter                           Self;
+  typedef FFT1DComplexToComplexImageFilter< TInputImage, TOutputImage > Superclass;
+  typedef SmartPointer< Self >                                          Pointer;
+  typedef SmartPointer< const Self >                                    ConstPointer;
 
-  typedef typename Superclass::InputImageType                    InputImageType;
-  typedef typename Superclass::OutputImageType                   OutputImageType;
-  typedef typename OutputImageType::RegionType                   OutputImageRegionType;
+  typedef typename Superclass::InputImageType                           InputImageType;
+  typedef typename Superclass::OutputImageType                          OutputImageType;
+  typedef typename OutputImageType::RegionType                          OutputImageRegionType;
 
-  typedef typename Superclass::TransformDirectionType TransformDirectionType;
+  typedef typename Superclass::TransformDirectionType                   TransformDirectionType;
 
   /** Method for creation through the object factory. */
-  itkNewMacro(Self);
+  itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(VnlFFT1DComplexToComplexImageFilter,
-               FFT1DComplexToComplexImageFilter);
+  itkTypeMacro( VnlFFT1DComplexToComplexImageFilter, FFT1DComplexToComplexImageFilter );
 
 protected:
-  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID );  // generates output from input
+  VnlFFT1DComplexToComplexImageFilter() {}
+  virtual ~VnlFFT1DComplexToComplexImageFilter() {}
 
-  VnlFFT1DComplexToComplexImageFilter() { }
-  virtual ~VnlFFT1DComplexToComplexImageFilter() { }
+  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) ITK_OVERRIDE;
 
 private:
   VnlFFT1DComplexToComplexImageFilter(const Self&); //purposely not implemented

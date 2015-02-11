@@ -21,6 +21,7 @@
 #include "itkSpecialCoordinatesImage.h"
 #include "itkPoint.h"
 #include "vnl/vnl_math.h"
+#include "itkNeighborhoodAccessorFunctor.h"
 
 namespace itk
 {
@@ -124,6 +125,10 @@ public:
    * the Image, and DefaultVectorPixelAccessor for the vector image. The
    * functor provides a generic API between the two accessors. */
   typedef DefaultPixelAccessorFunctor< Self > AccessorFunctorType;
+
+  /** Typedef for the functor used to access a neighborhood of pixel
+   * pointers. */
+  typedef NeighborhoodAccessorFunctor< Self > NeighborhoodAccessorFunctorType;
 
   /** Dimension of the image.  This constant is used by functions that are
    * templated over image type (as opposed to being templated over pixel type

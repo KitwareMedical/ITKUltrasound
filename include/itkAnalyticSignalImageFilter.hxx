@@ -35,8 +35,8 @@
 namespace itk
 {
 
-template< typename TPixel, unsigned int VDimension >
-AnalyticSignalImageFilter< TPixel, VDimension >
+template< typename TInputImage, typename TOutputImage >
+AnalyticSignalImageFilter< TInputImage, TOutputImage >
 ::AnalyticSignalImageFilter()
 {
   m_FFTRealToComplexFilter = FFTRealToComplexType::New();
@@ -49,9 +49,10 @@ AnalyticSignalImageFilter< TPixel, VDimension >
   this->m_ImageRegionSplitter = ImageRegionSplitterDirection::New();
 }
 
-template< typename TPixel, unsigned int Dimension >
+
+template< typename TInputImage, typename TOutputImage >
 void
-AnalyticSignalImageFilter < TPixel , Dimension >
+AnalyticSignalImageFilter< TInputImage, TOutputImage >
 ::GenerateInputRequestedRegion()
 {
   // call the superclass' implementation of this method
@@ -96,9 +97,9 @@ AnalyticSignalImageFilter < TPixel , Dimension >
 }
 
 
-template< typename TPixel, unsigned int Dimension >
+template< typename TInputImage, typename TOutputImage >
 void
-AnalyticSignalImageFilter < TPixel , Dimension >
+AnalyticSignalImageFilter< TInputImage, TOutputImage >
 ::EnlargeOutputRequestedRegion(DataObject *output)
 {
   OutputImageType* outputPtr = dynamic_cast< OutputImageType* >( output );
@@ -129,9 +130,9 @@ AnalyticSignalImageFilter < TPixel , Dimension >
 }
 
 
-template< typename TPixel, unsigned int Dimension >
+template< typename TInputImage, typename TOutputImage >
 void
-AnalyticSignalImageFilter < TPixel , Dimension >
+AnalyticSignalImageFilter< TInputImage, TOutputImage >
 ::PrintSelf( std::ostream& os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
@@ -146,18 +147,18 @@ AnalyticSignalImageFilter < TPixel , Dimension >
 }
 
 
-template< typename TPixel, unsigned int VDimension >
+template< typename TInputImage, typename TOutputImage >
 const ImageRegionSplitterBase *
-AnalyticSignalImageFilter< TPixel, VDimension >
+AnalyticSignalImageFilter< TInputImage, TOutputImage >
 ::GetImageRegionSplitter() const
 {
   return this->m_ImageRegionSplitter.GetPointer();
 }
 
 
-template< typename TPixel, unsigned int Dimension >
+template< typename TInputImage, typename TOutputImage >
 void
-AnalyticSignalImageFilter < TPixel , Dimension >
+AnalyticSignalImageFilter< TInputImage, TOutputImage >
 ::BeforeThreadedGenerateData()
 {
   this->m_ImageRegionSplitter->SetDirection( this->GetDirection() );
@@ -169,9 +170,10 @@ AnalyticSignalImageFilter < TPixel , Dimension >
   m_FFTRealToComplexFilter->Update ();
 }
 
-template< typename TPixel, unsigned int Dimension >
+
+template< typename TInputImage, typename TOutputImage >
 void
-AnalyticSignalImageFilter < TPixel , Dimension >
+AnalyticSignalImageFilter< TInputImage, TOutputImage >
 ::ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread, ThreadIdType itkNotUsed( threadId ) )
 {
   // get pointers to the input and output
@@ -194,8 +196,8 @@ AnalyticSignalImageFilter < TPixel , Dimension >
     dub_size = (size + 1) / 2 - 1;
     }
 
-  typedef ImageLinearConstIteratorWithIndex< OutputImageType > InputIteratorType;
-  typedef ImageLinearIteratorWithIndex< OutputImageType >      OutputIteratorType;
+  typedef ImageLinearConstIteratorWithIndex< typename FFTRealToComplexType::OutputImageType > InputIteratorType;
+  typedef ImageLinearIteratorWithIndex< OutputImageType >                                     OutputIteratorType;
   InputIteratorType inputIt( inputPtr, outputRegionForThread );
   OutputIteratorType outputIt( outputPtr, outputRegionForThread );
   inputIt.SetDirection( direction );
@@ -216,7 +218,7 @@ AnalyticSignalImageFilter < TPixel , Dimension >
 
     for( i = 0; i < dub_size; i++ )
       {
-      outputIt.Set( inputIt.Get() * static_cast< TPixel >( 2 ) );
+      outputIt.Set( inputIt.Get() * static_cast< typename TInputImage::PixelType >( 2 ) );
       ++outputIt;
       ++inputIt;
       }
@@ -228,15 +230,16 @@ AnalyticSignalImageFilter < TPixel , Dimension >
       }
     while( !outputIt.IsAtEndOfLine() )
       {
-      outputIt.Set( static_cast< TPixel >( 0 ) );
+      outputIt.Set( static_cast< typename TInputImage::PixelType >( 0 ) );
       ++outputIt;
       }
     }
 }
 
-template< typename TPixel, unsigned int Dimension >
+
+template< typename TInputImage, typename TOutputImage >
 void
-AnalyticSignalImageFilter < TPixel , Dimension >
+AnalyticSignalImageFilter< TInputImage, TOutputImage >
 ::AfterThreadedGenerateData()
 {
   // Trippy, eh?
