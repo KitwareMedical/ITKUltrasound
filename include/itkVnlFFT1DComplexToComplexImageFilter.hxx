@@ -48,23 +48,24 @@ VnlFFT1DComplexToComplexImageFilter< TInputImage, TOutputImage >
 
   const typename Superclass::InputImageType::SizeType & inputSize = inputPtr->GetRequestedRegion().GetSize();
 
-  unsigned int vec_size = inputSize[this->m_Direction];
+  const unsigned int direction = this->GetDirection();
+  const unsigned int vectorSize = inputSize[direction];
 
   typedef itk::ImageLinearConstIteratorWithIndex< InputImageType >  InputIteratorType;
   typedef itk::ImageLinearIteratorWithIndex< OutputImageType >      OutputIteratorType;
   InputIteratorType inputIt( inputPtr, outputRegion );
   OutputIteratorType outputIt( outputPtr, outputRegion );
 
-  inputIt.SetDirection(this->m_Direction);
-  outputIt.SetDirection(this->m_Direction);
+  inputIt.SetDirection( direction );
+  outputIt.SetDirection( direction );
 
   typedef typename TInputImage::PixelType PixelType;
   typedef vnl_vector< PixelType >         VNLVectorType;
-  VNLVectorType inputBuffer( vec_size );
+  VNLVectorType inputBuffer( vectorSize );
   typename VNLVectorType::iterator inputBufferIt  = inputBuffer.begin();
     // fft is done in-place
   typename VNLVectorType::iterator outputBufferIt = inputBuffer.begin();
-  vnl_fft_1d< typename NumericTraits< PixelType >::ValueType > v1d(vec_size);
+  vnl_fft_1d< typename NumericTraits< PixelType >::ValueType > v1d(vectorSize);
 
   // for every fft line
   for( inputIt.GoToBegin(), outputIt.GoToBegin(); !inputIt.IsAtEnd();
@@ -102,7 +103,7 @@ VnlFFT1DComplexToComplexImageFilter< TInputImage, TOutputImage >
       outputIt.GoToBeginOfLine();
       while( !outputIt.IsAtEndOfLine() )
 	{
-	outputIt.Set( (*outputBufferIt) / static_cast< PixelType >( vec_size ));
+	outputIt.Set( (*outputBufferIt) / static_cast< PixelType >( vectorSize ));
 	++outputIt;
 	++outputBufferIt;
 	}
