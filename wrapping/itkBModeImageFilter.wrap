@@ -1,11 +1,18 @@
 itk_wrap_include("itkCurvilinearArraySpecialCoordinatesImage.h")
+itk_wrap_include("complex")
+
+itk_wrap_class("itk::CurvilinearArraySpecialCoordinatesImage" POINTER_WITH_SUPERCLASS)
+  foreach(d ${ITK_WRAP_DIMS})
+    foreach(t ${WRAP_ITK_REAL})
+      itk_wrap_template("C${ITKM_${t}}${d}" "std::complex< ${ITKT_${t}} >, ${d}")
+    endforeach()
+  endforeach()
+itk_end_wrap_class()
 
 itk_wrap_class("itk::BModeImageFilter" POINTER)
   itk_wrap_image_filter("${WRAP_ITK_REAL}" 2)
   foreach(t ${WRAP_ITK_REAL})
     itk_wrap_template("CASCI${ITKM_${t}}2CASCI${ITKM_${t}}2CASCcomplexI${ITKM_${t}}2"
-          "itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, 2 >,
-          itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, 2 >,
-          itk::CurvilinearArraySpecialCoordinatesImage< std::complex< ${ITKT_${t}} >, 2 >")
+          "itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, 2 >, itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, 2 >, itk::CurvilinearArraySpecialCoordinatesImage< std::complex< ${ITKT_${t}} >, 2 >")
   endforeach()
 itk_end_wrap_class()
