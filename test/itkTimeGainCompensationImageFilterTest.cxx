@@ -18,10 +18,11 @@
 
 #include "itkTimeGainCompensationImageFilter.h"
 #include "itkCurvilinearArraySpecialCoordinatesImage.h"
+#include "itkBModeImageFilter.h"
+#include "itkCastImageFilter.h"
 
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
-
 #include "itkResampleImageFilter.h"
 
 int itkTimeGainCompensationImageFilterTest( int argc, char * argv[] )
@@ -36,22 +37,32 @@ int itkTimeGainCompensationImageFilterTest( int argc, char * argv[] )
   const char * inputImageFileName = argv[1];
   const char * outputImageFileName = argv[2];
 
-  typedef signed short PixelType;
   const unsigned int Dimension = 2;
-  typedef itk::Image< PixelType, Dimension > ImageType;
-  typedef itk::CurvilinearArraySpecialCoordinatesImage< PixelType, Dimension > SpecialCoordinatesImageType;
+  typedef signed short                                                                IntegerPixelType;
+  typedef itk::CurvilinearArraySpecialCoordinatesImage< IntegerPixelType, Dimension > IntegerImageType;
+  typedef float                                                                       RealPixelType;
+  typedef itk::CurvilinearArraySpecialCoordinatesImage< RealPixelType, Dimension >    RealImageType;
+  typedef itk::Image< RealPixelType, Dimension >                                      ScanConvertedImageType;
 
-  typedef itk::ImageFileReader < SpecialCoordinatesImageType > ReaderType;
+  typedef itk::ImageFileReader< IntegerImageType > ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
 
-  typedef itk::TimeGainCompensationImageFilter< SpecialCoordinatesImageType > TGCFilterType;
+  typedef itk::TimeGainCompensationImageFilter< IntegerImageType > TGCFilterType;
   TGCFilterType::Pointer tgcFilter = TGCFilterType::New();
   tgcFilter->SetInput( reader->GetOutput() );
 
+  typedef itk::CastImageFilter< IntegerImageType, RealImageType > CasterType;
+  CasterType::Pointer caster = CasterType::New();
+  caster->SetInput( tgcFilter->GetOutput() );
+
+  typedef itk::BModeImageFilter< RealImageType, RealImageType > BModeFilterType;
+  BModeFilterType::Pointer bmodeFilter = BModeFilterType::New();
+  bmodeFilter->SetInput( caster->GetOutput() );
+
   try
     {
-    tgcFilter->Update();
+    bmodeFilter->Update();
     }
   catch( itk::ExceptionObject & error )
     {
@@ -61,8 +72,11 @@ int itkTimeGainCompensationImageFilterTest( int argc, char * argv[] )
 
   tgcFilter->Print( std::cout );
 
-  SpecialCoordinatesImageType::Pointer curvilinearArrayImage = tgcFilter->GetOutput();
-  const SpecialCoordinatesImageType::SizeType inputSize = curvilinearArrayImage->GetLargestPossibleRegion().GetSize();
+  RealImageType::Pointer curvilinearArrayImage = bmodeFilter->GetOutput();
+  curvilinearArrayImage->DisconnectPipeline();
+  curvilinearArrayImage->Print( std::cout );
+  std::cout << "Size: " << curvilinearArrayImage->GetPixelContainer()->Size() << std::endl;
+  const RealImageType::SizeType inputSize = curvilinearArrayImage->GetLargestPossibleRegion().GetSize();
   const double lateralAngularSeparation = (vnl_math::pi / 2.0 + 0.5) /
     (inputSize[1] - 1);
   curvilinearArrayImage->SetLateralAngularSeparation( lateralAngularSeparation );
@@ -71,22 +85,23 @@ int itkTimeGainCompensationImageFilterTest( int argc, char * argv[] )
   curvilinearArrayImage->SetFirstSampleDistance( radiusStart );
   curvilinearArrayImage->SetRadiusSampleSize( (radiusStop - radiusStart) / (inputSize[0] -1) );
 
-  typedef itk::ResampleImageFilter< SpecialCoordinatesImageType, ImageType > ResamplerType;
+  typedef itk::ResampleImageFilter< RealImageType, ScanConvertedImageType > ResamplerType;
   ResamplerType::Pointer resampler = ResamplerType::New();
-  resampler->SetInput( tgcFilter->GetOutput() );
-  SpecialCoordinatesImageType::SizeType outputSize;
+  resampler->SetInput( curvilinearArrayImage );
+  RealImageType::SizeType outputSize;
   outputSize[0] = 800;
   outputSize[1] = 800;
   resampler->SetSize( outputSize );
-  SpecialCoordinatesImageType::SpacingType outputSpacing;
+  RealImageType::SpacingType outputSpacing;
   outputSpacing.Fill( 0.15 );
   resampler->SetOutputSpacing( outputSpacing );
-  SpecialCoordinatesImageType::PointType outputOrigin;
+  RealImageType::PointType outputOrigin;
   outputOrigin[0] = outputSize[0] * outputSpacing[0] / -2.0;
   outputOrigin[1] = radiusStart * std::cos( vnl_math::pi / 4.0 );
   resampler->SetOutputOrigin( outputOrigin );
 
-  typedef itk::ImageFileWriter< ImageType > WriterType;
+  typedef itk::ImageFileWriter< ScanConvertedImageType > WriterType;
+  //typedef itk::ImageFileWriter< RealImageType > WriterType;
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFileName );
   writer->SetInput( resampler->GetOutput() );

@@ -35,10 +35,10 @@ int itkCurvilinearArraySpecialCoordinatesImageTest( int argc, char * argv[] )
   const char * inputImageFileName = argv[1];
   const char * outputImageFileName = argv[2];
 
-  typedef unsigned char PixelType;
   const unsigned int Dimension = 2;
-  typedef itk::Image< PixelType, Dimension > ImageType;
+  typedef unsigned char PixelType;
 
+  typedef itk::Image< PixelType, Dimension >                                   ImageType;
   typedef itk::CurvilinearArraySpecialCoordinatesImage< PixelType, Dimension > SpecialCoordinatesImageType;
 
   typedef itk::ImageFileReader < SpecialCoordinatesImageType > ReaderType;

@@ -139,8 +139,10 @@ void
 BModeImageFilter< TInputImage, TOutputImage, TComplexImage >
 ::GenerateData()
 {
-  typename InputImageType::ConstPointer  inputPtr  = this->GetInput();
-  typename OutputImageType::Pointer      outputPtr = this->GetOutput();
+  this->AllocateOutputs();
+
+  const InputImageType * inputPtr = this->GetInput();
+  OutputImageType * outputPtr = this->GetOutput();
 
   const unsigned int direction = m_AnalyticFilter->GetDirection();
   typename InputImageType::SizeType size = inputPtr->GetLargestPossibleRegion().GetSize();
@@ -166,7 +168,9 @@ BModeImageFilter< TInputImage, TOutputImage, TComplexImage >
     n = size[direction];
     unsigned int newSizeDirection = 1;
     while( newSizeDirection < n )
+      {
       newSizeDirection *= 2;
+      }
     typename InputImageType::SizeType padSize;
     padSize.Fill( 0 );
     padSize[direction] = newSizeDirection - size[direction];

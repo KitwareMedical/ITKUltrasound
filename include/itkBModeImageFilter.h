@@ -50,8 +50,11 @@ class BModeImageFilter :
   public ImageToImageFilter< TInputImage, TOutputImage >
 {
 public:
-  /** Standard "Self" typedef.   */
-  typedef BModeImageFilter Self;
+  /** Standard class typedefs.   */
+  typedef BModeImageFilter                                Self;
+  typedef ImageToImageFilter< TInputImage, TOutputImage > Superclass;
+  typedef SmartPointer< Self >                            Pointer;
+  typedef SmartPointer< const Self >                      ConstPointer;
 
   /** The type of input image.   */
   typedef TInputImage InputImageType;
@@ -77,13 +80,6 @@ public:
   typedef typename InputImageType::RegionType InputRegionType;
   typedef typename InputImageType::SizeType   InputSizeType;
   typedef typename InputImageType::IndexType  InputIndexType;
-
-  /** Standard super class typedef support. */
-  typedef ImageToImageFilter< InputImageType, OutputImageType > Superclass;
-
-  /** Smart pointer typedef support.  */
-  typedef SmartPointer<Self> Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
 
   /** Run-time type information (and related methods) */
   itkTypeMacro( BModeImageFilter, ImageToImageFilter );
