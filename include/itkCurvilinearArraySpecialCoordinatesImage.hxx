@@ -52,6 +52,36 @@ CurvilinearArraySpecialCoordinatesImage< TPixel, VDimension >
      << std::endl;
 }
 
+
+template< typename TPixel, unsigned int VDimension >
+void
+CurvilinearArraySpecialCoordinatesImage< TPixel, VDimension >
+::Graft(const DataObject *data)
+{
+  // call the superclass' implementation
+  Superclass::Graft(data);
+
+  if ( data )
+    {
+    // Attempt to cast data to a CurvilinearArraySpecialCoordinatesImage
+    const Self * const imgData = dynamic_cast< const Self * >( data );
+
+    if ( imgData )
+      {
+      // Now copy anything remaining that is needed
+      this->SetPixelContainer( const_cast< PixelContainer * >
+                               ( imgData->GetPixelContainer() ) );
+      }
+    else
+      {
+      // pointer could not be cast back down
+      itkExceptionMacro( << "itk::Image::Graft() cannot cast "
+                         << typeid( data ).name() << " to "
+                         << typeid( const Self * ).name() );
+      }
+    }
+}
+
 } // end namespace itk
 
 #endif

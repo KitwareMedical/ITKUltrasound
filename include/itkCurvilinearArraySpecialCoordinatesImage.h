@@ -173,6 +173,18 @@ public:
   typedef typename PixelContainer::Pointer      PixelContainerPointer;
   typedef typename PixelContainer::ConstPointer PixelContainerConstPointer;
 
+  /** Graft the data and information from one image to another. This
+   * is a convenience method to setup a second image with all the meta
+   * information of another image and use the same pixel
+   * container. Note that this method is different than just using two
+   * SmartPointers to the same image since separate DataObjects are
+   * still maintained. This method is similar to
+   * ImageSource::GraftOutput(). The implementation in ImageBase
+   * simply calls CopyInformation() and copies the region ivars.
+   * The implementation here refers to the superclass' implementation
+   * and then copies over the pixel container. */
+  virtual void Graft(const DataObject *data) ITK_OVERRIDE;
+
   /** \brief Get the continuous index from a physical point
    *
    * Returns true if the resulting index is within the image, false otherwise.
