@@ -143,6 +143,9 @@ itk_add_test( NAME itkSpectra1DSupportWindowToMaskImageFilterTest2
     )
 itk_add_test( NAME itkTimeGainCompensationImageFilterTest
   COMMAND UltrasoundTestDriver
+  --compare
+    ${ITK_TEST_OUTPUT_DIR}/itkTimeGainCompensationImageFilterTest.mha
+    DATA{Baseline/itkTimeGainCompensationImageFilterTest.mha}
   itkTimeGainCompensationImageFilterTest
     DATA{Input/EyeRoundOverChuck_5.0MHz_20V.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkTimeGainCompensationImageFilterTest.mha
