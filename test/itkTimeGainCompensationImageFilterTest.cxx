@@ -20,6 +20,7 @@
 #include "itkCurvilinearArraySpecialCoordinatesImage.h"
 #include "itkBModeImageFilter.h"
 #include "itkCastImageFilter.h"
+#include "itkRescaleIntensityImageFilter.h"
 
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
@@ -118,22 +119,26 @@ int itkTimeGainCompensationImageFilterTest( int argc, char * argv[] )
   ResamplerType::Pointer resampler = ResamplerType::New();
   resampler->SetInput( curvilinearArrayImage );
   RealImageType::SizeType outputSize;
-  outputSize[0] = 800;
-  outputSize[1] = 800;
+  outputSize[0] = 400;
+  outputSize[1] = 400;
   resampler->SetSize( outputSize );
   RealImageType::SpacingType outputSpacing;
-  outputSpacing.Fill( 0.15 );
+  outputSpacing.Fill( 0.30 );
   resampler->SetOutputSpacing( outputSpacing );
   RealImageType::PointType outputOrigin;
   outputOrigin[0] = outputSize[0] * outputSpacing[0] / -2.0;
   outputOrigin[1] = radiusStart * std::cos( vnl_math::pi / 4.0 );
   resampler->SetOutputOrigin( outputOrigin );
 
-  typedef itk::ImageFileWriter< ScanConvertedImageType > WriterType;
-  //typedef itk::ImageFileWriter< RealImageType > WriterType;
+  typedef itk::Image< unsigned char, Dimension > OutputImageType;
+  typedef itk::RescaleIntensityImageFilter< ScanConvertedImageType, OutputImageType > RescalerType;
+  RescalerType::Pointer rescaler = RescalerType::New();
+  rescaler->SetInput( resampler->GetOutput() );
+
+  typedef itk::ImageFileWriter< OutputImageType > WriterType;
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFileName );
-  writer->SetInput( resampler->GetOutput() );
+  writer->SetInput( rescaler->GetOutput() );
   try
     {
     writer->Update();
