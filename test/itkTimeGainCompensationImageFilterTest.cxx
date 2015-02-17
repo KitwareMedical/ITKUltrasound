@@ -24,6 +24,7 @@
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 #include "itkResampleImageFilter.h"
+#include "itkTestingMacros.h"
 
 int itkTimeGainCompensationImageFilterTest( int argc, char * argv[] )
 {
@@ -52,6 +53,36 @@ int itkTimeGainCompensationImageFilterTest( int argc, char * argv[] )
   TGCFilterType::Pointer tgcFilter = TGCFilterType::New();
   tgcFilter->SetInput( reader->GetOutput() );
 
+  typedef TGCFilterType::GainType GainType;
+
+  GainType gain = tgcFilter->GetGain();
+  TEST_SET_GET_VALUE( 1.0, gain(0, 1) );
+
+  // Invalid number of columns
+  gain.SetSize( 4, 3 );
+  tgcFilter->SetGain( gain );
+  TRY_EXPECT_EXCEPTION( tgcFilter->Update() );
+
+  // Invalid number of rows
+  gain.SetSize( 1, 2 );
+  tgcFilter->SetGain( gain );
+  TRY_EXPECT_EXCEPTION( tgcFilter->Update() );
+
+  // Depths are not ascending
+  gain.SetSize( 3, 2 );
+  gain( 0, 0 ) = 0.0;
+  gain( 0, 1 ) = 1.0;
+  gain( 1, 0 ) = 2000.0;
+  gain( 1, 1 ) = 3.0;
+  gain( 2, 0 ) = 1000.0;
+  gain( 2, 1 ) = 5.0;
+  tgcFilter->SetGain( gain );
+  TRY_EXPECT_EXCEPTION( tgcFilter->Update() );
+
+  gain( 1, 0 ) = 1000.0;
+  gain( 2, 0 ) = 2000.0;
+  tgcFilter->SetGain( gain );
+
   typedef itk::CastImageFilter< IntegerImageType, RealImageType > CasterType;
   CasterType::Pointer caster = CasterType::New();
   caster->SetInput( tgcFilter->GetOutput() );
@@ -74,8 +105,6 @@ int itkTimeGainCompensationImageFilterTest( int argc, char * argv[] )
 
   RealImageType::Pointer curvilinearArrayImage = bmodeFilter->GetOutput();
   curvilinearArrayImage->DisconnectPipeline();
-  curvilinearArrayImage->Print( std::cout );
-  std::cout << "Size: " << curvilinearArrayImage->GetPixelContainer()->Size() << std::endl;
   const RealImageType::SizeType inputSize = curvilinearArrayImage->GetLargestPossibleRegion().GetSize();
   const double lateralAngularSeparation = (vnl_math::pi / 2.0 + 0.5) /
     (inputSize[1] - 1);

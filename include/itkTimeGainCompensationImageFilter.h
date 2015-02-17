@@ -20,6 +20,8 @@
 
 #include "itkImageToImageFilter.h"
 
+#include "itkArray2D.h"
+
 namespace itk
 {
 
@@ -50,17 +52,29 @@ public:
   itkTypeMacro( TimeGainCompensationImageFilter, ImageToImageFilter );
   itkNewMacro( Self );
 
+  typedef Array2D< double > GainType;
+
+  /** Set/Get the gain.  The first column specifies the depth. The second
+   * column specifies the gain. */
+  itkSetMacro( Gain, GainType );
+  itkGetConstReferenceMacro( Gain, GainType );
+
 protected:
   typedef typename OutputImageType::RegionType                  OutputImageRegionType;
 
   TimeGainCompensationImageFilter();
   virtual ~TimeGainCompensationImageFilter() {}
 
+  void PrintSelf( std::ostream & os, Indent indent ) const ITK_OVERRIDE;
+
+  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
   virtual void ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread, ThreadIdType threadId ) ITK_OVERRIDE;
 
 private:
   TimeGainCompensationImageFilter( const Self& ); // purposely not implemented
   void operator=( const Self& ); // purposely not implemented
+
+  GainType m_Gain;
 };
 
 }

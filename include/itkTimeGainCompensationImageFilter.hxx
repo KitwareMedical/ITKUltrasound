@@ -28,9 +28,56 @@ namespace itk
 
 template< typename TInputImage, typename TOutputImage >
 TimeGainCompensationImageFilter< TInputImage, TOutputImage >
-::TimeGainCompensationImageFilter()
+::TimeGainCompensationImageFilter():
+  m_Gain( 2, 2 )
 {
+  m_Gain(0, 0) = NumericTraits< double >::min();
+  m_Gain(0, 1) = NumericTraits< double >::OneValue();
+  m_Gain(1, 0) = NumericTraits< double >::max();
+  m_Gain(1, 1) = NumericTraits< double >::OneValue();
 }
+
+
+template< typename TInputImage, typename TOutputImage >
+void
+TimeGainCompensationImageFilter< TInputImage, TOutputImage >
+::PrintSelf( std::ostream & os, Indent indent ) const
+{
+  Superclass::PrintSelf( os, indent );
+
+  os << indent << "Gain:" << std::endl;
+  for( unsigned int ii = 0; ii < m_Gain.rows(); ++ii )
+    {
+    os << indent.GetNextIndent() << "[" << m_Gain( ii, 0 ) << ", " << m_Gain( ii, 1 ) << "]" << std::endl;
+    }
+}
+
+
+template< typename TInputImage, typename TOutputImage >
+void
+TimeGainCompensationImageFilter< TInputImage, TOutputImage >
+::BeforeThreadedGenerateData()
+{
+  const GainType & gain = this->GetGain();
+  if( gain.cols() != 2 )
+    {
+    itkExceptionMacro( "Gain should have two columns." );
+    }
+  if( gain.rows() < 2 )
+    {
+    itkExceptionMacro( "Insufficient depths specified in Gain." );
+    }
+  double depth = gain( 0, 0 );
+  for( unsigned int ii = 1; ii < gain.rows(); ++ii )
+    {
+    if( gain( ii, 0 ) <= depth )
+      {
+      itkExceptionMacro( "Gain depths must be strictly increasing." );
+      }
+    depth = gain( ii, 0 );
+    }
+}
+
 
 template< typename TInputImage, typename TOutputImage >
 void
