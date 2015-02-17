@@ -20,8 +20,9 @@
 
 #include "itkTimeGainCompensationImageFilter.h"
 
-#include "itkImageLinearConstIteratorWithIndex.h"
-#include "itkImageLinearIteratorWithIndex.h"
+#include "itkImageScanlineIterator.h"
+#include "itkImageScanlineConstIterator.h"
+#include "itkArray.h"
 
 namespace itk
 {
@@ -87,15 +88,60 @@ TimeGainCompensationImageFilter< TInputImage, TOutputImage >
   const InputImageType * inputImage = this->GetInput();
   OutputImageType * outputImage = this->GetOutput();
 
-  typedef ImageLinearConstIteratorWithIndex< InputImageType > InputIteratorType;
-  InputIteratorType inputIt( inputImage, outputRegionForThread );
-  inputIt.SetDirection( 0 );
-  inputIt.GoToBegin();
+  // Compute the line gain once.
+  const GainType & gain = this->GetGain();
+  double pieceStart = gain( 0, 0 );
+  double pieceEnd = gain( 1, 0 );
+  double gainStart = gain( 0, 1 );
+  double gainEnd = gain( 1, 1 );
+  SizeValueType gainSegment = 1;
 
-  typedef ImageLinearIteratorWithIndex< OutputImageType > OutputIteratorType;
+  typedef Array< double > LineGainType;
+  const SizeValueType lineGainSize = outputRegionForThread.GetSize()[0];
+  const typename InputImageType::RegionType & inputRegion = inputImage->GetLargestPossibleRegion();
+  const IndexValueType imageStartIndex = inputRegion.GetIndex()[0];
+  const typename InputImageType::PointType origin = inputImage->GetOrigin();
+  const SpacePrecisionType pixelSpacing = inputImage->GetSpacing()[0];
+  IndexValueType indexOffset = outputRegionForThread.GetIndex()[0] - imageStartIndex;
+  LineGainType lineGain( lineGainSize );
+  for( SizeValueType lineGainIndex = 0; lineGainIndex < lineGainSize; ++lineGainIndex )
+    {
+    const SpacePrecisionType pixelLocation = origin[0] + pixelSpacing * indexOffset;
+    if( pixelLocation <= pieceStart )
+      {
+      lineGain[lineGainIndex] = gainStart;
+      }
+    else if( pixelLocation > pieceEnd )
+      {
+      if( gainSegment >= gain.rows() - 1 )
+        {
+        lineGain[lineGainIndex] = gainEnd;
+        }
+      else
+        {
+        ++gainSegment;
+        pieceStart = gain( gainSegment - 1, 0 );
+        pieceEnd = gain( gainSegment, 0 );
+        gainStart = gain( gainSegment - 1, 1 );
+        gainEnd = gain( gainSegment, 1 );
+
+        const SpacePrecisionType offset = static_cast< SpacePrecisionType >( pixelLocation - pieceStart );
+        lineGain[lineGainIndex] = offset * ( gainEnd - gainStart ) / ( pieceEnd - pieceStart ) + gainStart;
+        }
+      }
+    else
+      {
+      const SpacePrecisionType offset = static_cast< SpacePrecisionType >( pixelLocation - pieceStart );
+      lineGain[lineGainIndex] = offset * ( gainEnd - gainStart ) / ( pieceEnd - pieceStart ) + gainStart;
+      }
+    ++indexOffset;
+    }
+
+  typedef ImageScanlineConstIterator< InputImageType > InputIteratorType;
+  InputIteratorType inputIt( inputImage, outputRegionForThread );
+
+  typedef ImageScanlineIterator< OutputImageType > OutputIteratorType;
   OutputIteratorType outputIt( outputImage, outputRegionForThread );
-  outputIt.SetDirection( 0 );
-  outputIt.GoToBegin();
 
   for( inputIt.GoToBegin(), outputIt.GoToBegin();
        !outputIt.IsAtEnd();
@@ -103,11 +149,13 @@ TimeGainCompensationImageFilter< TInputImage, TOutputImage >
     {
     inputIt.GoToBeginOfLine();
     outputIt.GoToBeginOfLine();
+    SizeValueType lineGainIndex = 0;
     while( ! outputIt.IsAtEndOfLine() )
       {
-      outputIt.Set( inputIt.Value() );
+      outputIt.Set( inputIt.Value() * lineGain[lineGainIndex] );
       ++inputIt;
       ++outputIt;
+      ++lineGainIndex;
       }
     }
 }
