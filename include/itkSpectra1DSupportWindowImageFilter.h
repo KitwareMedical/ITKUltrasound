@@ -33,6 +33,9 @@ namespace itk
  * nominal number of lines on either side of the central FFT line to add to
  * the window. The nominal size of the 1D FFT is specified with SetFFTSize()
  *
+ * The overlap between windows is specified with SetStep(). By default, the
+ * Step is only one sample.
+ *
  * \ingroup Ultrasound
  */
 template< typename TInputImage >
@@ -46,7 +49,7 @@ public:
   typedef TInputImage                              InputImageType;
   typedef typename InputImageType::IndexType       IndexType;
 
-  typedef std::deque< IndexType >                   OutputPixelType;
+  typedef std::deque< IndexType >                  OutputPixelType;
   typedef Image< OutputPixelType, ImageDimension > OutputImageType;
 
   typedef unsigned int                             FFT1DSizeType;
@@ -65,21 +68,29 @@ public:
   itkGetConstMacro( FFT1DSize, FFT1DSizeType );
   itkSetMacro( FFT1DSize, FFT1DSizeType );
 
+  /** Set/Get the number of samples between windows -- defaults to 1. */
+  itkGetConstMacro( Step, SizeValueType );
+  itkSetMacro( Step, SizeValueType );
+
 protected:
   Spectra1DSupportWindowImageFilter();
   virtual ~Spectra1DSupportWindowImageFilter() {};
 
   typedef typename OutputImageType::RegionType OutputImageRegionType;
 
-  virtual void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId ) ITK_OVERRIDE;
+  virtual void GenerateOutputInformation() ITK_OVERRIDE;
 
+  virtual void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId ) ITK_OVERRIDE;
   virtual void AfterThreadedGenerateData() ITK_OVERRIDE;
+
+  virtual void PrintSelf( std::ostream & os, Indent indent ) const ITK_OVERRIDE;
 
 private:
   Spectra1DSupportWindowImageFilter( const Self & ); // purposely not implemented
   void operator=( const Self & ); // purposely not implemented
 
   FFT1DSizeType m_FFT1DSize;
+  SizeValueType m_Step;
 };
 
 } // end namespace itk

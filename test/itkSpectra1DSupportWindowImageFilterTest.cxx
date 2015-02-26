@@ -83,5 +83,18 @@ int itkSpectra1DSupportWindowImageFilterTest( int argc, char* argv[] )
   spectraSupportWindowFilter->Print( std::cout );
   spectraSupportWindowFilter->GetOutput()->GetMetaDataDictionary().Print(std::cout);
 
+  spectraSupportWindowFilter->SetStep( 10 );
+  try
+    {
+    spectraSupportWindowFilter->UpdateLargestPossibleRegion();
+    }
+  catch( itk::ExceptionObject & error )
+    {
+    std::cout << "Error: " << error << std::endl;
+    return EXIT_FAILURE;
+    }
+  std::cout << "\n\nAfter setting the Step to 10: " << std::endl;
+  spectraSupportWindowFilter->Print( std::cout );
+
   return EXIT_SUCCESS;
 }

@@ -20,8 +20,9 @@
 
 #include "itkSpectra1DSupportWindowImageFilter.h"
 #include "itkImageRegionIterator.h"
-#include "itkImageRegionConstIteratorWithIndex.h"
+#include "itkImageLinearConstIteratorWithIndex.h"
 #include "itkMetaDataObject.h"
+#include "itkImageScanlineIterator.h"
 
 namespace itk
 {
@@ -29,8 +30,31 @@ namespace itk
 template< typename TInputImage >
 Spectra1DSupportWindowImageFilter< TInputImage >
 ::Spectra1DSupportWindowImageFilter():
-  m_FFT1DSize( 32 )
+  m_FFT1DSize( 32 ),
+  m_Step( 1 )
 {
+}
+
+
+template< typename TInputImage >
+void
+Spectra1DSupportWindowImageFilter< TInputImage >
+::GenerateOutputInformation()
+{
+  Superclass::GenerateOutputInformation();
+
+  OutputImageType * output = this->GetOutput();
+  const InputImageType * input = this->GetInput();
+
+  OutputImageRegionType outputRegion = input->GetLargestPossibleRegion();
+  typename OutputImageType::SizeType outputSize = outputRegion.GetSize();
+  outputSize[0] /= this->GetStep();
+  outputRegion.SetSize( outputSize );
+  output->SetLargestPossibleRegion( outputRegion );
+
+  typename OutputImageType::SpacingType outputSpacing = input->GetSpacing();
+  outputSpacing[0] *= this->GetStep();
+  output->SetSpacing( outputSpacing );
 }
 
 
@@ -51,46 +75,57 @@ Spectra1DSupportWindowImageFilter< TInputImage >
     largestIndexStop[dim] -= 1;
     }
 
-  typedef ImageRegionConstIteratorWithIndex< InputImageType > InputIteratorType;
+  typedef ImageLinearConstIteratorWithIndex< InputImageType > InputIteratorType;
   InputIteratorType inputIt( input, outputRegionForThread );
-  typedef ImageRegionIterator< OutputImageType > OutputIteratorType;
+  typedef ImageScanlineIterator< OutputImageType > OutputIteratorType;
   OutputIteratorType outputIt( output, outputRegionForThread );
   const FFT1DSizeType fftSize = this->GetFFT1DSize();
+  const SizeValueType sampleStep = this->GetStep();
   if( outputLargestRegion.GetSize()[0] < fftSize )
     {
     itkExceptionMacro( "Insufficient size in the FFT direction." );
     }
-  for( inputIt.GoToBegin(), outputIt.GoToBegin(); !outputIt.IsAtEnd(); ++inputIt, ++outputIt )
+  for( inputIt.GoToBegin(), outputIt.GoToBegin(); !outputIt.IsAtEnd(); )
     {
-    OutputPixelType & supportWindow = outputIt.Value();
-    supportWindow.clear();
-
-    const IndexType inputIndex = inputIt.GetIndex();
-
-    IndexType lineIndex;
-    lineIndex[0] = inputIndex[0] - fftSize / 2;
-    if( lineIndex[0] < largestIndexStart[0] )
+    while( !outputIt.IsAtEndOfLine() )
       {
-      lineIndex[0] = largestIndexStart[0];
-      }
+      OutputPixelType & supportWindow = outputIt.Value();
+      supportWindow.clear();
 
-    if( lineIndex[0] + fftSize > largestIndexStop[0] )
-      {
-      lineIndex[0] = largestIndexStop[0] - fftSize;
-      }
+      const IndexType inputIndex = inputIt.GetIndex();
 
-    const IndexValueType sideLines = static_cast< IndexValueType >( inputIt.Get() );
-    for( IndexValueType line = inputIndex[1] - sideLines;
-         line < inputIndex[1] + sideLines;
-         ++line )
-      {
-      if( line < largestIndexStart[1] || line > largestIndexStop[1] )
+      IndexType lineIndex;
+      lineIndex[0] = inputIndex[0] - fftSize / 2;
+      if( lineIndex[0] < largestIndexStart[0] )
         {
-        continue;
+        lineIndex[0] = largestIndexStart[0];
         }
-      lineIndex[1] = line;
-      supportWindow.push_back( lineIndex );
+
+      if( lineIndex[0] + fftSize > largestIndexStop[0] )
+        {
+        lineIndex[0] = largestIndexStop[0] - fftSize;
+        }
+
+      const IndexValueType sideLines = static_cast< IndexValueType >( inputIt.Get() );
+      for( IndexValueType line = inputIndex[1] - sideLines;
+           line < inputIndex[1] + sideLines;
+           ++line )
+        {
+        if( line < largestIndexStart[1] || line > largestIndexStop[1] )
+          {
+          continue;
+          }
+        lineIndex[1] = line;
+        supportWindow.push_back( lineIndex );
+        }
+      for( SizeValueType ii = 0; ii < sampleStep; ++ii )
+        {
+        ++inputIt;
+        }
+      ++outputIt;
       }
+      inputIt.NextLine();
+      outputIt.NextLine();
     }
 }
 
@@ -103,6 +138,18 @@ Spectra1DSupportWindowImageFilter< TInputImage >
   OutputImageType * output = this->GetOutput();
   MetaDataDictionary & dict = output->GetMetaDataDictionary();
   EncapsulateMetaData< FFT1DSizeType >( dict, "FFT1DSize", this->GetFFT1DSize() );
+}
+
+
+template< typename TInputImage >
+void
+Spectra1DSupportWindowImageFilter< TInputImage >
+::PrintSelf( std::ostream & os, Indent indent ) const
+{
+  Superclass::PrintSelf( os, indent );
+
+  os << indent << "FFT1DSize: " << this->GetFFT1DSize() << std::endl;
+  os << indent << "Step: " << this->GetStep() << std::endl;
 }
 
 } // end namespace itk
