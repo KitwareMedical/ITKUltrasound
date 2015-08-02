@@ -46,7 +46,7 @@ RUN /usr/src/CMake/bootstrap \
 WORKDIR /usr/src
 RUN git clone git://itk.org/ITK.git
 WORKDIR /usr/src/ITK
-RUN git fetch http://review.source.kitware.com/ITK refs/changes/56/19856/5 && \
+RUN git fetch http://review.source.kitware.com/ITK refs/changes/56/19856/6 && \
   git checkout FETCH_HEAD -b ExternalModule
 RUN mkdir /usr/src/ITK-build
 WORKDIR /usr/src/ITK-build
