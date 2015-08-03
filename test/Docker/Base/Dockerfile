@@ -30,10 +30,10 @@ RUN pip install matplotlib
 WORKDIR /usr/src
 RUN git clone git://cmake.org/cmake.git CMake && \
   cd CMake && \
-  git checkout v3.3.0
-RUN mkdir CMake-build
-WORKDIR /usr/src/CMake-build
-RUN /usr/src/CMake/bootstrap \
+  git checkout v3.3.0 && \
+  mkdir ../CMake-build && \
+  cd ../CMake-build && \
+  /usr/src/CMake/bootstrap \
     --parallel=$(nproc) \
     --prefix=/usr && \
   make -j$(nproc) && \
@@ -41,7 +41,8 @@ RUN /usr/src/CMake/bootstrap \
     -DCMAKE_BUILD_TYPE:STRING=Release \
     -DCMAKE_USE_OPENSSL:BOOL=ON . && \
   make install && \
-  rm -rf *
+  cd .. && \
+  rm -rf CMake CMake-build
 
 # Build and install KWStyle from source.
 WORKDIR /usr/src
@@ -59,22 +60,23 @@ RUN git clone https://github.com/Kitware/KWStyle.git && \
 
 # Build and install ITK from source.
 WORKDIR /usr/src
-RUN git clone git://itk.org/ITK.git
-WORKDIR /usr/src/ITK
-RUN git fetch http://review.source.kitware.com/ITK refs/changes/56/19856/6 && \
-  git checkout FETCH_HEAD -b ExternalModule
-RUN mkdir /usr/src/ITK-build
-WORKDIR /usr/src/ITK-build
-RUN cmake -G Ninja \
-  -DCMAKE_BUILD_TYPE:STRING=MinSizeRel \
-  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
-  -DBUILD_TESTING:BOOL=OFF \
-  -DBUILD_EXAMPLES:BOOL=OFF \
-  -DBUILD_SHARED_LIBS:BOOL=ON \
-  -DITK_WRAP_PYTHON:BOOL=ON \
-    /usr/src/ITK && \
+RUN git clone git://itk.org/ITK.git && \
+  cd /usr/src/ITK && \
+  git fetch http://review.source.kitware.com/ITK refs/changes/56/19856/6 && \
+    git checkout FETCH_HEAD -b ExternalModule && \
+  mkdir /usr/src/ITK-build && \
+  cd /usr/src/ITK-build && \
+  cmake -G Ninja \
+    -DCMAKE_BUILD_TYPE:STRING=MinSizeRel \
+    -DCMAKE_INSTALL_PREFIX:PATH=/usr \
+    -DBUILD_TESTING:BOOL=OFF \
+    -DBUILD_EXAMPLES:BOOL=OFF \
+    -DBUILD_SHARED_LIBS:BOOL=ON \
+    -DITK_WRAP_PYTHON:BOOL=ON \
+      /usr/src/ITK && \
   ninja install && \
-  rm -rf *
+  cd .. && \
+  rm -rf ITK ITK-build
 
 RUN mkdir /usr/bin/ITKUltrasound-build
 
