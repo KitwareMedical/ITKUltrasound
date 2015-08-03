@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y \
   python \
   python-dev \
   python-pip \
+  python-matplotlib \
   python-numpy \
   python-scipy \
   python-nose \
@@ -21,10 +22,7 @@ RUN apt-get update && apt-get install -y \
   sed \
   tar \
   vim \
-  wget && \
-  apt-get build-dep -y python-matplotlib
-
-RUN pip install matplotlib
+  wget
 
 # Build and install CMake from source.
 WORKDIR /usr/src
