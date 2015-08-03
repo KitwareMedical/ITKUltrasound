@@ -70,6 +70,10 @@ RUN git clone git://itk.org/ITK.git && \
     -DBUILD_TESTING:BOOL=OFF \
     -DBUILD_EXAMPLES:BOOL=OFF \
     -DBUILD_SHARED_LIBS:BOOL=ON \
+    -DITK_BUILD_DEFAULT_MODULES:BOOL=OFF \
+    -DITKGroup_Filtering:BOOL=ON \
+    -DITKGroup_Numerics:BOOL=ON \
+    -DITKGroup_IO:BOOL=ON \
     -DITK_WRAP_PYTHON:BOOL=ON \
       /usr/src/ITK && \
   ninja install && \
