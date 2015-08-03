@@ -1,3 +1,3 @@
 #!/bin/sh
 
-docker build -t itkultrasound-base .
+docker build -t thewtex/itkultrasound-base .
