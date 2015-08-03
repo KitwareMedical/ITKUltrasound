@@ -43,6 +43,21 @@ RUN /usr/src/CMake/bootstrap \
   make install && \
   rm -rf *
 
+# Build and install KWStyle from source.
+WORKDIR /usr/src
+RUN git clone https://github.com/Kitware/KWStyle.git && \
+  mkdir KWStyle-build && \
+  cd KWStyle-build && \
+  cmake \
+    -G Ninja \
+    -DCMAKE_BUILD_TYPE:STRING=Release \
+    -DCMAKE_INSTALL_PREFIX:PATH=/usr \
+      ../KWStyle && \
+  ninja install && \
+  cd .. && \
+  rm -rf KWStyle KWStyle-build
+
+# Build and install ITK from source.
 WORKDIR /usr/src
 RUN git clone git://itk.org/ITK.git
 WORKDIR /usr/src/ITK
