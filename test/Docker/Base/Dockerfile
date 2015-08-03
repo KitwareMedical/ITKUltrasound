@@ -51,7 +51,7 @@ RUN git fetch http://review.source.kitware.com/ITK refs/changes/56/19856/6 && \
 RUN mkdir /usr/src/ITK-build
 WORKDIR /usr/src/ITK-build
 RUN cmake -G Ninja \
-  -DCMAKE_BUILD_TYPE:STRING=Release \
+  -DCMAKE_BUILD_TYPE:STRING=MinSizeRel \
   -DBUILD_TESTING:BOOL=OFF \
   -DBUILD_EXAMPLES:BOOL=OFF \
   -DBUILD_SHARED_LIBS:BOOL=ON \
