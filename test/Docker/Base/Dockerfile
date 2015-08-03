@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
   curl \
   git \
   libcurl4-openssl-dev \
+  libfftw3-dev \
   libssl-dev \
   make \
   ninja-build \
@@ -75,6 +76,8 @@ RUN git clone git://itk.org/ITK.git && \
     -DITKGroup_Numerics:BOOL=ON \
     -DITKGroup_IO:BOOL=ON \
     -DITK_WRAP_PYTHON:BOOL=ON \
+    -DITK_USE_FFTWD:BOOL=ON \
+    -DITK_USE_SYSTEM_FFTW:BOOL=ON \
       /usr/src/ITK && \
   ninja install && \
   cd .. && \
