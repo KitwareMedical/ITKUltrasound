@@ -23,7 +23,14 @@ RUN apt-get update && apt-get install -y \
   sed \
   tar \
   vim \
-  wget
+  wget \
+  libexpat1-dev \
+  libhdf5-dev \
+  libgdcm2-dev \
+  libjpeg-dev \
+  libpng12-dev \
+  libtiff5-dev \
+  zlib1g-dev
 
 # Build and install CMake from source.
 WORKDIR /usr/src
@@ -44,7 +51,6 @@ RUN git clone git://cmake.org/cmake.git CMake && \
   rm -rf CMake CMake-build
 
 # Build and install KWStyle from source.
-WORKDIR /usr/src
 RUN git clone https://github.com/Kitware/KWStyle.git && \
   mkdir KWStyle-build && \
   cd KWStyle-build && \
@@ -58,7 +64,6 @@ RUN git clone https://github.com/Kitware/KWStyle.git && \
   rm -rf KWStyle KWStyle-build
 
 # Build and install ITK from source.
-WORKDIR /usr/src
 RUN git clone git://itk.org/ITK.git && \
   cd /usr/src/ITK && \
   git fetch http://review.source.kitware.com/ITK refs/changes/56/19856/7 && \
@@ -78,6 +83,9 @@ RUN git clone git://itk.org/ITK.git && \
     -DITK_WRAP_PYTHON:BOOL=ON \
     -DITK_USE_FFTWD:BOOL=ON \
     -DITK_USE_SYSTEM_FFTW:BOOL=ON \
+    -DITK_USE_SYSTEM_SWIG:BOOL=OFF \
+    -DITK_USE_SYSTEM_GDCM:BOOL=ON \
+    -DITK_USE_SYSTEM_LIBRARIES:BOOL=ON \
       /usr/src/ITK && \
   ninja install && \
   cd .. && \
