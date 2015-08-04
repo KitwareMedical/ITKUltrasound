@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
   curl \
   git \
   libcurl4-openssl-dev \
+  libncurses5-dev \
   libfftw3-dev \
   libssl-dev \
   make \
