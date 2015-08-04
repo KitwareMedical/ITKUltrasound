@@ -67,7 +67,7 @@ RUN git clone https://github.com/Kitware/KWStyle.git && \
 # Build and install ITK from source.
 RUN git clone git://itk.org/ITK.git && \
   cd /usr/src/ITK && \
-  git fetch http://review.source.kitware.com/ITK refs/changes/56/19856/7 && \
+  git fetch http://review.source.kitware.com/ITK refs/changes/56/19856/8 && \
     git checkout FETCH_HEAD -b ExternalModule && \
   mkdir /usr/src/ITK-build && \
   cd /usr/src/ITK-build && \
