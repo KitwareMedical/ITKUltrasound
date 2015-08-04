@@ -8,12 +8,15 @@ RUN apt-get update && apt-get install -y \
   curl \
   git \
   libcurl4-openssl-dev \
+  libncurses5-dev \
+  libfftw3-dev \
   libssl-dev \
   make \
   ninja-build \
   python \
   python-dev \
   python-pip \
+  python-matplotlib \
   python-numpy \
   python-scipy \
   python-nose \
@@ -21,19 +24,23 @@ RUN apt-get update && apt-get install -y \
   sed \
   tar \
   vim \
-  wget && \
-  apt-get build-dep -y python-matplotlib
-
-RUN pip install matplotlib
+  wget \
+  libexpat1-dev \
+  libhdf5-dev \
+  libgdcm2-dev \
+  libjpeg-dev \
+  libpng12-dev \
+  libtiff5-dev \
+  zlib1g-dev
 
 # Build and install CMake from source.
 WORKDIR /usr/src
 RUN git clone git://cmake.org/cmake.git CMake && \
   cd CMake && \
-  git checkout v3.3.0
-RUN mkdir CMake-build
-WORKDIR /usr/src/CMake-build
-RUN /usr/src/CMake/bootstrap \
+  git checkout v3.3.0 && \
+  mkdir ../CMake-build && \
+  cd ../CMake-build && \
+  /usr/src/CMake/bootstrap \
     --parallel=$(nproc) \
     --prefix=/usr && \
   make -j$(nproc) && \
@@ -41,25 +48,49 @@ RUN /usr/src/CMake/bootstrap \
     -DCMAKE_BUILD_TYPE:STRING=Release \
     -DCMAKE_USE_OPENSSL:BOOL=ON . && \
   make install && \
-  rm -rf *
+  cd .. && \
+  rm -rf CMake CMake-build
 
-WORKDIR /usr/src
-RUN git clone git://itk.org/ITK.git
-WORKDIR /usr/src/ITK
-RUN git fetch http://review.source.kitware.com/ITK refs/changes/56/19856/6 && \
-  git checkout FETCH_HEAD -b ExternalModule
-RUN mkdir /usr/src/ITK-build
-WORKDIR /usr/src/ITK-build
-RUN cmake -G Ninja \
-  -DCMAKE_BUILD_TYPE:STRING=MinSizeRel \
-  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
-  -DBUILD_TESTING:BOOL=OFF \
-  -DBUILD_EXAMPLES:BOOL=OFF \
-  -DBUILD_SHARED_LIBS:BOOL=ON \
-  -DITK_WRAP_PYTHON:BOOL=ON \
-    /usr/src/ITK && \
+# Build and install KWStyle from source.
+RUN git clone https://github.com/Kitware/KWStyle.git && \
+  mkdir KWStyle-build && \
+  cd KWStyle-build && \
+  cmake \
+    -G Ninja \
+    -DCMAKE_BUILD_TYPE:STRING=Release \
+    -DCMAKE_INSTALL_PREFIX:PATH=/usr \
+      ../KWStyle && \
   ninja install && \
-  rm -rf *
+  cd .. && \
+  rm -rf KWStyle KWStyle-build
+
+# Build and install ITK from source.
+RUN git clone git://itk.org/ITK.git && \
+  cd /usr/src/ITK && \
+  git fetch http://review.source.kitware.com/ITK refs/changes/56/19856/8 && \
+    git checkout FETCH_HEAD -b ExternalModule && \
+  mkdir /usr/src/ITK-build && \
+  cd /usr/src/ITK-build && \
+  cmake -G Ninja \
+    -DCMAKE_BUILD_TYPE:STRING=MinSizeRel \
+    -DCMAKE_INSTALL_PREFIX:PATH=/usr \
+    -DBUILD_TESTING:BOOL=OFF \
+    -DBUILD_EXAMPLES:BOOL=OFF \
+    -DBUILD_SHARED_LIBS:BOOL=ON \
+    -DITK_BUILD_DEFAULT_MODULES:BOOL=OFF \
+    -DITKGroup_Filtering:BOOL=ON \
+    -DITKGroup_Numerics:BOOL=ON \
+    -DITKGroup_IO:BOOL=ON \
+    -DITK_WRAP_PYTHON:BOOL=ON \
+    -DITK_USE_FFTWD:BOOL=ON \
+    -DITK_USE_SYSTEM_FFTW:BOOL=ON \
+    -DITK_USE_SYSTEM_SWIG:BOOL=OFF \
+    -DITK_USE_SYSTEM_GDCM:BOOL=ON \
+    -DITK_USE_SYSTEM_LIBRARIES:BOOL=ON \
+      /usr/src/ITK && \
+  ninja install && \
+  cd .. && \
+  rm -rf ITK ITK-build
 
 RUN mkdir /usr/bin/ITKUltrasound-build
 
