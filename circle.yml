@@ -3,9 +3,14 @@ machine:
     - docker
 
 dependencies:
+  cache_directories:
+    - "~/Docker"
+
   override:
     - docker info
-    - docker pull thewtex/itkultrasound-base
+    - if [[ -e ~/Docker/image.tar ]]; then docker load -i ~/Docker/image.tar; fi
+    - docker build -t thewtex/itkultrasound-base ~/ITKUltrasound/test/Docker/Base
+    - mkdir -p ~/Docker; docker save thewtex/itkultrasound-base > ~/Docker/image.tar
 
 test:
   override:
