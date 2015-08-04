@@ -52,12 +52,14 @@ RUN mkdir /usr/src/ITK-build
 WORKDIR /usr/src/ITK-build
 RUN cmake -G Ninja \
   -DCMAKE_BUILD_TYPE:STRING=MinSizeRel \
+  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
   -DBUILD_TESTING:BOOL=OFF \
   -DBUILD_EXAMPLES:BOOL=OFF \
   -DBUILD_SHARED_LIBS:BOOL=ON \
   -DITK_WRAP_PYTHON:BOOL=ON \
-  /usr/src/ITK && \
-  ninja
+    /usr/src/ITK && \
+  ninja install && \
+  rm -rf *
 
 RUN mkdir /usr/bin/ITKUltrasound-build
 

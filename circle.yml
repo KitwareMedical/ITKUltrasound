@@ -1,0 +1,14 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  override:
+    - docker info
+    - docker pull thewtex/itkultrasound-base
+
+test:
+  override:
+    - mkdir ~/ITKUltrasound-build
+    - docker run -v ~/ITKUltrasound:/usr/src/ITKUltrasound -v ~/ITKUltrasound-build:/usr/src/ITKUltrasound-build thewtex/itkultrasound-base /usr/src/ITKUltrasound/test/Docker/test.sh
+    - mv ~/ITKUltrasound-build/Testing/Temporary/* $CIRCLE_ARTIFACTS/
