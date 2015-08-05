@@ -27,7 +27,6 @@ RUN apt-get update && apt-get install -y \
   wget \
   libexpat1-dev \
   libhdf5-dev \
-  libgdcm2-dev \
   libjpeg-dev \
   libpng12-dev \
   libtiff5-dev \
@@ -67,7 +66,7 @@ RUN git clone https://github.com/Kitware/KWStyle.git && \
 # Build and install ITK from source.
 RUN git clone git://itk.org/ITK.git && \
   cd /usr/src/ITK && \
-  git fetch http://review.source.kitware.com/ITK refs/changes/56/19856/8 && \
+  git fetch http://review.source.kitware.com/ITK refs/changes/56/19856/10 && \
     git checkout FETCH_HEAD -b ExternalModule && \
   mkdir /usr/src/ITK-build && \
   cd /usr/src/ITK-build && \
@@ -85,7 +84,7 @@ RUN git clone git://itk.org/ITK.git && \
     -DITK_USE_FFTWD:BOOL=ON \
     -DITK_USE_SYSTEM_FFTW:BOOL=ON \
     -DITK_USE_SYSTEM_SWIG:BOOL=OFF \
-    -DITK_USE_SYSTEM_GDCM:BOOL=ON \
+    -DITK_USE_SYSTEM_GDCM:BOOL=OFF \
     -DITK_USE_SYSTEM_LIBRARIES:BOOL=ON \
       /usr/src/ITK && \
   ninja install && \
