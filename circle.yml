@@ -11,4 +11,4 @@ test:
   override:
     - mkdir ~/ITKUltrasound-build
     - docker run -v ~/ITKUltrasound:/usr/src/ITKUltrasound -v ~/ITKUltrasound-build:/usr/src/ITKUltrasound-build thewtex/itkultrasound-base /usr/src/ITKUltrasound/test/Docker/test.sh
-    - mv ~/ITKUltrasound-build/Testing/Temporary/* $CIRCLE_ARTIFACTS/
+    - cp -r ~/ITKUltrasound-build/Testing/Temporary/* $CIRCLE_ARTIFACTS/

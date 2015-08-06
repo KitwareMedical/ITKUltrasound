@@ -42,10 +42,10 @@ FFT1DComplexToComplexImageFilter< TInputImage, TOutputImage >
 #ifdef ITK_USE_FFTWD
   if( smartPtr.IsNull() )
     {
-    if( typeid( TPixel ) == typeid( double ) )
+    if( typeid( typename TInputImage::PixelType::value_type ) == typeid( double ) )
       {
       smartPtr = dynamic_cast< Self* >(
-	FFTW1DComplexToComplexImageFilter< double, VDimension >
+	FFTW1DComplexToComplexImageFilter< TInputImage, TOutputImage >
 	::New().GetPointer() );
       }
     }
@@ -53,10 +53,10 @@ FFT1DComplexToComplexImageFilter< TInputImage, TOutputImage >
 #ifdef ITK_USE_FFTWF
   if( smartPtr.IsNull() )
     {
-    if( typeid( TPixel ) == typeid( float ) )
+    if( typeid( typename TInputImage::PixelType::value_type ) == typeid( float ) )
       {
       smartPtr = dynamic_cast<Self *>(
-	FFTW1DComplexToComplexImageFilter< float, VDimension >
+	FFTW1DComplexToComplexImageFilter< TInputImage, TOutputImage >
 	::New().GetPointer() );
       }
     }

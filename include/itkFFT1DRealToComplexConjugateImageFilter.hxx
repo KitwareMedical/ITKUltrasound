@@ -31,6 +31,41 @@
 namespace itk
 {
 
+template< typename TSelfPointer, typename TInputImage, typename TOutputImage, typename TPixel >
+struct Dispatch_1DRealToComplexConjugate_New
+{
+  static TSelfPointer Apply()
+    {
+    return VnlFFT1DRealToComplexConjugateImageFilter< TInputImage, TOutputImage >
+      ::New().GetPointer();
+    }
+};
+
+#ifdef ITK_USE_FFTWD
+template< typename TSelfPointer, typename TInputImage, typename TOutputImage >
+struct Dispatch_1DRealToComplexConjugate_New< TSelfPointer, TInputImage, TOutputImage, double >
+{
+  static TSelfPointer Apply()
+    {
+    return FFTW1DRealToComplexConjugateImageFilter< TInputImage, TOutputImage >
+      ::New().GetPointer();
+    }
+};
+#endif
+
+#ifdef ITK_USE_FFTWF
+template< typename TSelfPointer, typename TInputImage, typename TOutputImage >
+struct Dispatch_1DRealToComplexConjugate_New< TSelfPointer, TInputImage, TOutputImage, float >
+{
+  static TSelfPointer Apply()
+    {
+    return FFTW1DRealToComplexConjugateImageFilter< TInputImage, TOutputImage >
+      ::New().GetPointer();
+    }
+};
+#endif
+
+
 template < typename TInputImage, typename TOutputImage >
 typename FFT1DRealToComplexConjugateImageFilter< TInputImage, TOutputImage >::Pointer
 FFT1DRealToComplexConjugateImageFilter< TInputImage, TOutputImage >
@@ -38,33 +73,9 @@ FFT1DRealToComplexConjugateImageFilter< TInputImage, TOutputImage >
 {
   Pointer smartPtr = ::itk::ObjectFactory< Self >::Create();
 
-#ifdef ITK_USE_FFTWD
   if( smartPtr.IsNull() )
     {
-    if( typeid( TPixel ) == typeid( double ) )
-      {
-      smartPtr = dynamic_cast< Self* >(
-	FFTW1DRealToComplexConjugateImageFilter< double, VDimension >
-	::New().GetPointer() );
-      }
-    }
-#endif
-#ifdef ITK_USE_FFTWF
-  if( smartPtr.IsNull() )
-    {
-    if( typeid( TPixel ) == typeid( float ) )
-      {
-      smartPtr = dynamic_cast<Self *>(
-	FFTW1DRealToComplexConjugateImageFilter< float, VDimension >
-	::New().GetPointer() );
-      }
-    }
-#endif
-
-  if( smartPtr.IsNull() )
-    {
-    smartPtr = VnlFFT1DRealToComplexConjugateImageFilter< TInputImage, TOutputImage >
-      ::New().GetPointer();
+    smartPtr = Dispatch_1DRealToComplexConjugate_New< Pointer, TInputImage, TOutputImage, typename NumericTraits< typename TOutputImage::PixelType >::ValueType >::Apply();
     }
 
   return smartPtr;
