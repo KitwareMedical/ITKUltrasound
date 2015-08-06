@@ -2,6 +2,9 @@
 ITKUltrasound
 ==================
 
+.. image:: https://circleci.com/gh/KitwareMedical/ITKUltrasound.svg?style=svg
+    :target: https://circleci.com/gh/KitwareMedical/ITKUltrasound
+
 Purpose
 =======
 
