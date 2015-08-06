@@ -177,7 +177,7 @@ FFTW1DComplexToComplexImageFilter< TInputImage, TOutputImage >
       outputIt.GoToBeginOfLine();
       while( !outputIt.IsAtEndOfLine() )
 	{
-	outputIt.Set( *outputBufferIt / static_cast< TPixel >( lineSize ));
+	outputIt.Set( *outputBufferIt / static_cast< typename OutputIteratorType::PixelType >( lineSize ));
 	++outputIt;
 	++outputBufferIt;
 	}

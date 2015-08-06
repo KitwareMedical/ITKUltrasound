@@ -53,7 +53,7 @@ public:
    * is trying to use double if only the float FFTW1D version is
    * configured in, or float if only double is configured.
    */
-  typedef typename fftw::ComplexToComplexProxy< typename TInputImage::PixelType > FFTW1DProxyType;
+  typedef typename fftw::ComplexToComplexProxy< typename TOutputImage::PixelType > FFTW1DProxyType;
   typedef typename std::vector< typename FFTW1DProxyType::PlanType > PlanArrayType;
   typedef typename std::vector< typename FFTW1DProxyType::ComplexType* > PlanBufferPointerType;
 

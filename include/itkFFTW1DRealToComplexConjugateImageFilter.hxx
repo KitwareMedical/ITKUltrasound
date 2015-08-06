@@ -59,7 +59,7 @@ FFTW1DRealToComplexConjugateImageFilter< TInputImage, TOutputImage >
     }
 
   const typename OutputImageType::SizeType& outputSize = outputPtr->GetRequestedRegion().GetSize();
-  const unsigned int lineSize = outputSize[this->m_Direction];
+  const unsigned int lineSize = outputSize[this->GetDirection()];
 
   if( this->m_PlanComputed )
     {
@@ -119,8 +119,8 @@ FFTW1DRealToComplexConjugateImageFilter< TInputImage, TOutputImage >
   InputIteratorType inputIt( inputPtr, outputRegion );
   OutputIteratorType outputIt( outputPtr, outputRegion );
 
-  inputIt.SetDirection(this->m_Direction);
-  outputIt.SetDirection(this->m_Direction);
+  inputIt.SetDirection(this->GetDirection());
+  outputIt.SetDirection(this->GetDirection());
 
   typename FFTW1DProxyType::ComplexType* inputBufferIt;
   typename FFTW1DProxyType::ComplexType* outputBufferIt;
