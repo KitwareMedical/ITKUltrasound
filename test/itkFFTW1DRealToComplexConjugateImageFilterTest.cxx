@@ -43,7 +43,7 @@ int itkFFTW1DRealToComplexConjugateImageFilterTest( int argc, char* argv[] )
   typedef itk::Image< std::complex< PixelType >, Dimension > ComplexImageType;
 
   typedef itk::ImageFileReader< ImageType > ReaderType;
-  typedef itk::FFTW1DRealToComplexConjugateImageFilter< PixelType, Dimension > FFTType;
+  typedef itk::FFTW1DRealToComplexConjugateImageFilter< ImageType, ComplexImageType > FFTType;
   typedef itk::ComplexToRealImageFilter< ComplexImageType, ImageType > RealFilterType;
   typedef itk::ComplexToImaginaryImageFilter< ComplexImageType, ImageType > ImaginaryFilterType;
   typedef itk::ImageFileWriter< ImageType > WriterType;

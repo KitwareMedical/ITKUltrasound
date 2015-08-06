@@ -21,7 +21,7 @@ set( UltrasoundTests
   itkVnlFFT1DRealToComplexConjugateImageFilterTest.cxx
   )
 if( USE_FFTW )
-  list( APPEND FFT1DTests
+  list( APPEND UltrasoundTests
     itkFFTW1DRealToComplexConjugateImageFilterTest.cxx
     itkFFTW1DComplexConjugateToRealImageFilterTest.cxx
     itkFFTW1DComplexToComplexImageFilterTest.cxx

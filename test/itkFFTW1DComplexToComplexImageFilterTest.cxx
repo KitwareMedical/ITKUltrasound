@@ -42,11 +42,11 @@ int itkFFTW1DComplexToComplexImageFilterTest( int argc, char* argv[] )
   typedef itk::Image< PixelType, Dimension >                             ImageType;
   typedef itk::Image< std::complex< PixelType >, Dimension >             ComplexImageType;
 
-  typedef itk::ImageFileReader< ImageType >                              ReaderType;
-  typedef itk::FFTW1DComplexToComplexImageFilter< PixelType, Dimension > FFTType;
-  typedef itk::ComposeImageFilter< ImageType, ComplexImageType >         JoinFilterType;
-  typedef itk::ComplexToRealImageFilter< ComplexImageType, ImageType >   ToRealFilterType;
-  typedef itk::ImageFileWriter< ImageType >                              WriterType;
+  typedef itk::ImageFileReader< ImageType >                                            ReaderType;
+  typedef itk::FFTW1DComplexToComplexImageFilter< ComplexImageType, ComplexImageType > FFTType;
+  typedef itk::ComposeImageFilter< ImageType, ComplexImageType >                       JoinFilterType;
+  typedef itk::ComplexToRealImageFilter< ComplexImageType, ImageType >                 ToRealFilterType;
+  typedef itk::ImageFileWriter< ImageType >                                            WriterType;
 
   ReaderType::Pointer readerReal = ReaderType::New();
   ReaderType::Pointer readerImag = ReaderType::New();
