@@ -34,6 +34,8 @@ int itkFFT1DImageFilterTest( int argc, char* argv[] )
     std::cerr << std::endl;
     return EXIT_FAILURE;
     }
+  const char * inputImage = argv[1];
+  const char * outputImage = argv[2];
 
   typedef double PixelType;
   const unsigned int Dimension = 2;
@@ -43,22 +45,23 @@ int itkFFT1DImageFilterTest( int argc, char* argv[] )
   typedef itk::Image< std::complex< PixelType >, Dimension >                         ComplexImageType;
 
   typedef itk::ImageFileReader< ImageType >                                          ReaderType;
-  typedef itk::FFT1DRealToComplexConjugateImageFilter< ImageType, ComplexImageType > FFTForwardType;
-  typedef itk::FFT1DComplexConjugateToRealImageFilter< ComplexImageType, ImageType > FFTInverseType;
-  typedef itk::ImageFileWriter< ImageType >                                          WriterType;
-
   ReaderType::Pointer reader = ReaderType::New();
-  FFTForwardType::Pointer fftForward = FFTForwardType::New();
-  FFTInverseType::Pointer fftInverse = FFTInverseType::New();
-  WriterType::Pointer writer = WriterType::New();
+  reader->SetFileName( inputImage );
 
-  reader->SetFileName( argv[1] );
+  typedef itk::FFT1DRealToComplexConjugateImageFilter< ImageType, ComplexImageType > FFTForwardType;
+  FFTForwardType::Pointer fftForward = FFTForwardType::New();
   fftForward->SetInput( reader->GetOutput() );
   fftForward->SetDirection( direction );
+
+  typedef itk::FFT1DComplexConjugateToRealImageFilter< ComplexImageType, ImageType > FFTInverseType;
+  FFTInverseType::Pointer fftInverse = FFTInverseType::New();
   fftInverse->SetInput( fftForward->GetOutput() );
   fftInverse->SetDirection( direction );
+
+  typedef itk::ImageFileWriter< ImageType >                                          WriterType;
+  WriterType::Pointer writer = WriterType::New();
   writer->SetInput( fftInverse->GetOutput() );
-  writer->SetFileName( argv[2] );
+  writer->SetFileName( outputImage );
 
   try
     {
