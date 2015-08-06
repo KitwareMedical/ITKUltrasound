@@ -14,4 +14,4 @@ cmake \
   -G Ninja \
   -DCMAKE_BUILD_TYPE:STRING=Release \
     /usr/src/ITKUltrasound || die "CMake configuration failed"
-ctest -D Experimental || die "ctest failed"
+ctest -VV -D Experimental || die "ctest failed"
