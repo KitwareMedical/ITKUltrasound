@@ -52,6 +52,8 @@ void
 FFTW1DComplexToComplexImageFilter< TInputImage, TOutputImage >
 ::BeforeThreadedGenerateData()
 {
+  Superclass::BeforeThreadedGenerateData();
+
   typename OutputImageType::Pointer      outputPtr = this->GetOutput();
   if ( !outputPtr )
     {

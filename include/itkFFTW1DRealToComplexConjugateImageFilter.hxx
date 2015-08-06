@@ -52,6 +52,8 @@ void
 FFTW1DRealToComplexConjugateImageFilter< TInputImage, TOutputImage >
 ::BeforeThreadedGenerateData()
 {
+  Superclass::BeforeThreadedGenerateData();
+
   typename OutputImageType::Pointer      outputPtr = this->GetOutput();
   if ( !outputPtr )
     {
