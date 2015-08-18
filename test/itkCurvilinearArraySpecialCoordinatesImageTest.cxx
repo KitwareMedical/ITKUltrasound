@@ -23,6 +23,7 @@
 
 #include "itkResampleImageFilter.h"
 
+
 int itkCurvilinearArraySpecialCoordinatesImageTest( int argc, char * argv[] )
 {
   if( argc < 3 )
@@ -35,7 +36,7 @@ int itkCurvilinearArraySpecialCoordinatesImageTest( int argc, char * argv[] )
   const char * inputImageFileName = argv[1];
   const char * outputImageFileName = argv[2];
 
-  const unsigned int Dimension = 2;
+  const unsigned int Dimension = 3;
   typedef unsigned char PixelType;
 
   typedef itk::Image< PixelType, Dimension >                                   ImageType;
@@ -68,7 +69,7 @@ int itkCurvilinearArraySpecialCoordinatesImageTest( int argc, char * argv[] )
   typedef itk::ResampleImageFilter< SpecialCoordinatesImageType, ImageType > ResamplerType;
   ResamplerType::Pointer resampler = ResamplerType::New();
   resampler->SetInput( reader->GetOutput() );
-  SpecialCoordinatesImageType::SizeType outputSize;
+  SpecialCoordinatesImageType::SizeType outputSize = reader->GetOutput()->GetLargestPossibleRegion().GetSize();
   outputSize[0] = 800;
   outputSize[1] = 800;
   resampler->SetSize( outputSize );
@@ -78,6 +79,7 @@ int itkCurvilinearArraySpecialCoordinatesImageTest( int argc, char * argv[] )
   SpecialCoordinatesImageType::PointType outputOrigin;
   outputOrigin[0] = outputSize[0] * outputSpacing[0] / -2.0;
   outputOrigin[1] = radiusStart * std::cos( vnl_math::pi / 4.0 );
+  outputOrigin[2] = reader->GetOutput()->GetOrigin()[2];
   resampler->SetOutputOrigin( outputOrigin );
 
   typedef itk::ImageFileWriter< ImageType > WriterType;

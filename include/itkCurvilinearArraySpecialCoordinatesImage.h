@@ -189,10 +189,10 @@ public:
    *
    * Returns true if the resulting index is within the image, false otherwise.
    * \sa Transform */
-  template< typename TCoordRep >
+  template< typename TCoordRep, typename TIndexRep >
   bool TransformPhysicalPointToContinuousIndex(
     const Point< TCoordRep, VDimension > & point,
-    ContinuousIndex< TCoordRep, VDimension > & index) const
+    ContinuousIndex< TIndexRep, VDimension > & index) const
   {
     const RegionType & region = this->GetLargestPossibleRegion();
     const double maxLateral = region.GetSize(1) - 1;
@@ -206,6 +206,16 @@ public:
                                            / m_RadiusSampleSize ) );
     index[1] = static_cast< TCoordRep >( ( lateral / m_LateralAngularSeparation )
                                          + ( maxLateral / 2.0 ) );
+    Vector< SpacePrecisionType, VDimension > cvector;
+    for ( unsigned int kk = 0; kk < VDimension; ++kk )
+      {
+      cvector[kk] = point[kk] - this->m_Origin[kk];
+      }
+    cvector = this->m_PhysicalPointToIndex * cvector;
+    for ( unsigned int ii = 2; ii < VDimension; ++ii )
+      {
+      index[ii] = static_cast< TIndexRep >( cvector[ii] );
+      }
 
     // Now, check to see if the index is within allowed bounds
     const bool isInside = region.IsInside(index);
@@ -234,6 +244,15 @@ public:
                                            / m_RadiusSampleSize ) );
     index[1] = static_cast< IndexValueType >( ( lateral / m_LateralAngularSeparation )
                                          + ( maxLateral / 2.0 ) );
+    for ( unsigned int ii = 2; ii < VDimension; ++ii )
+      {
+      TCoordRep sum = NumericTraits< TCoordRep >::ZeroValue();
+      for ( unsigned int jj = 0; jj < VDimension; ++jj )
+        {
+        sum += this->m_PhysicalPointToIndex[ii][jj] * ( point[jj] - this->m_Origin[jj] );
+        }
+      index[ii] = Math::RoundHalfIntegerUp< IndexValueType >(sum);
+      }
 
     // Now, check to see if the index is within allowed bounds
     const bool isInside = region.IsInside(index);
@@ -260,6 +279,15 @@ public:
     // Convert the angular coordinates into Cartesian coordinates
     point[0] = static_cast< TCoordRep >( radius * std::sin(lateral) );
     point[1] = static_cast< TCoordRep >( radius * std::cos(lateral) );
+    for ( unsigned int rr = 2; rr < VDimension; ++rr )
+      {
+      TCoordRep sum = NumericTraits< TCoordRep >::ZeroValue();
+      for ( unsigned int cc = 0; cc < VDimension; ++cc )
+        {
+        sum += this->m_IndexToPhysicalPoint(rr, cc) * index[cc];
+        }
+      point[rr] = sum + this->m_Origin[rr];
+      }
   }
 
   /** Get a physical point (in the space which
@@ -282,6 +310,14 @@ public:
     // Convert the angular coordinates into Cartesian coordinates
     point[0] = static_cast< TCoordRep >( radius * std::sin(lateral) );
     point[1] = static_cast< TCoordRep >( radius * std::cos(lateral) );
+    for ( unsigned int ii = 2; ii < VDimension; ++ii )
+      {
+      point[ii] = this->m_Origin[ii];
+      for ( unsigned int jj = 0; jj < VDimension; ++jj )
+        {
+        point[ii] += this->m_IndexToPhysicalPoint[ii][jj] * index[jj];
+        }
+      }
   }
 
   /** Set/Get the number of radians between each lateral unit.   */

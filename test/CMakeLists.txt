@@ -53,14 +53,23 @@ itk_add_test( NAME itkBModeImageFilterTestTiming
     DATA{Input/uniform_phantom_8.9_MHz.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkBModeImageFilterTestTiming.mha
     )
-itk_add_test( NAME itkCurvilinearArraySpecialCoordinatesImageTest
+itk_add_test( NAME itkCurvilinearArraySpecialCoordinatesImageTest1
   COMMAND UltrasoundTestDriver
   --compare
-    ${ITK_TEST_OUTPUT_DIR}/itkCurvilinearArraySpecialCoordinatesImageTest.mha
-    DATA{Baseline/itkCurvilinearArraySpecialCoordinatesImageTest.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkCurvilinearArraySpecialCoordinatesImageTest1.mha
+    DATA{Baseline/itkCurvilinearArraySpecialCoordinatesImageTest1.mha}
   itkCurvilinearArraySpecialCoordinatesImageTest
     DATA{Input/curvilinear_envelope.mha}
-    ${ITK_TEST_OUTPUT_DIR}/itkCurvilinearArraySpecialCoordinatesImageTest.mha
+    ${ITK_TEST_OUTPUT_DIR}/itkCurvilinearArraySpecialCoordinatesImageTest1.mha
+    )
+itk_add_test( NAME itkCurvilinearArraySpecialCoordinatesImageTest2
+  COMMAND UltrasoundTestDriver
+  --compare
+    ${ITK_TEST_OUTPUT_DIR}/itkCurvilinearArraySpecialCoordinatesImageTest2.mha
+    DATA{Baseline/itkCurvilinearArraySpecialCoordinatesImageTest2.mha}
+  itkCurvilinearArraySpecialCoordinatesImageTest
+    DATA{Input/curvilinear_envelope_multiframe.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkCurvilinearArraySpecialCoordinatesImageTest2.mha
     )
 itk_add_test( NAME itkFFT1DComplexToComplexImageFilterTest
   COMMAND UltrasoundTestDriver
