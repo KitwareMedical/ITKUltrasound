@@ -264,9 +264,9 @@ public:
    * the origin and spacing information comes from)
    * from a continuous index (in the index space)
    * \sa Transform */
-  template< typename TCoordRep >
+  template< typename TCoordRep, typename TIndexRep >
   void TransformContinuousIndexToPhysicalPoint(
-    const ContinuousIndex< TCoordRep, VDimension > & index,
+    const ContinuousIndex< TIndexRep, VDimension > & index,
     Point< TCoordRep, VDimension > & point) const
   {
     const RegionType & region = this->GetLargestPossibleRegion();
