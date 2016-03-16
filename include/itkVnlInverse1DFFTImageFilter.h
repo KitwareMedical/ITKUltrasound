@@ -15,16 +15,16 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef itkVnlFFT1DComplexConjugateToRealImageFilter_h
-#define itkVnlFFT1DComplexConjugateToRealImageFilter_h
+#ifndef itkVnlInverse1DFFTImageFilter_h
+#define itkVnlInverse1DFFTImageFilter_h
 
-#include "itkFFT1DComplexConjugateToRealImageFilter.h"
+#include "itkInverse1DFFTImageFilter.h"
 #include <complex>
 
 namespace itk
 {
 
-/** \class VnlFFT1DComplexConjugateToRealImageFilter
+/** \class VnlInverse1DFFTImageFilter
  *
  * \brief Perform the FFT along one dimension of an image using Vnl as a
  * backend.
@@ -32,13 +32,13 @@ namespace itk
  * \ingroup Ultrasound
  */
 template< typename TInputImage, typename TOutputImage=Image< typename NumericTraits< typename TInputImage::PixelType >::ValueType, TInputImage::ImageDimension > >
-class VnlFFT1DComplexConjugateToRealImageFilter:
-  public FFT1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
+class VnlInverse1DFFTImageFilter:
+  public Inverse1DFFTImageFilter< TInputImage, TOutputImage >
 {
 public:
   /** Standard class typedefs. */
-  typedef VnlFFT1DComplexConjugateToRealImageFilter                           Self;
-  typedef FFT1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage > Superclass;
+  typedef VnlInverse1DFFTImageFilter                           Self;
+  typedef Inverse1DFFTImageFilter< TInputImage, TOutputImage > Superclass;
   typedef SmartPointer< Self >                                                Pointer;
   typedef SmartPointer< const Self >                                          ConstPointer;
 
@@ -50,23 +50,23 @@ public:
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( VnlFFT1DComplexConjugateToRealImageFilter, FFT1DComplexConjugateToRealImageFilter );
+  itkTypeMacro( VnlInverse1DFFTImageFilter, Inverse1DFFTImageFilter );
 
 protected:
   virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID );  // generates output from input
 
-  VnlFFT1DComplexConjugateToRealImageFilter() { }
-  virtual ~VnlFFT1DComplexConjugateToRealImageFilter() { }
+  VnlInverse1DFFTImageFilter() { }
+  virtual ~VnlInverse1DFFTImageFilter() { }
 
 private:
-  VnlFFT1DComplexConjugateToRealImageFilter(const Self&); //purposely not implemented
+  VnlInverse1DFFTImageFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkVnlFFT1DComplexConjugateToRealImageFilter.hxx"
+#include "itkVnlInverse1DFFTImageFilter.hxx"
 #endif
 
 #endif

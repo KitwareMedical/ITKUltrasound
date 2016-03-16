@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef itkFFT1DComplexConjugateToRealImageFilter_h
-#define itkFFT1DComplexConjugateToRealImageFilter_h
+#ifndef itkInverse1DFFTImageFilter_h
+#define itkInverse1DFFTImageFilter_h
 
 #include <complex>
 
@@ -25,7 +25,7 @@
 
 namespace itk
 {
-/** \class FFT1DComplexConjugateToRealImageFilter
+/** \class Inverse1DFFTImageFilter
  * \brief Perform the Fast Fourier Transform, in the reverse direction, with
  * real output, but only along one dimension.
  *
@@ -33,7 +33,7 @@ namespace itk
  * \ingroup Ultrasound
  */
 template< typename TInputImage, typename TOutputImage=Image< typename NumericTraits< typename TInputImage::PixelType >::ValueType, TInputImage::ImageDimension > >
-class FFT1DComplexConjugateToRealImageFilter:
+class Inverse1DFFTImageFilter:
   public ImageToImageFilter< TInputImage, TOutputImage >
 {
 public:
@@ -42,14 +42,14 @@ public:
   typedef TOutputImage                         OutputImageType;
   typedef typename OutputImageType::RegionType OutputImageRegionType;
 
-  typedef FFT1DComplexConjugateToRealImageFilter                Self;
+  typedef Inverse1DFFTImageFilter                Self;
   typedef ImageToImageFilter< InputImageType, OutputImageType > Superclass;
   typedef SmartPointer< Self >                                  Pointer;
   typedef SmartPointer< const Self >                            ConstPointer;
 
   itkStaticConstMacro(ImageDimension, unsigned int, InputImageType::ImageDimension );
 
-  itkTypeMacro( FFT1DComplexConjugateToRealImageFilter, ImageToImageFilter );
+  itkTypeMacro( Inverse1DFFTImageFilter, ImageToImageFilter );
 
   /** Customized object creation methods that support configuration-based
     * selection of FFT implementation.
@@ -65,8 +65,8 @@ public:
   itkSetClampMacro(Direction, unsigned int, 0, ImageDimension - 1);
 
 protected:
-  FFT1DComplexConjugateToRealImageFilter();
-  virtual ~FFT1DComplexConjugateToRealImageFilter() {}
+  Inverse1DFFTImageFilter();
+  virtual ~Inverse1DFFTImageFilter() {}
 
   void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
 
@@ -84,7 +84,7 @@ protected:
   unsigned int m_Direction;
 
 private:
-  FFT1DComplexConjugateToRealImageFilter( const Self& );
+  Inverse1DFFTImageFilter( const Self& );
   void operator=( const Self& );
 
   ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;
@@ -92,15 +92,15 @@ private:
 }
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#ifndef itkVnlFFT1DComplexConjugateToRealImageFilter_h
-#ifndef itkVnlFFT1DComplexConjugateToRealImageFilter_hxx
-#ifndef itkFFTW1DComplexConjugateToRealImageFilter_h
-#ifndef itkFFTW1DComplexConjugateToRealImageFilter_hxx
-#include "itkFFT1DComplexConjugateToRealImageFilter.hxx"
+#ifndef itkVnlInverse1DFFTImageFilter_h
+#ifndef itkVnlInverse1DFFTImageFilter_hxx
+#ifndef itkFFTWInverse1DFFTImageFilter_h
+#ifndef itkFFTWInverse1DFFTImageFilter_hxx
+#include "itkInverse1DFFTImageFilter.hxx"
 #endif
 #endif
 #endif
 #endif
 #endif
 
-#endif // itkFFT1DComplexConjugateToRealImageFilter_h
+#endif // itkInverse1DFFTImageFilter_h

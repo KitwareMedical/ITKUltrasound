@@ -15,15 +15,15 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef itkFFT1DComplexConjugateToRealImageFilter_hxx
-#define itkFFT1DComplexConjugateToRealImageFilter_hxx
+#ifndef itkInverse1DFFTImageFilter_hxx
+#define itkInverse1DFFTImageFilter_hxx
 
-#include "itkFFT1DComplexConjugateToRealImageFilter.h"
+#include "itkInverse1DFFTImageFilter.h"
 
-#include "itkVnlFFT1DComplexConjugateToRealImageFilter.h"
+#include "itkVnlInverse1DFFTImageFilter.h"
 
 #if defined(ITK_USE_FFTWD) || defined(ITK_USE_FFTWF)
-#include "itkFFTW1DComplexConjugateToRealImageFilter.h"
+#include "itkFFTWInverse1DFFTImageFilter.h"
 #endif
 
 #include "itkMetaDataDictionary.h"
@@ -37,7 +37,7 @@ struct Dispatch_1DComplexConjugateToReal_New
 {
   static TSelfPointer Apply()
     {
-    return VnlFFT1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
+    return VnlInverse1DFFTImageFilter< TInputImage, TOutputImage >
       ::New().GetPointer();
     }
 };
@@ -49,7 +49,7 @@ struct Dispatch_1DComplexConjugateToReal_New< TSelfPointer, TInputImage, TOutput
 {
   static TSelfPointer Apply()
     {
-    return FFTW1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
+    return FFTWInverse1DFFTImageFilter< TInputImage, TOutputImage >
       ::New().GetPointer();
     }
 };
@@ -62,7 +62,7 @@ struct Dispatch_1DComplexConjugateToReal_New< TSelfPointer, TInputImage, TOutput
 {
   static TSelfPointer Apply()
     {
-    return FFTW1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
+    return FFTWInverse1DFFTImageFilter< TInputImage, TOutputImage >
       ::New().GetPointer();
     }
 };
@@ -70,8 +70,8 @@ struct Dispatch_1DComplexConjugateToReal_New< TSelfPointer, TInputImage, TOutput
 
 
 template < typename TInputImage, typename TOutputImage >
-typename FFT1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >::Pointer
-FFT1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
+typename Inverse1DFFTImageFilter< TInputImage, TOutputImage >::Pointer
+Inverse1DFFTImageFilter< TInputImage, TOutputImage >
 ::New()
 {
   Pointer smartPtr = ::itk::ObjectFactory< Self >::Create();
@@ -86,8 +86,8 @@ FFT1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
 
 
 template < typename TInputImage, typename TOutputImage >
-FFT1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
-::FFT1DComplexConjugateToRealImageFilter():
+Inverse1DFFTImageFilter< TInputImage, TOutputImage >
+::Inverse1DFFTImageFilter():
   m_Direction( 0 )
 {
   this->m_ImageRegionSplitter = ImageRegionSplitterDirection::New();
@@ -96,7 +96,7 @@ FFT1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
 
 template <typename TInputImage, typename TOutputImage>
 const ImageRegionSplitterBase*
-FFT1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
+Inverse1DFFTImageFilter< TInputImage, TOutputImage >
 ::GetImageRegionSplitter() const
 {
   return this->m_ImageRegionSplitter.GetPointer();
@@ -105,7 +105,7 @@ FFT1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
 
 template<typename TInputImage, typename TOutputImage >
 void
-FFT1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
+Inverse1DFFTImageFilter< TInputImage, TOutputImage >
 ::BeforeThreadedGenerateData()
 {
   this->m_ImageRegionSplitter->SetDirection( this->GetDirection() );
@@ -114,7 +114,7 @@ FFT1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
 
 template< typename TInputImage, typename TOutputImage >
 void
-FFT1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
+Inverse1DFFTImageFilter< TInputImage, TOutputImage >
 ::GenerateInputRequestedRegion()
 {
   // call the superclass' implementation of this method
@@ -161,7 +161,7 @@ FFT1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
 
 template< typename TInputImage, typename TOutputImage >
 void
-FFT1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
+Inverse1DFFTImageFilter< TInputImage, TOutputImage >
 ::EnlargeOutputRequestedRegion(DataObject *output)
 {
   OutputImageType* outputPtr = dynamic_cast<OutputImageType*>( output );
@@ -193,7 +193,7 @@ FFT1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
 
 template< typename TInputImage, typename TOutputImage >
 void
-FFT1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
+Inverse1DFFTImageFilter< TInputImage, TOutputImage >
 ::PrintSelf( std::ostream& os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
@@ -203,4 +203,4 @@ FFT1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
 
 } // end namespace itk
 
-#endif // itkFFT1DComplexConjugateToRealImageFilter_hxx
+#endif // itkInverse1DFFTImageFilter_hxx

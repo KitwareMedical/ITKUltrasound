@@ -15,29 +15,29 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef itkFFTW1DComplexConjugateToRealImageFilter_h
-#define itkFFTW1DComplexConjugateToRealImageFilter_h
+#ifndef itkFFTWInverse1DFFTImageFilter_h
+#define itkFFTWInverse1DFFTImageFilter_h
 
-#include "itkFFT1DComplexConjugateToRealImageFilter.h"
+#include "itkInverse1DFFTImageFilter.h"
 #include "itkFFTWCommonExtended.h"
 
 #include <vector>
 
 namespace itk
 {
-/** \class FFTW1DComplexConjugateToRealImageFilter
+/** \class FFTWInverse1DFFTImageFilter
  * \brief only do FFT along one dimension using FFTW as a backend.
  *
  * \ingroup Ultrasound
  */
 
 template< typename TInputImage, typename TOutputImage=Image< typename NumericTraits< typename TInputImage::PixelType >::ValueType, TInputImage::ImageDimension > >
-class FFTW1DComplexConjugateToRealImageFilter:
-  public FFT1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage >
+class FFTWInverse1DFFTImageFilter:
+  public Inverse1DFFTImageFilter< TInputImage, TOutputImage >
 {
 public:
-  typedef FFTW1DComplexConjugateToRealImageFilter                             Self;
-  typedef FFT1DComplexConjugateToRealImageFilter< TInputImage, TOutputImage > Superclass;
+  typedef FFTWInverse1DFFTImageFilter                             Self;
+  typedef Inverse1DFFTImageFilter< TInputImage, TOutputImage > Superclass;
   typedef SmartPointer< Self >                                                Pointer;
   typedef SmartPointer< const Self >                                          ConstPointer;
 
@@ -61,15 +61,15 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(FFTW1DComplexConjugateToRealImageFilter,
-               FFT1DComplexConjugateToRealImageFilter);
+  itkTypeMacro(FFTWInverse1DFFTImageFilter,
+               Inverse1DFFTImageFilter);
 
 
 protected:
-  FFTW1DComplexConjugateToRealImageFilter(): m_PlanComputed( false ),
+  FFTWInverse1DFFTImageFilter(): m_PlanComputed( false ),
     m_LastImageSize( 0 )
   {}
-  virtual ~FFTW1DComplexConjugateToRealImageFilter()
+  virtual ~FFTWInverse1DFFTImageFilter()
   {
   if ( m_PlanComputed )
     {
@@ -81,7 +81,7 @@ protected:
   virtual void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadID ) ITK_OVERRIDE;
 
 private:
-  FFTW1DComplexConjugateToRealImageFilter(const Self&); //purposely not implemented
+  FFTWInverse1DFFTImageFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
   /** Destroy FFTW Plans and associated buffers. */
@@ -97,7 +97,7 @@ private:
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkFFTW1DComplexConjugateToRealImageFilter.hxx"
+#include "itkFFTWInverse1DFFTImageFilter.hxx"
 #endif
 
-#endif //itkFFTW1DComplexConjugateToRealImageFilter_h
+#endif //itkFFTWInverse1DFFTImageFilter_h
