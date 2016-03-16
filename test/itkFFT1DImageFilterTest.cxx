@@ -22,7 +22,7 @@
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 
-#include "itkFFT1DRealToComplexConjugateImageFilter.h"
+#include "itkForward1DFFTImageFilter.h"
 #include "itkFFT1DComplexConjugateToRealImageFilter.h"
 
 int itkFFT1DImageFilterTest( int argc, char* argv[] )
@@ -48,7 +48,7 @@ int itkFFT1DImageFilterTest( int argc, char* argv[] )
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImage );
 
-  typedef itk::FFT1DRealToComplexConjugateImageFilter< ImageType, ComplexImageType > FFTForwardType;
+  typedef itk::Forward1DFFTImageFilter< ImageType, ComplexImageType > FFTForwardType;
   FFTForwardType::Pointer fftForward = FFTForwardType::New();
   fftForward->SetInput( reader->GetOutput() );
   fftForward->SetDirection( direction );

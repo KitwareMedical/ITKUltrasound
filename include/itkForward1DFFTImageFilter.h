@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef itkFFT1DRealToComplexConjugateImageFilter_h
-#define itkFFT1DRealToComplexConjugateImageFilter_h
+#ifndef itkForward1DFFTImageFilter_h
+#define itkForward1DFFTImageFilter_h
 
 #include <complex>
 
@@ -25,7 +25,7 @@
 
 namespace itk
 {
-/** \class FFT1DRealToComplexConjugateImageFilter
+/** \class Forward1DFFTImageFilter
  * \brief Perform the Fast Fourier Transform, in the forward direction, with
  * real inputs, but only along one dimension.
  *
@@ -33,7 +33,7 @@ namespace itk
  * \ingroup Ultrasound
  */
 template< typename TInputImage, typename TOutputImage=Image< std::complex< typename TInputImage::PixelType >, TInputImage::ImageDimension > >
-class FFT1DRealToComplexConjugateImageFilter:
+class Forward1DFFTImageFilter:
   public ImageToImageFilter< TInputImage, TOutputImage >
 {
 public:
@@ -43,14 +43,14 @@ public:
   typedef TOutputImage                                          OutputImageType;
   typedef typename OutputImageType::RegionType                  OutputImageRegionType;
 
-  typedef FFT1DRealToComplexConjugateImageFilter                Self;
+  typedef Forward1DFFTImageFilter                Self;
   typedef ImageToImageFilter< InputImageType, OutputImageType > Superclass;
   typedef SmartPointer< Self >                                  Pointer;
   typedef SmartPointer< const Self >                            ConstPointer;
 
   itkStaticConstMacro( ImageDimension, unsigned int, InputImageType::ImageDimension );
 
-  itkTypeMacro( FFT1DRealToComplexConjugateImageFilter, ImageToImageFilter );
+  itkTypeMacro( Forward1DFFTImageFilter, ImageToImageFilter );
 
   /** Customized object creation methods that support configuration-based
     * selection of FFT implementation.
@@ -66,8 +66,8 @@ public:
   itkSetClampMacro(Direction, unsigned int, 0, ImageDimension - 1);
 
 protected:
-  FFT1DRealToComplexConjugateImageFilter();
-  virtual ~FFT1DRealToComplexConjugateImageFilter() {}
+  Forward1DFFTImageFilter();
+  virtual ~Forward1DFFTImageFilter() {}
 
   void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
 
@@ -81,7 +81,7 @@ protected:
   virtual const ImageRegionSplitterBase* GetImageRegionSplitter() const ITK_OVERRIDE;
 
 private:
-  FFT1DRealToComplexConjugateImageFilter( const Self& );
+  Forward1DFFTImageFilter( const Self& );
   void operator=( const Self& );
 
   ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;
@@ -94,15 +94,15 @@ private:
 }
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#ifndef itkVnlFFT1DRealToComplexConjugateImageFilter_h
-#ifndef itkVnlFFT1DRealToComplexConjugateImageFilter_hxx
-#ifndef itkFFTW1DRealToComplexConjugateImageFilter_h
-#ifndef itkFFTW1DRealToComplexConjugateImageFilter_hxx
-#include "itkFFT1DRealToComplexConjugateImageFilter.hxx"
+#ifndef itkVnlForward1DFFTImageFilter_h
+#ifndef itkVnlForward1DFFTImageFilter_hxx
+#ifndef itkFFTWForward1DFFTImageFilter_h
+#ifndef itkFFTWForward1DFFTImageFilter_hxx
+#include "itkForward1DFFTImageFilter.hxx"
 #endif
 #endif
 #endif
 #endif
 #endif
 
-#endif // itkFFT1DRealToComplexConjugateImageFilter_h
+#endif // itkForward1DFFTImageFilter_h

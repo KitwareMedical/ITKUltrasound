@@ -1,0 +1,5 @@
+ObjectType = Image
+NDims = 2
+DimSize = 128 100
+ElementType = MET_DOUBLE
+ElementDataFile = itkForward1DFFTImageFilterTestBaselineReal128.raw

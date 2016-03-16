@@ -21,7 +21,7 @@
 #include <complex>
 
 #include "itkComplexToComplex1DFFTImageFilter.h"
-#include "itkFFT1DRealToComplexConjugateImageFilter.h"
+#include "itkForward1DFFTImageFilter.h"
 #include "itkImageRegionSplitterDirection.h"
 
 namespace itk
@@ -95,7 +95,7 @@ protected:
 
   virtual void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
 
-  // These behave like their analogs in FFT1DRealToComplexConjugateImageFilter.
+  // These behave like their analogs in Forward1DFFTImageFilter.
   virtual void GenerateInputRequestedRegion() ITK_OVERRIDE;
   virtual void EnlargeOutputRequestedRegion(DataObject *output) ITK_OVERRIDE;
 
@@ -103,7 +103,7 @@ protected:
   virtual void ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread, ThreadIdType threadId ) ITK_OVERRIDE;
   virtual void AfterThreadedGenerateData() ITK_OVERRIDE;
 
-  typedef FFT1DRealToComplexConjugateImageFilter< InputImageType, OutputImageType > FFTRealToComplexType;
+  typedef Forward1DFFTImageFilter< InputImageType, OutputImageType > FFTRealToComplexType;
   typedef ComplexToComplex1DFFTImageFilter< OutputImageType, OutputImageType >      FFTComplexToComplexType;
 
   typename FFTRealToComplexType::Pointer    m_FFTRealToComplexFilter;
