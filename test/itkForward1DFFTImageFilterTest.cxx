@@ -19,52 +19,54 @@
 #include <complex>
 #include <string>
 
+#include "itkComplexToImaginaryImageFilter.h"
+#include "itkComplexToRealImageFilter.h"
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 
 #include "itkForward1DFFTImageFilter.h"
-#include "itkInverse1DFFTImageFilter.h"
 
-int itkFFT1DImageFilterTest( int argc, char* argv[] )
+int itkForward1DFFTImageFilterTest( int argc, char* argv[] )
 {
   if( argc < 3 )
     {
     std::cerr << "Usage: " << argv[0];
-    std::cerr << " inputImage outputImage";
+    std::cerr << " inputImage outputImagePrefix";
     std::cerr << std::endl;
     return EXIT_FAILURE;
     }
-  const char * inputImage = argv[1];
-  const char * outputImage = argv[2];
 
   typedef double PixelType;
   const unsigned int Dimension = 2;
-  const unsigned int direction = 1;
 
-  typedef itk::Image< PixelType, Dimension >                                         ImageType;
-  typedef itk::Image< std::complex< PixelType >, Dimension >                         ComplexImageType;
+  typedef itk::Image< PixelType, Dimension >                 ImageType;
+  typedef itk::Image< std::complex< PixelType >, Dimension > ComplexImageType;
 
-  typedef itk::ImageFileReader< ImageType >                                          ReaderType;
+  typedef itk::ImageFileReader< ImageType >                                 ReaderType;
+  typedef itk::Forward1DFFTImageFilter< ImageType, ComplexImageType >       FFTType;
+  typedef itk::ComplexToRealImageFilter< ComplexImageType, ImageType >      RealFilterType;
+  typedef itk::ComplexToImaginaryImageFilter< ComplexImageType, ImageType > ImaginaryFilterType;
+  typedef itk::ImageFileWriter< ImageType >                                 WriterType;
+
   ReaderType::Pointer reader = ReaderType::New();
-  reader->SetFileName( inputImage );
-
-  typedef itk::Forward1DFFTImageFilter< ImageType, ComplexImageType > FFTForwardType;
-  FFTForwardType::Pointer fftForward = FFTForwardType::New();
-  fftForward->SetInput( reader->GetOutput() );
-  fftForward->SetDirection( direction );
-
-  typedef itk::Inverse1DFFTImageFilter< ComplexImageType, ImageType > FFTInverseType;
-  FFTInverseType::Pointer fftInverse = FFTInverseType::New();
-  fftInverse->SetInput( fftForward->GetOutput() );
-  fftInverse->SetDirection( direction );
-
-  typedef itk::ImageFileWriter< ImageType >                                          WriterType;
+  FFTType::Pointer    fft    = FFTType::New();
+  RealFilterType::Pointer realFilter = RealFilterType::New();
+  ImaginaryFilterType::Pointer imaginaryFilter = ImaginaryFilterType::New();
   WriterType::Pointer writer = WriterType::New();
-  writer->SetInput( fftInverse->GetOutput() );
-  writer->SetFileName( outputImage );
+
+  reader->SetFileName( argv[1] );
+  fft->SetInput( reader->GetOutput() );
+  realFilter->SetInput( fft->GetOutput() );
+  imaginaryFilter->SetInput( fft->GetOutput() );
 
   try
     {
+    writer->SetInput( realFilter->GetOutput() );
+    writer->SetFileName( std::string( argv[2] ) + "Real.mha" );
+    writer->Update();
+
+    writer->SetInput( imaginaryFilter->GetOutput() );
+    writer->SetFileName( std::string( argv[2] ) + "Imaginary.mha" );
     writer->Update();
     }
   catch( itk::ExceptionObject & excep )
@@ -74,8 +76,7 @@ int itkFFT1DImageFilterTest( int argc, char* argv[] )
     return EXIT_FAILURE;
     }
 
-  fftForward.Print( std::cout );
-  fftInverse.Print( std::cout );
+  fft.Print( std::cout );
 
   return EXIT_SUCCESS;
 }

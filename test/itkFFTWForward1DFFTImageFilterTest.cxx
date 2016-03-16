@@ -21,13 +21,12 @@
 
 #include "itkComplexToImaginaryImageFilter.h"
 #include "itkComplexToRealImageFilter.h"
-#include "itkConstantPadImageFilter.h"
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 
-#include "itkAnalyticSignalImageFilter.h"
+#include "itkFFTWForward1DFFTImageFilter.h"
 
-int itkAnalyticSignalImageFilterTest( int argc, char* argv[] )
+int itkFFTWForward1DFFTImageFilterTest( int argc, char* argv[] )
 {
   if( argc < 3 )
     {
@@ -37,37 +36,28 @@ int itkAnalyticSignalImageFilterTest( int argc, char* argv[] )
     return EXIT_FAILURE;
     }
 
-  typedef float PixelType;
+  typedef double PixelType;
   const unsigned int Dimension = 2;
 
   typedef itk::Image< PixelType, Dimension >                 ImageType;
   typedef itk::Image< std::complex< PixelType >, Dimension > ComplexImageType;
 
   typedef itk::ImageFileReader< ImageType >                                 ReaderType;
-  typedef itk::ConstantPadImageFilter< ImageType, ImageType >               PadType;
-  typedef itk::AnalyticSignalImageFilter< ImageType, ComplexImageType >     AnalyticType;
+  typedef itk::FFTWForward1DFFTImageFilter< ImageType, ComplexImageType >   FFTType;
   typedef itk::ComplexToRealImageFilter< ComplexImageType, ImageType >      RealFilterType;
   typedef itk::ComplexToImaginaryImageFilter< ComplexImageType, ImageType > ImaginaryFilterType;
   typedef itk::ImageFileWriter< ImageType >                                 WriterType;
 
   ReaderType::Pointer reader = ReaderType::New();
-  PadType::Pointer    pad    = PadType::New();
-  AnalyticType::Pointer analytic     = AnalyticType::New();
+  FFTType::Pointer    fft    = FFTType::New();
   RealFilterType::Pointer realFilter = RealFilterType::New();
   ImaginaryFilterType::Pointer imaginaryFilter = ImaginaryFilterType::New();
   WriterType::Pointer writer = WriterType::New();
 
   reader->SetFileName( argv[1] );
-  pad->SetInput( reader->GetOutput() );
-  ImageType::SizeType padSize;
-  padSize[0] = 0;
-  padSize[1] = 28;
-  pad->SetPadUpperBound( padSize );
-  pad->SetConstant( 0. );
-  analytic->SetInput( pad->GetOutput() );
-  analytic->SetDirection( 1 );
-  realFilter->SetInput( analytic->GetOutput() );
-  imaginaryFilter->SetInput( analytic->GetOutput() );
+  fft->SetInput( reader->GetOutput() );
+  realFilter->SetInput( fft->GetOutput() );
+  imaginaryFilter->SetInput( fft->GetOutput() );
 
   try
     {
@@ -86,7 +76,7 @@ int itkAnalyticSignalImageFilterTest( int argc, char* argv[] )
     return EXIT_FAILURE;
     }
 
-  analytic.Print( std::cout );
+  fft.Print( std::cout );
 
   return EXIT_SUCCESS;
 }

@@ -52,10 +52,10 @@ template <>
 class ComplexToComplexProxy<float>
 {
 public:
-  typedef float         PixelType;
-  typedef fftwf_complex ComplexType;
-  typedef fftwf_plan    PlanType;
-  typedef ComplexToComplexProxy<float>  Self;
+  typedef float                        PixelType;
+  typedef fftwf_complex                ComplexType;
+  typedef fftwf_plan                   PlanType;
+  typedef ComplexToComplexProxy<float> Self;
 
   static PlanType Plan_dft_c2r_1d(int n,
                                   ComplexType *in,
@@ -155,11 +155,11 @@ public:
     return plan;
     }
   static PlanType Plan_dft_1d(const int n,
-			      ComplexType *in,
-			      ComplexType *out,
-			      int sign,
-			      unsigned flags,
-			      int threads=1)
+            ComplexType *in,
+            ComplexType *out,
+            int sign,
+            unsigned flags,
+            int threads=1)
     {
     MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftwf_plan_with_nthreads(threads);
@@ -186,9 +186,9 @@ template <>
 class ComplexToComplexProxy<double>
 {
 public:
-  typedef double       PixelType;
-  typedef fftw_complex ComplexType;
-  typedef fftw_plan    PlanType;
+  typedef double                        PixelType;
+  typedef fftw_complex                  ComplexType;
+  typedef fftw_plan                     PlanType;
   typedef ComplexToComplexProxy<double> Self;
 
   static PlanType Plan_dft_c2r_1d(int n,
@@ -289,11 +289,11 @@ public:
     return plan;
     }
   static PlanType Plan_dft_1d(const int n,
-			      ComplexType *in,
-			      ComplexType *out,
-			      int sign,
-			      unsigned flags,
-			      int threads=1)
+            ComplexType *in,
+            ComplexType *out,
+            int sign,
+            unsigned flags,
+            int threads=1)
     {
     MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftw_plan_with_nthreads(threads);

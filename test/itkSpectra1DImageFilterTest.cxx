@@ -37,7 +37,7 @@ int itkSpectra1DImageFilterTest( int argc, char* argv[] )
   const char * outputImageFileName = argv[2];
 
   const unsigned int Dimension = 2;
-  typedef short PixelType;
+  typedef short                              PixelType;
   typedef itk::Image< PixelType, Dimension > ImageType;
 
   typedef itk::ImageFileReader< ImageType > ReaderType;
@@ -73,9 +73,9 @@ int itkSpectra1DImageFilterTest( int argc, char* argv[] )
   SpectraSupportWindowFilterType::Pointer spectraSupportWindowFilter = SpectraSupportWindowFilterType::New();
   spectraSupportWindowFilter->SetInput( sideLines );
 
-  typedef SpectraSupportWindowFilterType::OutputImageType SupportWindowImageType;
-  typedef float SpectraComponentType;
-  typedef itk::VectorImage< SpectraComponentType, Dimension > SpectraImageType;
+  typedef SpectraSupportWindowFilterType::OutputImageType                                  SupportWindowImageType;
+  typedef float                                                                            SpectraComponentType;
+  typedef itk::VectorImage< SpectraComponentType, Dimension >                              SpectraImageType;
   typedef itk::Spectra1DImageFilter< ImageType, SupportWindowImageType, SpectraImageType > SpectraFilterType;
   SpectraFilterType::Pointer spectraFilter = SpectraFilterType::New();
   spectraFilter->SetInput( rfImage );

@@ -108,7 +108,7 @@ protected:
 
   virtual void GenerateData() ITK_OVERRIDE;
 
-  // These behave like their analogs in FFT1DRealToComplexConjugateImageFilter.
+  // These behave like their analogs in Forward1DFFTImageFilter.
   virtual void GenerateInputRequestedRegion() ITK_OVERRIDE;
   virtual void EnlargeOutputRequestedRegion(DataObject *output) ITK_OVERRIDE;
 

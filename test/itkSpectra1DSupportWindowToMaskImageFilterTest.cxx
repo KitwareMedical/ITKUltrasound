@@ -26,9 +26,9 @@
 int itkSpectra1DSupportWindowToMaskImageFilterTest( int argc, char* argv[] )
 {
   const unsigned int Dimension = 2;
-  typedef short PixelType;
+  typedef short                              PixelType;
   typedef itk::Image< PixelType, Dimension > ImageType;
-  typedef ImageType::IndexType IndexType;
+  typedef ImageType::IndexType               IndexType;
 
   if( argc < 4 )
     {
@@ -76,8 +76,8 @@ int itkSpectra1DSupportWindowToMaskImageFilterTest( int argc, char* argv[] )
   SpectraSupportWindowFilterType::Pointer spectraSupportWindowFilter = SpectraSupportWindowFilterType::New();
   spectraSupportWindowFilter->SetInput( sideLines );
 
-  typedef SpectraSupportWindowFilterType::OutputImageType SupportWindowImageType;
-  typedef itk::Image< unsigned char, Dimension > MaskImageType;
+  typedef SpectraSupportWindowFilterType::OutputImageType                                       SupportWindowImageType;
+  typedef itk::Image< unsigned char, Dimension >                                                MaskImageType;
   typedef itk::Spectra1DSupportWindowToMaskImageFilter< SupportWindowImageType, MaskImageType > SpectraSupportWindowMaskFilterType;
   SpectraSupportWindowMaskFilterType::Pointer spectraSupportWindowMaskFilter = SpectraSupportWindowMaskFilterType::New();
   spectraSupportWindowMaskFilter->SetInput( spectraSupportWindowFilter->GetOutput() );

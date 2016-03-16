@@ -20,8 +20,8 @@
 
 #include <complex>
 
-#include "itkFFT1DComplexToComplexImageFilter.h"
-#include "itkFFT1DRealToComplexConjugateImageFilter.h"
+#include "itkComplexToComplex1DFFTImageFilter.h"
+#include "itkForward1DFFTImageFilter.h"
 #include "itkImageRegionSplitterDirection.h"
 
 namespace itk
@@ -93,9 +93,9 @@ protected:
   AnalyticSignalImageFilter();
   virtual ~AnalyticSignalImageFilter() {}
 
-  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
+  virtual void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
 
-  // These behave like their analogs in FFT1DRealToComplexConjugateImageFilter.
+  // These behave like their analogs in Forward1DFFTImageFilter.
   virtual void GenerateInputRequestedRegion() ITK_OVERRIDE;
   virtual void EnlargeOutputRequestedRegion(DataObject *output) ITK_OVERRIDE;
 
@@ -103,10 +103,10 @@ protected:
   virtual void ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread, ThreadIdType threadId ) ITK_OVERRIDE;
   virtual void AfterThreadedGenerateData() ITK_OVERRIDE;
 
-  typedef FFT1DRealToComplexConjugateImageFilter< InputImageType, OutputImageType > FFTRealToComplexType;
-  typedef FFT1DComplexToComplexImageFilter< OutputImageType, OutputImageType >      FFTComplexToComplexType;
+  typedef Forward1DFFTImageFilter< InputImageType, OutputImageType > FFTRealToComplexType;
+  typedef ComplexToComplex1DFFTImageFilter< OutputImageType, OutputImageType >      FFTComplexToComplexType;
 
-  typename FFTRealToComplexType::Pointer m_FFTRealToComplexFilter;
+  typename FFTRealToComplexType::Pointer    m_FFTRealToComplexFilter;
   typename FFTComplexToComplexType::Pointer m_FFTComplexToComplexFilter;
 
   /** Override to return a splitter that does not split along the direction we
@@ -114,8 +114,8 @@ protected:
   virtual const ImageRegionSplitterBase* GetImageRegionSplitter() const ITK_OVERRIDE;
 
 private:
-  AnalyticSignalImageFilter( const Self& ); // purposely not implemented
-  void operator=( const Self& ); // purposely not implemented
+  AnalyticSignalImageFilter( const Self& ) ITK_DELETE_FUNCTION;
+  void operator=( const Self& ) ITK_DELETE_FUNCTION;
 
   ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;
 };
