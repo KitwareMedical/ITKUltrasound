@@ -12,6 +12,9 @@ cd /usr/src/ITKUltrasound-build || die "Could not cd into the build directory"
 
 cmake \
   -G Ninja \
+  -DITK_DIR:PATH=/usr/src/ITK-build \
+  -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python3 \
   -DCMAKE_BUILD_TYPE:STRING=Release \
+  -DBUILDNAME:STRING=External-Ultrasound \
     /usr/src/ITKUltrasound || die "CMake configuration failed"
 ctest -VV -D Experimental || die "ctest failed"
