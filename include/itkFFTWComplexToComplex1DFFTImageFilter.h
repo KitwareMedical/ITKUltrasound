@@ -87,9 +87,9 @@ private:
   /** Destroy FFTW Plans and associated buffers. */
   void DestroyPlans();
 
-  bool m_PlanComputed;
-  PlanArrayType m_PlanArray;
-  unsigned int m_LastImageSize;
+  bool                  m_PlanComputed;
+  PlanArrayType         m_PlanArray;
+  unsigned int          m_LastImageSize;
   PlanBufferPointerType m_InputBufferArray;
   PlanBufferPointerType m_OutputBufferArray;
 };

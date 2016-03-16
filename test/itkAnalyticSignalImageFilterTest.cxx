@@ -40,7 +40,7 @@ int itkAnalyticSignalImageFilterTest( int argc, char* argv[] )
   typedef float PixelType;
   const unsigned int Dimension = 2;
 
-  typedef itk::Image< PixelType, Dimension > ImageType;
+  typedef itk::Image< PixelType, Dimension >                 ImageType;
   typedef itk::Image< std::complex< PixelType >, Dimension > ComplexImageType;
 
   typedef itk::ImageFileReader< ImageType >                                 ReaderType;

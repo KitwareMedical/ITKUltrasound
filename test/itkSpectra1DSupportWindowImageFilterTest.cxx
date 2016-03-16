@@ -34,7 +34,7 @@ int itkSpectra1DSupportWindowImageFilterTest( int argc, char* argv[] )
   const char * inputImageFileName = argv[1];
 
   const unsigned int Dimension = 2;
-  typedef short PixelType;
+  typedef short                              PixelType;
   typedef itk::Image< PixelType, Dimension > ImageType;
 
   typedef itk::ImageFileReader< ImageType > ReaderType;

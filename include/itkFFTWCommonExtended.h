@@ -52,10 +52,10 @@ template <>
 class ComplexToComplexProxy<float>
 {
 public:
-  typedef float         PixelType;
-  typedef fftwf_complex ComplexType;
-  typedef fftwf_plan    PlanType;
-  typedef ComplexToComplexProxy<float>  Self;
+  typedef float                        PixelType;
+  typedef fftwf_complex                ComplexType;
+  typedef fftwf_plan                   PlanType;
+  typedef ComplexToComplexProxy<float> Self;
 
   static PlanType Plan_dft_c2r_1d(int n,
                                   ComplexType *in,
@@ -186,9 +186,9 @@ template <>
 class ComplexToComplexProxy<double>
 {
 public:
-  typedef double       PixelType;
-  typedef fftw_complex ComplexType;
-  typedef fftw_plan    PlanType;
+  typedef double                        PixelType;
+  typedef fftw_complex                  ComplexType;
+  typedef fftw_plan                     PlanType;
   typedef ComplexToComplexProxy<double> Self;
 
   static PlanType Plan_dft_c2r_1d(int n,
