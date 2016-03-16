@@ -45,8 +45,8 @@ ComplexToComplexFFT1DImageFilter< TInputImage, TOutputImage >
     if( typeid( typename TInputImage::PixelType::value_type ) == typeid( double ) )
       {
       smartPtr = dynamic_cast< Self* >(
-	FFTWComplexToComplexFFT1DImageFilter< TInputImage, TOutputImage >
-	::New().GetPointer() );
+  FFTWComplexToComplexFFT1DImageFilter< TInputImage, TOutputImage >
+  ::New().GetPointer() );
       }
     }
 #endif
@@ -56,8 +56,8 @@ ComplexToComplexFFT1DImageFilter< TInputImage, TOutputImage >
     if( typeid( typename TInputImage::PixelType::value_type ) == typeid( float ) )
       {
       smartPtr = dynamic_cast<Self *>(
-	FFTWComplexToComplexFFT1DImageFilter< TInputImage, TOutputImage >
-	::New().GetPointer() );
+  FFTWComplexToComplexFFT1DImageFilter< TInputImage, TOutputImage >
+  ::New().GetPointer() );
       }
     }
 #endif

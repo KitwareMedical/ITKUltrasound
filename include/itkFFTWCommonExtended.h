@@ -155,11 +155,11 @@ public:
     return plan;
     }
   static PlanType Plan_dft_1d(const int n,
-			      ComplexType *in,
-			      ComplexType *out,
-			      int sign,
-			      unsigned flags,
-			      int threads=1)
+            ComplexType *in,
+            ComplexType *out,
+            int sign,
+            unsigned flags,
+            int threads=1)
     {
     MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftwf_plan_with_nthreads(threads);
@@ -289,11 +289,11 @@ public:
     return plan;
     }
   static PlanType Plan_dft_1d(const int n,
-			      ComplexType *in,
-			      ComplexType *out,
-			      int sign,
-			      unsigned flags,
-			      int threads=1)
+            ComplexType *in,
+            ComplexType *out,
+            int sign,
+            unsigned flags,
+            int threads=1)
     {
     MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftw_plan_with_nthreads(threads);

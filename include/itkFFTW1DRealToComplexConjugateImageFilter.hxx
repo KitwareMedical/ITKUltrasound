@@ -81,20 +81,20 @@ FFTW1DRealToComplexConjugateImageFilter< TInputImage, TOutputImage >
     for( int i = 0; i < threads; i++ )
       {
       try
-	{
-	m_InputBufferArray[i]  = new typename FFTW1DProxyType::ComplexType[lineSize];
-	m_OutputBufferArray[i] = new typename FFTW1DProxyType::ComplexType[lineSize];
-	}
+  {
+  m_InputBufferArray[i]  = new typename FFTW1DProxyType::ComplexType[lineSize];
+  m_OutputBufferArray[i] = new typename FFTW1DProxyType::ComplexType[lineSize];
+  }
       catch( std::bad_alloc & )
-	{
-	itkExceptionMacro("Problem allocating memory for internal computations");
-	}
+  {
+  itkExceptionMacro("Problem allocating memory for internal computations");
+  }
       m_PlanArray[i] = FFTW1DProxyType::Plan_dft_1d( lineSize,
-				       m_InputBufferArray[i],
-				       m_OutputBufferArray[i],
-				       FFTW_FORWARD,
-				       FFTW_ESTIMATE,
-				       threads );
+               m_InputBufferArray[i],
+               m_OutputBufferArray[i],
+               FFTW_FORWARD,
+               FFTW_ESTIMATE,
+               threads );
       }
     this->m_LastImageSize = lineSize;
     this->m_PlanComputed = true;

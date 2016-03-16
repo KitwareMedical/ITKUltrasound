@@ -89,11 +89,11 @@ VnlComplexToComplexFFT1DImageFilter< TInputImage, TOutputImage >
       outputBufferIt = inputBuffer.begin();
       outputIt.GoToBeginOfLine();
       while( !outputIt.IsAtEndOfLine() )
-	{
-	outputIt.Set( *outputBufferIt );
-	++outputIt;
-	++outputBufferIt;
-	}
+  {
+  outputIt.Set( *outputBufferIt );
+  ++outputIt;
+  ++outputBufferIt;
+  }
       }
     else // m_TransformDirection == INVERSE
       {
@@ -102,11 +102,11 @@ VnlComplexToComplexFFT1DImageFilter< TInputImage, TOutputImage >
       outputBufferIt = inputBuffer.begin();
       outputIt.GoToBeginOfLine();
       while( !outputIt.IsAtEndOfLine() )
-	{
-	outputIt.Set( (*outputBufferIt) / static_cast< PixelType >( vectorSize ));
-	++outputIt;
-	++outputBufferIt;
-	}
+  {
+  outputIt.Set( (*outputBufferIt) / static_cast< PixelType >( vectorSize ));
+  ++outputIt;
+  ++outputBufferIt;
+  }
       }
     }
 }

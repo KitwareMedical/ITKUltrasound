@@ -81,32 +81,32 @@ FFTWComplexToComplexFFT1DImageFilter< TInputImage, TOutputImage >
     for( int i = 0; i < threads; i++ )
       {
       try
-	{
-	m_InputBufferArray[i]  = new typename FFTW1DProxyType::ComplexType[lineSize];
-	m_OutputBufferArray[i] = new typename FFTW1DProxyType::ComplexType[lineSize];
-	}
+  {
+  m_InputBufferArray[i]  = new typename FFTW1DProxyType::ComplexType[lineSize];
+  m_OutputBufferArray[i] = new typename FFTW1DProxyType::ComplexType[lineSize];
+  }
       catch( std::bad_alloc & )
-	{
-	itkExceptionMacro("Problem allocating memory for internal computations");
-	}
+  {
+  itkExceptionMacro("Problem allocating memory for internal computations");
+  }
       if( this->m_TransformDirection == Superclass::DIRECT )
-	{
-	m_PlanArray[i] = FFTW1DProxyType::Plan_dft_1d( lineSize,
-					 m_InputBufferArray[i],
-					 m_OutputBufferArray[i],
-					 FFTW_FORWARD,
-					 FFTW_ESTIMATE,
-					 threads );
-	}
+  {
+  m_PlanArray[i] = FFTW1DProxyType::Plan_dft_1d( lineSize,
+           m_InputBufferArray[i],
+           m_OutputBufferArray[i],
+           FFTW_FORWARD,
+           FFTW_ESTIMATE,
+           threads );
+  }
       else // m_TransformDirection == INVERSE
-	{
-	m_PlanArray[i] = FFTW1DProxyType::Plan_dft_1d( lineSize,
-					 m_InputBufferArray[i],
-					 m_OutputBufferArray[i],
-					 FFTW_BACKWARD,
-					 FFTW_ESTIMATE,
-					 threads );
-	}
+  {
+  m_PlanArray[i] = FFTW1DProxyType::Plan_dft_1d( lineSize,
+           m_InputBufferArray[i],
+           m_OutputBufferArray[i],
+           FFTW_BACKWARD,
+           FFTW_ESTIMATE,
+           threads );
+  }
       }
     this->m_LastImageSize = lineSize;
     this->m_PlanComputed = true;
@@ -166,11 +166,11 @@ FFTWComplexToComplexFFT1DImageFilter< TInputImage, TOutputImage >
       outputBufferIt = reinterpret_cast< typename OutputIteratorType::PixelType* >( m_OutputBufferArray[threadID] );
       outputIt.GoToBeginOfLine();
       while( !outputIt.IsAtEndOfLine() )
-	{
-	outputIt.Set( *outputBufferIt );
-	++outputIt;
-	++outputBufferIt;
-	}
+  {
+  outputIt.Set( *outputBufferIt );
+  ++outputIt;
+  ++outputBufferIt;
+  }
       }
     else // m_TransformDirection == INVERSE
       {
@@ -178,11 +178,11 @@ FFTWComplexToComplexFFT1DImageFilter< TInputImage, TOutputImage >
       outputBufferIt = reinterpret_cast< typename OutputIteratorType::PixelType* >( m_OutputBufferArray[threadID] );
       outputIt.GoToBeginOfLine();
       while( !outputIt.IsAtEndOfLine() )
-	{
-	outputIt.Set( *outputBufferIt / static_cast< typename OutputIteratorType::PixelType >( lineSize ));
-	++outputIt;
-	++outputBufferIt;
-	}
+  {
+  outputIt.Set( *outputBufferIt / static_cast< typename OutputIteratorType::PixelType >( lineSize ));
+  ++outputIt;
+  ++outputBufferIt;
+  }
       }
     }
 }
