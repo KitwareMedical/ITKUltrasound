@@ -42,7 +42,7 @@ public:
   typedef TOutputImage                         OutputImageType;
   typedef typename OutputImageType::RegionType OutputImageRegionType;
 
-  typedef Inverse1DFFTImageFilter                Self;
+  typedef Inverse1DFFTImageFilter                               Self;
   typedef ImageToImageFilter< InputImageType, OutputImageType > Superclass;
   typedef SmartPointer< Self >                                  Pointer;
   typedef SmartPointer< const Self >                            ConstPointer;
@@ -84,8 +84,8 @@ protected:
   unsigned int m_Direction;
 
 private:
-  Inverse1DFFTImageFilter( const Self& );
-  void operator=( const Self& );
+  Inverse1DFFTImageFilter( const Self& ) ITK_DELETE_FUNCTION;
+  void operator=( const Self& ) ITK_DELETE_FUNCTION;
 
   ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;
 };

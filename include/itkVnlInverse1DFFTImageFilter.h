@@ -39,12 +39,12 @@ public:
   /** Standard class typedefs. */
   typedef VnlInverse1DFFTImageFilter                           Self;
   typedef Inverse1DFFTImageFilter< TInputImage, TOutputImage > Superclass;
-  typedef SmartPointer< Self >                                                Pointer;
-  typedef SmartPointer< const Self >                                          ConstPointer;
+  typedef SmartPointer< Self >                                 Pointer;
+  typedef SmartPointer< const Self >                           ConstPointer;
 
-  typedef typename Superclass::InputImageType                                 InputImageType;
-  typedef typename Superclass::OutputImageType                                OutputImageType;
-  typedef typename OutputImageType::RegionType                                OutputImageRegionType;
+  typedef typename Superclass::InputImageType                  InputImageType;
+  typedef typename Superclass::OutputImageType                 OutputImageType;
+  typedef typename OutputImageType::RegionType                 OutputImageRegionType;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -53,14 +53,14 @@ public:
   itkTypeMacro( VnlInverse1DFFTImageFilter, Inverse1DFFTImageFilter );
 
 protected:
-  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID );  // generates output from input
+  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID );
 
   VnlInverse1DFFTImageFilter() { }
   virtual ~VnlInverse1DFFTImageFilter() { }
 
 private:
-  VnlInverse1DFFTImageFilter(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  VnlInverse1DFFTImageFilter(const Self&) ITK_DELETE_FUNCTION;
+  void operator=(const Self&) ITK_DELETE_FUNCTION;
 };
 
 } // end namespace itk
