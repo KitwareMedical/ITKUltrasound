@@ -39,14 +39,14 @@ int itkForward1DFFTImageFilterTest( int argc, char* argv[] )
   typedef double PixelType;
   const unsigned int Dimension = 2;
 
-  typedef itk::Image< PixelType, Dimension > ImageType;
+  typedef itk::Image< PixelType, Dimension >                 ImageType;
   typedef itk::Image< std::complex< PixelType >, Dimension > ComplexImageType;
 
-  typedef itk::ImageFileReader< ImageType > ReaderType;
-  typedef itk::Forward1DFFTImageFilter< ImageType, ComplexImageType > FFTType;
-  typedef itk::ComplexToRealImageFilter< ComplexImageType, ImageType > RealFilterType;
+  typedef itk::ImageFileReader< ImageType >                                 ReaderType;
+  typedef itk::Forward1DFFTImageFilter< ImageType, ComplexImageType >       FFTType;
+  typedef itk::ComplexToRealImageFilter< ComplexImageType, ImageType >      RealFilterType;
   typedef itk::ComplexToImaginaryImageFilter< ComplexImageType, ImageType > ImaginaryFilterType;
-  typedef itk::ImageFileWriter< ImageType > WriterType;
+  typedef itk::ImageFileWriter< ImageType >                                 WriterType;
 
   ReaderType::Pointer reader = ReaderType::New();
   FFTType::Pointer    fft    = FFTType::New();

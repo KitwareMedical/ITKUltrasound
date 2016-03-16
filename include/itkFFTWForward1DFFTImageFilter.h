@@ -37,15 +37,15 @@ class FFTWForward1DFFTImageFilter :
     public Forward1DFFTImageFilter< TInputImage, TOutputImage >
 {
 public:
-  typedef FFTWForward1DFFTImageFilter                             Self;
+  typedef FFTWForward1DFFTImageFilter                          Self;
   typedef Forward1DFFTImageFilter< TInputImage, TOutputImage > Superclass;
-  typedef SmartPointer< Self >                                                Pointer;
-  typedef SmartPointer< const Self >                                          ConstPointer;
+  typedef SmartPointer< Self >                                 Pointer;
+  typedef SmartPointer< const Self >                           ConstPointer;
 
   /** Standard class typedefs.*/
-  typedef typename Superclass::InputImageType                                 InputImageType;
-  typedef typename Superclass::OutputImageType                                OutputImageType;
-  typedef typename OutputImageType::RegionType                                OutputImageRegionType;
+  typedef typename Superclass::InputImageType  InputImageType;
+  typedef typename Superclass::OutputImageType OutputImageType;
+  typedef typename OutputImageType::RegionType OutputImageRegionType;
 
   /**
    * the proxy type is a wrapper for the fftw API
@@ -55,8 +55,8 @@ public:
    * configured in, or float if only double is configured.
    */
   typedef typename fftw::ComplexToComplexProxy< typename TInputImage::PixelType > FFTW1DProxyType;
-  typedef typename std::vector< typename FFTW1DProxyType::PlanType >     PlanArrayType;
-  typedef typename std::vector< typename FFTW1DProxyType::ComplexType* > PlanBufferPointerType;
+  typedef typename std::vector< typename FFTW1DProxyType::PlanType >              PlanArrayType;
+  typedef typename std::vector< typename FFTW1DProxyType::ComplexType* >          PlanBufferPointerType;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -78,18 +78,18 @@ protected:
   }
 
   virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
-  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) ITK_OVERRIDE;  // generates output from input
+  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) ITK_OVERRIDE;
 
 private:
-  FFTWForward1DFFTImageFilter(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  FFTWForward1DFFTImageFilter(const Self&) ITK_DELETE_FUNCTION;
+  void operator=(const Self&) ITK_DELETE_FUNCTION;
 
   /** Destroy FFTW Plans and associated buffers. */
   void DestroyPlans();
 
-  bool m_PlanComputed;
-  PlanArrayType m_PlanArray;
-  unsigned int m_LastImageSize;
+  bool                  m_PlanComputed;
+  PlanArrayType         m_PlanArray;
+  unsigned int          m_LastImageSize;
   PlanBufferPointerType m_InputBufferArray;
   PlanBufferPointerType m_OutputBufferArray;
 };

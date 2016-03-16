@@ -39,12 +39,12 @@ public:
   /** Standard class typedefs. */
   typedef VnlForward1DFFTImageFilter                           Self;
   typedef Forward1DFFTImageFilter< TInputImage, TOutputImage > Superclass;
-  typedef SmartPointer< Self >                                                Pointer;
-  typedef SmartPointer< const Self >                                          ConstPointer;
+  typedef SmartPointer< Self >                                 Pointer;
+  typedef SmartPointer< const Self >                           ConstPointer;
 
-  typedef typename Superclass::InputImageType                                 InputImageType;
-  typedef typename Superclass::OutputImageType                                OutputImageType;
-  typedef typename OutputImageType::RegionType                                OutputImageRegionType;
+  typedef typename Superclass::InputImageType                  InputImageType;
+  typedef typename Superclass::OutputImageType                 OutputImageType;
+  typedef typename OutputImageType::RegionType                 OutputImageRegionType;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
