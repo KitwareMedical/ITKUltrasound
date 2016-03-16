@@ -24,9 +24,9 @@
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 
-#include "itkVnlComplexToComplexFFT1DImageFilter.h"
+#include "itkVnlComplexToComplex1DFFTImageFilter.h"
 
-int itkVnlComplexToComplexFFT1DImageFilterTest( int argc, char* argv[] )
+int itkVnlComplexToComplex1DFFTImageFilterTest( int argc, char* argv[] )
 {
   if( argc < 3 )
     {
@@ -43,7 +43,7 @@ int itkVnlComplexToComplexFFT1DImageFilterTest( int argc, char* argv[] )
   typedef itk::Image< std::complex< PixelType >, Dimension >                             ComplexImageType;
 
   typedef itk::ImageFileReader< ImageType >                                              ReaderType;
-  typedef itk::VnlComplexToComplexFFT1DImageFilter< ComplexImageType, ComplexImageType > FFTType;
+  typedef itk::VnlComplexToComplex1DFFTImageFilter< ComplexImageType, ComplexImageType > FFTType;
   typedef itk::ComposeImageFilter< ImageType, ComplexImageType >                         JoinFilterType;
   typedef itk::ComplexToRealImageFilter< ComplexImageType, ImageType >                   ToRealFilterType;
   typedef itk::ImageFileWriter< ImageType >                                              WriterType;

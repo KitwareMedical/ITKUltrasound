@@ -15,10 +15,10 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef itkFFTWComplexToComplexFFT1DImageFilter_h
-#define itkFFTWComplexToComplexFFT1DImageFilter_h
+#ifndef itkFFTWComplexToComplex1DFFTImageFilter_h
+#define itkFFTWComplexToComplex1DFFTImageFilter_h
 
-#include "itkComplexToComplexFFT1DImageFilter.h"
+#include "itkComplexToComplex1DFFTImageFilter.h"
 #include "itkFFTWCommonExtended.h"
 
 #include <vector>
@@ -27,18 +27,18 @@
 namespace itk
 {
 
-/** \class FFTWComplexToComplexFFT1DImageFilter
+/** \class FFTWComplexToComplex1DFFTImageFilter
  * \brief only do FFT along one dimension using FFTW as a backend.
  *
  * \ingroup Ultrasound
  */
 template< typename TInputImage, typename TOutputImage >
-class FFTWComplexToComplexFFT1DImageFilter :
-    public ComplexToComplexFFT1DImageFilter< TInputImage, TOutputImage >
+class FFTWComplexToComplex1DFFTImageFilter :
+    public ComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
 {
 public:
-  typedef FFTWComplexToComplexFFT1DImageFilter                             Self;
-  typedef ComplexToComplexFFT1DImageFilter< TInputImage, TOutputImage > Superclass;
+  typedef FFTWComplexToComplex1DFFTImageFilter                             Self;
+  typedef ComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage > Superclass;
   typedef SmartPointer< Self >                                          Pointer;
   typedef SmartPointer< const Self >                                    ConstPointer;
 
@@ -62,14 +62,14 @@ public:
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( FFTWComplexToComplexFFT1DImageFilter, ComplexToComplexFFT1DImageFilter );
+  itkTypeMacro( FFTWComplexToComplex1DFFTImageFilter, ComplexToComplex1DFFTImageFilter );
 
 
 protected:
-  FFTWComplexToComplexFFT1DImageFilter(): m_PlanComputed( false ),
+  FFTWComplexToComplex1DFFTImageFilter(): m_PlanComputed( false ),
     m_LastImageSize( 0 )
   {}
-  virtual ~FFTWComplexToComplexFFT1DImageFilter()
+  virtual ~FFTWComplexToComplex1DFFTImageFilter()
   {
   if ( m_PlanComputed )
     {
@@ -81,7 +81,7 @@ protected:
   virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) ITK_OVERRIDE;
 
 private:
-  FFTWComplexToComplexFFT1DImageFilter(const Self&); //purposely not implemented
+  FFTWComplexToComplex1DFFTImageFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
   /** Destroy FFTW Plans and associated buffers. */
@@ -97,7 +97,7 @@ private:
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkFFTWComplexToComplexFFT1DImageFilter.hxx"
+#include "itkFFTWComplexToComplex1DFFTImageFilter.hxx"
 #endif
 
-#endif //itkFFTWComplexToComplexFFT1DImageFilter_h
+#endif //itkFFTWComplexToComplex1DFFTImageFilter_h

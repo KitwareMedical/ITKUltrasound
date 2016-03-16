@@ -15,11 +15,11 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef itkFFTWComplexToComplexFFT1DImageFilter_hxx
-#define itkFFTWComplexToComplexFFT1DImageFilter_hxx
+#ifndef itkFFTWComplexToComplex1DFFTImageFilter_hxx
+#define itkFFTWComplexToComplex1DFFTImageFilter_hxx
 
-#include "itkComplexToComplexFFT1DImageFilter.hxx"
-#include "itkFFTWComplexToComplexFFT1DImageFilter.h"
+#include "itkComplexToComplex1DFFTImageFilter.hxx"
+#include "itkFFTWComplexToComplex1DFFTImageFilter.h"
 
 #include "itkFFTWCommonExtended.h"
 #include "itkIndent.h"
@@ -34,7 +34,7 @@ namespace itk
 
 template< typename TInputImage, typename TOutputImage >
 void
-FFTWComplexToComplexFFT1DImageFilter< TInputImage, TOutputImage >
+FFTWComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
 ::DestroyPlans()
 {
   for( unsigned int i = 0; i < m_PlanArray.size(); i++ )
@@ -49,7 +49,7 @@ FFTWComplexToComplexFFT1DImageFilter< TInputImage, TOutputImage >
 
 template< typename TInputImage, typename TOutputImage >
 void
-FFTWComplexToComplexFFT1DImageFilter< TInputImage, TOutputImage >
+FFTWComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
 ::BeforeThreadedGenerateData()
 {
   Superclass::BeforeThreadedGenerateData();
@@ -116,7 +116,7 @@ FFTWComplexToComplexFFT1DImageFilter< TInputImage, TOutputImage >
 
 template <typename TInputImage, typename TOutputImage>
 void
-FFTWComplexToComplexFFT1DImageFilter< TInputImage, TOutputImage >
+FFTWComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
 ::ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType threadID )
 {
   // get pointers to the input and output
@@ -191,4 +191,4 @@ FFTWComplexToComplexFFT1DImageFilter< TInputImage, TOutputImage >
 
 #endif // defined( ITK_USE_FFTWF ) || defined( ITK_USE_FFTWD )
 
-#endif //_itkFFTWComplexToComplexFFT1DImageFilter_hxx
+#endif //_itkFFTWComplexToComplex1DFFTImageFilter_hxx

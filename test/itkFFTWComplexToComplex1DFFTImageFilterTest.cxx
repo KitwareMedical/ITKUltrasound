@@ -24,9 +24,9 @@
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 
-#include "itkComplexToComplexFFT1DImageFilter.h"
+#include "itkFFTWComplexToComplex1DFFTImageFilter.h"
 
-int itkComplexToComplexFFT1DImageFilterTest( int argc, char* argv[] )
+int itkFFTWComplexToComplex1DFFTImageFilterTest( int argc, char* argv[] )
 {
   if( argc < 3 )
     {
@@ -39,14 +39,14 @@ int itkComplexToComplexFFT1DImageFilterTest( int argc, char* argv[] )
   typedef double PixelType;
   const unsigned int Dimension = 2;
 
-  typedef itk::Image< PixelType, Dimension >                                          ImageType;
-  typedef itk::Image< std::complex< PixelType >, Dimension >                          ComplexImageType;
+  typedef itk::Image< PixelType, Dimension >                             ImageType;
+  typedef itk::Image< std::complex< PixelType >, Dimension >             ComplexImageType;
 
-  typedef itk::ImageFileReader< ImageType >                                           ReaderType;
-  typedef itk::ComplexToComplexFFT1DImageFilter< ComplexImageType, ComplexImageType > FFTType;
-  typedef itk::ComposeImageFilter< ImageType, ComplexImageType >                      JoinFilterType;
-  typedef itk::ComplexToRealImageFilter< ComplexImageType, ImageType >                ToRealFilterType;
-  typedef itk::ImageFileWriter< ImageType >                                           WriterType;
+  typedef itk::ImageFileReader< ImageType >                                            ReaderType;
+  typedef itk::FFTWComplexToComplex1DFFTImageFilter< ComplexImageType, ComplexImageType > FFTType;
+  typedef itk::ComposeImageFilter< ImageType, ComplexImageType >                       JoinFilterType;
+  typedef itk::ComplexToRealImageFilter< ComplexImageType, ImageType >                 ToRealFilterType;
+  typedef itk::ImageFileWriter< ImageType >                                            WriterType;
 
   ReaderType::Pointer readerReal = ReaderType::New();
   ReaderType::Pointer readerImag = ReaderType::New();
