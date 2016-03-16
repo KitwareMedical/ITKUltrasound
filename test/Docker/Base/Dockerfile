@@ -93,6 +93,7 @@ RUN git clone git://itk.org/ITK.git && \
       /usr/src/ITK && \
   ninja && \
   cp /usr/src/ITK-build/Wrapping/Generators/Python/WrapITK.pth /usr/lib/python3/dist-packages/ && \
+  find ./Wrapping -name '*.cpp' -delete -o -name '*.xml' -delete && \
   find . -name '*.o' -delete
 
 RUN mkdir /usr/src/ITKUltrasound-build
