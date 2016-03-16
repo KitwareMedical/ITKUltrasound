@@ -1,7 +1,8 @@
-FROM ipython/notebook:latest
+FROM thewtex/jupyter-notebook-debian:latest
 MAINTAINER Matt McCormick <matt.mccormick@kitware.com>
 
-RUN apt-get update && apt-get install -y \
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends \
   bash \
   build-essential \
   bzip2 \
@@ -13,14 +14,14 @@ RUN apt-get update && apt-get install -y \
   libssl-dev \
   make \
   ninja-build \
-  python \
-  python-dev \
-  python-pip \
-  python-matplotlib \
-  python-numpy \
-  python-scipy \
-  python-nose \
-  python-setuptools \
+  python3 \
+  python3-dev \
+  python3-matplotlib \
+  python3-numpy \
+  python3-nose \
+  python3-pip \
+  python3-scipy \
+  python3-setuptools \
   sed \
   tar \
   vim \
@@ -32,11 +33,13 @@ RUN apt-get update && apt-get install -y \
   libtiff5-dev \
   zlib1g-dev
 
+RUN pip3 install ipywidgets
+
 # Build and install CMake from source.
 WORKDIR /usr/src
 RUN git clone git://cmake.org/cmake.git CMake && \
   cd CMake && \
-  git checkout v3.3.0 && \
+  git checkout v3.5.0 && \
   mkdir ../CMake-build && \
   cd ../CMake-build && \
   /usr/src/CMake/bootstrap \
@@ -66,8 +69,7 @@ RUN git clone https://github.com/Kitware/KWStyle.git && \
 # Build and install ITK from source.
 RUN git clone git://itk.org/ITK.git && \
   cd /usr/src/ITK && \
-  git fetch http://review.source.kitware.com/ITK refs/changes/56/19856/10 && \
-    git checkout FETCH_HEAD -b ExternalModule && \
+  git checkout v4.9.0 && \
   mkdir /usr/src/ITK-build && \
   cd /usr/src/ITK-build && \
   cmake -G Ninja \
@@ -81,6 +83,7 @@ RUN git clone git://itk.org/ITK.git && \
     -DITKGroup_Numerics:BOOL=ON \
     -DITKGroup_IO:BOOL=ON \
     -DITK_WRAP_PYTHON:BOOL=ON \
+    -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python3 \
     -DITK_USE_FFTWD:BOOL=ON \
     -DITK_USE_FFTWF:BOOL=ON \
     -DITK_USE_SYSTEM_FFTW:BOOL=ON \
@@ -88,13 +91,11 @@ RUN git clone git://itk.org/ITK.git && \
     -DITK_USE_SYSTEM_GDCM:BOOL=OFF \
     -DITK_USE_SYSTEM_LIBRARIES:BOOL=ON \
       /usr/src/ITK && \
-  ninja install && \
-  cd .. && \
-  rm -rf ITK ITK-build
+  ninja && \
+  cp /usr/src/ITK-build/Wrapping/Generators/Python/WrapITK.pth /usr/lib/python3/dist-packages/ && \
+  find . -name '*.o' -delete
 
-RUN mkdir /usr/bin/ITKUltrasound-build
+RUN mkdir /usr/src/ITKUltrasound-build
 
-# IPython
-ENV PASSWORD wavy
-WORKDIR /notebooks
-CMD ["/notebook.sh"]
+USER jovyan
+WORKDIR /home/jovyan
