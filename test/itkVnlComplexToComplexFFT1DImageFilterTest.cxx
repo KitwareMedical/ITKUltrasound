@@ -24,9 +24,9 @@
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 
-#include "itkFFTW1DComplexToComplexImageFilter.h"
+#include "itkVnlComplexToComplexFFT1DImageFilter.h"
 
-int itkFFTW1DComplexToComplexImageFilterTest( int argc, char* argv[] )
+int itkVnlComplexToComplexFFT1DImageFilterTest( int argc, char* argv[] )
 {
   if( argc < 3 )
     {
@@ -39,14 +39,14 @@ int itkFFTW1DComplexToComplexImageFilterTest( int argc, char* argv[] )
   typedef double PixelType;
   const unsigned int Dimension = 2;
 
-  typedef itk::Image< PixelType, Dimension >                             ImageType;
-  typedef itk::Image< std::complex< PixelType >, Dimension >             ComplexImageType;
+  typedef itk::Image< PixelType, Dimension >                                             ImageType;
+  typedef itk::Image< std::complex< PixelType >, Dimension >                             ComplexImageType;
 
-  typedef itk::ImageFileReader< ImageType >                                            ReaderType;
-  typedef itk::FFTW1DComplexToComplexImageFilter< ComplexImageType, ComplexImageType > FFTType;
-  typedef itk::ComposeImageFilter< ImageType, ComplexImageType >                       JoinFilterType;
-  typedef itk::ComplexToRealImageFilter< ComplexImageType, ImageType >                 ToRealFilterType;
-  typedef itk::ImageFileWriter< ImageType >                                            WriterType;
+  typedef itk::ImageFileReader< ImageType >                                              ReaderType;
+  typedef itk::VnlComplexToComplexFFT1DImageFilter< ComplexImageType, ComplexImageType > FFTType;
+  typedef itk::ComposeImageFilter< ImageType, ComplexImageType >                         JoinFilterType;
+  typedef itk::ComplexToRealImageFilter< ComplexImageType, ImageType >                   ToRealFilterType;
+  typedef itk::ImageFileWriter< ImageType >                                              WriterType;
 
   ReaderType::Pointer readerReal = ReaderType::New();
   ReaderType::Pointer readerImag = ReaderType::New();

@@ -15,12 +15,12 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef itkVnlFFT1DComplexToComplexImageFilter_hxx
-#define itkVnlFFT1DComplexToComplexImageFilter_hxx
+#ifndef itkVnlComplexToComplexFFT1DImageFilter_hxx
+#define itkVnlComplexToComplexFFT1DImageFilter_hxx
 
-#include "itkVnlFFT1DComplexToComplexImageFilter.h"
+#include "itkVnlComplexToComplexFFT1DImageFilter.h"
 
-#include "itkFFT1DComplexToComplexImageFilter.hxx"
+#include "itkComplexToComplexFFT1DImageFilter.hxx"
 #include "itkImageLinearConstIteratorWithIndex.h"
 #include "itkImageLinearIteratorWithIndex.h"
 #include "itkIndent.h"
@@ -34,7 +34,7 @@ namespace itk
 
 template< typename TInputImage, typename TOutputImage >
 void
-VnlFFT1DComplexToComplexImageFilter< TInputImage, TOutputImage >
+VnlComplexToComplexFFT1DImageFilter< TInputImage, TOutputImage >
 ::ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType itkNotUsed( threadID ) )
 {
   // get pointers to the input and output

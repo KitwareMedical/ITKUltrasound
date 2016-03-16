@@ -21,11 +21,11 @@
 #include "itkAnalyticSignalImageFilter.h"
 
 #include "itkVnlFFT1DRealToComplexConjugateImageFilter.h"
-#include "itkVnlFFT1DComplexToComplexImageFilter.h"
+#include "itkVnlComplexToComplexFFT1DImageFilter.h"
 
 #if defined(ITK_USE_FFTWD) || defined(ITK_USE_FFTWF)
 #include "itkFFTW1DRealToComplexConjugateImageFilter.h"
-#include "itkFFTW1DComplexToComplexImageFilter.h"
+#include "itkFFTWComplexToComplexFFT1DImageFilter.h"
 #endif
 
 #include "itkImageLinearConstIteratorWithIndex.h"

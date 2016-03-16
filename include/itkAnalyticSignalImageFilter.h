@@ -20,7 +20,7 @@
 
 #include <complex>
 
-#include "itkFFT1DComplexToComplexImageFilter.h"
+#include "itkComplexToComplexFFT1DImageFilter.h"
 #include "itkFFT1DRealToComplexConjugateImageFilter.h"
 #include "itkImageRegionSplitterDirection.h"
 
@@ -104,7 +104,7 @@ protected:
   virtual void AfterThreadedGenerateData() ITK_OVERRIDE;
 
   typedef FFT1DRealToComplexConjugateImageFilter< InputImageType, OutputImageType > FFTRealToComplexType;
-  typedef FFT1DComplexToComplexImageFilter< OutputImageType, OutputImageType >      FFTComplexToComplexType;
+  typedef ComplexToComplexFFT1DImageFilter< OutputImageType, OutputImageType >      FFTComplexToComplexType;
 
   typename FFTRealToComplexType::Pointer    m_FFTRealToComplexFilter;
   typename FFTComplexToComplexType::Pointer m_FFTComplexToComplexFilter;

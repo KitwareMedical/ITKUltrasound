@@ -15,16 +15,16 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef itkVnlFFT1DComplexToComplexImageFilter_h
-#define itkVnlFFT1DComplexToComplexImageFilter_h
+#ifndef itkVnlComplexToComplexFFT1DImageFilter_h
+#define itkVnlComplexToComplexFFT1DImageFilter_h
 
-#include "itkFFT1DComplexToComplexImageFilter.h"
+#include "itkComplexToComplexFFT1DImageFilter.h"
 #include <complex>
 
 namespace itk
 {
 
-/** \class VnlFFT1DComplexToComplexImageFilter
+/** \class VnlComplexToComplexFFT1DImageFilter
  *
  * \brief Perform the FFT along one dimension of an image using Vnl as a
  * backend.
@@ -32,13 +32,13 @@ namespace itk
  * \ingroup Ultrasound
  */
 template< typename TInputImage, typename TOutputImage >
-class VnlFFT1DComplexToComplexImageFilter:
-    public FFT1DComplexToComplexImageFilter< TInputImage, TOutputImage >
+class VnlComplexToComplexFFT1DImageFilter:
+    public ComplexToComplexFFT1DImageFilter< TInputImage, TOutputImage >
 {
 public:
   /** Standard class typedefs. */
-  typedef VnlFFT1DComplexToComplexImageFilter                           Self;
-  typedef FFT1DComplexToComplexImageFilter< TInputImage, TOutputImage > Superclass;
+  typedef VnlComplexToComplexFFT1DImageFilter                           Self;
+  typedef ComplexToComplexFFT1DImageFilter< TInputImage, TOutputImage > Superclass;
   typedef SmartPointer< Self >                                          Pointer;
   typedef SmartPointer< const Self >                                    ConstPointer;
 
@@ -52,23 +52,23 @@ public:
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( VnlFFT1DComplexToComplexImageFilter, FFT1DComplexToComplexImageFilter );
+  itkTypeMacro( VnlComplexToComplexFFT1DImageFilter, ComplexToComplexFFT1DImageFilter );
 
 protected:
-  VnlFFT1DComplexToComplexImageFilter() {}
-  virtual ~VnlFFT1DComplexToComplexImageFilter() {}
+  VnlComplexToComplexFFT1DImageFilter() {}
+  virtual ~VnlComplexToComplexFFT1DImageFilter() {}
 
   virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) ITK_OVERRIDE;
 
 private:
-  VnlFFT1DComplexToComplexImageFilter(const Self&); //purposely not implemented
+  VnlComplexToComplexFFT1DImageFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkVnlFFT1DComplexToComplexImageFilter.hxx"
+#include "itkVnlComplexToComplexFFT1DImageFilter.hxx"
 #endif
 
 #endif

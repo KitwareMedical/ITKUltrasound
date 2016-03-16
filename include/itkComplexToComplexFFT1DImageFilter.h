@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef itkFFT1DComplexToComplexImageFilter_h
-#define itkFFT1DComplexToComplexImageFilter_h
+#ifndef itkComplexToComplexFFT1DImageFilter_h
+#define itkComplexToComplexFFT1DImageFilter_h
 
 #include <complex>
 
@@ -26,7 +26,7 @@
 
 namespace itk
 {
-/** \class FFT1DComplexToComplexImageFilter
+/** \class ComplexToComplexFFT1DImageFilter
  * \brief Perform the Fast Fourier Transform, complex input to complex output,
  * but only along one dimension.
  *
@@ -40,7 +40,7 @@ namespace itk
  * \ingroup Ultrasound
  */
 template< typename TInputImage, typename TOutputImage=TInputImage >
-class FFT1DComplexToComplexImageFilter:
+class ComplexToComplexFFT1DImageFilter:
   public ImageToImageFilter< TInputImage, TOutputImage >
 {
 public:
@@ -49,14 +49,14 @@ public:
   typedef TOutputImage                         OutputImageType;
   typedef typename OutputImageType::RegionType OutputImageRegionType;
 
-  typedef FFT1DComplexToComplexImageFilter                      Self;
+  typedef ComplexToComplexFFT1DImageFilter                      Self;
   typedef ImageToImageFilter< InputImageType, OutputImageType > Superclass;
   typedef SmartPointer< Self >                                  Pointer;
   typedef SmartPointer< const Self >                            ConstPointer;
 
   itkStaticConstMacro(ImageDimension, unsigned int, InputImageType::ImageDimension );
 
-  itkTypeMacro( FFT1DComplexToComplexImageFilter, ImageToImageFilter );
+  itkTypeMacro( ComplexToComplexFFT1DImageFilter, ImageToImageFilter );
 
   /** Customized object creation methods that support configuration-based
     * selection of FFT implementation.
@@ -83,8 +83,8 @@ public:
   itkSetClampMacro(Direction, unsigned int, 0, ImageDimension - 1);
 
 protected:
-  FFT1DComplexToComplexImageFilter();
-  virtual ~FFT1DComplexToComplexImageFilter() {}
+  ComplexToComplexFFT1DImageFilter();
+  virtual ~ComplexToComplexFFT1DImageFilter() {}
 
   void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
 
@@ -105,7 +105,7 @@ protected:
   TransformDirectionType m_TransformDirection;
 
 private:
-  FFT1DComplexToComplexImageFilter( const Self& );
+  ComplexToComplexFFT1DImageFilter( const Self& );
   void operator=( const Self& );
 
   ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;
@@ -113,15 +113,15 @@ private:
 }
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#ifndef itkVnlFFT1DComplexToComplexImageFilter_h
-#ifndef itkVnlFFT1DComplexToComplexImageFilter_hxx
-#ifndef itkFFTW1DComplexToComplexImageFilter_h
-#ifndef itkFFTW1DComplexToComplexImageFilter_hxx
-#include "itkFFT1DComplexToComplexImageFilter.hxx"
+#ifndef itkVnlComplexToComplexFFT1DImageFilter_h
+#ifndef itkVnlComplexToComplexFFT1DImageFilter_hxx
+#ifndef itkFFTWComplexToComplexFFT1DImageFilter_h
+#ifndef itkFFTWComplexToComplexFFT1DImageFilter_hxx
+#include "itkComplexToComplexFFT1DImageFilter.hxx"
 #endif
 #endif
 #endif
 #endif
 #endif
 
-#endif // itkFFT1DComplexToComplexImageFilter_h
+#endif // itkComplexToComplexFFT1DImageFilter_h
