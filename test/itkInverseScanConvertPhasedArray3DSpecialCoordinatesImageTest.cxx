@@ -23,6 +23,7 @@
 #include "itkPhasedArray3DSpecialCoordinatesImage.h"
 #include "itkResampleImageFilter.h"
 #include "itkGaborImageSource.h"
+#include "itkRescaleIntensityImageFilter.h"
 #include "itkMetaDataObject.h"
 #include "itkImageFileWriter.h"
 
@@ -36,13 +37,15 @@ int itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest( int argc, cha
   const char * outputImageFile = argv[1];
 
   const unsigned int Dimension = 3;
-  typedef float                                            PixelType;
+  typedef float                                                  RealPixelType;
+  typedef unsigned char                                          PixelType;
+  typedef itk::Image< RealPixelType, Dimension >                 RealImageType;
   typedef itk::Image< PixelType, Dimension >                     InputImageType;
   typedef itk::PhasedArray3DSpecialCoordinatesImage< PixelType > OutputImageType;
   typedef double                                                 CoordRepType;
 
 
-  typedef itk::GaborImageSource< InputImageType > SourceType;
+  typedef itk::GaborImageSource< RealImageType > SourceType;
   SourceType::Pointer source = SourceType::New();
 
   SourceType::ArrayType sigma;
@@ -55,17 +58,17 @@ int itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest( int argc, cha
   mean.Fill( 0.0 );
   source->SetMean( mean );
 
-  InputImageType::SizeType size;
+  RealImageType::SizeType size;
   size.Fill( 128 );
   source->SetSize( size );
 
-  InputImageType::SpacingType spacing;
+  RealImageType::SpacingType spacing;
   spacing[0] = 0.2;
   spacing[1] = 0.2;
   spacing[2] = 0.4;
   source->SetSpacing( spacing );
 
-  InputImageType::PointType origin;
+  RealImageType::PointType origin;
   for( unsigned int ii = 0; ii < Dimension; ++ii )
     {
     origin[ii] = -1 * spacing[ii] * size[ii]  / 2;
@@ -76,16 +79,20 @@ int itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest( int argc, cha
 
   source->SetCalculateImaginaryPart( true );
 
+  typedef itk::RescaleIntensityImageFilter< RealImageType, InputImageType > RescalerType;
+  RescalerType::Pointer rescaler = RescalerType::New();
+  rescaler->SetInput( source->GetOutput() );
+
   try
     {
-    source->Update();
+    rescaler->Update();
     }
   catch( itk::ExceptionObject & error )
     {
     std::cerr << "Error while generating Gabor input: " << error << std::endl;
     return EXIT_FAILURE;
     }
-  InputImageType::Pointer gaborInput = source->GetOutput();
+  InputImageType::Pointer gaborInput = rescaler->GetOutput();
   gaborInput->DisconnectPipeline();
 
   typedef itk::ResampleImageFilter< InputImageType, OutputImageType > ResamplerType;
