@@ -164,9 +164,9 @@ itk_add_test(NAME itkTimeGainCompensationImageFilterTest
     )
   itk_add_test(NAME itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest
   COMMAND UltrasoundTestDriver
-  #--compare
-    #${ITK_TEST_OUTPUT_DIR}/itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTestOutput.mha
-    #DATA{Baseline/itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTestOutput.mha}
+  --compare
+    ${ITK_TEST_OUTPUT_DIR}/itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTestOutput.mha
+    DATA{Baseline/itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTestOutput.mha}
   itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest
     ${ITK_TEST_OUTPUT_DIR}/itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTestOutput.mha
     )
