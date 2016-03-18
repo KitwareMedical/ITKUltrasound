@@ -23,6 +23,7 @@
 #include "itkPhasedArray3DSpecialCoordinatesImage.h"
 #include "itkResampleImageFilter.h"
 #include "itkGaborImageSource.h"
+#include "itkMetaDataObject.h"
 #include "itkImageFileWriter.h"
 
 int itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest( int argc, char* argv[] )
@@ -92,10 +93,15 @@ int itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest( int argc, cha
   resampler->SetInput( gaborInput );
 
   OutputImageType::Pointer phasedArraySampledData = resampler->GetOutput();
-  phasedArraySampledData->SetAzimuthAngularSeparation( 5.0*2.0*vnl_math::pi/360.0 );
-  phasedArraySampledData->SetElevationAngularSeparation( 5.0*2.0*vnl_math::pi/360.0 );
-  phasedArraySampledData->SetRadiusSampleSize( 0.5 );
-  phasedArraySampledData->SetFirstSampleDistance( 2 );
+
+  const double azimuthAngularSeparation = 5.0 * vnl_math::pi/180.0;
+  const double elevationAngularSeparation = 5.0 * vnl_math::pi/180.0;
+  const double radiusSampleSize = 0.5;
+  const double firstSampleDistance = 2.0;
+  phasedArraySampledData->SetAzimuthAngularSeparation( azimuthAngularSeparation );
+  phasedArraySampledData->SetElevationAngularSeparation( elevationAngularSeparation );
+  phasedArraySampledData->SetRadiusSampleSize( radiusSampleSize );
+  phasedArraySampledData->SetFirstSampleDistance( firstSampleDistance );
 
   OutputImageType::SizeType outputSize;
   outputSize[0] = 64;
@@ -103,12 +109,30 @@ int itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest( int argc, cha
   outputSize[2] = 16;
   resampler->SetSize( outputSize );
 
- typedef itk::ImageFileWriter< OutputImageType > WriterType;
- WriterType::Pointer writer = WriterType::New();
- writer->SetFileName( outputImageFile );
- writer->SetInput( resampler->GetOutput() );
- writer->Update();
+  try
+    {
+    resampler->Update();
+    }
+  catch( itk::ExceptionObject & error )
+    {
+    std::cerr << "Error while resampling data: " << error << std::endl;
+    return EXIT_FAILURE;
+    }
+  phasedArraySampledData->DisconnectPipeline();
 
- return EXIT_SUCCESS;
+  // Since this is non-standard image metadata, make sure it is serialized
+  // into the MetaDataDictionary
+  itk::MetaDataDictionary & dictionary = phasedArraySampledData->GetMetaDataDictionary();
+  itk::EncapsulateMetaData< double >( dictionary, "AzimuthAngularSeparation", azimuthAngularSeparation );
+  itk::EncapsulateMetaData< double >( dictionary, "ElevationAngularSeparation", elevationAngularSeparation );
+  itk::EncapsulateMetaData< double >( dictionary, "RadiusSampleSize", radiusSampleSize );
+  itk::EncapsulateMetaData< double >( dictionary, "FirstSampleDistance", firstSampleDistance );
 
+  typedef itk::ImageFileWriter< OutputImageType > WriterType;
+  WriterType::Pointer writer = WriterType::New();
+  writer->SetFileName( outputImageFile );
+  writer->SetInput( phasedArraySampledData );
+  writer->Update();
+
+  return EXIT_SUCCESS;
 }
