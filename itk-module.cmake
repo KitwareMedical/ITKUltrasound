@@ -14,6 +14,7 @@ itk_module(Ultrasound
     ${_fft_depends}
   TEST_DEPENDS
     ITKTestKernel
+    ITKImageSources
   EXCLUDE_FROM_DEFAULT
   DESCRIPTION
     "${DOCUMENTATION}"
