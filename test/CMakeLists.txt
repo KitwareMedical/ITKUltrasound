@@ -13,6 +13,7 @@ set(UltrasoundTests
   itkComplexToComplex1DFFTImageFilterTest.cxx
   itkFFT1DImageFilterTest.cxx
   itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest.cxx
+  itkScanConvertPhasedArray3DSpecialCoordinatesImageTest.cxx
   itkSpectra1DImageFilterTest.cxx
   itkSpectra1DSupportWindowImageFilterTest.cxx
   itkSpectra1DSupportWindowToMaskImageFilterTest.cxx
@@ -169,6 +170,15 @@ itk_add_test(NAME itkTimeGainCompensationImageFilterTest
     DATA{Baseline/itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTestOutput.mha}
   itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest
     ${ITK_TEST_OUTPUT_DIR}/itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTestOutput.mha
+    )
+  itk_add_test(NAME itkScanConvertPhasedArray3DSpecialCoordinatesImageTest
+  COMMAND UltrasoundTestDriver
+  #--compare
+    #${ITK_TEST_OUTPUT_DIR}/itkScanConvertPhasedArray3DSpecialCoordinatesImageTestOutput.mha
+    #DATA{Baseline/itkScanConvertPhasedArray3DSpecialCoordinatesImageTestOutput.mha}
+  itkScanConvertPhasedArray3DSpecialCoordinatesImageTest
+    DATA{Input/itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTestOutput.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkScanConvertPhasedArray3DSpecialCoordinatesImageTestOutput.mha
     )
 
 if(USE_FFTW)

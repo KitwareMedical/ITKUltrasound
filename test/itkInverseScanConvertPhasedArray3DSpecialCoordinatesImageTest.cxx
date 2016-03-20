@@ -16,9 +16,6 @@
  *
  *=========================================================================*/
 
-#include <iostream>
-#include <iomanip>
-
 #include "itkMath.h"
 #include "itkPhasedArray3DSpecialCoordinatesImage.h"
 #include "itkResampleImageFilter.h"
