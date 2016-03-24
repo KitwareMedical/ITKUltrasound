@@ -16,9 +16,6 @@
  *
  *=========================================================================*/
 
-#include <iostream>
-#include <iomanip>
-
 #include "itkMath.h"
 #include "itkPhasedArray3DSpecialCoordinatesImage.h"
 #include "itkResampleImageFilter.h"
@@ -69,10 +66,11 @@ int itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest( int argc, cha
   source->SetSpacing( spacing );
 
   RealImageType::PointType origin;
-  for( unsigned int ii = 0; ii < Dimension; ++ii )
+  for( unsigned int ii = 0; ii < Dimension - 1; ++ii )
     {
-    origin[ii] = -1 * spacing[ii] * size[ii]  / 2;
+    origin[ii] = -1 * spacing[ii] * size[ii] / 2;
     }
+  origin[2] = 0.0;
   source->SetOrigin( origin );
 
   source->SetFrequency( 0.2 );
@@ -102,18 +100,18 @@ int itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest( int argc, cha
   OutputImageType::Pointer phasedArraySampledData = resampler->GetOutput();
 
   const double azimuthAngularSeparation = 5.0 * vnl_math::pi/180.0;
-  const double elevationAngularSeparation = 5.0 * vnl_math::pi/180.0;
-  const double radiusSampleSize = 0.5;
-  const double firstSampleDistance = 2.0;
+  const double elevationAngularSeparation = 1.0 * vnl_math::pi/180.0;
+  const double radiusSampleSize = 0.2;
+  const double firstSampleDistance = 8.0;
   phasedArraySampledData->SetAzimuthAngularSeparation( azimuthAngularSeparation );
   phasedArraySampledData->SetElevationAngularSeparation( elevationAngularSeparation );
   phasedArraySampledData->SetRadiusSampleSize( radiusSampleSize );
   phasedArraySampledData->SetFirstSampleDistance( firstSampleDistance );
 
   OutputImageType::SizeType outputSize;
-  outputSize[0] = 64;
+  outputSize[0] = 16;
   outputSize[1] = 32;
-  outputSize[2] = 16;
+  outputSize[2] = 64;
   resampler->SetSize( outputSize );
 
   try
@@ -134,12 +132,21 @@ int itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest( int argc, cha
   itk::EncapsulateMetaData< double >( dictionary, "ElevationAngularSeparation", elevationAngularSeparation );
   itk::EncapsulateMetaData< double >( dictionary, "RadiusSampleSize", radiusSampleSize );
   itk::EncapsulateMetaData< double >( dictionary, "FirstSampleDistance", firstSampleDistance );
+  phasedArraySampledData->Print( std::cout );
+  phasedArraySampledData->GetMetaDataDictionary().Print( std::cout );
 
   typedef itk::ImageFileWriter< OutputImageType > WriterType;
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFile );
   writer->SetInput( phasedArraySampledData );
-  writer->Update();
+  try
+    {
+    writer->Update();
+    }
+  catch( itk::ExceptionObject & error )
+    {
+    std::cerr << "Error while writing output: " << error << std::endl;
+    }
 
   return EXIT_SUCCESS;
 }
