@@ -117,6 +117,7 @@ int itkScanConvertPhasedArray3DSpecialCoordinatesImageTest( int argc, char* argv
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFile );
   writer->SetInput( resampler->GetOutput() );
+  writer->SetUseCompression( true );
 
   try
     {
