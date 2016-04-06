@@ -2,7 +2,8 @@ FROM thewtex/jupyter-notebook-debian:latest
 MAINTAINER Matt McCormick <matt.mccormick@kitware.com>
 
 USER root
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
   bash \
   build-essential \
   bzip2 \
@@ -11,6 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   libcurl4-openssl-dev \
   libncurses5-dev \
   libfftw3-dev \
+  libgl1-mesa-dev \
   libssl-dev \
   make \
   ninja-build \
@@ -31,6 +33,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   libjpeg-dev \
   libpng12-dev \
   libtiff5-dev \
+  xserver-xorg-video-dummy \
+  xserver-xorg-input-void \
+  libxt-dev \
   zlib1g-dev
 
 RUN pip3 install ipywidgets
@@ -39,7 +44,7 @@ RUN pip3 install ipywidgets
 WORKDIR /usr/src
 RUN git clone git://cmake.org/cmake.git CMake && \
   cd CMake && \
-  git checkout v3.5.0 && \
+  git checkout v3.5.1 && \
   mkdir ../CMake-build && \
   cd ../CMake-build && \
   /usr/src/CMake/bootstrap \
@@ -65,6 +70,22 @@ RUN git clone https://github.com/Kitware/KWStyle.git && \
   ninja install && \
   cd .. && \
   rm -rf KWStyle KWStyle-build
+
+# Build and install VTK from source
+RUN git clone https://gitlab.kitware.com/vtk/vtk.git VTK && \
+  cd VTK && git checkout v7.0.0 && cd .. && \
+  mkdir VTK-build && \
+  cd VTK-build && \
+  cmake \
+    -G Ninja \
+    -DCMAKE_BUILD_TYPE:STRING=Release \
+    -DVTK_Group_Rendering:BOOL=OFF \
+    -DVTK_WRAP_PYTHON:STRING=ON \
+    -DCMAKE_INSTALL_PREFIX:PATH=/usr \
+      ../VTK && \
+  ninja && \
+  ninja install && \
+  cd .. && rm -rf VTK VTK-build
 
 # Build and install ITK from source.
 RUN git clone git://itk.org/ITK.git && \
