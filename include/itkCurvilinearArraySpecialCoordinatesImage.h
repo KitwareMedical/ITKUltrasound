@@ -198,7 +198,11 @@ public:
     const double maxLateral = region.GetSize(1) - 1;
 
     // Convert Cartesian coordinates into angular coordinates
-    const TCoordRep lateral = std::atan(point[0] / point[1]);
+    TCoordRep lateral = Math::pi_over_2;
+    if( point[1] != 0.0 )
+      {
+      lateral = std::atan(point[0] / point[1]);
+      }
     const TCoordRep radius  = std::sqrt(point[0] * point[0] + point[1] * point[1] );
 
     // Convert the "proper" angular coordinates into index format
@@ -236,7 +240,11 @@ public:
     const double maxLateral = region.GetSize(1) - 1;
 
     // Convert Cartesian coordinates into angular coordinates
-    const TCoordRep lateral = std::atan(point[0] / point[1]);
+    TCoordRep lateral = Math::pi_over_2;
+    if( point[1] != 0.0 )
+      {
+      lateral = std::atan(point[0] / point[1]);
+      }
     const TCoordRep radius  = std::sqrt(point[0] * point[0] + point[1] * point[1] );
 
     // Convert the "proper" angular coordinates into index format
