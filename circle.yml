@@ -5,11 +5,11 @@ machine:
 dependencies:
   override:
     - docker info
-    - docker pull thewtex/itkultrasound-base
-    - docker pull thewtex/itkultrasound-test
+    - docker pull kitwaremedical/itkultrasound-base
+    - docker pull kitwaremedical/itkultrasound-test
 
 test:
   override:
     - mkdir ~/ITKUltrasound-build
-    - docker run -v ~/ITKUltrasound:/usr/src/ITKUltrasound -v ~/ITKUltrasound-build:/usr/src/ITKUltrasound-build thewtex/itkultrasound-test /usr/src/ITKUltrasound/test/Docker/Test/test.sh
+    - docker run -v ~/ITKUltrasound:/usr/src/ITKUltrasound -v ~/ITKUltrasound-build:/usr/src/ITKUltrasound-build kitwaremedical/itkultrasound-test /usr/src/ITKUltrasound/test/Docker/Test/test.sh
     - cp -r ~/ITKUltrasound-build/Testing/Temporary/* $CIRCLE_ARTIFACTS/

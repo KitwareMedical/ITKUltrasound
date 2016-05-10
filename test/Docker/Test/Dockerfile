@@ -1,4 +1,4 @@
-FROM thewtex/itkultrasound-base:latest
+FROM kitwaremedical/itkultrasound-base:latest
 MAINTAINER Matt McCormick <matt.mccormick@kitware.com>
 
 USER root
