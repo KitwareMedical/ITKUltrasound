@@ -13,6 +13,7 @@ cd /usr/src/ITKUltrasound-build || die "Could not cd into the build directory"
 cmake \
   -G Ninja \
   -DITK_DIR:PATH=/usr/src/ITK-build \
+  -DITKUltrasound_USE_VTK:BOOL=ON \
   -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python3 \
   -DCMAKE_BUILD_TYPE:STRING=Release \
   -DBUILDNAME:STRING=External-Ultrasound \
