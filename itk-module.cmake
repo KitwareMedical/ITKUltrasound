@@ -11,6 +11,7 @@ itk_module(Ultrasound
   DEPENDS
     ITKImageCompose
     ITKImageIntensity
+    ITKIOImageBase
     ${_fft_depends}
   TEST_DEPENDS
     ITKTestKernel

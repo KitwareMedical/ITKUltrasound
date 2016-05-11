@@ -10,6 +10,7 @@ set(UltrasoundTests
   itkAnalyticSignalImageFilterTest.cxx
   itkBModeImageFilterTestTiming.cxx
   itkCurvilinearArraySpecialCoordinatesImageTest.cxx
+  itkCurvilinearArrayUltrasoundImageFileReaderTest.cxx
   itkComplexToComplex1DFFTImageFilterTest.cxx
   itkFFT1DImageFilterTest.cxx
   itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest.cxx
@@ -77,6 +78,11 @@ itk_add_test(NAME itkCurvilinearArraySpecialCoordinatesImageTest2
   itkCurvilinearArraySpecialCoordinatesImageTest
     DATA{Input/curvilinear_envelope_multiframe.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkCurvilinearArraySpecialCoordinatesImageTest2.mha
+    )
+itk_add_test(NAME itkCurvilinearArrayUltrasoundImageFileReaderTest
+  COMMAND UltrasoundTestDriver
+  itkCurvilinearArrayUltrasoundImageFileReaderTest
+    DATA{Input/curvilinear_envelope_with_metadata.mha}
     )
 itk_add_test(NAME itkComplexToComplex1DFFTImageFilterTest
   COMMAND UltrasoundTestDriver
