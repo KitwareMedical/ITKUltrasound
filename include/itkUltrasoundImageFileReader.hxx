@@ -40,7 +40,6 @@ GetMetaDataAsDouble(const itk::MetaDataDictionary & dictionary, const std::strin
 }
 
 
-/** Extract matadata from the MetaDataDictionary to the Image i-vars */
 template< typename TImage >
 class Dispatch
 {
@@ -70,7 +69,7 @@ public:
       {
       image->SetRadiusSampleSize( GetMetaDataAsDouble( dictionary, "RadiusSampleSize" ) );
       }
-  };
+  }
 };
 
 } // end anonymous namespace
