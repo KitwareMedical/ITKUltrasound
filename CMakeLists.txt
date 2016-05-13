@@ -25,6 +25,8 @@ if(ITKUltrasound_USE_VTK)
     vtkCommonDataModel
     )
 
+  set(Ultrasound_LIBRARIES ${VTK_LIBRARIES})
+
   # The VTK DICOMParser and vtkmetaio includes conflict with the ITK
   # versions. Here we remove them from the include directories.
   #

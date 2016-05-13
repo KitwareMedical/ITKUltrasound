@@ -12,8 +12,10 @@ itk_module(Ultrasound
     ITKImageCompose
     ITKImageIntensity
     ITKIOImageBase
+    ITKTransform
     ${_fft_depends}
   TEST_DEPENDS
+    ITKTransform
     ITKTestKernel
     ITKImageSources
   EXCLUDE_FROM_DEFAULT

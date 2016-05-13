@@ -20,6 +20,7 @@
 
 #include "itkProcessObject.h"
 #include "vtkStructuredGrid.h"
+#include "vtkSmartPointer.h"
 
 namespace itk
 {
@@ -46,7 +47,29 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro(SpecialCoordinatesImageToVTKStructuredGridFilter, ProcessObject);
 
+  typedef TInputImage InputImageType;
+
+  using Superclass::SetInput;
+  virtual void SetInput(const InputImageType * image);
+  const InputImageType * GetInput() const;
+
+protected:
+  SpecialCoordinatesImageToVTKStructuredGridFilter();
+  virtual ~SpecialCoordinatesImageToVTKStructuredGridFilter();
+
+  virtual void GenerateData() ITK_OVERRIDE;
+
+private:
+  SpecialCoordinatesImageToVTKStructuredGridFilter(const Self &) ITK_DELETE_FUNCTION;
+  void operator=(const Self&) ITK_DELETE_FUNCTION;
+
+  vtkSmartPointer< vtkStructuredGrid > m_StructuredGrid;
 };
+
 } // end namespace itk
+
+#ifndef ITK_MANUAL_INSTANTIATION
+#include "itkSpecialCoordinatesImageToVTKStructuredGridFilter.hxx"
+#endif
 
 #endif

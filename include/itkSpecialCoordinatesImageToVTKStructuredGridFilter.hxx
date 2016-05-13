@@ -20,4 +20,43 @@
 
 #include "itkSpecialCoordinatesImageToVTKStructuredGridFilter.h"
 
+namespace itk
+{
+
+template< typename TInputImage >
+SpecialCoordinatesImageToVTKStructuredGridFilter< TInputImage >
+::SpecialCoordinatesImageToVTKStructuredGridFilter()
+{
+  this->SetNumberOfRequiredInputs( 1 );
+  m_StructuredGrid = vtkSmartPointer< vtkStructuredGrid >::New();
+}
+
+
+template< typename TInputImage >
+SpecialCoordinatesImageToVTKStructuredGridFilter< TInputImage >
+::~SpecialCoordinatesImageToVTKStructuredGridFilter()
+{
+}
+
+
+template< typename TInputImage >
+void
+SpecialCoordinatesImageToVTKStructuredGridFilter< TInputImage >
+::SetInput(const InputImageType *input)
+{
+  // Process object is not const-correct so the const_cast is required here
+  this->ProcessObject::SetNthInput( 0,
+                                    const_cast< InputImageType * >( input ) );
+}
+
+
+template< typename TInputImage >
+void
+SpecialCoordinatesImageToVTKStructuredGridFilter< TInputImage >
+::GenerateData()
+{
+}
+
+} // end namespace itk
+
 #endif
