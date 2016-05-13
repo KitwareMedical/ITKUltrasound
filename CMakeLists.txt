@@ -23,6 +23,7 @@ if(ITKUltrasound_USE_VTK)
 
   vtk_module_config(Ultrasound_VTK
     vtkCommonDataModel
+    vtkIOLegacy
     )
 
   set(Ultrasound_LIBRARIES ${VTK_LIBRARIES})

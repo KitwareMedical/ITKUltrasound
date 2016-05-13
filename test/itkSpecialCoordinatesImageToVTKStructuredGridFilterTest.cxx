@@ -20,6 +20,9 @@
 #include "itkCurvilinearArraySpecialCoordinatesImage.h"
 #include "itkUltrasoundImageFileReader.h"
 
+#include "vtkStructuredGridWriter.h"
+#include "vtkNew.h"
+
 int itkSpecialCoordinatesImageToVTKStructuredGridFilterTest( int argc, char* argv[] )
 {
   if( argc < 3 )
@@ -59,6 +62,11 @@ int itkSpecialCoordinatesImageToVTKStructuredGridFilterTest( int argc, char* arg
   vtkSmartPointer< vtkStructuredGrid > structuredGrid = conversionFilter->GetOutput();
   structuredGrid->Print( std::cout );
 
+  vtkNew< vtkStructuredGridWriter > writer;
+  writer->SetInputData( structuredGrid );
+  writer->SetFileName( outputStructuredGridFileName );
+  writer->SetFileTypeToBinary();
+  writer->Write();
 
   return EXIT_SUCCESS;
 }
