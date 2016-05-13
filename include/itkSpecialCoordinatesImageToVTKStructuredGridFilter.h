@@ -31,9 +31,21 @@ namespace itk
  * \ingroup Ultrasound
  */
 template< typename TInputImage >
-class itkSpecialCoordinatesImageToVTKStructuredGridFilter: public ProcessObject
+class SpecialCoordinatesImageToVTKStructuredGridFilter: public ProcessObject
 {
 public:
+  /** Standard class typedefs. */
+  typedef SpecialCoordinatesImageToVTKStructuredGridFilter Self;
+  typedef ProcessObject                                    Superclass;
+  typedef SmartPointer<Self>                               Pointer;
+  typedef SmartPointer<const Self>                         ConstPointer;
+
+  /** Method for creation through the object factory. */
+  itkNewMacro(Self);
+
+  /** Run-time type information (and related methods). */
+  itkTypeMacro(SpecialCoordinatesImageToVTKStructuredGridFilter, ProcessObject);
+
 };
 } // end namespace itk
 

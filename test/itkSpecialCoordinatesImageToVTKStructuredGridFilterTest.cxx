@@ -17,8 +17,33 @@
  *=========================================================================*/
 
 #include "itkSpecialCoordinatesImageToVTKStructuredGridFilter.h"
+#include "itkCurvilinearArraySpecialCoordinatesImage.h"
+#include "itkUltrasoundImageFileReader.h"
 
 int itkSpecialCoordinatesImageToVTKStructuredGridFilterTest( int argc, char* argv[] )
 {
+  if( argc < 3 )
+    {
+    std::cerr << "Usage: " << argv[0];
+    std::cerr << " inputImage outputStructuredGrid";
+    std::cerr << std::endl;
+    return EXIT_FAILURE;
+    }
+  const char * inputImageFileName = argv[1];
+  const char * outputStructuredGridFileName = argv[2];
+
+  const unsigned int Dimension = 3;
+  typedef unsigned char PixelType;
+
+  typedef itk::CurvilinearArraySpecialCoordinatesImage< PixelType, Dimension > SpecialCoordinatesImageType;
+
+  typedef itk::UltrasoundImageFileReader< SpecialCoordinatesImageType > ReaderType;
+  ReaderType::Pointer reader = ReaderType::New();
+  reader->SetFileName( inputImageFileName );
+
+  typedef itk::SpecialCoordinatesImageToVTKStructuredGridFilter< SpecialCoordinatesImageType > ConversionFilterType;
+  ConversionFilterType::Pointer conversionFilter = ConversionFilterType::New();
+
+
   return EXIT_SUCCESS;
 }

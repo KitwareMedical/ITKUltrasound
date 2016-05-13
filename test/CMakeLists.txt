@@ -250,5 +250,7 @@ if(ITKUltrasound_USE_VTK)
   itk_add_test(NAME itkSpecialCoordinatesImageToVTKStructuredGridFilterTest
     COMMAND UltrasoundTestDriver
     itkSpecialCoordinatesImageToVTKStructuredGridFilterTest
+      DATA{Input/curvilinear_envelope_with_metadata.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkSpecialCoordinatesImageToVTKStructuredGridTestOutput.vtk
       )
 endif()
