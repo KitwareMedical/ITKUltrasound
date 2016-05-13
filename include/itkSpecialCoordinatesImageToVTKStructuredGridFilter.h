@@ -53,6 +53,8 @@ public:
   virtual void SetInput(const InputImageType * image);
   const InputImageType * GetInput() const;
 
+  vtkStructuredGrid * GetOutput();
+
 protected:
   SpecialCoordinatesImageToVTKStructuredGridFilter();
   virtual ~SpecialCoordinatesImageToVTKStructuredGridFilter();

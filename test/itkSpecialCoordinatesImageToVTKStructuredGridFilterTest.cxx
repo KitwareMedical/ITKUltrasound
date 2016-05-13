@@ -44,6 +44,21 @@ int itkSpecialCoordinatesImageToVTKStructuredGridFilterTest( int argc, char* arg
   typedef itk::SpecialCoordinatesImageToVTKStructuredGridFilter< SpecialCoordinatesImageType > ConversionFilterType;
   ConversionFilterType::Pointer conversionFilter = ConversionFilterType::New();
 
+  conversionFilter->SetInput( reader->GetOutput() );
+
+  try
+    {
+    conversionFilter->Update();
+    }
+  catch( itk::ExceptionObject & error )
+    {
+    std::cerr << "Error: " << error << std::endl;
+    return EXIT_FAILURE;
+    }
+
+  vtkSmartPointer< vtkStructuredGrid > structuredGrid = conversionFilter->GetOutput();
+  structuredGrid->Print( std::cout );
+
 
   return EXIT_SUCCESS;
 }

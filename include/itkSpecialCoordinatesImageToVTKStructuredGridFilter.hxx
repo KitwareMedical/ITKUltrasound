@@ -51,6 +51,15 @@ SpecialCoordinatesImageToVTKStructuredGridFilter< TInputImage >
 
 
 template< typename TInputImage >
+vtkStructuredGrid *
+SpecialCoordinatesImageToVTKStructuredGridFilter< TInputImage >
+::GetOutput()
+{
+  return this->m_StructuredGrid.GetPointer();
+}
+
+
+template< typename TInputImage >
 void
 SpecialCoordinatesImageToVTKStructuredGridFilter< TInputImage >
 ::GenerateData()
