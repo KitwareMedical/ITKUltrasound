@@ -22,6 +22,10 @@
 
 #include "itkCurvilinearArraySpecialCoordinatesImage.h"
 
+#ifdef ITK_HAS_GCC_PRAGMA_DIAG_PUSHPOP
+  ITK_GCC_PRAGMA_DIAG_PUSH()
+#endif
+ITK_GCC_PRAGMA_DIAG(ignored "-Wattributes")
 namespace itk
 {
 
@@ -77,6 +81,12 @@ private:
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkUltrasoundImageFileReader.hxx"
+#endif
+
+#ifdef ITK_HAS_GCC_PRAGMA_DIAG_PUSHPOP
+  ITK_GCC_PRAGMA_DIAG_POP()
+#else
+  ITK_GCC_PRAGMA_DIAG(warning "-Wattributes")
 #endif
 
 #endif // itkUltrasoundImageFileReader_h

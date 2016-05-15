@@ -25,6 +25,10 @@
 
 #include "itkCurvilinearArraySpecialCoordinatesImage.h"
 
+#ifdef ITK_HAS_GCC_PRAGMA_DIAG_PUSHPOP
+  ITK_GCC_PRAGMA_DIAG_PUSH()
+#endif
+ITK_GCC_PRAGMA_DIAG(ignored "-Wattributes")
 namespace
 {
 
@@ -41,7 +45,7 @@ GetMetaDataAsDouble(const itk::MetaDataDictionary & dictionary, const std::strin
 
 
 template< typename TImage >
-class Dispatch
+class UltrasoundImageFileReaderDispatch
 {
 public:
   typedef TImage ImageType;
@@ -50,7 +54,7 @@ public:
 
 
 template< typename TPixel, unsigned int VDimension >
-class Dispatch< itk::CurvilinearArraySpecialCoordinatesImage< TPixel, VDimension > >
+class UltrasoundImageFileReaderDispatch< itk::CurvilinearArraySpecialCoordinatesImage< TPixel, VDimension > >
 {
 public:
   typedef itk::CurvilinearArraySpecialCoordinatesImage< TPixel, VDimension > ImageType;
@@ -73,6 +77,12 @@ public:
 };
 
 } // end anonymous namespace
+#ifdef ITK_HAS_GCC_PRAGMA_DIAG_PUSHPOP
+  ITK_GCC_PRAGMA_DIAG_POP()
+#else
+  ITK_GCC_PRAGMA_DIAG(warning "-Wattributes")
+#endif
+
 
 namespace itk
 {
@@ -90,9 +100,8 @@ UltrasoundImageFileReader< TOutputImage >
 ::GenerateOutputInformation()
 {
   Superclass::GenerateOutputInformation();
-  Dispatch< TOutputImage >::ExtractMetaData( this->GetOutput() );
+  UltrasoundImageFileReaderDispatch< TOutputImage >::ExtractMetaData( this->GetOutput() );
 }
-
 
 } // end namespace itk
 
