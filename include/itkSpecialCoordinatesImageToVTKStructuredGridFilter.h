@@ -19,6 +19,7 @@
 #define itkSpecialCoordinatesImageToVTKStructuredGridFilter_h
 
 #include "itkProcessObject.h"
+#include "itkSimpleDataObjectDecorator.h"
 #include "vtkStructuredGrid.h"
 #include "vtkSmartPointer.h"
 
@@ -49,15 +50,27 @@ public:
 
   typedef TInputImage InputImageType;
 
+  typedef vtkSmartPointer< vtkStructuredGrid >                   StructuredGridPointerType;
+  typedef SimpleDataObjectDecorator< StructuredGridPointerType > DecoratedStructuredGridPointerType;
+
+  itkStaticConstMacro(ImageDimension, unsigned int, InputImageType::ImageDimension);
+
+
   using Superclass::SetInput;
   virtual void SetInput(const InputImageType * image);
   const InputImageType * GetInput() const;
 
   vtkStructuredGrid * GetOutput();
+  itkGetDecoratedOutputMacro(StructuredGrid, StructuredGridPointerType);
 
 protected:
   SpecialCoordinatesImageToVTKStructuredGridFilter();
   virtual ~SpecialCoordinatesImageToVTKStructuredGridFilter();
+
+  /** Make a DataObject of the correct type to be used as the specified output. */
+  typedef ProcessObject::DataObjectPointerArraySizeType DataObjectPointerArraySizeType;
+  using Superclass::MakeOutput;
+  virtual DataObjectPointer MakeOutput( DataObjectPointerArraySizeType ) ITK_OVERRIDE;
 
   virtual void GenerateData() ITK_OVERRIDE;
 
