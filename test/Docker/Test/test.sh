@@ -6,6 +6,11 @@
 set -x
 set -o
 
+cd /usr/src/ITKUltrasound
+branch=$(git rev-parse --abbrev-ref HEAD)
+date=$(date +%F_%H_%M_%S)
+sha=$(git rev-parse --short HEAD)
+
 cd /usr/src/ITKUltrasound-build
 
 cmake \
@@ -14,6 +19,6 @@ cmake \
   -DITKUltrasound_USE_VTK:BOOL=ON \
   -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python3 \
   -DCMAKE_BUILD_TYPE:STRING=Release \
-  -DBUILDNAME:STRING=External-Ultrasound \
+  -DBUILDNAME:STRING=External-Ultrasound-${branch}-${date}-${sha} \
     /usr/src/ITKUltrasound
 ctest -VV -D Experimental
