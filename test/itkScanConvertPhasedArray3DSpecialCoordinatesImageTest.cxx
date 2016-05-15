@@ -128,6 +128,8 @@ int itkScanConvertPhasedArray3DSpecialCoordinatesImageTest( int argc, char* argv
     std::cerr << "Error while resampling data: " << error << std::endl;
     return EXIT_FAILURE;
     }
+  std::cout << resampler << std::endl;
+  std::cout << inputImage << std::endl;
 
   return EXIT_SUCCESS;
 }

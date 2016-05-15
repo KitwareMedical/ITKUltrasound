@@ -2,4 +2,4 @@
 
 script_dir="`cd $(dirname $0); pwd`"
 
-docker build -t thewtex/itkultrasound-base $script_dir
+docker build -t kitwaremedical/itkultrasound-base $script_dir

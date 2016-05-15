@@ -58,6 +58,7 @@ int itkCurvilinearArraySpecialCoordinatesImageTest( int argc, char * argv[] )
   const SpecialCoordinatesImageType::SizeType inputSize = curvilinearArrayImage->GetLargestPossibleRegion().GetSize();
   const double lateralAngularSeparation = (vnl_math::pi / 2.0 + 0.5) /
     (inputSize[1] - 1);
+  std::cout << "lateral angular separation: " << lateralAngularSeparation << std::endl;
   curvilinearArrayImage->SetLateralAngularSeparation( lateralAngularSeparation );
   const double radiusStart = 26.4;
   const double radiusStop = 131.5;

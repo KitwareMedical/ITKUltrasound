@@ -1,15 +1,16 @@
 itk_module_test()
 
 if(ITK_USE_FFTWF OR ITK_USE_FFTWD)
-  set(USE_FFTW 1)
+  set(use_fftw 1)
 else()
-  set(USE_FFTW 0)
+  set(use_fftw 0)
 endif()
 
 set(UltrasoundTests
   itkAnalyticSignalImageFilterTest.cxx
   itkBModeImageFilterTestTiming.cxx
   itkCurvilinearArraySpecialCoordinatesImageTest.cxx
+  itkCurvilinearArrayUltrasoundImageFileReaderTest.cxx
   itkComplexToComplex1DFFTImageFilterTest.cxx
   itkFFT1DImageFilterTest.cxx
   itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest.cxx
@@ -22,13 +23,18 @@ set(UltrasoundTests
   itkVnlComplexToComplex1DFFTImageFilterTest.cxx
   itkVnlForward1DFFTImageFilterTest.cxx
   )
-if(USE_FFTW)
+if(use_fftw)
   list(APPEND UltrasoundTests
     itkFFTWForward1DFFTImageFilterTest.cxx
     itkForward1DFFTImageFilterTest.cxx
     itkFFTWInverse1DFFTImageFilterTest.cxx
     itkInverse1DFFTImageFilterTest.cxx
     itkFFTWComplexToComplex1DFFTImageFilterTest.cxx
+    )
+endif()
+if(ITKUltrasound_USE_VTK)
+  list(APPEND UltrasoundTests
+    itkSpecialCoordinatesImageToVTKStructuredGridFilterTest.cxx
     )
 endif()
 
@@ -72,6 +78,11 @@ itk_add_test(NAME itkCurvilinearArraySpecialCoordinatesImageTest2
   itkCurvilinearArraySpecialCoordinatesImageTest
     DATA{Input/curvilinear_envelope_multiframe.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkCurvilinearArraySpecialCoordinatesImageTest2.mha
+    )
+itk_add_test(NAME itkCurvilinearArrayUltrasoundImageFileReaderTest
+  COMMAND UltrasoundTestDriver
+  itkCurvilinearArrayUltrasoundImageFileReaderTest
+    DATA{Input/curvilinear_envelope_with_metadata.mha}
     )
 itk_add_test(NAME itkComplexToComplex1DFFTImageFilterTest
   COMMAND UltrasoundTestDriver
@@ -181,7 +192,7 @@ itk_add_test(NAME itkTimeGainCompensationImageFilterTest
     ${ITK_TEST_OUTPUT_DIR}/itkScanConvertPhasedArray3DSpecialCoordinatesImageTestOutput.mha
     )
 
-if(USE_FFTW)
+if(use_fftw)
   itk_add_test(NAME itkFFTWForward1DFFTImageFilterTest
     COMMAND UltrasoundTestDriver
     --compare
@@ -232,5 +243,14 @@ if(USE_FFTW)
     itkFFTWComplexToComplex1DFFTImageFilterTest
       ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkForward1DFFTImageFilterTestBaseline
       ${ITK_TEST_OUTPUT_DIR}/itkFFTWComplexToComplex1DFFTImageFilterTestOutput.mha
+      )
+endif()
+
+if(ITKUltrasound_USE_VTK)
+  itk_add_test(NAME itkSpecialCoordinatesImageToVTKStructuredGridFilterTest
+    COMMAND UltrasoundTestDriver
+    itkSpecialCoordinatesImageToVTKStructuredGridFilterTest
+      DATA{Input/curvilinear_envelope_with_metadata.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkSpecialCoordinatesImageToVTKStructuredGridTestOutput.vtk
       )
 endif()
