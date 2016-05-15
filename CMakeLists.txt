@@ -2,8 +2,7 @@ project(Ultrasound)
 cmake_minimum_required(VERSION 2.8)
 
 # required VTK version
-set(version_min "7.0.0")
-find_package(VTK ${version_min} NO_MODULE QUIET)
+find_package(VTK NO_MODULE QUIET)
 set(itkultrasound_use_vtk_default OFF)
 if(VTK_FOUND)
   set(itkultrasound_use_vtk_default ON)
@@ -12,7 +11,7 @@ option(ITKUltrasound_USE_VTK "Build ITKUltrasound filters that require VTK." ${i
 mark_as_advanced(ITKUltrasound_USE_VTK)
 
 if(ITKUltrasound_USE_VTK)
-  find_package(VTK ${version_min} NO_MODULE REQUIRED)
+  find_package(VTK NO_MODULE REQUIRED)
 
   # Add compiler flags needed to use VTK.
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${VTK_REQUIRED_C_FLAGS}")
