@@ -3,12 +3,10 @@
 # This is a script to build the modules and run the test suite in the base
 # Docker container.
 
-die() {
-  echo "Error: $@" 1>&2
-  exit 1;
-}
+set -x
+set -o
 
-cd /usr/src/ITKUltrasound-build || die "Could not cd into the build directory"
+cd /usr/src/ITKUltrasound-build
 
 cmake \
   -G Ninja \
@@ -17,5 +15,5 @@ cmake \
   -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python3 \
   -DCMAKE_BUILD_TYPE:STRING=Release \
   -DBUILDNAME:STRING=External-Ultrasound \
-    /usr/src/ITKUltrasound || die "CMake configuration failed"
-ctest -VV -D Experimental || die "ctest failed"
+    /usr/src/ITKUltrasound
+ctest -VV -D Experimental
