@@ -351,6 +351,22 @@ public:
     FixedArray< TCoordRep, VDimension > & ) const
     {}
 
+  /** Return the Pixel Accessor object */
+  AccessorType GetPixelAccessor(void)
+  { return AccessorType(); }
+
+  /** Return the Pixel Accesor object */
+  const AccessorType GetPixelAccessor(void) const
+  { return AccessorType(); }
+
+  /** Return the NeighborhoodAccessor functor */
+  NeighborhoodAccessorFunctorType GetNeighborhoodAccessor()
+  { return NeighborhoodAccessorFunctorType(); }
+
+  /** Return the NeighborhoodAccessor functor */
+  const NeighborhoodAccessorFunctorType GetNeighborhoodAccessor() const
+  { return NeighborhoodAccessorFunctorType(); }
+
 protected:
   CurvilinearArraySpecialCoordinatesImage()
     {
