@@ -85,6 +85,8 @@ int itkCurvilinearArraySpecialCoordinatesImageTest( int argc, char * argv[] )
   resampler->SetOutputOrigin( outputOrigin );
 
   typedef itk::WindowedSincInterpolateImageFunction< SpecialCoordinatesImageType, 3 > WindowedSincInterpolatorType;
+  WindowedSincInterpolatorType::Pointer sincInterpolator = WindowedSincInterpolatorType::New();
+  sincInterpolator->SetInputImage( curvilinearArrayImage );
 
   typedef itk::ImageFileWriter< ImageType > WriterType;
   WriterType::Pointer writer = WriterType::New();
