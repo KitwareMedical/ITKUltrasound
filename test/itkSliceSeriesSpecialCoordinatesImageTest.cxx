@@ -25,6 +25,7 @@
 #include "itkResampleImageFilter.h"
 #include "itkWindowedSincInterpolateImageFunction.h"
 #include "itkEuler3DTransform.h"
+#include "vnl/vnl_math.h"
 
 
 int itkSliceSeriesSpecialCoordinatesImageTest( int argc, char * argv[] )
@@ -81,7 +82,19 @@ int itkSliceSeriesSpecialCoordinatesImageTest( int argc, char * argv[] )
   SliceSeriesImageType::Pointer image = reader->GetOutput();
   image->SetSliceImage( sliceImage );
 
+  double elevationAngle = 0.0;
+  const itk::SizeValueType numberOfSlices = image->GetLargestPossibleRegion().GetSize()[Dimension - 1];
+  for( itk::SizeValueType sliceIndex = 0; sliceIndex < numberOfSlices; ++sliceIndex )
+    {
+    TransformType::Pointer transform = TransformType::New();
+    transform->SetRotation( 0.0, 0.0, sliceIndex * 5.0 * vnl_math::pi / 180.0 );
+    image->SetSliceTransform( sliceIndex, transform );
+    }
+  TransformType::ConstPointer obtainedTransform = image->GetSliceTransform( 0 );
+
+
   image->Print( std::cout );
+
 
   //typedef itk::ResampleImageFilter< SpecialCoordinatesImageType, ImageType > ResamplerType;
   //ResamplerType::Pointer resampler = ResamplerType::New();

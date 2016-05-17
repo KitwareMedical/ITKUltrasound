@@ -55,6 +55,33 @@ SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension 
 template< typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension >
 void
 SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension >
+::SetSliceTransform( SizeValueType sliceIndex, TransformType * transform )
+{
+  if( this->m_SliceTransforms->Size() > sliceIndex && this->m_SliceTransforms->GetElement( sliceIndex ).GetPointer() == transform )
+    {
+    return;
+    }
+  this->m_SliceTransforms->SetElement( sliceIndex, transform );
+  this->Modified();
+}
+
+
+template< typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension >
+const typename SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension >::TransformType *
+SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension >
+::GetSliceTransform( SizeValueType sliceIndex ) const
+{
+  if( this->m_SliceTransforms->Size() > sliceIndex )
+    {
+    return this->m_SliceTransforms->GetElement( sliceIndex ).GetPointer();
+    }
+  return ITK_NULLPTR;
+}
+
+
+template< typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension >
+void
+SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension >
 ::PrintSelf(std::ostream & os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);

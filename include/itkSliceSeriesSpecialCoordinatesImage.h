@@ -156,6 +156,9 @@ public:
   itkSetObjectMacro(SliceImage, SliceImageType);
   itkGetConstObjectMacro(SliceImage, SliceImageType);
 
+  void SetSliceTransform( SizeValueType sliceIndex, TransformType * transform );
+  const TransformType * GetSliceTransform( SizeValueType sliceIndex ) const;
+
   /** Graft the data and information from one image to another. This
    * is a convenience method to setup a second image with all the meta
    * information of another image and use the same pixel
