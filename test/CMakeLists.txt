@@ -15,6 +15,7 @@ set(UltrasoundTests
   itkFFT1DImageFilterTest.cxx
   itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest.cxx
   itkScanConvertPhasedArray3DSpecialCoordinatesImageTest.cxx
+  itkSliceSeriesSpecialCoordinatesImageTest.cxx
   itkSpectra1DImageFilterTest.cxx
   itkSpectra1DSupportWindowImageFilterTest.cxx
   itkSpectra1DSupportWindowToMaskImageFilterTest.cxx
@@ -133,6 +134,15 @@ itk_add_test( NAME itkVnlInverse1DFFTImageFilterTest
   itkVnlInverse1DFFTImageFilterTest
     ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkForward1DFFTImageFilterTestBaseline
     ${ITK_TEST_OUTPUT_DIR}/itkVnlInverse1DFFTImageFilterTestOutput.mhd
+    )
+  itk_add_test(NAME itkSliceSeriesSpecialCoordinatesImageTest
+  COMMAND UltrasoundTestDriver
+  #--compare
+    #${ITK_TEST_OUTPUT_DIR}/itkSliceSeriesSpecialCoordinatesImageTest.mha
+    #DATA{Baseline/itkSliceSeriesSpecialCoordinatesImageTest.mha}
+  itkSliceSeriesSpecialCoordinatesImageTest
+    DATA{Input/curvilinear_envelope_multiframe.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkSliceSeriesSpecialCoordinatesImageTest.mha
     )
 itk_add_test(NAME itkSpectra1DImageFilterTest
   COMMAND UltrasoundTestDriver
