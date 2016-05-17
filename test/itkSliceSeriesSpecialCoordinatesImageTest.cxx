@@ -51,7 +51,22 @@ int itkSliceSeriesSpecialCoordinatesImageTest( int argc, char * argv[] )
   typedef itk::SliceSeriesSpecialCoordinatesImage< SliceImageType, TransformType >  SliceSeriesImageType;
 
 
-  typedef itk::UltrasoundImageFileReader < SliceImageType > ReaderType;
+  typedef itk::UltrasoundImageFileReader < SliceImageType > SliceReaderType;
+  SliceReaderType::Pointer sliceReader = SliceReaderType::New();
+  sliceReader->SetFileName( inputImageFileName );
+  try
+    {
+    sliceReader->Update();
+    }
+  catch( itk::ExceptionObject & error )
+    {
+    std::cerr << "Error: " << error << std::endl;
+    return EXIT_FAILURE;
+    }
+  SliceImageType::Pointer sliceImage = sliceReader->GetOutput();
+  sliceImage->Print( std::cout );
+
+  typedef itk::ImageFileReader< SliceSeriesImageType > ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
   try
@@ -63,9 +78,10 @@ int itkSliceSeriesSpecialCoordinatesImageTest( int argc, char * argv[] )
     std::cerr << "Error: " << error << std::endl;
     return EXIT_FAILURE;
     }
-  SliceImageType::Pointer sliceImage = reader->GetOutput();
+  SliceSeriesImageType::Pointer image = reader->GetOutput();
+  image->SetSliceImage( sliceImage );
 
-  sliceImage->Print( std::cout );
+  image->Print( std::cout );
 
   //typedef itk::ResampleImageFilter< SpecialCoordinatesImageType, ImageType > ResamplerType;
   //ResamplerType::Pointer resampler = ResamplerType::New();
