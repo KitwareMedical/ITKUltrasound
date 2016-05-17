@@ -350,7 +350,7 @@ private:
   SliceSeriesSpecialCoordinatesImage(const Self &); // purposely not implemented
   void operator=(const Self &);                          // purposely not implemented
 
-  typename SliceImageType::Pointer m_SliceImage;
+  typename SliceImageType::Pointer      m_SliceImage;
   typename SliceTransformsType::Pointer m_SliceTransforms;
 };
 } // end namespace itk
