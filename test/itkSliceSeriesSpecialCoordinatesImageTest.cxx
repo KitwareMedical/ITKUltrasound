@@ -19,7 +19,7 @@
 #include "itkCurvilinearArraySpecialCoordinatesImage.h"
 #include "itkSliceSeriesSpecialCoordinatesImage.h"
 
-#include "itkImageFileReader.h"
+#include "itkUltrasoundImageFileReader.h"
 #include "itkImageFileWriter.h"
 
 #include "itkResampleImageFilter.h"
@@ -51,30 +51,21 @@ int itkSliceSeriesSpecialCoordinatesImageTest( int argc, char * argv[] )
   typedef itk::SliceSeriesSpecialCoordinatesImage< SliceImageType, TransformType >  SliceSeriesImageType;
 
 
-  //typedef itk::ImageFileReader < SpecialCoordinatesImageType > ReaderType;
-  //ReaderType::Pointer reader = ReaderType::New();
-  //reader->SetFileName( inputImageFileName );
-  //try
-    //{
-    //reader->Update();
-    //}
-  //catch( itk::ExceptionObject & error )
-    //{
-    //std::cerr << "Error: " << error << std::endl;
-    //return EXIT_FAILURE;
-    //}
-  //SpecialCoordinatesImageType::Pointer curvilinearArrayImage = reader->GetOutput();
-  //const SpecialCoordinatesImageType::SizeType inputSize = curvilinearArrayImage->GetLargestPossibleRegion().GetSize();
-  //const double lateralAngularSeparation = (vnl_math::pi / 2.0 + 0.5) /
-    //(inputSize[1] - 1);
-  //std::cout << "lateral angular separation: " << lateralAngularSeparation << std::endl;
-  //curvilinearArrayImage->SetLateralAngularSeparation( lateralAngularSeparation );
-  //const double radiusStart = 26.4;
-  //const double radiusStop = 131.5;
-  //curvilinearArrayImage->SetFirstSampleDistance( radiusStart );
-  //curvilinearArrayImage->SetRadiusSampleSize( (radiusStop - radiusStart) / (inputSize[0] -1) );
+  typedef itk::UltrasoundImageFileReader < SliceImageType > ReaderType;
+  ReaderType::Pointer reader = ReaderType::New();
+  reader->SetFileName( inputImageFileName );
+  try
+    {
+    reader->Update();
+    }
+  catch( itk::ExceptionObject & error )
+    {
+    std::cerr << "Error: " << error << std::endl;
+    return EXIT_FAILURE;
+    }
+  SliceImageType::Pointer sliceImage = reader->GetOutput();
 
-  //curvilinearArrayImage->Print( std::cout );
+  sliceImage->Print( std::cout );
 
   //typedef itk::ResampleImageFilter< SpecialCoordinatesImageType, ImageType > ResamplerType;
   //ResamplerType::Pointer resampler = ResamplerType::New();
