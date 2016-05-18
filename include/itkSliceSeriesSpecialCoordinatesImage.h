@@ -294,24 +294,20 @@ public:
     const IndexType & index,
     Point< TCoordRep, VDimension > & point) const
   {
-    //const RegionType & region = this->GetLargestPossibleRegion();
-    //const double maxLateral = region.GetSize(1) - 1;
-
-    //// Convert the index into proper angular coordinates
-    //const TCoordRep radius  = ( index[0] * m_RadiusSampleSize ) + m_FirstSampleDistance;
-    //const TCoordRep lateral = ( index[1] - ( maxLateral / 2.0 ) ) * m_LateralAngularSeparation;
-
-    //// Convert the angular coordinates into Cartesian coordinates
-    //point[0] = static_cast< TCoordRep >( radius * std::sin(lateral) );
-    //point[1] = static_cast< TCoordRep >( radius * std::cos(lateral) );
-    //for ( unsigned int ii = 2; ii < VDimension; ++ii )
-      //{
-      //point[ii] = this->m_Origin[ii];
-      //for ( unsigned int jj = 0; jj < VDimension; ++jj )
-        //{
-        //point[ii] += this->m_IndexToPhysicalPoint[ii][jj] * index[jj];
-        //}
-      //}
+    point.Fill( 0.0 );
+    typename SliceImageType::IndexType sliceIndex;
+    for( unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii )
+      {
+      sliceIndex[ii] = index[ii];
+      }
+    Point< TCoordRep, SliceImageType::ImageDimension > slicePoint;
+    this->m_SliceImage->TransformIndexToPhysicalPoint( sliceIndex, slicePoint );
+    for( unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii )
+      {
+      point[ii] += slicePoint[ii];
+      }
+    const TransformType * transform = this->GetTransform( index[ImageDimension - 1] );
+    point = transform->TransformPoint( point );
   }
 
   template< typename TCoordRep >

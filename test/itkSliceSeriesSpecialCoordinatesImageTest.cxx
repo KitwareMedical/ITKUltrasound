@@ -92,13 +92,11 @@ int itkSliceSeriesSpecialCoordinatesImageTest( int argc, char * argv[] )
     }
   TransformType::ConstPointer obtainedTransform = image->GetSliceTransform( 0 );
 
-
   image->Print( std::cout );
 
-
-  //typedef itk::ResampleImageFilter< SpecialCoordinatesImageType, ImageType > ResamplerType;
-  //ResamplerType::Pointer resampler = ResamplerType::New();
-  //resampler->SetInput( reader->GetOutput() );
+  typedef itk::ResampleImageFilter< SliceSeriesImageType, ImageType > ResamplerType;
+  ResamplerType::Pointer resampler = ResamplerType::New();
+  resampler->SetInput( reader->GetOutput() );
   //SpecialCoordinatesImageType::SizeType outputSize = reader->GetOutput()->GetLargestPossibleRegion().GetSize();
   //outputSize[0] = 800;
   //outputSize[1] = 800;
