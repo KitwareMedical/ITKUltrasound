@@ -22,6 +22,7 @@
 #include "itkPoint.h"
 #include "itkNeighborhoodAccessorFunctor.h"
 #include "itkVectorContainer.h"
+#include "itkMath.h"
 
 namespace itk
 {
@@ -263,25 +264,23 @@ public:
     const ContinuousIndex< TIndexRep, VDimension > & index,
     Point< TCoordRep, VDimension > & point) const
   {
-    //const RegionType & region = this->GetLargestPossibleRegion();
-    //const double maxLateral = region.GetSize(1) - 1;
-
-    //// Convert the index into proper angular coordinates
-    //const TCoordRep radius  = ( index[0] * m_RadiusSampleSize ) + m_FirstSampleDistance;
-    //const TCoordRep lateral = ( index[1] - ( maxLateral / 2.0 ) ) * m_LateralAngularSeparation;
-
-    //// Convert the angular coordinates into Cartesian coordinates
-    //point[0] = static_cast< TCoordRep >( radius * std::sin(lateral) );
-    //point[1] = static_cast< TCoordRep >( radius * std::cos(lateral) );
-    //for ( unsigned int rr = 2; rr < VDimension; ++rr )
-      //{
-      //TCoordRep sum = NumericTraits< TCoordRep >::ZeroValue();
-      //for ( unsigned int cc = 0; cc < VDimension; ++cc )
-        //{
-        //sum += this->m_IndexToPhysicalPoint(rr, cc) * index[cc];
-        //}
-      //point[rr] = sum + this->m_Origin[rr];
-      //}
+    point.Fill( 0.0 );
+    typename SliceImageType::ContinuousIndexType sliceIndex;
+    for( unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii )
+      {
+      sliceIndex[ii] = index[ii];
+      }
+    Point< TCoordRep, SliceImageType::ImageDimension > slicePoint;
+    this->m_SliceImage->TransformContinuousIndexToPhysicalPoint( sliceIndex, slicePoint );
+    for( unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii )
+      {
+      point[ii] += slicePoint[ii];
+      }
+    const TransformType * transform = this->GetSliceTransform( Math::RoundHalfIntegerUp< IndexValueType, TIndexRep >( index[ImageDimension - 1] ) );
+    if( transform != ITK_NULLPTR )
+      {
+      point = transform->TransformPoint( point );
+      }
   }
 
   /** Get a physical point (in the space which
@@ -306,8 +305,11 @@ public:
       {
       point[ii] += slicePoint[ii];
       }
-    const TransformType * transform = this->GetTransform( index[ImageDimension - 1] );
-    point = transform->TransformPoint( point );
+    const TransformType * transform = this->GetSliceTransform( index[ImageDimension - 1] );
+    if( transform != ITK_NULLPTR )
+      {
+      point = transform->TransformPoint( point );
+      }
   }
 
   template< typename TCoordRep >
