@@ -347,12 +347,15 @@ protected:
   virtual ~SliceSeriesSpecialCoordinatesImage() {}
   virtual void PrintSelf(std::ostream & os, Indent indent) const ITK_OVERRIDE;
 
+  const TransformType * GetSliceInverseTransform( SizeValueType sliceIndex ) const;
+
 private:
   SliceSeriesSpecialCoordinatesImage(const Self &); // purposely not implemented
   void operator=(const Self &);                          // purposely not implemented
 
   typename SliceImageType::Pointer      m_SliceImage;
   typename SliceTransformsType::Pointer m_SliceTransforms;
+  typename SliceTransformsType::Pointer m_SliceInverseTransforms;
 };
 } // end namespace itk
 

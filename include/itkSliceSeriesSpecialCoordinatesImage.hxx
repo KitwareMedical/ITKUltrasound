@@ -38,6 +38,7 @@ SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension 
 {
   this->m_SliceImage = SliceImageType::New();
   this->m_SliceTransforms = SliceTransformsType::New();
+  this->m_SliceInverseTransforms = SliceTransformsType::New();
 }
 
 
@@ -49,6 +50,7 @@ SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension 
   Superclass::SetLargestPossibleRegion( region );
   const SizeType & largestSize = this->GetLargestPossibleRegion().GetSize();
   this->m_SliceTransforms->Reserve( largestSize[ImageDimension - 1] );
+  this->m_SliceInverseTransforms->Reserve( largestSize[ImageDimension - 1] );
 }
 
 
@@ -62,6 +64,15 @@ SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension 
     return;
     }
   this->m_SliceTransforms->SetElement( sliceIndex, transform );
+  typename TransformType::Pointer inverse = TransformType::New();
+  if( transform->GetInverse( inverse ) )
+    {
+    this->m_SliceInverseTransforms->SetElement( sliceIndex, inverse );
+    }
+  else
+    {
+    itkExceptionMacro("Could not get inverse for transform: " << transform);
+    }
   this->Modified();
 }
 
@@ -74,6 +85,19 @@ SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension 
   if( this->m_SliceTransforms->Size() > sliceIndex )
     {
     return this->m_SliceTransforms->GetElement( sliceIndex ).GetPointer();
+    }
+  return ITK_NULLPTR;
+}
+
+
+template< typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension >
+const typename SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension >::TransformType *
+SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension >
+::GetSliceInverseTransform( SizeValueType sliceIndex ) const
+{
+  if( this->m_SliceInverseTransforms->Size() > sliceIndex )
+    {
+    return this->m_SliceInverseTransforms->GetElement( sliceIndex ).GetPointer();
     }
   return ITK_NULLPTR;
 }
