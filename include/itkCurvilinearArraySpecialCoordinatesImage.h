@@ -78,11 +78,11 @@ namespace itk
  *
  * \sa SpecialCoordinatesImage
  * \sa PhasedArray3DSpecialCoordinatesImage
+ * \sa SliceSeriesSpecialCoordinatesImage
  *
  * \ingroup Ultrasound
  *
  * \ingroup ImageObjects
- * \ingroup ITKCommon
  */
 template< typename TPixel, unsigned int VDimension >
 class CurvilinearArraySpecialCoordinatesImage:

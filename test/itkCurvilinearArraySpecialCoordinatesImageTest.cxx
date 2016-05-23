@@ -68,6 +68,30 @@ int itkCurvilinearArraySpecialCoordinatesImageTest( int argc, char * argv[] )
 
   curvilinearArrayImage->Print( std::cout );
 
+  typedef itk::ContinuousIndex< double, Dimension > ContinuousIndexType;
+  ContinuousIndexType continuousIndex;
+  continuousIndex[0] = 0.0;
+  continuousIndex[1] = 0.0;
+  continuousIndex[2] = 0.0;
+  std::cout << "Continuous index: " << continuousIndex << std::endl;
+  SpecialCoordinatesImageType::PointType point;
+  curvilinearArrayImage->TransformContinuousIndexToPhysicalPoint( continuousIndex, point );
+  std::cout << "Transformed point: " << point << std::endl;
+  ContinuousIndexType continuousTransformedIndex;
+  curvilinearArrayImage->TransformPhysicalPointToContinuousIndex( point, continuousTransformedIndex );
+  std::cout << "Transformed continuous index: " << continuousTransformedIndex << std::endl;
+  std::cout << std::endl;
+
+  continuousIndex[0] = 2047.0;
+  continuousIndex[1] = 240.0;
+  continuousIndex[2] = 0.0;
+  std::cout << "Continuous index: " << continuousIndex << std::endl;
+  curvilinearArrayImage->TransformContinuousIndexToPhysicalPoint( continuousIndex, point );
+  std::cout << "Transformed point: " << point << std::endl;
+  curvilinearArrayImage->TransformPhysicalPointToContinuousIndex( point, continuousTransformedIndex );
+  std::cout << "Transformed continuous index: " << continuousTransformedIndex << std::endl;
+  std::cout << std::endl;
+
   typedef itk::ResampleImageFilter< SpecialCoordinatesImageType, ImageType > ResamplerType;
   ResamplerType::Pointer resampler = ResamplerType::New();
   resampler->SetInput( reader->GetOutput() );
@@ -85,6 +109,8 @@ int itkCurvilinearArraySpecialCoordinatesImageTest( int argc, char * argv[] )
   resampler->SetOutputOrigin( outputOrigin );
 
   typedef itk::WindowedSincInterpolateImageFunction< SpecialCoordinatesImageType, 3 > WindowedSincInterpolatorType;
+  WindowedSincInterpolatorType::Pointer sincInterpolator = WindowedSincInterpolatorType::New();
+  sincInterpolator->SetInputImage( curvilinearArrayImage );
 
   typedef itk::ImageFileWriter< ImageType > WriterType;
   WriterType::Pointer writer = WriterType::New();

@@ -90,7 +90,7 @@ RUN git clone https://gitlab.kitware.com/vtk/vtk.git VTK && \
 # Build and install ITK from source.
 RUN git clone git://itk.org/ITK.git && \
   cd /usr/src/ITK && \
-  git checkout v4.9.0 && \
+  git checkout v4.10rc02 && \
   mkdir /usr/src/ITK-build && \
   cd /usr/src/ITK-build && \
   cmake -G Ninja \
