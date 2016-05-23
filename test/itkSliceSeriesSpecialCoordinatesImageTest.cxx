@@ -230,6 +230,7 @@ int itkSliceSeriesSpecialCoordinatesImageTest( int argc, char * argv[] )
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFileName );
   writer->SetInput( resampler->GetOutput() );
+  writer->SetUseCompression( true );
   try
     {
     writer->Update();

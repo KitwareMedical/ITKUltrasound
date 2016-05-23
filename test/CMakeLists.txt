@@ -137,9 +137,9 @@ itk_add_test( NAME itkVnlInverse1DFFTImageFilterTest
     )
   itk_add_test(NAME itkSliceSeriesSpecialCoordinatesImageTest
   COMMAND UltrasoundTestDriver
-  #--compare
-    #${ITK_TEST_OUTPUT_DIR}/itkSliceSeriesSpecialCoordinatesImageTest.mha
-    #DATA{Baseline/itkSliceSeriesSpecialCoordinatesImageTest.mha}
+  --compare
+    ${ITK_TEST_OUTPUT_DIR}/itkSliceSeriesSpecialCoordinatesImageTest.mha
+    DATA{Baseline/itkSliceSeriesSpecialCoordinatesImageTest.mha}
   itkSliceSeriesSpecialCoordinatesImageTest
     DATA{Input/curvilinear_envelope_multiframe.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkSliceSeriesSpecialCoordinatesImageTest.mha
