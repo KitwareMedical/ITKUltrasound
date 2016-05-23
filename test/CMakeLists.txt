@@ -137,6 +137,7 @@ itk_add_test( NAME itkVnlInverse1DFFTImageFilterTest
     )
   itk_add_test(NAME itkSliceSeriesSpecialCoordinatesImageTest
   COMMAND UltrasoundTestDriver
+  --compareIntensityTolerance 10.0
   --compare
     ${ITK_TEST_OUTPUT_DIR}/itkSliceSeriesSpecialCoordinatesImageTest.mha
     DATA{Baseline/itkSliceSeriesSpecialCoordinatesImageTest.mha}
