@@ -87,46 +87,157 @@ int itkSliceSeriesSpecialCoordinatesImageTest( int argc, char * argv[] )
   for( itk::SizeValueType sliceIndex = 0; sliceIndex < numberOfSlices; ++sliceIndex )
     {
     TransformType::Pointer transform = TransformType::New();
-    transform->SetRotation( 0.0, 0.0, sliceIndex * 5.0 * vnl_math::pi / 180.0 );
+    transform->SetRotation( sliceIndex * 5.0 * vnl_math::pi / 180.0, 0.0, 0.0 );
     image->SetSliceTransform( sliceIndex, transform );
+    std::cout << "sliceIndex: " << sliceIndex << std::endl;
+    std::cout << "transform: " << std::endl;
+    transform->Print( std::cout );
     }
   TransformType::ConstPointer obtainedTransform = image->GetSliceTransform( 0 );
 
   image->Print( std::cout );
 
+  SliceSeriesImageType::IndexType index;
+  index[0] = 1000;
+  index[1] = 150;
+  index[2] = 1;
+  std::cout << "Input index: " << index << std::endl;
+  SliceSeriesImageType::PointType point;
+  image->TransformIndexToPhysicalPoint( index, point );
+  std::cout << "Transformed point: " << point << std::endl;
+  SliceSeriesImageType::IndexType transformedIndex;
+  image->TransformPhysicalPointToIndex( point, transformedIndex );
+  std::cout << "Transformed index: " << transformedIndex << std::endl;
+  std::cout << std::endl;
+
+  typedef itk::ContinuousIndex< double, Dimension > ContinuousIndexType;
+  ContinuousIndexType continuousIndex;
+  continuousIndex[0] = 1000.5;
+  continuousIndex[1] = 150.5;
+  continuousIndex[2] = 1.5;
+  std::cout << "Continuous index: " << continuousIndex << std::endl;
+  image->TransformContinuousIndexToPhysicalPoint( continuousIndex, point );
+  std::cout << "Transformed point: " << point << std::endl;
+  ContinuousIndexType continuousTransformedIndex;
+  image->TransformPhysicalPointToContinuousIndex( point, continuousTransformedIndex );
+  std::cout << "Transformed continuous index: " << continuousTransformedIndex << std::endl;
+  std::cout << std::endl;
+
+  continuousIndex[0] = 500.0;
+  continuousIndex[1] = 50.0;
+  continuousIndex[2] = 0.0;
+  std::cout << "Continuous index: " << continuousIndex << std::endl;
+  image->TransformContinuousIndexToPhysicalPoint( continuousIndex, point );
+  std::cout << "Transformed point: " << point << std::endl;
+  image->TransformPhysicalPointToContinuousIndex( point, continuousTransformedIndex );
+  std::cout << "Transformed continuous index: " << continuousTransformedIndex << std::endl;
+  std::cout << std::endl;
+
+  continuousIndex[0] = 0.0;
+  continuousIndex[1] = 0.0;
+  continuousIndex[2] = 0.0;
+  std::cout << "Continuous index: " << continuousIndex << std::endl;
+  image->TransformContinuousIndexToPhysicalPoint( continuousIndex, point );
+  std::cout << "Transformed point: " << point << std::endl;
+  image->TransformPhysicalPointToContinuousIndex( point, continuousTransformedIndex );
+  std::cout << "Transformed continuous index: " << continuousTransformedIndex << std::endl;
+  std::cout << std::endl;
+
+  continuousIndex[0] = 2047.0;
+  continuousIndex[1] = 240.0;
+  continuousIndex[2] = 2.0;
+  std::cout << "Continuous index: " << continuousIndex << std::endl;
+  image->TransformContinuousIndexToPhysicalPoint( continuousIndex, point );
+  std::cout << "Transformed point: " << point << std::endl;
+  image->TransformPhysicalPointToContinuousIndex( point, continuousTransformedIndex );
+  std::cout << "Transformed continuous index: " << continuousTransformedIndex << std::endl;
+  std::cout << std::endl;
+
+  ImageType::SizeType inputSize = image->GetLargestPossibleRegion().GetSize();
+
   typedef itk::ResampleImageFilter< SliceSeriesImageType, ImageType > ResamplerType;
   ResamplerType::Pointer resampler = ResamplerType::New();
-  resampler->SetInput( reader->GetOutput() );
+  resampler->SetInput( image );
+  resampler->SetDefaultPixelValue( 33 );
   ImageType::SizeType outputSize = reader->GetOutput()->GetLargestPossibleRegion().GetSize();
-  outputSize[0] = 800;
-  outputSize[1] = 800;
-  outputSize[2] = 40;
+  outputSize[0] = 100;
+  outputSize[1] = 100;
+  outputSize[2] = 20;
   resampler->SetSize( outputSize );
+
+  continuousIndex[0] = inputSize[0] - 1;
+  continuousIndex[1] = 0;
+  continuousIndex[2] = 0;
+  SliceSeriesImageType::PointType xMinPoint;
+  image->TransformContinuousIndexToPhysicalPoint( continuousIndex, xMinPoint );
+  std::cout << "xMinPoint: " << xMinPoint << std::endl;
+
+  continuousIndex[0] = inputSize[0] - 1;
+  continuousIndex[1] = inputSize[1] - 1;
+  continuousIndex[2] = 0;
+  SliceSeriesImageType::PointType xMaxPoint;
+  image->TransformContinuousIndexToPhysicalPoint( continuousIndex, xMaxPoint );
+  std::cout << "xMaxPoint: " << xMaxPoint << std::endl;
+
+  continuousIndex[0] = 0;
+  continuousIndex[1] = 0;
+  continuousIndex[2] = inputSize[2] - 1;
+  SliceSeriesImageType::PointType yMinPoint;
+  image->TransformContinuousIndexToPhysicalPoint( continuousIndex, yMinPoint );
+  std::cout << "yMinPoint: " << yMinPoint << std::endl;
+
+  continuousIndex[0] = inputSize[0] - 1;
+  continuousIndex[1] = inputSize[1] / 2;
+  continuousIndex[2] = 0;
+  SliceSeriesImageType::PointType yMaxPoint;
+  image->TransformContinuousIndexToPhysicalPoint( continuousIndex, yMaxPoint );
+  std::cout << "yMaxPoint: " << yMaxPoint << std::endl;
+
+  continuousIndex[0] = 0;
+  continuousIndex[1] = 0;
+  continuousIndex[2] = 0;
+  SliceSeriesImageType::PointType zMinPoint;
+  image->TransformContinuousIndexToPhysicalPoint( continuousIndex, zMinPoint );
+  std::cout << "zMinPoint: " << zMinPoint << std::endl;
+
+  continuousIndex[0] = inputSize[0] - 1;
+  continuousIndex[1] = inputSize[1] / 2;
+  continuousIndex[2] = inputSize[2] - 1;
+  SliceSeriesImageType::PointType zMaxPoint;
+  image->TransformContinuousIndexToPhysicalPoint( continuousIndex, zMaxPoint );
+  std::cout << "zMaxPoint: " << zMaxPoint << std::endl;
+
+  std::cout << std::endl;
+  ImageType::PointType outputOrigin;
+  outputOrigin[0] = xMinPoint[0];
+  outputOrigin[1] = yMinPoint[1];
+  outputOrigin[2] = zMinPoint[2];
+  resampler->SetOutputOrigin( outputOrigin );
+  std::cout << "Output origin: " << outputOrigin << std::endl;
+
   ImageType::SpacingType outputSpacing;
-  outputSpacing.Fill( 0.15 );
+  outputSpacing[0] = (xMaxPoint[0] - xMinPoint[0]) / (outputSize[0] - 1);
+  outputSpacing[1] = (yMaxPoint[1] - yMinPoint[1]) / (outputSize[1] - 1);
+  outputSpacing[2] = (zMaxPoint[2] - zMinPoint[2]) / (outputSize[2] - 1);
   resampler->SetOutputSpacing( outputSpacing );
-  //SpecialCoordinatesImageType::PointType outputOrigin;
-  //outputOrigin[0] = outputSize[0] * outputSpacing[0] / -2.0;
-  //outputOrigin[1] = radiusStart * std::cos( vnl_math::pi / 4.0 );
-  //outputOrigin[2] = reader->GetOutput()->GetOrigin()[2];
-  //resampler->SetOutputOrigin( outputOrigin );
+  std::cout << "Output spacing: " << outputSpacing << std::endl;
 
-  //typedef itk::WindowedSincInterpolateImageFunction< SpecialCoordinatesImageType, 3 > WindowedSincInterpolatorType;
-  //WindowedSincInterpolatorType::Pointer sincInterpolator = WindowedSincInterpolatorType::New();
-  //sincInterpolator->SetInputImage( curvilinearArrayImage );
+  typedef itk::WindowedSincInterpolateImageFunction< SliceSeriesImageType, 3 > WindowedSincInterpolatorType;
+  WindowedSincInterpolatorType::Pointer sincInterpolator = WindowedSincInterpolatorType::New();
+  sincInterpolator->SetInputImage( image );
 
-  //typedef itk::ImageFileWriter< ImageType > WriterType;
-  //WriterType::Pointer writer = WriterType::New();
-  //writer->SetFileName( outputImageFileName );
-  //writer->SetInput( resampler->GetOutput() );
-  //try
-    //{
-    //writer->Update();
-    //}
-  //catch( itk::ExceptionObject & error )
-    //{
-    //std::cerr << "Error: " << error << std::endl;
-    //return EXIT_FAILURE;
-    //}
+  typedef itk::ImageFileWriter< ImageType > WriterType;
+  WriterType::Pointer writer = WriterType::New();
+  writer->SetFileName( outputImageFileName );
+  writer->SetInput( resampler->GetOutput() );
+  try
+    {
+    writer->Update();
+    }
+  catch( itk::ExceptionObject & error )
+    {
+    std::cerr << "Error: " << error << std::endl;
+    return EXIT_FAILURE;
+    }
   return EXIT_SUCCESS;
 }

@@ -157,8 +157,8 @@ public:
   itkSetObjectMacro(SliceImage, SliceImageType);
   itkGetConstObjectMacro(SliceImage, SliceImageType);
 
-  void SetSliceTransform( SizeValueType sliceIndex, TransformType * transform );
-  const TransformType * GetSliceTransform( SizeValueType sliceIndex ) const;
+  void SetSliceTransform( IndexValueType sliceIndex, TransformType * transform );
+  const TransformType * GetSliceTransform( IndexValueType sliceIndex ) const;
 
   /** Graft the data and information from one image to another. This
    * is a convenience method to setup a second image with all the meta
@@ -181,37 +181,101 @@ public:
     const Point< TCoordRep, VDimension > & point,
     ContinuousIndex< TIndexRep, VDimension > & index) const
   {
-    //const RegionType & region = this->GetLargestPossibleRegion();
-    //const double maxLateral = region.GetSize(1) - 1;
+    const RegionType & region = this->GetLargestPossibleRegion();
+    const unsigned int sliceDimensionIndex = ImageDimension - 1;
+    IndexValueType lowerIndex = region.GetIndex( sliceDimensionIndex );
+    IndexValueType upperIndex = lowerIndex + region.GetSize( sliceDimensionIndex ) - 1;
+    IndexValueType nextIndex = lowerIndex;
+    PointType lowerPoint;
+    const TransformType * transform = this->GetSliceInverseTransform( lowerIndex );
+    if( transform == ITK_NULLPTR )
+      {
+      itkExceptionMacro("Inverse slice transform not available for index: " << lowerIndex);
+      }
+    lowerPoint = transform->TransformPoint( point );
+    int lowerSign = Math::sgn( lowerPoint[sliceDimensionIndex] );
+    PointType upperPoint;
+    transform = this->GetSliceInverseTransform( upperIndex );
+    if( transform == ITK_NULLPTR )
+      {
+      itkExceptionMacro("Inverse slice transform not available for index: " << upperIndex);
+      }
+    upperPoint = transform->TransformPoint( point );
+    int upperSign = Math::sgn( upperPoint[sliceDimensionIndex] );
+    PointType nextPoint = lowerPoint;
+    int nextSign = 0;
+    if( lowerSign == 0 )
+      {
+      nextSign = 0;
+      nextPoint = lowerPoint;
+      }
+    else if( upperSign == 0 )
+      {
+      nextSign = 0;
+      nextPoint = upperPoint;
+      }
+    else
+      {
+      if( lowerSign == upperSign )
+        {
+        // outside the image
+        return false;
+        }
 
-    //// Convert Cartesian coordinates into angular coordinates
-    //TCoordRep lateral = Math::pi_over_2;
-    //if( point[1] != 0.0 )
-      //{
-      //lateral = std::atan(point[0] / point[1]);
-      //}
-    //const TCoordRep radius  = std::sqrt(point[0] * point[0] + point[1] * point[1] );
+      // Binary search for the transforms that bounds the slice
+      while( upperIndex - lowerIndex > 1 )
+        {
+        nextIndex = lowerIndex + ( upperIndex - lowerIndex ) / 2;
+        transform = this->GetSliceInverseTransform( nextIndex );
+        nextPoint = transform->TransformPoint( point );
+        nextSign = Math::sgn( nextPoint[sliceDimensionIndex] );
+        if( nextSign == 0 )
+          {
+          break;
+          }
+        else if( nextSign == lowerSign )
+          {
+          lowerIndex = nextIndex;
+          lowerPoint = nextPoint;
+          }
+        else
+          {
+          upperIndex = nextIndex;
+          upperPoint = nextPoint;
+          }
+        }
+      }
 
-    //// Convert the "proper" angular coordinates into index format
-    //index[0] = static_cast< TCoordRep >( ( ( radius - m_FirstSampleDistance )
-                                           /// m_RadiusSampleSize ) );
-    //index[1] = static_cast< TCoordRep >( ( lateral / m_LateralAngularSeparation )
-                                         //+ ( maxLateral / 2.0 ) );
-    //Vector< SpacePrecisionType, VDimension > cvector;
-    //for ( unsigned int kk = 0; kk < VDimension; ++kk )
-      //{
-      //cvector[kk] = point[kk] - this->m_Origin[kk];
-      //}
-    //cvector = this->m_PhysicalPointToIndex * cvector;
-    //for ( unsigned int ii = 2; ii < VDimension; ++ii )
-      //{
-      //index[ii] = static_cast< TIndexRep >( cvector[ii] );
-      //}
+    if( nextSign != 0 )
+      {
+      const TCoordRep fraction = - lowerPoint[sliceDimensionIndex] / ( upperPoint[sliceDimensionIndex] - lowerPoint[sliceDimensionIndex] );
+      nextPoint[sliceDimensionIndex] = lowerIndex + fraction * (upperIndex - lowerIndex);
+      for( unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii )
+        {
+        nextPoint[ii] = lowerPoint[ii] + fraction * (upperPoint[ii] - lowerPoint[ii]);
+        }
+      }
+    else
+      {
+      nextPoint[sliceDimensionIndex] = nextIndex;
+      }
 
-    //// Now, check to see if the index is within allowed bounds
-    //const bool isInside = region.IsInside(index);
+    typename SliceImageType::PointType slicePoint;
+    for( unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii )
+      {
+      slicePoint[ii] = nextPoint[ii];
+      }
+    ContinuousIndex< TIndexRep, SliceImageType::ImageDimension > sliceIndex;
+    this->m_SliceImage->TransformPhysicalPointToContinuousIndex( slicePoint, sliceIndex );
+    for( unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii )
+      {
+      index[ii] = sliceIndex[ii];
+      }
+    index[sliceDimensionIndex] = nextPoint[sliceDimensionIndex];
+    // Now, check to see if the index is within allowed bounds
+    const bool isInside = region.IsInside(index);
 
-    //return isInside;
+    return isInside;
   }
 
   /** Get the index (discrete) from a physical point.
@@ -223,36 +287,101 @@ public:
     const Point< TCoordRep, VDimension > & point,
     IndexType & index) const
   {
-    //const RegionType & region = this->GetLargestPossibleRegion();
-    //const double maxLateral = region.GetSize(1) - 1;
+    const RegionType & region = this->GetLargestPossibleRegion();
+    const unsigned int sliceDimensionIndex = ImageDimension - 1;
+    IndexValueType lowerIndex = region.GetIndex( sliceDimensionIndex );
+    IndexValueType upperIndex = lowerIndex + region.GetSize( sliceDimensionIndex ) - 1;
+    IndexValueType nextIndex = lowerIndex;
+    PointType lowerPoint;
+    const TransformType * transform = this->GetSliceInverseTransform( lowerIndex );
+    if( transform == ITK_NULLPTR )
+      {
+      itkExceptionMacro("Inverse slice transform not available for index: " << lowerIndex);
+      }
+    lowerPoint = transform->TransformPoint( point );
+    int lowerSign = Math::sgn( lowerPoint[sliceDimensionIndex] );
+    PointType upperPoint;
+    transform = this->GetSliceInverseTransform( upperIndex );
+    if( transform == ITK_NULLPTR )
+      {
+      itkExceptionMacro("Inverse slice transform not available for index: " << upperIndex);
+      }
+    upperPoint = transform->TransformPoint( point );
+    int upperSign = Math::sgn( upperPoint[sliceDimensionIndex] );
+    PointType nextPoint = lowerPoint;
+    int nextSign = 0;
+    if( lowerSign == 0 )
+      {
+      nextSign = 0;
+      nextPoint = lowerPoint;
+      }
+    else if( upperSign == 0 )
+      {
+      nextSign = 0;
+      nextPoint = upperPoint;
+      }
+    else
+      {
+      if( lowerSign == upperSign )
+        {
+        // outside the image
+        return false;
+        }
 
-    //// Convert Cartesian coordinates into angular coordinates
-    //TCoordRep lateral = Math::pi_over_2;
-    //if( point[1] != 0.0 )
-      //{
-      //lateral = std::atan(point[0] / point[1]);
-      //}
-    //const TCoordRep radius  = std::sqrt(point[0] * point[0] + point[1] * point[1] );
+      // Binary search for the transforms that bounds the slice
+      while( upperIndex - lowerIndex > 1 )
+        {
+        nextIndex = lowerIndex + ( upperIndex - lowerIndex ) / 2;
+        transform = this->GetSliceInverseTransform( nextIndex );
+        nextPoint = transform->TransformPoint( point );
+        nextSign = Math::sgn( nextPoint[sliceDimensionIndex] );
+        if( nextSign == 0 )
+          {
+          break;
+          }
+        else if( nextSign == lowerSign )
+          {
+          lowerIndex = nextIndex;
+          lowerPoint = nextPoint;
+          }
+        else
+          {
+          upperIndex = nextIndex;
+          upperPoint = nextPoint;
+          }
+        }
+      }
 
-    //// Convert the "proper" angular coordinates into index format
-    //index[0] = static_cast< IndexValueType >( ( ( radius - m_FirstSampleDistance )
-                                           /// m_RadiusSampleSize ) );
-    //index[1] = static_cast< IndexValueType >( ( lateral / m_LateralAngularSeparation )
-                                         //+ ( maxLateral / 2.0 ) );
-    //for ( unsigned int ii = 2; ii < VDimension; ++ii )
-      //{
-      //TCoordRep sum = NumericTraits< TCoordRep >::ZeroValue();
-      //for ( unsigned int jj = 0; jj < VDimension; ++jj )
-        //{
-        //sum += this->m_PhysicalPointToIndex[ii][jj] * ( point[jj] - this->m_Origin[jj] );
-        //}
-      //index[ii] = Math::RoundHalfIntegerUp< IndexValueType >(sum);
-      //}
+    if( nextSign != 0 )
+      {
+      const TCoordRep fraction = - lowerPoint[sliceDimensionIndex] / ( upperPoint[sliceDimensionIndex] - lowerPoint[sliceDimensionIndex] );
+      nextPoint[sliceDimensionIndex] = lowerIndex + fraction * (upperIndex - lowerIndex);
+      for( unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii )
+        {
+        nextPoint[ii] = lowerPoint[ii] + fraction * (upperPoint[ii] - lowerPoint[ii]);
+        }
+      }
+    else
+      {
+      nextPoint[sliceDimensionIndex] = nextIndex;
+      }
 
-    //// Now, check to see if the index is within allowed bounds
-    //const bool isInside = region.IsInside(index);
+    typename SliceImageType::PointType slicePoint;
+    for( unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii )
+      {
+      slicePoint[ii] = nextPoint[ii];
+      }
+    typename SliceImageType::IndexType sliceIndex;
+    this->m_SliceImage->TransformPhysicalPointToIndex( slicePoint, sliceIndex );
+    for( unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii )
+      {
+      index[ii] = sliceIndex[ii];
+      }
+    index[sliceDimensionIndex] = Math::RoundHalfIntegerUp< IndexValueType >( nextPoint[sliceDimensionIndex] );
+    // Now, check to see if the index is within allowed bounds
+    const bool isInside = region.IsInside(index);
 
-    //return isInside;
+    return isInside;
   }
 
   /** Get a physical point (in the space which
@@ -265,7 +394,7 @@ public:
     Point< TCoordRep, VDimension > & point) const
   {
     point.Fill( 0.0 );
-    typename SliceImageType::ContinuousIndexType sliceIndex;
+    ContinuousIndex< TIndexRep, SliceImageType::ImageDimension > sliceIndex;
     for( unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii )
       {
       sliceIndex[ii] = index[ii];
@@ -276,10 +405,41 @@ public:
       {
       point[ii] += slicePoint[ii];
       }
-    const TransformType * transform = this->GetSliceTransform( Math::RoundHalfIntegerUp< IndexValueType, TIndexRep >( index[ImageDimension - 1] ) );
+    typedef Point< TCoordRep, VDimension > PointType;
+    PointType lowerPoint;
+    const IndexValueType floor = Math::Floor< IndexValueType, TIndexRep >( index[ImageDimension - 1] );
+    const IndexValueType ceil = Math::Ceil< IndexValueType, TIndexRep >( index[ImageDimension - 1] );
+    const TransformType * transform = this->GetSliceTransform( floor );
     if( transform != ITK_NULLPTR )
       {
-      point = transform->TransformPoint( point );
+      lowerPoint = transform->TransformPoint( point );
+      }
+    else
+      {
+      transform = this->GetSliceTransform( ceil );
+      if( transform != ITK_NULLPTR )
+        {
+        point = transform->TransformPoint( point );
+        }
+      return;
+      }
+
+    transform = this->GetSliceTransform( ceil );
+    PointType upperPoint;
+    if( transform != ITK_NULLPTR )
+      {
+      upperPoint = transform->TransformPoint( point );
+      }
+    else
+      {
+      point = lowerPoint;
+      return;
+      }
+
+    const TIndexRep fraction = index[ImageDimension - 1] - floor;
+    for( unsigned int ii = 0; ii < ImageDimension; ++ii )
+      {
+      point[ii] = lowerPoint[ii] + fraction * (upperPoint[ii] - lowerPoint[ii]);
       }
   }
 
@@ -347,7 +507,7 @@ protected:
   virtual ~SliceSeriesSpecialCoordinatesImage() {}
   virtual void PrintSelf(std::ostream & os, Indent indent) const ITK_OVERRIDE;
 
-  const TransformType * GetSliceInverseTransform( SizeValueType sliceIndex ) const;
+  const TransformType * GetSliceInverseTransform( IndexValueType sliceIndex ) const;
 
 private:
   SliceSeriesSpecialCoordinatesImage(const Self &); // purposely not implemented

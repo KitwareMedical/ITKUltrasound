@@ -57,17 +57,20 @@ SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension 
 template< typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension >
 void
 SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension >
-::SetSliceTransform( SizeValueType sliceIndex, TransformType * transform )
+::SetSliceTransform( IndexValueType sliceIndex, TransformType * transform )
 {
-  if( this->m_SliceTransforms->Size() > sliceIndex && this->m_SliceTransforms->GetElement( sliceIndex ).GetPointer() == transform )
+  const RegionType & largestRegion = this->GetLargestPossibleRegion();
+  const IndexValueType largestIndex = largestRegion.GetIndex(ImageDimension - 1);
+  const SizeValueType transformsIndex = static_cast< SizeValueType >( sliceIndex - largestIndex );
+  if( this->m_SliceTransforms->Size() > transformsIndex && this->m_SliceTransforms->GetElement( transformsIndex ).GetPointer() == transform )
     {
     return;
     }
-  this->m_SliceTransforms->SetElement( sliceIndex, transform );
+  this->m_SliceTransforms->SetElement( transformsIndex, transform );
   typename TransformType::Pointer inverse = TransformType::New();
   if( transform->GetInverse( inverse ) )
     {
-    this->m_SliceInverseTransforms->SetElement( sliceIndex, inverse );
+    this->m_SliceInverseTransforms->SetElement( transformsIndex, inverse );
     }
   else
     {
@@ -80,11 +83,14 @@ SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension 
 template< typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension >
 const typename SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension >::TransformType *
 SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension >
-::GetSliceTransform( SizeValueType sliceIndex ) const
+::GetSliceTransform( IndexValueType sliceIndex ) const
 {
-  if( this->m_SliceTransforms->Size() > sliceIndex )
+  const RegionType & largestRegion = this->GetLargestPossibleRegion();
+  const IndexValueType largestIndex = largestRegion.GetIndex(ImageDimension - 1);
+  const SizeValueType transformsIndex = static_cast< SizeValueType >( sliceIndex - largestIndex );
+  if( this->m_SliceTransforms->Size() > transformsIndex )
     {
-    return this->m_SliceTransforms->GetElement( sliceIndex ).GetPointer();
+    return this->m_SliceTransforms->GetElement( transformsIndex ).GetPointer();
     }
   return ITK_NULLPTR;
 }
@@ -93,11 +99,14 @@ SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension 
 template< typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension >
 const typename SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension >::TransformType *
 SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension >
-::GetSliceInverseTransform( SizeValueType sliceIndex ) const
+::GetSliceInverseTransform( IndexValueType sliceIndex ) const
 {
-  if( this->m_SliceInverseTransforms->Size() > sliceIndex )
+  const RegionType & largestRegion = this->GetLargestPossibleRegion();
+  const IndexValueType largestIndex = largestRegion.GetIndex(ImageDimension - 1);
+  const SizeValueType transformsIndex = static_cast< SizeValueType >( sliceIndex - largestIndex );
+  if( this->m_SliceInverseTransforms->Size() > transformsIndex )
     {
-    return this->m_SliceInverseTransforms->GetElement( sliceIndex ).GetPointer();
+    return this->m_SliceInverseTransforms->GetElement( transformsIndex ).GetPointer();
     }
   return ITK_NULLPTR;
 }
