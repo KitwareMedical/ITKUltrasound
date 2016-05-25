@@ -40,11 +40,7 @@ HDF5UltrasoundImageIO
     m_VoxelDataSet->close();
     delete m_VoxelDataSet;
     }
-  if(this->m_H5File != ITK_NULLPTR)
-    {
-    this->m_H5File->close();
-    delete this->m_H5File;
-    }
+  this->CloseH5File();
 }
 
 namespace
@@ -463,6 +459,7 @@ HDF5UltrasoundImageIO
     return false;
     }
 
+
   // call standard method to determine HDF-ness
   bool rval;
   // HDF5 is so exception happy, we have to worry about
@@ -474,9 +471,31 @@ HDF5UltrasoundImageIO
     }
   catch(...)
     {
+    return false;
+    }
+
+  this->CloseH5File();
+  this->m_H5File = new H5::H5File( fileNameToRead, H5F_ACC_RDONLY );
+  // Do not try to read this file if it is an ITK HDF5 Image file.
+  const herr_t status = H5Gget_objinfo( this->m_H5File->getId(), "/ITKImage", 0, ITK_NULLPTR );
+  if( status == 0 )
+    {
     rval = false;
     }
+
   return rval;
+}
+
+
+void
+HDF5UltrasoundImageIO
+::CloseH5File()
+{
+  if(this->m_H5File != ITK_NULLPTR)
+    {
+    this->m_H5File->close();
+    delete this->m_H5File;
+    }
 }
 
 
@@ -486,6 +505,7 @@ HDF5UltrasoundImageIO
 {
   try
     {
+    this->CloseH5File();
     this->m_H5File = new H5::H5File(this->GetFileName(),
                                     H5F_ACC_RDONLY);
 

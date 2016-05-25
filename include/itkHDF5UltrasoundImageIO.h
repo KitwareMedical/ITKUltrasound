@@ -108,6 +108,8 @@ private:
   void SetupStreaming(H5::DataSpace *imageSpace,
                       H5::DataSpace *slabSpace);
 
+  void CloseH5File();
+
   H5::H5File  * m_H5File;
   H5::DataSet * m_VoxelDataSet;
 };
