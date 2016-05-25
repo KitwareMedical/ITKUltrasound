@@ -14,12 +14,15 @@ itk_module(Ultrasound
     ITKIOImageBase
     ITKTransform
     ${_fft_depends}
+  PRIVATE_DEPENDS
+    ITKHDF5
   TEST_DEPENDS
     ITKTransform
     ITKTestKernel
     ITKImageSources
     ${_fft_depends}
   EXCLUDE_FROM_DEFAULT
+  ENABLE_SHARED
   DESCRIPTION
     "${DOCUMENTATION}"
   )
