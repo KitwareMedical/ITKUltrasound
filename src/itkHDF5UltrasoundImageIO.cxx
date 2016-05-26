@@ -477,8 +477,8 @@ HDF5UltrasoundImageIO
   this->CloseH5File();
   this->m_H5File = new H5::H5File( fileNameToRead, H5F_ACC_RDONLY );
   // Do not try to read this file if it is an ITK HDF5 Image file.
-  const herr_t status = H5Gget_objinfo( this->m_H5File->getId(), "/ITKImage", 0, ITK_NULLPTR );
-  if( status == 0 )
+  const herr_t status = H5Lexists( this->m_H5File->getId(), "/ITKImage", H5P_DEFAULT );
+  if( status == 1 )
     {
     rval = false;
     }
