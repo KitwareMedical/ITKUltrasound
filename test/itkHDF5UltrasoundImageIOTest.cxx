@@ -39,5 +39,19 @@ itkHDF5UltrasoundImageIOTest( int argc, char * argv [] )
 
   imageIO->SetFileName( inputImageFileName );
 
+  imageIO->ReadImageInformation();
+
+  const unsigned int Dimension = 3;
+
+  itk::SizeValueType dimensions[Dimension];
+  for( unsigned int ii = 0; ii < Dimension; ++ii )
+    {
+    dimensions[ii] = imageIO->GetDimensions( ii );
+    }
+  std::cout << "dimensions: [ " << dimensions[0] << ", " << dimensions[1] << ", " << dimensions[2] << " ]" << std::endl;
+  TEST_EXPECT_EQUAL( dimensions[0], 240 );
+  TEST_EXPECT_EQUAL( dimensions[1], 328 );
+  TEST_EXPECT_EQUAL( dimensions[2], 125 );
+
   return EXIT_SUCCESS;
 }

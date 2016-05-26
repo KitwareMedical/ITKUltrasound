@@ -49,8 +49,6 @@ namespace
 // strings defining HDF file layout for image data.
 const std::string eleAngle("/eleAngle");
 const std::string bimg("/bimg");
-const std::string axial("/axial");
-const std::string lat("/lat");
 
 template <typename TScalar>
 H5::PredType GetType()
@@ -305,29 +303,24 @@ std::vector<TScalar>
 HDF5UltrasoundImageIO
 ::ReadVector(const std::string & dataSetName)
 {
-  std::vector<TScalar> vec;
-  hsize_t dim[1];
-  H5::DataSet vecSet = this->m_H5File->openDataSet(dataSetName);
-  H5::DataSpace Space = vecSet.getSpace();
+  std::vector<TScalar> result;
+  H5::DataSet dataSet = this->m_H5File->openDataSet(dataSetName);
+  H5::DataSpace space = dataSet.getSpace();
 
-  if(Space.getSimpleExtentNdims() != 1)
+  hsize_t dim[space.getSimpleExtentNdims()];
+  space.getSimpleExtentDims( dim, ITK_NULLPTR );
+  result.resize( dim[0] );
+
+  TScalar * buffer = new TScalar[dim[0]];
+  H5::PredType vecType = GetType<TScalar>();
+  dataSet.read( buffer, vecType );
+  for( size_t ii = 0; ii < dim[0]; ++ii )
     {
-    itkExceptionMacro(<< "Wrong # of dims for data "
-                      << "in HDF5 File");
+    result[ii] = buffer[ii];
     }
-  Space.getSimpleExtentDims(dim,ITK_NULLPTR);
-  vec.resize(dim[0]);
-  TScalar *buf = new TScalar[dim[0]];
-  H5::PredType vecType =
-    GetType<TScalar>();
-  vecSet.read(buf,vecType);
-  for(unsigned int i = 0; i < dim[0]; ++i)
-    {
-    vec[i] = buf[i];
-    }
-  delete[] buf;
-  vecSet.close();
-  return vec;
+  delete[] buffer;
+  dataSet.close();
+  return result;
 }
 
 
@@ -511,34 +504,20 @@ HDF5UltrasoundImageIO
 
     this->SetNumberOfDimensions( 3 );
 
-    //std::string OriginName(groupName);
-    //OriginName += Origin;
-    //this->m_Origin = this->ReadVector<double>(OriginName);
+    const std::string axialPixelLocationsDataSet("/axial");
+    typedef std::vector< double > AxialPixelLocationsType;
+    AxialPixelLocationsType axialPixelLocations = this->ReadVector< double >( axialPixelLocationsDataSet );
+    this->SetDimensions( 0, axialPixelLocations.size() );
 
-    //for(int i = 0; i < numDims; i++)
-      //{
-      //this->SetDirection(i,directions[i]);
-      //}
+    const std::string lateralPixelLocationsDataSet("/lat");
+    typedef std::vector< double > LateralPixelLocationsType;
+    LateralPixelLocationsType lateralPixelLocations = this->ReadVector< double >( lateralPixelLocationsDataSet );
+    this->SetDimensions( 1, lateralPixelLocations.size() );
 
-    //std::string SpacingName(groupName);
-    //SpacingName += Spacing;
-    //std::vector<double> spacing = this->ReadVector<double>(SpacingName);
-    //for(int i = 0; i < numDims; i++)
-      //{
-      //this->SetSpacing(i,spacing[i]);
-      //}
-
-    //std::string DimensionsName(groupName);
-    //DimensionsName += Dimensions;
-
-    //{
-    //std::vector<ImageIOBase::SizeValueType> Dims =
-      //this->ReadVector<ImageIOBase::SizeValueType>(DimensionsName);
-    //for(int i = 0; i < numDims; i++)
-      //{
-      //this->SetDimensions(i,Dims[i]);
-      //}
-    //}
+    const std::string elevationalSliceAngleDataSet("/eleAngle");
+    typedef std::vector< double > ElevationalSliceAngleType;
+    ElevationalSliceAngleType elevationalSliceAngles = this->ReadVector< double >( elevationalSliceAngleDataSet );
+    this->SetDimensions( 2, elevationalSliceAngles.size() );
 
     //std::string VoxelDataName(groupName);
     //VoxelDataName += VoxelData;
