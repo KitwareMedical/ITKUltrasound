@@ -56,5 +56,11 @@ itkHDF5UltrasoundImageIOTest( int argc, char * argv [] )
   std::cout << "ComponentType: " << imageIO->GetComponentTypeAsString( imageIO->GetComponentType() ) << std::endl;
   TEST_EXPECT_EQUAL( imageIO->GetComponentType(), 9 );
 
+  const itk::MetaDataDictionary & metaDataDict = imageIO->GetMetaDataDictionary();
+  std::string sliceType;
+  itk::ExposeMetaData< std::string >( metaDataDict, "SliceType", sliceType );
+  std::cout << "SliceType: " << sliceType << std::endl;
+  TEST_EXPECT_EQUAL( sliceType, "Image" );
+
   return EXIT_SUCCESS;
 }
