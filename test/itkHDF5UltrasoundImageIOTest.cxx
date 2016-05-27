@@ -48,10 +48,13 @@ itkHDF5UltrasoundImageIOTest( int argc, char * argv [] )
     {
     dimensions[ii] = imageIO->GetDimensions( ii );
     }
-  std::cout << "dimensions: [ " << dimensions[0] << ", " << dimensions[1] << ", " << dimensions[2] << " ]" << std::endl;
+  std::cout << "Dimensions: [ " << dimensions[0] << ", " << dimensions[1] << ", " << dimensions[2] << " ]" << std::endl;
   TEST_EXPECT_EQUAL( dimensions[0], 240 );
   TEST_EXPECT_EQUAL( dimensions[1], 328 );
   TEST_EXPECT_EQUAL( dimensions[2], 125 );
+
+  std::cout << "ComponentType: " << imageIO->GetComponentTypeAsString( imageIO->GetComponentType() ) << std::endl;
+  TEST_EXPECT_EQUAL( imageIO->GetComponentType(), 9 );
 
   return EXIT_SUCCESS;
 }

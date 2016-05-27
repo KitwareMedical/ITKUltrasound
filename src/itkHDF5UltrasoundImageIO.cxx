@@ -95,7 +95,7 @@ GetH5TypeSpecialize(unsigned long long int, H5::PredType::NATIVE_ULLONG)
 
 inline
 ImageIOBase::IOComponentType
-PredTypeToComponentType(H5::DataType &type)
+PredTypeToComponentType(const H5::DataType & type)
 {
   if(type ==  H5::PredType::NATIVE_UCHAR)
     {
@@ -504,42 +504,28 @@ HDF5UltrasoundImageIO
 
     this->SetNumberOfDimensions( 3 );
 
-    const std::string axialPixelLocationsDataSet("/axial");
+    const std::string axialPixelLocationsDataSet( "/axial" );
     typedef std::vector< double > AxialPixelLocationsType;
     AxialPixelLocationsType axialPixelLocations = this->ReadVector< double >( axialPixelLocationsDataSet );
     this->SetDimensions( 0, axialPixelLocations.size() );
 
-    const std::string lateralPixelLocationsDataSet("/lat");
+    const std::string lateralPixelLocationsDataSet( "/lat" );
     typedef std::vector< double > LateralPixelLocationsType;
     LateralPixelLocationsType lateralPixelLocations = this->ReadVector< double >( lateralPixelLocationsDataSet );
     this->SetDimensions( 1, lateralPixelLocations.size() );
 
-    const std::string elevationalSliceAngleDataSet("/eleAngle");
+    const std::string elevationalSliceAngleDataSet( "/eleAngle" );
     typedef std::vector< double > ElevationalSliceAngleType;
     ElevationalSliceAngleType elevationalSliceAngles = this->ReadVector< double >( elevationalSliceAngleDataSet );
     this->SetDimensions( 2, elevationalSliceAngles.size() );
 
-    //std::string VoxelDataName(groupName);
-    //VoxelDataName += VoxelData;
-    //H5::DataSet imageSet = this->m_H5File->openDataSet(VoxelDataName);
-    //H5::DataSpace imageSpace = imageSet.getSpace();
-    ////
-    //// set the componentType
-    //H5::DataType imageVoxelType = imageSet.getDataType();
-    //this->m_ComponentType = PredTypeToComponentType(imageVoxelType);
-    ////
-    //// if this isn't a scalar image, deduce the # of components
-    //// by comparing the size of the Directions matrix with the
-    //// reported # of dimensions in the voxel dataset
-    //hsize_t nDims = imageSpace.getSimpleExtentNdims();
-    //hsize_t *Dims = new hsize_t[nDims];
-    //imageSpace.getSimpleExtentDims(Dims);
-    //if(nDims > this->GetNumberOfDimensions())
-      //{
-      //this->SetNumberOfComponents(Dims[nDims - 1]);
-      //}
-    //delete[] Dims;
-    ////
+    // set the ComponentType
+    const std::string pixelDataName( "/bimg" );
+    const H5::DataSet pixelDataSet = this->m_H5File->openDataSet( pixelDataName );
+    const H5::DataType pixelDataType = pixelDataSet.getDataType();
+    this->SetComponentType( PredTypeToComponentType( pixelDataType ) );
+
+
     //// read out metadata
     //MetaDataDictionary & metaDict = this->GetMetaDataDictionary();
     //// Necessary to clear dict if ImageIO object is re-used
