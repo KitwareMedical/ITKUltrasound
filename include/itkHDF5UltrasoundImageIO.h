@@ -90,21 +90,9 @@ private:
   HDF5UltrasoundImageIO(const Self &) ITK_DELETE_FUNCTION;
   void operator=(const Self &) ITK_DELETE_FUNCTION;
 
-  std::string ReadString(const std::string &path);
-
-  template <typename TScalar>
-  TScalar ReadScalar(const std::string &dataSetName);
-
   template <typename TScalar>
   std::vector<TScalar> ReadVector(const std::string &dataSetName);
 
-  std::vector<std::vector<double> > ReadDirections(const std::string &path);
-
-  template <typename TType>
-    void StoreMetaData(MetaDataDictionary *metaDict,
-                       const std::string &HDFPath,
-                       const std::string &name,
-                       unsigned long numElements);
   void SetupStreaming(H5::DataSpace *imageSpace,
                       H5::DataSpace *slabSpace);
 

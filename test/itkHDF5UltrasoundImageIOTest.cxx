@@ -70,6 +70,5 @@ itkHDF5UltrasoundImageIOTest( int argc, char * argv [] )
   TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceSpacing[0], 0.1925 ) );
   TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceSpacing[1], 0.167811, 10, 1e-6 ) );
 
-
   return EXIT_SUCCESS;
 }
