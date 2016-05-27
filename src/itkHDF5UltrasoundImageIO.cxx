@@ -298,7 +298,7 @@ std::vector<TScalar>
 HDF5UltrasoundImageIO
 ::ReadVector(const std::string & dataSetName)
 {
-  std::vector<TScalar> result;
+  std::vector< TScalar > result;
   H5::DataSet dataSet = this->m_H5File->openDataSet(dataSetName);
   H5::DataSpace space = dataSet.getSpace();
 
@@ -306,14 +306,8 @@ HDF5UltrasoundImageIO
   space.getSimpleExtentDims( dim, ITK_NULLPTR );
   result.resize( dim[0] );
 
-  TScalar * buffer = new TScalar[dim[0]];
   H5::PredType vecType = GetType<TScalar>();
-  dataSet.read( buffer, vecType );
-  for( size_t ii = 0; ii < dim[0]; ++ii )
-    {
-    result[ii] = buffer[ii];
-    }
-  delete[] buffer;
+  dataSet.read( &(result[0]), vecType );
   dataSet.close();
   return result;
 }
