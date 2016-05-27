@@ -406,6 +406,10 @@ HDF5UltrasoundImageIO
     sliceOrigin[0] = axialPixelLocations[0];
     sliceOrigin[1] = lateralPixelLocations[1];
     EncapsulateMetaData< SliceOriginType >( metaDataDict, "SliceOrigin", sliceOrigin );
+
+    typedef Array< double > ElevationalSliceAnglesMetaDataType;
+    ElevationalSliceAnglesMetaDataType elevationalSliceAnglesMetaData( &(elevationalSliceAngles[0]), elevationalSliceAngles.size() );
+    EncapsulateMetaData< ElevationalSliceAnglesMetaDataType >( metaDataDict, "ElevationalSliceAngles", elevationalSliceAnglesMetaData );
     }
   // catch failure caused by the H5File operations
   catch( H5::AttributeIException & error )
