@@ -70,5 +70,12 @@ itkHDF5UltrasoundImageIOTest( int argc, char * argv [] )
   TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceSpacing[0], 0.1925 ) );
   TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceSpacing[1], 0.167811, 10, 1e-6 ) );
 
+  typedef itk::Array< double > SliceOriginType;
+  SliceOriginType sliceOrigin( 2 );
+  itk::ExposeMetaData< SliceOriginType >( metaDataDict, "SliceOrigin", sliceOrigin );
+  std::cout << "SliceOrigin: [ " << sliceOrigin[0] << ", " << sliceOrigin[1] << " ]" << std::endl;
+  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceOrigin[0], 0.0 ) );
+  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceOrigin[1], -27.2693, 10, 1e-3 ) );
+
   return EXIT_SUCCESS;
 }

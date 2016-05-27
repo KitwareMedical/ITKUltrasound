@@ -400,6 +400,12 @@ HDF5UltrasoundImageIO
     sliceSpacing[0] = ( axialPixelLocations[axialPixelLocations.size() - 1] - axialPixelLocations[0] ) / ( axialPixelLocations.size() - 1 );
     sliceSpacing[1] = ( lateralPixelLocations[lateralPixelLocations.size() - 1] - lateralPixelLocations[0] ) / ( lateralPixelLocations.size() - 1 );
     EncapsulateMetaData< SliceSpacingType >( metaDataDict, "SliceSpacing", sliceSpacing );
+
+    typedef Array< double > SliceOriginType;
+    SliceOriginType sliceOrigin( 2 );
+    sliceOrigin[0] = axialPixelLocations[0];
+    sliceOrigin[1] = lateralPixelLocations[1];
+    EncapsulateMetaData< SliceOriginType >( metaDataDict, "SliceOrigin", sliceOrigin );
     }
   // catch failure caused by the H5File operations
   catch( H5::AttributeIException & error )
