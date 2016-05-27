@@ -20,6 +20,7 @@
 #include "itkHDF5UltrasoundImageIOFactory.h"
 #include "itkMetaDataObject.h"
 #include "itkTestingMacros.h"
+#include "itkMath.h"
 
 int
 itkHDF5UltrasoundImageIOTest( int argc, char * argv [] )
@@ -61,6 +62,14 @@ itkHDF5UltrasoundImageIOTest( int argc, char * argv [] )
   itk::ExposeMetaData< std::string >( metaDataDict, "SliceType", sliceType );
   std::cout << "SliceType: " << sliceType << std::endl;
   TEST_EXPECT_EQUAL( sliceType, "Image" );
+
+  typedef itk::Array< double > SliceSpacingType;
+  SliceSpacingType sliceSpacing( 2 );
+  itk::ExposeMetaData< SliceSpacingType >( metaDataDict, "SliceSpacing", sliceSpacing );
+  std::cout << "SliceSpacing: [ " << sliceSpacing[0] << ", " << sliceSpacing[1] << " ]" << std::endl;
+  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceSpacing[0], 0.1925 ) );
+  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceSpacing[1], 0.167811, 10, 1e-6 ) );
+
 
   return EXIT_SUCCESS;
 }

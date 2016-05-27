@@ -45,11 +45,6 @@ HDF5UltrasoundImageIO
 
 namespace
 {
-//
-// strings defining HDF file layout for image data.
-const std::string eleAngle("/eleAngle");
-const std::string bimg("/bimg");
-
 template <typename TScalar>
 H5::PredType GetType()
 {
@@ -532,6 +527,12 @@ HDF5UltrasoundImageIO
     metaDataDict.Clear();
 
     EncapsulateMetaData< std::string >( metaDataDict, "SliceType", "Image" );
+
+    typedef Array< double > SliceSpacingType;
+    SliceSpacingType sliceSpacing( 2 );
+    sliceSpacing[0] = ( axialPixelLocations[axialPixelLocations.size() - 1] - axialPixelLocations[0] ) / ( axialPixelLocations.size() - 1 );
+    sliceSpacing[1] = ( lateralPixelLocations[lateralPixelLocations.size() - 1] - lateralPixelLocations[0] ) / ( lateralPixelLocations.size() - 1 );
+    EncapsulateMetaData< SliceSpacingType >( metaDataDict, "SliceSpacing", sliceSpacing );
     }
   // catch failure caused by the H5File operations
   catch( H5::AttributeIException & error )
