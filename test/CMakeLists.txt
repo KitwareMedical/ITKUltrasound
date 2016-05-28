@@ -13,6 +13,8 @@ set(UltrasoundTests
   itkCurvilinearArrayUltrasoundImageFileReaderTest.cxx
   itkComplexToComplex1DFFTImageFilterTest.cxx
   itkFFT1DImageFilterTest.cxx
+  itkHDF5UltrasoundImageIOTest.cxx
+  itkHDF5UltrasoundImageIOCanReadITKImageTest.cxx
   itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest.cxx
   itkScanConvertPhasedArray3DSpecialCoordinatesImageTest.cxx
   itkSliceSeriesSpecialCoordinatesImageTest.cxx
@@ -185,7 +187,7 @@ itk_add_test(NAME itkTimeGainCompensationImageFilterTest
     DATA{Input/EyeRoundOverChuck_5.0MHz_20V.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkTimeGainCompensationImageFilterTest.mha
     )
-  itk_add_test(NAME itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest
+itk_add_test(NAME itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest
   COMMAND UltrasoundTestDriver
   --compare
     ${ITK_TEST_OUTPUT_DIR}/itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTestOutput.mha
@@ -193,7 +195,7 @@ itk_add_test(NAME itkTimeGainCompensationImageFilterTest
   itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest
     ${ITK_TEST_OUTPUT_DIR}/itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTestOutput.mha
     )
-  itk_add_test(NAME itkScanConvertPhasedArray3DSpecialCoordinatesImageTest
+itk_add_test(NAME itkScanConvertPhasedArray3DSpecialCoordinatesImageTest
   COMMAND UltrasoundTestDriver
   --compare
     ${ITK_TEST_OUTPUT_DIR}/itkScanConvertPhasedArray3DSpecialCoordinatesImageTestOutput.mha
@@ -201,6 +203,16 @@ itk_add_test(NAME itkTimeGainCompensationImageFilterTest
   itkScanConvertPhasedArray3DSpecialCoordinatesImageTest
     DATA{Input/itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTestOutput.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkScanConvertPhasedArray3DSpecialCoordinatesImageTestOutput.mha
+    )
+itk_add_test(NAME itkHDF5UltrasoundImageIOTest
+  COMMAND UltrasoundTestDriver
+  itkHDF5UltrasoundImageIOTest
+    DATA{Input/bmode_p59.hdf5}
+    )
+itk_add_test(NAME itkHDF5UltrasoundImageIOCanReadITKImageTest
+  COMMAND UltrasoundTestDriver
+  itkHDF5UltrasoundImageIOCanReadITKImageTest
+    DATA{Input/ITKImage.hdf5}
     )
 
 if(use_fftw)

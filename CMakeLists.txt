@@ -1,6 +1,8 @@
 project(Ultrasound)
 cmake_minimum_required(VERSION 2.8)
 
+set(Ultrasound_LIBRARIES Ultrasound)
+
 # required VTK version
 find_package(VTK NO_MODULE QUIET)
 set(itkultrasound_use_vtk_default OFF)
