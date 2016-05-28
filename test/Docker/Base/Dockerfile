@@ -88,9 +88,9 @@ RUN git clone https://gitlab.kitware.com/vtk/vtk.git VTK && \
   cd .. && rm -rf VTK VTK-build
 
 # Build and install ITK from source.
-RUN git clone git://itk.org/ITK.git && \
+RUN git clone https://github.com/thewtex/ITK.git && \
   cd /usr/src/ITK && \
-  git checkout v4.10rc02 && \
+  git checkout ExternalModuleWrappingDepends-for-release && \
   mkdir /usr/src/ITK-build && \
   cd /usr/src/ITK-build && \
   cmake -G Ninja \
@@ -103,6 +103,7 @@ RUN git clone git://itk.org/ITK.git && \
     -DITKGroup_Filtering:BOOL=ON \
     -DITKGroup_Numerics:BOOL=ON \
     -DITKGroup_IO:BOOL=ON \
+    -DModule_ITKHDF5:BOOL=ON \
     -DITK_WRAP_PYTHON:BOOL=ON \
     -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python3 \
     -DITK_USE_FFTWD:BOOL=ON \
