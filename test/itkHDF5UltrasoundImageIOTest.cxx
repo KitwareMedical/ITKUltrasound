@@ -21,6 +21,7 @@
 #include "itkMetaDataObject.h"
 #include "itkTestingMacros.h"
 #include "itkMath.h"
+#include "itkImageIORegion.h"
 
 int
 itkHDF5UltrasoundImageIOTest( int argc, char * argv [] )
@@ -83,6 +84,23 @@ itkHDF5UltrasoundImageIOTest( int argc, char * argv [] )
   std::cout << "ElevationalSliceAngles: [ " << elevationalSliceAngles[0] << ", " << elevationalSliceAngles[1] << ", " << elevationalSliceAngles[2] << " ..." << std::endl;
   TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( elevationalSliceAngles[0], -62.0 ) );
   TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( elevationalSliceAngles[1], -61.0 ) );
+
+
+  float * buffer = new float[10 * 10 * 10];
+
+  itk::ImageIORegion ioRegion( Dimension );
+  for( unsigned int ii = 0; ii < Dimension; ++ii )
+    {
+    ioRegion.SetIndex( ii, 0 );
+    ioRegion.SetSize( ii, 10 );
+    }
+  imageIO->SetIORegion( ioRegion );
+  imageIO->Read( static_cast< void * >( buffer ) );
+  TEST_EXPECT_EQUAL( buffer[0], 88.0 );
+  TEST_EXPECT_EQUAL( buffer[1], 78.0 );
+  TEST_EXPECT_EQUAL( buffer[2], 77.0 );
+
+  delete[] buffer;
 
   return EXIT_SUCCESS;
 }
