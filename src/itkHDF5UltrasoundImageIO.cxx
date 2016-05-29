@@ -441,11 +441,11 @@ void
 HDF5UltrasoundImageIO
 ::SetupStreaming(H5::DataSpace *imageSpace, H5::DataSpace *slabSpace)
 {
-  ImageIORegion            regionToRead = this->GetIORegion();
-  ImageIORegion::SizeType  size = regionToRead.GetSize();
-  ImageIORegion::IndexType start = regionToRead.GetIndex();
+  const ImageIORegion            regionToRead = this->GetIORegion();
+  const ImageIORegion::SizeType  size = regionToRead.GetSize();
+  const ImageIORegion::IndexType start = regionToRead.GetIndex();
   //
-  int numComponents = this->GetNumberOfComponents();
+  const int numComponents = this->GetNumberOfComponents();
 
   const int HDFDim(this->GetNumberOfDimensions() +
                    (numComponents > 1 ? 1 : 0));
@@ -464,6 +464,8 @@ HDF5UltrasoundImageIO
     ++i;
     }
 
+  // HDF5 dimensions listed slowest moving first, ITK are fastest
+  // moving first.
   for(int j = 0; j < limit && i < HDFDim; ++i, ++j )
     {
       offset[HDFDim - i - 1] = start[j];
@@ -487,27 +489,18 @@ void
 HDF5UltrasoundImageIO
 ::Read(void *buffer)
 {
-  //ImageIORegion            regionToRead = this->GetIORegion();
-  //ImageIORegion::SizeType  size = regionToRead.GetSize();
-  //ImageIORegion::IndexType start = regionToRead.GetIndex();
+  ImageIORegion            regionToRead = this->GetIORegion();
+  ImageIORegion::SizeType  size = regionToRead.GetSize();
+  ImageIORegion::IndexType start = regionToRead.GetIndex();
 
-  //// HDF5 dimensions listed slowest moving first, ITK are fastest
-  //// moving first.
-  //std::string VoxelDataName(ImageGroup);
-  //VoxelDataName += "/0";
-  //VoxelDataName += VoxelData;
-  //if(this->m_VoxelDataSet == ITK_NULLPTR)
-    //{
-    //this->m_VoxelDataSet = new H5::DataSet();
-    //*(this->m_VoxelDataSet) = this->m_H5File->openDataSet(VoxelDataName);
-    //}
-  //H5::DataType voxelType = this->m_VoxelDataSet->getDataType();
-  //H5::DataSpace imageSpace = this->m_VoxelDataSet->getSpace();
+  std::string pixelDataName( "/bimg" );
+  H5::DataSet pixelDataSet = this->m_H5File->openDataSet( pixelDataName );
+  H5::DataType voxelType = pixelDataSet.getDataType();
+  H5::DataSpace imageSpace = pixelDataSet.getSpace();
 
-
-  //H5::DataSpace dspace;
-  //this->SetupStreaming(&imageSpace,&dspace);
-  //this->m_VoxelDataSet->read(buffer,voxelType,dspace,imageSpace);
+  H5::DataSpace dataSpace;
+  this->SetupStreaming( &imageSpace, &dataSpace );
+  pixelDataSet.read( buffer, voxelType, dataSpace, imageSpace);
 }
 
 
