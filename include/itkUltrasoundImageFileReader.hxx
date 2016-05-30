@@ -22,8 +22,10 @@
 
 #include "itkMetaDataDictionary.h"
 #include "itkMetaDataObject.h"
+#include "itkEuler3DTransform.h"
 
 #include "itkCurvilinearArraySpecialCoordinatesImage.h"
+#include "itkSliceSeriesSpecialCoordinatesImage.h"
 
 #ifdef ITK_HAS_GCC_PRAGMA_DIAG_PUSHPOP
   ITK_GCC_PRAGMA_DIAG_PUSH()
@@ -75,6 +77,88 @@ public:
       }
   }
 };
+
+
+template< typename TPixel, unsigned int VDimension, typename TParametersValue >
+class UltrasoundImageFileReaderDispatch< itk::SliceSeriesSpecialCoordinatesImage< itk::Image< TPixel, VDimension - 1 >, itk::Euler3DTransform< TParametersValue >, TPixel, VDimension > >
+{
+public:
+  static const unsigned int Dimension = VDimension;
+  static const unsigned int SliceDimension = VDimension -1;
+
+  typedef TPixel                                                                   PixelType;
+  typedef TParametersValue                                                         ParametersValueType;
+  typedef itk::Image< PixelType, SliceDimension >                                  SliceImageType;
+  typedef itk::Euler3DTransform< ParametersValueType >                             TransformType;
+  typedef itk::SliceSeriesSpecialCoordinatesImage< SliceImageType, TransformType,
+    PixelType, Dimension > ImageType;
+  static void ExtractMetaData( ImageType * image )
+  {
+    const itk::MetaDataDictionary & dictionary = image->GetMetaDataDictionary();
+    // Currently only an Image SliceType is supported.
+    if( !dictionary.HasKey( "SliceType" ) )
+      {
+      return;
+      }
+    else
+      {
+      std::string sliceType;
+      itk::ExposeMetaData< std::string >( dictionary, "SliceType", sliceType );
+      if( sliceType != "Image" )
+        {
+        return;
+        }
+      }
+
+    typename SliceImageType::Pointer sliceImage = SliceImageType::New();
+
+    if( dictionary.HasKey( "SliceSpacing" ) )
+      {
+      typedef itk::Array< double > SliceSpacingArrayType;
+      SliceSpacingArrayType sliceSpacingArray( SliceDimension );
+      itk::ExposeMetaData< SliceSpacingArrayType >( dictionary, "SliceSpacing", sliceSpacingArray );
+      typename SliceImageType::SpacingType sliceSpacing;
+      for( unsigned int ii = 0; ii < SliceDimension; ++ii )
+        {
+        sliceSpacing[ii] = sliceSpacingArray[ii];
+        }
+      sliceImage->SetSpacing( sliceSpacing );
+      }
+
+    if( dictionary.HasKey( "SliceOrigin" ) )
+      {
+      typedef itk::Array< double > SliceOriginArrayType;
+      SliceOriginArrayType sliceOriginArray( SliceDimension );
+      itk::ExposeMetaData< SliceOriginArrayType >( dictionary, "SliceOrigin", sliceOriginArray );
+      typename SliceImageType::PointType sliceOrigin;
+      for( unsigned int ii = 0; ii < SliceDimension; ++ii )
+        {
+        sliceOrigin[ii] = sliceOriginArray[ii];
+        }
+      sliceImage->SetOrigin( sliceOrigin );
+      }
+
+    image->SetSliceImage( sliceImage );
+
+    if( dictionary.HasKey( "ElevationalSliceAngles" ) )
+      {
+      typedef itk::Array< double > ElevationalSliceAnglesType;
+      const typename ImageType::RegionType & largestRegion = image->GetLargestPossibleRegion();
+      const typename ImageType::SizeType & largestSize = largestRegion.GetSize();
+      const itk::SizeValueType angles = largestSize[SliceDimension];
+      ElevationalSliceAnglesType elevationalSliceAngles( angles );
+      itk::ExposeMetaData< ElevationalSliceAnglesType >( dictionary, "ElevationalSliceAngles", elevationalSliceAngles );
+      typename SliceImageType::PointType sliceOrigin;
+      for( unsigned int ii = 0; ii < angles; ++ii )
+        {
+        typename TransformType::Pointer transform = TransformType::New();
+        transform->SetRotation( elevationalSliceAngles[ii], 0.0, 0.0 );
+        image->SetSliceTransform( ii, transform );
+        }
+      }
+  }
+};
+
 
 } // end anonymous namespace
 #ifdef ITK_HAS_GCC_PRAGMA_DIAG_PUSHPOP

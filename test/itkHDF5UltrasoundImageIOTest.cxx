@@ -82,8 +82,8 @@ itkHDF5UltrasoundImageIOTest( int argc, char * argv [] )
   ElevationalSliceAnglesType elevationalSliceAngles( imageIO->GetDimensions( 2 ) );
   itk::ExposeMetaData< ElevationalSliceAnglesType >( metaDataDict, "ElevationalSliceAngles", elevationalSliceAngles );
   std::cout << "ElevationalSliceAngles: [ " << elevationalSliceAngles[0] << ", " << elevationalSliceAngles[1] << ", " << elevationalSliceAngles[2] << " ..." << std::endl;
-  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( elevationalSliceAngles[0], -62.0 ) );
-  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( elevationalSliceAngles[1], -61.0 ) );
+  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( elevationalSliceAngles[0], -1.0821, 10, 1e-3 ) );
+  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( elevationalSliceAngles[1], -1.06465, 10, 1e-4 ) );
 
 
   float * buffer = new float[10 * 10 * 10];
