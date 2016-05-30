@@ -13,6 +13,7 @@ set(UltrasoundTests
   itkCurvilinearArrayUltrasoundImageFileReaderTest.cxx
   itkComplexToComplex1DFFTImageFilterTest.cxx
   itkFFT1DImageFilterTest.cxx
+  itkHDF5BModeUltrasoundImageFileReaderTest.cxx
   itkHDF5UltrasoundImageIOTest.cxx
   itkHDF5UltrasoundImageIOCanReadITKImageTest.cxx
   itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest.cxx
@@ -214,6 +215,11 @@ itk_add_test(NAME itkHDF5UltrasoundImageIOCanReadITKImageTest
   itkHDF5UltrasoundImageIOCanReadITKImageTest
     DATA{Input/ITKImage.hdf5}
     )
+itk_add_test(NAME itkHDF5BModeUltrasoundImageFileReaderTest
+  COMMAND UltrasoundTestDriver
+  itkHDF5BModeUltrasoundImageFileReaderTest
+    DATA{Input/bmode_p59.hdf5}
+  )
 
 if(use_fftw)
   itk_add_test(NAME itkFFTWForward1DFFTImageFilterTest

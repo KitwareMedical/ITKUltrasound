@@ -379,7 +379,12 @@ HDF5UltrasoundImageIO
     const std::string elevationalSliceAngleDataSet( "/eleAngle" );
     typedef std::vector< double > ElevationalSliceAngleType;
     ElevationalSliceAngleType elevationalSliceAngles = this->ReadVector< double >( elevationalSliceAngleDataSet );
-    this->SetDimensions( 2, elevationalSliceAngles.size() );
+    const size_t angles = elevationalSliceAngles.size();
+    for( size_t ii = 0; ii < angles; ++ii )
+      {
+      elevationalSliceAngles[ii] *= Math::pi_over_180;
+      }
+    this->SetDimensions( 2, angles );
 
     // set the ComponentType
     const std::string pixelDataName( "/bimg" );
