@@ -223,6 +223,9 @@ itk_add_test(NAME itkHDF5BModeUltrasoundImageFileReaderTest
   )
 itk_add_test(NAME itkReplaceNonFiniteImageFilterTest
   COMMAND UltrasoundTestDriver
+  --compare
+    ${ITK_TEST_OUTPUT_DIR}/itkReplaceNonFiniteImageFilterTestOutput.mha
+    DATA{Baseline/itkReplaceNonFiniteImageFilterTestOutput.mha}
   itkReplaceNonFiniteImageFilterTest
     ${ITK_TEST_OUTPUT_DIR}/itkReplaceNonFiniteImageFilterTestOutput.mha
   )
