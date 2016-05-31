@@ -64,7 +64,8 @@ SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension 
   if ( data )
     {
     // Attempt to cast data to an ImageBase
-    const SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension > * const sliceSeries = dynamic_cast< const SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension > * >( data );
+    const SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension > * const sliceSeries =
+      dynamic_cast< const SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension > * >( data );
 
     if ( sliceSeries != ITK_NULLPTR )
       {
