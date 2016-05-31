@@ -19,7 +19,9 @@
 #include "itkImageFileWriter.h"
 #include "itkTestingMacros.h"
 
-//#include "itkReplaceNonFiniteImageFilter.h"
+#include "itkReplaceNonFiniteImageFilter.h"
+
+#include <limits>
 
 int itkReplaceNonFiniteImageFilterTest( int argc, char * argv [] )
 {
@@ -45,11 +47,24 @@ int itkReplaceNonFiniteImageFilterTest( int argc, char * argv [] )
   ImageType::Pointer image = ImageType::New();
   image->SetRegions( region );
   image->Allocate();
+  image->FillBuffer( 7.5f );
+
+  ImageType::IndexType index;
+  index.Fill( 3 );
+  image->SetPixel( index, std::numeric_limits< PixelType >::infinity() );
+  index.Fill( 4 );
+  image->SetPixel( index, -std::numeric_limits< PixelType >::infinity() );
+  index.Fill( 5 );
+  image->SetPixel( index, std::numeric_limits< PixelType >::quiet_NaN() );
+
+  typedef itk::ReplaceNonFiniteImageFilter< ImageType > FilterType;
+  FilterType::Pointer filter = FilterType::New();
+  filter->SetInput( image );
 
   typedef itk::ImageFileWriter< ImageType > WriterType;
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFileName );
-  writer->SetInput( image );
+  writer->SetInput( filter->GetOutput() );
   try
     {
     writer->Update();
