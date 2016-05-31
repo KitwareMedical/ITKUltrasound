@@ -25,7 +25,8 @@
 #include "itkResampleImageFilter.h"
 #include "itkWindowedSincInterpolateImageFunction.h"
 #include "itkEuler3DTransform.h"
-#include "vnl/vnl_math.h"
+#include "itkMath.h"
+#include "itkTestingMacros.h"
 
 
 int itkSliceSeriesSpecialCoordinatesImageTest( int argc, char * argv[] )
@@ -87,7 +88,7 @@ int itkSliceSeriesSpecialCoordinatesImageTest( int argc, char * argv[] )
   for( itk::SizeValueType sliceIndex = 0; sliceIndex < numberOfSlices; ++sliceIndex )
     {
     TransformType::Pointer transform = TransformType::New();
-    transform->SetRotation( sliceIndex * 5.0 * vnl_math::pi / 180.0, 0.0, 0.0 );
+    transform->SetRotation( sliceIndex * 5.0 * itk::Math::pi / 180.0, 0.0, 0.0 );
     image->SetSliceTransform( sliceIndex, transform );
     std::cout << "sliceIndex: " << sliceIndex << std::endl;
     std::cout << "transform: " << std::endl;
@@ -240,5 +241,21 @@ int itkSliceSeriesSpecialCoordinatesImageTest( int argc, char * argv[] )
     std::cerr << "Error: " << error << std::endl;
     return EXIT_FAILURE;
     }
+
+  // Check CopyInformation
+  SliceSeriesImageType::Pointer imageCopiedInformation = SliceSeriesImageType::New();
+  imageCopiedInformation->CopyInformation( image );
+
+  continuousIndex[0] = 1000.5;
+  continuousIndex[1] = 150.5;
+  continuousIndex[2] = 1.5;
+  std::cout << "\nContinuous index: " << continuousIndex << std::endl;
+  imageCopiedInformation->TransformContinuousIndexToPhysicalPoint( continuousIndex, point );
+  std::cout << "Transformed point: " << point << std::endl;
+  std::cout << imageCopiedInformation << std::endl;
+  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( point[0], 20.2306, 10, 1e-3 ) );
+  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( point[1], 74.3784, 10, 1e-3 ) );
+  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( point[2], 9.7921, 10, 1e-3 ) );
+
   return EXIT_SUCCESS;
 }

@@ -23,6 +23,7 @@
 
 #include "itkResampleImageFilter.h"
 #include "itkWindowedSincInterpolateImageFunction.h"
+#include "itkTestingMacros.h"
 
 
 int itkCurvilinearArraySpecialCoordinatesImageTest( int argc, char * argv[] )
@@ -125,5 +126,15 @@ int itkCurvilinearArraySpecialCoordinatesImageTest( int argc, char * argv[] )
     std::cerr << "Error: " << error << std::endl;
     return EXIT_FAILURE;
     }
+
+  // Check CopyInformation
+  SpecialCoordinatesImageType::Pointer curvilinearArrayCopiedInformation = SpecialCoordinatesImageType::New();
+  curvilinearArrayCopiedInformation->CopyInformation( curvilinearArrayImage );
+
+  std::cout << "With copied information: " << curvilinearArrayCopiedInformation << std::endl;
+  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( curvilinearArrayCopiedInformation->GetLateralAngularSeparation(), 0.00862832, 10, 1e-6 ) );
+  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( curvilinearArrayCopiedInformation->GetRadiusSampleSize(), 0.0513434, 10, 1e-6 ) );
+  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( curvilinearArrayCopiedInformation->GetFirstSampleDistance(), 26.4, 10, 1e-6 ) );
+
   return EXIT_SUCCESS;
 }

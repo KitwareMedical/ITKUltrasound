@@ -56,6 +56,35 @@ CurvilinearArraySpecialCoordinatesImage< TPixel, VDimension >
 template< typename TPixel, unsigned int VDimension >
 void
 CurvilinearArraySpecialCoordinatesImage< TPixel, VDimension >
+::CopyInformation(const DataObject *data)
+{
+  Superclass::CopyInformation( data );
+
+  if ( data )
+    {
+    // Attempt to cast data to an ImageBase
+    const CurvilinearArraySpecialCoordinatesImage< TPixel, VDimension > * const curvilinearArray = dynamic_cast< const CurvilinearArraySpecialCoordinatesImage< TPixel, VDimension > * >( data );
+
+    if ( curvilinearArray != ITK_NULLPTR )
+      {
+      this->SetLateralAngularSeparation( curvilinearArray->GetLateralAngularSeparation() );
+      this->SetRadiusSampleSize( curvilinearArray->GetRadiusSampleSize() );
+      this->SetFirstSampleDistance( curvilinearArray->GetFirstSampleDistance() );
+      }
+    else
+      {
+      // pointer could not be cast back down
+      itkExceptionMacro( << "itk::CurvilinearArraySpecialCoordinatesImage::CopyInformation() cannot cast "
+                         << typeid( data ).name() << " to "
+                         << typeid( const CurvilinearArraySpecialCoordinatesImage * ).name() );
+      }
+    }
+}
+
+
+template< typename TPixel, unsigned int VDimension >
+void
+CurvilinearArraySpecialCoordinatesImage< TPixel, VDimension >
 ::Graft(const DataObject *data)
 {
   // call the superclass' implementation

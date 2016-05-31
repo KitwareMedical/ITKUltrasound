@@ -57,6 +57,48 @@ SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension 
 template< typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension >
 void
 SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension >
+::CopyInformation( const DataObject * data )
+{
+  Superclass::CopyInformation( data );
+
+  if ( data )
+    {
+    // Attempt to cast data to an ImageBase
+    const SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension > * const sliceSeries =
+      dynamic_cast< const SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension > * >( data );
+
+    if ( sliceSeries != ITK_NULLPTR )
+      {
+      // Copy the meta data for this data type
+      typename SliceImageType::Pointer sliceImage = SliceImageType::New();
+      sliceImage->CopyInformation( sliceSeries->GetSliceImage() );
+      this->SetSliceImage( sliceImage );
+
+      const SizeValueType numberOfTransforms = sliceSeries->GetLargestPossibleRegion().GetSize()[ImageDimension - 1];
+      for( SizeValueType transformIndex = 0; transformIndex < numberOfTransforms; ++transformIndex )
+        {
+        const TransformType * transform = sliceSeries->GetSliceTransform( transformIndex );
+        if( transform != ITK_NULLPTR )
+          {
+          typename TransformType::Pointer transformClone = transform->Clone();
+          this->SetSliceTransform( transformIndex, transformClone );
+          }
+        }
+      }
+    else
+      {
+      // pointer could not be cast back down
+      itkExceptionMacro( << "itk::SliceSeriesSpecialCoordinatesImage::CopyInformation() cannot cast "
+                         << typeid( data ).name() << " to "
+                         << typeid( const SliceSeriesSpecialCoordinatesImage * ).name() );
+      }
+    }
+}
+
+
+template< typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension >
+void
+SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension >
 ::SetSliceTransform( IndexValueType sliceIndex, TransformType * transform )
 {
   const RegionType & largestRegion = this->GetLargestPossibleRegion();

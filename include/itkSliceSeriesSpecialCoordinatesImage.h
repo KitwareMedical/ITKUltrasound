@@ -501,6 +501,8 @@ public:
 
   virtual void SetLargestPossibleRegion(const RegionType & region) ITK_OVERRIDE;
 
+  virtual void CopyInformation( const DataObject * data ) ITK_OVERRIDE;
+
 protected:
   SliceSeriesSpecialCoordinatesImage();
 
