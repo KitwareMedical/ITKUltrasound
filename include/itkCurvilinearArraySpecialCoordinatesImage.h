@@ -367,6 +367,8 @@ public:
   const NeighborhoodAccessorFunctorType GetNeighborhoodAccessor() const
   { return NeighborhoodAccessorFunctorType(); }
 
+  virtual void CopyInformation( const DataObject * data ) ITK_OVERRIDE;
+
 protected:
   CurvilinearArraySpecialCoordinatesImage()
     {
