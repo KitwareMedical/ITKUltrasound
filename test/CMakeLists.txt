@@ -17,6 +17,7 @@ set(UltrasoundTests
   itkHDF5UltrasoundImageIOTest.cxx
   itkHDF5UltrasoundImageIOCanReadITKImageTest.cxx
   itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest.cxx
+  itkReplaceNonFiniteImageFilterTest.cxx
   itkScanConvertPhasedArray3DSpecialCoordinatesImageTest.cxx
   itkSliceSeriesSpecialCoordinatesImageTest.cxx
   itkSpectra1DImageFilterTest.cxx
@@ -219,6 +220,14 @@ itk_add_test(NAME itkHDF5BModeUltrasoundImageFileReaderTest
   COMMAND UltrasoundTestDriver
   itkHDF5BModeUltrasoundImageFileReaderTest
     DATA{Input/bmode_p59.hdf5}
+  )
+itk_add_test(NAME itkReplaceNonFiniteImageFilterTest
+  COMMAND UltrasoundTestDriver
+  --compare
+    ${ITK_TEST_OUTPUT_DIR}/itkReplaceNonFiniteImageFilterTestOutput.mha
+    DATA{Baseline/itkReplaceNonFiniteImageFilterTestOutput.mha}
+  itkReplaceNonFiniteImageFilterTest
+    ${ITK_TEST_OUTPUT_DIR}/itkReplaceNonFiniteImageFilterTestOutput.mha
   )
 
 if(use_fftw)
