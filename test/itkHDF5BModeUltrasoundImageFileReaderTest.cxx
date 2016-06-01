@@ -73,7 +73,7 @@ int itkHDF5BModeUltrasoundImageFileReaderTest( int argc, char * argv [] )
 
   const TransformType * transform = image->GetSliceTransform( 0 );
   transform->Print( std::cout );
-  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( transform->GetAngleX(), -1.0821, 10, 1e-3 ) );
+  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( transform->GetAngleY(), -1.0821, 10, 1e-3 ) );
 
   return EXIT_SUCCESS;
 }
