@@ -152,7 +152,7 @@ public:
       for( unsigned int ii = 0; ii < angles; ++ii )
         {
         typename TransformType::Pointer transform = TransformType::New();
-        transform->SetRotation( elevationalSliceAngles[ii], 0.0, 0.0 );
+        transform->SetRotation( 0.0, elevationalSliceAngles[ii], 0.0 );
         image->SetSliceTransform( ii, transform );
         }
       }
