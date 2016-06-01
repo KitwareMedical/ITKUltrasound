@@ -49,8 +49,8 @@ SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension 
 {
   Superclass::SetLargestPossibleRegion( region );
   const SizeType & largestSize = this->GetLargestPossibleRegion().GetSize();
-  this->m_SliceTransforms->Reserve( largestSize[ImageDimension - 1] );
-  this->m_SliceInverseTransforms->Reserve( largestSize[ImageDimension - 1] );
+  this->m_SliceTransforms->Reserve( largestSize[ImageDimension - 1] + 1 );
+  this->m_SliceInverseTransforms->Reserve( largestSize[ImageDimension - 1] + 1 );
 }
 
 
