@@ -273,7 +273,7 @@ public:
       }
     index[sliceDimensionIndex] = nextPoint[sliceDimensionIndex];
     // Now, check to see if the index is within allowed bounds
-    const bool isInside = region.IsInside(index);
+    const bool isInside = region.IsInside( index );
 
     return isInside;
   }
@@ -379,7 +379,7 @@ public:
       }
     index[sliceDimensionIndex] = Math::RoundHalfIntegerUp< IndexValueType >( nextPoint[sliceDimensionIndex] );
     // Now, check to see if the index is within allowed bounds
-    const bool isInside = region.IsInside(index);
+    const bool isInside = region.IsInside( index );
 
     return isInside;
   }
@@ -416,9 +416,19 @@ public:
       }
     else
       {
-      transform = this->GetSliceTransform( ceil );
-      if( transform != ITK_NULLPTR )
+      const RegionType & largestRegion = this->GetLargestPossibleRegion();
+      const IndexType & largestIndex = largestRegion.GetIndex();
+      if( index[ImageDimension - 1] < largestIndex[ImageDimension - 1] )
         {
+        point[ImageDimension - 1] = index[ImageDimension - 1] - largestIndex[ImageDimension - 1];
+        point = transform->TransformPoint( point );
+        return;
+        }
+
+      const SizeType & largestSize = largestRegion.GetSize();
+      if( index[ImageDimension - 1] > largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1 )
+        {
+        point[ImageDimension - 1] = index[ImageDimension - 1] - largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1;
         point = transform->TransformPoint( point );
         }
       return;
@@ -432,7 +442,21 @@ public:
       }
     else
       {
-      point = lowerPoint;
+      const RegionType & largestRegion = this->GetLargestPossibleRegion();
+      const IndexType & largestIndex = largestRegion.GetIndex();
+      if( index[ImageDimension - 1] < largestIndex[ImageDimension - 1] )
+        {
+        point[ImageDimension - 1] = index[ImageDimension - 1] - largestIndex[ImageDimension - 1];
+        point = transform->TransformPoint( point );
+        return;
+        }
+
+      const SizeType & largestSize = largestRegion.GetSize();
+      if( index[ImageDimension - 1] > largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1 )
+        {
+        point[ImageDimension - 1] = index[ImageDimension - 1] - largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1;
+        point = transform->TransformPoint( point );
+        }
       return;
       }
 
@@ -468,6 +492,24 @@ public:
     const TransformType * transform = this->GetSliceTransform( index[ImageDimension - 1] );
     if( transform != ITK_NULLPTR )
       {
+      point = transform->TransformPoint( point );
+      return;
+      }
+    const RegionType & largestRegion = this->GetLargestPossibleRegion();
+    const IndexType & largestIndex = largestRegion.GetIndex();
+    if( index[ImageDimension - 1] < largestIndex[ImageDimension - 1] )
+      {
+      point[ImageDimension - 1] = index[ImageDimension - 1] - largestIndex[ImageDimension - 1];
+      transform = this->GetSliceTransform( largestIndex[ImageDimension - 1] );
+      point = transform->TransformPoint( point );
+      return;
+      }
+
+    const SizeType & largestSize = largestRegion.GetSize();
+    if( index[ImageDimension - 1] > largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1 )
+      {
+      point[ImageDimension - 1] = index[ImageDimension - 1] - largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1;
+      transform = this->GetSliceTransform( largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1 );
       point = transform->TransformPoint( point );
       }
   }
