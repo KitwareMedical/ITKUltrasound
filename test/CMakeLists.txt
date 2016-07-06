@@ -40,6 +40,7 @@ endif()
 if(ITKUltrasound_USE_VTK)
   list(APPEND UltrasoundTests
     itkSpecialCoordinatesImageToVTKStructuredGridFilterTest.cxx
+    itkSpecialCoordinatesImageToVTKStructuredGridFilterSliceSeriesTest.cxx
     )
 endif()
 
@@ -290,5 +291,11 @@ if(ITKUltrasound_USE_VTK)
     itkSpecialCoordinatesImageToVTKStructuredGridFilterTest
       DATA{Input/curvilinear_envelope_with_metadata.mha}
       ${ITK_TEST_OUTPUT_DIR}/itkSpecialCoordinatesImageToVTKStructuredGridTestOutput.vtk
+      )
+    itk_add_test(NAME itkSpecialCoordinatesImageToVTKStructuredGridFilterSliceSeriesTest
+    COMMAND UltrasoundTestDriver
+    itkSpecialCoordinatesImageToVTKStructuredGridFilterSliceSeriesTest
+      DATA{Input/bmode_p59.hdf5}
+      ${ITK_TEST_OUTPUT_DIR}/itkSpecialCoordinatesImageToVTKStructuredGridSliceSeriesTestOutput.vtk
       )
 endif()
