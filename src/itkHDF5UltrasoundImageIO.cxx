@@ -259,8 +259,8 @@ HDF5UltrasoundImageIO
   H5::DataSet dataSet = this->m_H5File->openDataSet(dataSetName);
   H5::DataSpace space = dataSet.getSpace();
 
-  hsize_t dim[space.getSimpleExtentNdims()];
-  space.getSimpleExtentDims( dim, ITK_NULLPTR );
+  std::vector<hsize_t> dim(space.getSimpleExtentNdims());
+  space.getSimpleExtentDims( &dim[0], ITK_NULLPTR );
   result.resize( dim[0] );
 
   H5::PredType vecType = GetType<TScalar>();
