@@ -19,21 +19,26 @@
 #include "itkUltrasoundImageFileReader.h"
 #include "itkHDF5UltrasoundImageIO.h"
 #include "itkHDF5UltrasoundImageIOFactory.h"
+#include "itkSpecialCoordinatesImageToVTKStructuredGridFilter.h"
 
 #include "itkTestingMacros.h"
 #include "itkSliceSeriesSpecialCoordinatesImage.h"
 #include "itkEuler3DTransform.h"
 
-int itkHDF5BModeUltrasoundImageFileReaderTest( int argc, char * argv [] )
+#include "vtkStructuredGridWriter.h"
+#include "vtkNew.h"
+
+int itkSpecialCoordinatesImageToVTKStructuredGridFilterSliceSeriesTest( int argc, char * argv [] )
 {
-  if( argc < 2 )
+  if( argc < 3 )
     {
     std::cerr << "Usage: " << argv[0];
-    std::cerr << " inputImage";
+    std::cerr << " inputImage outputStructuredGridFileName";
     std::cerr << std::endl;
     return EXIT_FAILURE;
     }
   const char * inputImageFileName = argv[1];
+  const char * outputStructuredGridFileName = argv[2];
 
   itk::HDF5UltrasoundImageIOFactory::RegisterOneFactory();
 
@@ -58,22 +63,29 @@ int itkHDF5BModeUltrasoundImageFileReaderTest( int argc, char * argv [] )
     return EXIT_FAILURE;
     }
 
-  SpecialCoordinatesImageType::ConstPointer image = reader->GetOutput();
-  std::cout << image << std::endl;
+  typedef itk::SpecialCoordinatesImageToVTKStructuredGridFilter< SpecialCoordinatesImageType > ConversionFilterType;
+  ConversionFilterType::Pointer conversionFilter = ConversionFilterType::New();
 
-  SpecialCoordinatesImageType::SliceImageType::ConstPointer sliceImage = image->GetSliceImage();
+  conversionFilter->SetInput( reader->GetOutput() );
 
-  const SpecialCoordinatesImageType::SliceImageType::SpacingType sliceSpacing = sliceImage->GetSpacing();
-  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceSpacing[0], 0.1925 ) );
-  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceSpacing[1], 0.167811, 10, 1e-6 ) );
+  try
+    {
+    conversionFilter->Update();
+    }
+  catch( itk::ExceptionObject & error )
+    {
+    std::cerr << "Error: " << error << std::endl;
+    return EXIT_FAILURE;
+    }
 
-  const SpecialCoordinatesImageType::SliceImageType::PointType sliceOrigin = sliceImage->GetOrigin();
-  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceOrigin[0], 0.0 ) );
-  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceOrigin[1], -27.2693, 10, 1e-3 ) );
+  vtkSmartPointer< vtkStructuredGrid > structuredGrid = conversionFilter->GetOutput();
+  structuredGrid->Print( std::cout );
 
-  const TransformType * transform = image->GetSliceTransform( 0 );
-  transform->Print( std::cout );
-  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( transform->GetAngleY(), -1.0821, 10, 1e-3 ) );
+  vtkNew< vtkStructuredGridWriter > writer;
+  writer->SetInputData( structuredGrid );
+  writer->SetFileName( outputStructuredGridFileName );
+  writer->SetFileTypeToBinary();
+  writer->Write();
 
   return EXIT_SUCCESS;
 }

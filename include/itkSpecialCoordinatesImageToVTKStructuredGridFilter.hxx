@@ -160,7 +160,7 @@ SpecialCoordinatesImageToVTKStructuredGridFilter< TInputImage >
     vtkDoubleArray * array = vtkDoubleArray::New();
     array->SetNumberOfComponents( components );
     array->SetNumberOfTuples( tuples );
-    std::memcpy( array->GetVoidPointer( 0 ), reinterpret_cast< void * >( inputImage->GetPixelContainer()->GetBufferPointer() ), components * sizeof( double ) );
+    std::memcpy( array->GetVoidPointer( 0 ), reinterpret_cast< void * >( inputImage->GetPixelContainer()->GetBufferPointer() ), tuples * components * sizeof( double ) );
     pointDataArray = array;
     }
   else if ( typeid( ScalarType ) == typeid( float ) )
@@ -168,7 +168,7 @@ SpecialCoordinatesImageToVTKStructuredGridFilter< TInputImage >
     vtkFloatArray * array = vtkFloatArray::New();
     array->SetNumberOfComponents( components );
     array->SetNumberOfTuples( tuples );
-    std::memcpy( array->GetVoidPointer( 0 ), reinterpret_cast< void * >( inputImage->GetPixelContainer()->GetBufferPointer() ), components * sizeof( float ) );
+    std::memcpy( array->GetVoidPointer( 0 ), reinterpret_cast< void * >( inputImage->GetPixelContainer()->GetBufferPointer() ), tuples * components * sizeof( float ) );
     pointDataArray = array;
     }
   else if ( typeid( ScalarType ) == typeid( long ) )
@@ -176,7 +176,7 @@ SpecialCoordinatesImageToVTKStructuredGridFilter< TInputImage >
     vtkLongArray * array = vtkLongArray::New();
     array->SetNumberOfComponents( components );
     array->SetNumberOfTuples( tuples );
-    std::memcpy( array->GetVoidPointer( 0 ), reinterpret_cast< void * >( inputImage->GetPixelContainer()->GetBufferPointer() ), components * sizeof( long ) );
+    std::memcpy( array->GetVoidPointer( 0 ), reinterpret_cast< void * >( inputImage->GetPixelContainer()->GetBufferPointer() ), tuples * components * sizeof( long ) );
     pointDataArray = array;
     }
   else if ( typeid( ScalarType ) == typeid( unsigned long ) )
@@ -184,7 +184,7 @@ SpecialCoordinatesImageToVTKStructuredGridFilter< TInputImage >
     vtkUnsignedLongArray * array = vtkUnsignedLongArray::New();
     array->SetNumberOfComponents( components );
     array->SetNumberOfTuples( tuples );
-    std::memcpy( array->GetVoidPointer( 0 ), reinterpret_cast< void * >( inputImage->GetPixelContainer()->GetBufferPointer() ), components * sizeof( unsigned long ) );
+    std::memcpy( array->GetVoidPointer( 0 ), reinterpret_cast< void * >( inputImage->GetPixelContainer()->GetBufferPointer() ), tuples * components * sizeof( unsigned long ) );
     pointDataArray = array;
     }
   else if ( typeid( ScalarType ) == typeid( int ) )
@@ -192,7 +192,7 @@ SpecialCoordinatesImageToVTKStructuredGridFilter< TInputImage >
     vtkIntArray * array = vtkIntArray::New();
     array->SetNumberOfComponents( components );
     array->SetNumberOfTuples( tuples );
-    std::memcpy( array->GetVoidPointer( 0 ), reinterpret_cast< void * >( inputImage->GetPixelContainer()->GetBufferPointer() ), components * sizeof( int ) );
+    std::memcpy( array->GetVoidPointer( 0 ), reinterpret_cast< void * >( inputImage->GetPixelContainer()->GetBufferPointer() ), tuples * components * sizeof( int ) );
     pointDataArray = array;
     }
   else if ( typeid( ScalarType ) == typeid( unsigned int ) )
@@ -200,7 +200,7 @@ SpecialCoordinatesImageToVTKStructuredGridFilter< TInputImage >
     vtkUnsignedIntArray * array = vtkUnsignedIntArray::New();
     array->SetNumberOfComponents( components );
     array->SetNumberOfTuples( tuples );
-    std::memcpy( array->GetVoidPointer( 0 ), reinterpret_cast< void * >( inputImage->GetPixelContainer()->GetBufferPointer() ), components * sizeof( unsigned int ) );
+    std::memcpy( array->GetVoidPointer( 0 ), reinterpret_cast< void * >( inputImage->GetPixelContainer()->GetBufferPointer() ), tuples * components * sizeof( unsigned int ) );
     pointDataArray = array;
     }
   else if ( typeid( ScalarType ) == typeid( short ) )
@@ -208,7 +208,7 @@ SpecialCoordinatesImageToVTKStructuredGridFilter< TInputImage >
     vtkShortArray * array = vtkShortArray::New();
     array->SetNumberOfComponents( components );
     array->SetNumberOfTuples( tuples );
-    std::memcpy( array->GetVoidPointer( 0 ), reinterpret_cast< void * >( inputImage->GetPixelContainer()->GetBufferPointer() ), components * sizeof( short ) );
+    std::memcpy( array->GetVoidPointer( 0 ), reinterpret_cast< void * >( inputImage->GetPixelContainer()->GetBufferPointer() ), tuples * components * sizeof( short ) );
     pointDataArray = array;
     }
   else if ( typeid( ScalarType ) == typeid( unsigned short ) )
@@ -216,7 +216,7 @@ SpecialCoordinatesImageToVTKStructuredGridFilter< TInputImage >
     vtkUnsignedShortArray * array = vtkUnsignedShortArray::New();
     array->SetNumberOfComponents( components );
     array->SetNumberOfTuples( tuples );
-    std::memcpy( array->GetVoidPointer( 0 ), reinterpret_cast< void * >( inputImage->GetPixelContainer()->GetBufferPointer() ), components * sizeof( unsigned short ) );
+    std::memcpy( array->GetVoidPointer( 0 ), reinterpret_cast< void * >( inputImage->GetPixelContainer()->GetBufferPointer() ), tuples * components * sizeof( unsigned short ) );
     pointDataArray = array;
     }
   else if ( typeid( ScalarType ) == typeid( unsigned char ) )
@@ -224,7 +224,7 @@ SpecialCoordinatesImageToVTKStructuredGridFilter< TInputImage >
     vtkUnsignedCharArray * array = vtkUnsignedCharArray::New();
     array->SetNumberOfComponents( components );
     array->SetNumberOfTuples( tuples );
-    std::memcpy( array->GetVoidPointer( 0 ), reinterpret_cast< void * >( inputImage->GetPixelContainer()->GetBufferPointer() ), components * sizeof( unsigned char ) );
+    std::memcpy( array->GetVoidPointer( 0 ), reinterpret_cast< void * >( inputImage->GetPixelContainer()->GetBufferPointer() ), tuples * components * sizeof( unsigned char ) );
     pointDataArray = array;
     }
   else if ( typeid( ScalarType ) == typeid( signed char ) )
@@ -232,7 +232,7 @@ SpecialCoordinatesImageToVTKStructuredGridFilter< TInputImage >
     vtkSignedCharArray * array = vtkSignedCharArray::New();
     array->SetNumberOfComponents( components );
     array->SetNumberOfTuples( tuples );
-    std::memcpy( array->GetVoidPointer( 0 ), reinterpret_cast< void * >( inputImage->GetPixelContainer()->GetBufferPointer() ), components * sizeof( signed char ) );
+    std::memcpy( array->GetVoidPointer( 0 ), reinterpret_cast< void * >( inputImage->GetPixelContainer()->GetBufferPointer() ), tuples * components * sizeof( signed char ) );
     pointDataArray = array;
     }
   else
