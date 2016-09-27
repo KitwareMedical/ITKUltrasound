@@ -22,6 +22,7 @@
 
 #include "itkImageRegionConstIteratorWithIndex.h"
 #include "itkPixelTraits.h"
+#include "itkProgressReporter.h"
 
 #include "vtkPointData.h"
 #include "vtkNew.h"
@@ -139,6 +140,8 @@ SpecialCoordinatesImageToVTKStructuredGridFilter< TInputImage >
   gridPoints->SetDataTypeToDouble();
   gridPoints->SetNumberOfPoints( region.GetNumberOfPixels() );
 
+  ProgressReporter progress( this, 0, region.GetNumberOfPixels() );
+
   ImageRegionConstIteratorWithIndex< InputImageType > imageIt( inputImage, region );
   imageIt.GoToBegin();
   for( SizeValueType ii = 0; !imageIt.IsAtEnd(); ++imageIt, ++ii )
@@ -147,6 +150,7 @@ SpecialCoordinatesImageToVTKStructuredGridFilter< TInputImage >
     typename InputImageType::PointType point;
     inputImage->TransformIndexToPhysicalPoint( index, point );
     gridPoints->SetPoint( ii, point.GetVnlVector().data_block() );
+    progress.CompletedPixel();
     }
 
 
