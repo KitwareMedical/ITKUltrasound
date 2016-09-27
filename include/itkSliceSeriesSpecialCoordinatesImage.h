@@ -506,7 +506,7 @@ public:
       }
 
     const SizeType & largestSize = largestRegion.GetSize();
-    if( index[ImageDimension - 1] > largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1 )
+    if( index[ImageDimension - 1] > static_cast< IndexValueType >( largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1 ) )
       {
       point[ImageDimension - 1] = index[ImageDimension - 1] - largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1;
       transform = this->GetSliceTransform( largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1 );
