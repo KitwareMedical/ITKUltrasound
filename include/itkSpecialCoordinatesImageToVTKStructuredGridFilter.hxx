@@ -246,10 +246,12 @@ SpecialCoordinatesImageToVTKStructuredGridFilter< TInputImage >
 
   if( components == 1 )
     {
+    pointDataArray->SetName( "Scalars" );
     this->m_StructuredGrid->GetPointData()->SetScalars( pointDataArray );
     }
   else
     {
+    pointDataArray->SetName( "Vectors" );
     this->m_StructuredGrid->GetPointData()->SetVectors( pointDataArray );
     }
   pointDataArray->Delete();
