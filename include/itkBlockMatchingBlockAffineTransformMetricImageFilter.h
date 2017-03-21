@@ -28,7 +28,7 @@ namespace BlockMatching
  */
 template< class TFixedImage, class TMovingImage,
           class TMetricImage, class TStrainValueType >
-class ITK_EXPORT BlockAffineTransformMetricImageFilter :
+class ITK_TEMPLATE_EXPORT BlockAffineTransformMetricImageFilter :
   public MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 {
 public:

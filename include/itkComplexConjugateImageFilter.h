@@ -56,7 +56,7 @@ public:
 }
 
 template <class TInputImage, class TOutputImage>
-class ITK_EXPORT ComplexConjugateImageFilter :
+class ITK_TEMPLATE_EXPORT ComplexConjugateImageFilter :
     public
 UnaryFunctorImageFilter<TInputImage,TOutputImage, 
                         Function::ComplexConjugate< 

@@ -70,7 +70,7 @@ namespace itk
  */
 template <class TInputImage, class TOutputImage,
           class TInterpolatorPrecisionType = double>
-class ITK_EXPORT ResampleIdentityNeumannImageFilter :
+class ITK_TEMPLATE_EXPORT ResampleIdentityNeumannImageFilter :
   public ImageToImageFilter<TInputImage, TOutputImage>
 {
 public:

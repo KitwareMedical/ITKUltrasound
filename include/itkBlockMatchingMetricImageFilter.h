@@ -35,7 +35,7 @@ namespace BlockMatching
  * \ingroup Ultrasound
  */
 template< class TFixedImage, class TMovingImage, class TMetricImage >
-class ITK_EXPORT MetricImageFilter :
+class ITK_TEMPLATE_EXPORT MetricImageFilter :
   public ImageToImageFilter< TFixedImage, TMetricImage >
 {
 public:

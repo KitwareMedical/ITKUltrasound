@@ -19,7 +19,7 @@ namespace BlockMatching
  * \ingroup Ultrasound
  */
 template < class TMetricImage, class TDisplacementImage, class TCoordRep=double > 
-class ITK_EXPORT ParabolicInterpolationDisplacementCalculator:
+class ITK_TEMPLATE_EXPORT ParabolicInterpolationDisplacementCalculator:
   public MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 {
 public:

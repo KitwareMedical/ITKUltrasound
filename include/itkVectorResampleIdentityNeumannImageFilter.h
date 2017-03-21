@@ -53,7 +53,7 @@ namespace itk
  * \ingroup Ultrasound
  */
 template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType=double>
-class ITK_EXPORT VectorResampleIdentityNeumannImageFilter:
+class ITK_TEMPLATE_EXPORT VectorResampleIdentityNeumannImageFilter:
     public ImageToImageFilter<TInputImage, TOutputImage>
 {
 public:

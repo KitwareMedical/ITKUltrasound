@@ -18,7 +18,7 @@ namespace BlockMatching
  * \ingroup Ultrasound
  */
 template< class TFixedImage, class TMovingImage, class TMetricImage >
-class ITK_EXPORT NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter :
+class ITK_TEMPLATE_EXPORT NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter :
   public NormalizedCrossCorrelationMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 {
 public:

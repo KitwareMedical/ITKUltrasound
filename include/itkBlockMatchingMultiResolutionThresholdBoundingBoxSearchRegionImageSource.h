@@ -31,7 +31,7 @@ namespace BlockMatching
  * \ingroup Ultrasound
  * */
 template < class TFixedImage, class TMovingImage, class TMetricImage, class TDisplacementImage >
-class ITK_EXPORT MultiResolutionThresholdBoundingBoxSearchRegionImageSource:
+class ITK_TEMPLATE_EXPORT MultiResolutionThresholdBoundingBoxSearchRegionImageSource:
   public MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >,
   public MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 {

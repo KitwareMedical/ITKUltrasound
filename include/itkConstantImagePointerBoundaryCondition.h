@@ -58,7 +58,7 @@ namespace itk
  * \ingroup Ultrasound
  */
 template<class TImage>
-class ITK_EXPORT ConstantImagePointerBoundaryCondition
+class ITK_TEMPLATE_EXPORT ConstantImagePointerBoundaryCondition
   : public ImageBoundaryCondition<TImage>
 {
 public:

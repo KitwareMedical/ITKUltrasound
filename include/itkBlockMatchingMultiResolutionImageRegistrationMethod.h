@@ -32,7 +32,7 @@ namespace BlockMatching
  * */
 template < class TFixedImage, class TMovingImage,
   class TMetricImage, class TDisplacementImage, class TCoordRep >
-class ITK_EXPORT MultiResolutionImageRegistrationMethod :
+class ITK_TEMPLATE_EXPORT MultiResolutionImageRegistrationMethod :
   public ImageSource< TDisplacementImage >
 {
 public:

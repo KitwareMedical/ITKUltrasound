@@ -22,7 +22,7 @@ namespace BlockMatching
  * \ingroup Ultrasound
  */
 template < class TFixedImage, class TMovingImage >
-class ITK_EXPORT SearchRegionImageInitializer:
+class ITK_TEMPLATE_EXPORT SearchRegionImageInitializer:
   public ::itk::ImageSource< 
     ::itk::Image< typename TMovingImage::RegionType,
       TMovingImage::ImageDimension > >

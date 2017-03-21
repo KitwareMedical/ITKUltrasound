@@ -231,7 +231,7 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
  * \ingroup Ultrasound
  */
 template<class TInputImage, class TOutputImage=TInputImage>
-class ITK_EXPORT BoxSigmaSqrtNMinusOneImageFilter : 
+class ITK_TEMPLATE_EXPORT BoxSigmaSqrtNMinusOneImageFilter : 
     public BoxImageFilter<TInputImage, TOutputImage>
 {
 public:

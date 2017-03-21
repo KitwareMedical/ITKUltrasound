@@ -18,7 +18,7 @@ namespace BlockMatching
  * \ingroup Ultrasound
  */
 template < class TMetricImage, class TDisplacementImage >
-class ITK_EXPORT MaximumPixelDisplacementCalculator:
+class ITK_TEMPLATE_EXPORT MaximumPixelDisplacementCalculator:
   public itk::BlockMatching::MetricImageToDisplacementCalculator<
     TMetricImage, TDisplacementImage >
 {

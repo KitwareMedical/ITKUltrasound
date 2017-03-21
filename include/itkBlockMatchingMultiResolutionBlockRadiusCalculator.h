@@ -20,7 +20,7 @@ namespace BlockMatching
  * \ingroup Ultrasound
  */
 template< class TFixedImage >
-class ITK_EXPORT MultiResolutionBlockRadiusCalculator :
+class ITK_TEMPLATE_EXPORT MultiResolutionBlockRadiusCalculator :
   public ::itk::Object
 {
 public:

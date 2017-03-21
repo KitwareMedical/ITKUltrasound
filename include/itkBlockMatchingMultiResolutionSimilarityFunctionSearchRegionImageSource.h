@@ -47,7 +47,7 @@ namespace BlockMatching
  * */
 template <class TFixedImage, class TMovingImage, class TMetricImage, class TDisplacementImage,
           class TFunctor, class TInterpolatorPrecisionType = double>
-class ITK_EXPORT MultiResolutionSimilarityFunctionSearchRegionImageSource :
+class ITK_TEMPLATE_EXPORT MultiResolutionSimilarityFunctionSearchRegionImageSource :
   public MultiResolutionSearchRegionImageSource<TFixedImage, TMovingImage, TDisplacementImage>,
   public MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>
 {

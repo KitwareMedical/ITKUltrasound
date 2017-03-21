@@ -21,7 +21,7 @@ namespace BlockMatching
  * \ingroup Ultrasound
  * */
 template < class TFixedImage, class TMovingImage, class TDisplacementImage >
-class ITK_EXPORT MultiResolutionFixedSearchRegionImageSource :
+class ITK_TEMPLATE_EXPORT MultiResolutionFixedSearchRegionImageSource :
   public MultiResolutionSearchRegionImageSource < TFixedImage, TMovingImage,
                                                   TDisplacementImage >
 {

@@ -30,7 +30,7 @@ class MultiResolutionImageRegistrationMethod;
  * \ingroup Ultrasound
  */
 template < class TFixedImage, class TMovingImage, class TDisplacementImage >
-class ITK_EXPORT MultiResolutionSearchRegionImageSource :
+class ITK_TEMPLATE_EXPORT MultiResolutionSearchRegionImageSource :
   public ::itk::ImageSource<
     ::itk::Image< typename TMovingImage::RegionType,
                   TMovingImage::ImageDimension > >

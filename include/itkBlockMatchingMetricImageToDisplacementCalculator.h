@@ -37,7 +37,7 @@ namespace BlockMatching
  * \ingroup Ultrasound
  * */
 template <class TMetricImage, class TDisplacementImage>
-class ITK_EXPORT MetricImageToDisplacementCalculator :
+class ITK_TEMPLATE_EXPORT MetricImageToDisplacementCalculator :
   public itk::Object
 {
 public:
