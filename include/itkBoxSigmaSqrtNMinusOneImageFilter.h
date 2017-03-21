@@ -293,7 +293,7 @@ private:
 } // end namespace itk
   
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBoxSigmaSqrtNMinusOneImageFilter.txx"
+#include "itkBoxSigmaSqrtNMinusOneImageFilter.hxx"
 #endif
 
 #endif

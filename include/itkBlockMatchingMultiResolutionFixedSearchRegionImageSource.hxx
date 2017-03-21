@@ -1,10 +1,11 @@
-#ifndef __itkBlockMatchingMultiResolutionMinMaxSearchRegionImageSource_txx
-#define __itkBlockMatchingMultiResolutionMinMaxSearchRegionImageSource_txx
+#ifndef __itkBlockMatchingMultiResolutionFixedSearchRegionImageSource_hxx
+#define __itkBlockMatchingMultiResolutionFixedSearchRegionImageSource_hxx
 
-#include "itkBlockMatchingMultiResolutionMinMaxSearchRegionImageSource.h"
+#include "itkBlockMatchingMultiResolutionFixedSearchRegionImageSource.h"
 
 #include "itkImageRegionConstIterator.h"
 #include "itkImageRegionIteratorWithIndex.h"
+#include "itkResampleImageFilter.h"
 
 namespace itk
 {
@@ -12,8 +13,66 @@ namespace BlockMatching
 {
 
 template < class TFixedImage, class TMovingImage, class TDisplacementImage >
+MultiResolutionFixedSearchRegionImageSource< TFixedImage, TMovingImage,
+                                             TDisplacementImage >
+::MultiResolutionFixedSearchRegionImageSource():
+  m_SearchRegionRadiusSet( false )
+{
+}
+
+template < class TFixedImage, class TMovingImage, class TDisplacementImage >
 void
-MultiResolutionMinMaxSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >
+MultiResolutionFixedSearchRegionImageSource< TFixedImage, TMovingImage,
+                                             TDisplacementImage >
+::SetSearchRegionRadiusSchedule( const unsigned int rad )
+{
+  RadiusType radius;
+  radius.Fill( rad );
+  this->SetSearchRegionRadiusSchedule( radius );
+}
+
+template < class TFixedImage, class TMovingImage, class TDisplacementImage >
+void
+MultiResolutionFixedSearchRegionImageSource< TFixedImage, TMovingImage,
+                                             TDisplacementImage >
+::SetSearchRegionRadiusSchedule( const RadiusType& radius )
+{
+  // Check to make sure the PyramidSchedule has been set.
+  if( this->m_PyramidSchedule.size() == 0 )
+    {
+    itkExceptionMacro(<<"The PyramidSchedule must be set before calling this method.");
+    }
+
+  m_SearchRegionRadiusSchedule.SetSize( this->m_PyramidSchedule.rows(), this->m_PyramidSchedule.cols() );
+  for( unsigned int i = 0; i < this->m_PyramidSchedule.rows(); ++i )
+    {
+    for( unsigned int j = 0; j < this->m_PyramidSchedule.cols(); ++j )
+      {
+      m_SearchRegionRadiusSchedule( i, j ) = radius[j];
+      }
+    }
+  this->Modified();
+  m_SearchRegionRadiusSet = true;
+}
+
+template < class TFixedImage, class TMovingImage, class TDisplacementImage >
+void
+MultiResolutionFixedSearchRegionImageSource< TFixedImage, TMovingImage,
+                                             TDisplacementImage >
+::BeforeThreadedGenerateData()
+{
+  Superclass::BeforeThreadedGenerateData();
+
+  if( !m_SearchRegionRadiusSet )
+    {
+    itkExceptionMacro( << "The SearchRegionRadius has not been set." );
+    }
+}
+
+template < class TFixedImage, class TMovingImage, class TDisplacementImage >
+void
+MultiResolutionFixedSearchRegionImageSource< TFixedImage, TMovingImage,
+                                             TDisplacementImage >
 ::ThreadedGenerateData( const OutputRegionType& outputRegion, int threadID )
 {
   typename OutputImageType::Pointer outputPtr = this->GetOutput();
@@ -30,21 +89,16 @@ MultiResolutionMinMaxSearchRegionImageSource< TFixedImage, TMovingImage, TDispla
   typename MovingImageType::SizeType  minimumRegionSize;
   unitySize.Fill( 1 );
   unsigned int i;
-  IndexType startIndex = this->m_MovingImage->GetLargestPossibleRegion().GetIndex();
-  IndexType endIndex;
-  IndexType closestIndex;
+  IndexType    startIndex = this->m_MovingImage->GetLargestPossibleRegion().GetIndex();
+  IndexType    endIndex;
+  IndexType    closestIndex;
 
-  double slope;
   RadiusType radius;
-  for( i = 0; i < ImageDimension; ++i )
+  for( i = 0; i < this->m_SearchRegionRadiusSchedule.cols(); ++i )
     {
-    slope = (this->m_MinFactor[i] - this->m_MaxFactor[i]) / (this->m_PyramidSchedule.rows() - 1.0);
-    radius[i] =
-      Math::Ceil< typename RadiusType::SizeValueType >( this->m_FixedBlockRadius[i] *
-                                                        ( slope * this->m_CurrentLevel + this->m_MaxFactor[i] ) );
+    radius[i] = m_SearchRegionRadiusSchedule( this->m_CurrentLevel, i );
     minimumRegionSize[i] = 2 * radius[i] + 1;
-    endIndex[i] = startIndex[i] + this->m_MovingImage->GetLargestPossibleRegion().GetSize()[i] - 1 -
-      minimumRegionSize[i];
+    endIndex[i] = startIndex[i] + this->m_MovingImage->GetLargestPossibleRegion().GetSize()[i] - 1 - minimumRegionSize[i];
     }
 
   if( this->m_CurrentLevel == 0 )

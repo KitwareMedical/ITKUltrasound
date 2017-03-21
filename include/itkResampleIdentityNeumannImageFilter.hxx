@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    itkOptResampleIdentityNeumannImageFilter.txx
+  Module:    itkOptResampleIdentityNeumannImageFilter.hxx
   Language:  C++
   Date:      $Date$
   Version:   $Revision$
@@ -15,8 +15,8 @@
 
 =========================================================================*/
 
-#ifndef __itkResampleIdentityNeumannImageFilter_txx
-#define __itkResampleIdentityNeumannImageFilter_txx
+#ifndef __itkResampleIdentityNeumannImageFilter_hxx
+#define __itkResampleIdentityNeumannImageFilter_hxx
 
 #include "itkResampleIdentityNeumannImageFilter.h"
 #include "itkObjectFactory.h"

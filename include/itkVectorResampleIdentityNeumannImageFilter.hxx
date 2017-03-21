@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    itkVectorResampleIdentityNeumannImageFilter.txx
+  Module:    itkVectorResampleIdentityNeumannImageFilter.hxx
   Language:  C++
   Date:      $Date$
   Version:   $Revision$
@@ -14,8 +14,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkVectorResampleIdentityNeumannImageFilter_txx
-#define __itkVectorResampleIdentityNeumannImageFilter_txx
+#ifndef __itkVectorResampleIdentityNeumannImageFilter_hxx
+#define __itkVectorResampleIdentityNeumannImageFilter_hxx
 
 #include "itkMath.h"
 #include "itkVectorResampleIdentityNeumannImageFilter.h"

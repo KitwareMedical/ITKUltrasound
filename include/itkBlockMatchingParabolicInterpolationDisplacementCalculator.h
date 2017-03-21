@@ -86,7 +86,7 @@ private:
 } // end namespace BlockMatching
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingParabolicInterpolationDisplacementCalculator.txx"
+#include "itkBlockMatchingParabolicInterpolationDisplacementCalculator.hxx"
 #endif
 
 #endif

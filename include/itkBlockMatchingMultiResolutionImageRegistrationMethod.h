@@ -229,7 +229,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingMultiResolutionImageRegistrationMethod.txx"
+#include "itkBlockMatchingMultiResolutionImageRegistrationMethod.hxx"
 #endif
 
 #endif

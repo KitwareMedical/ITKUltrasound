@@ -172,7 +172,7 @@ private:
 } // end namespace BlockMatching
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingStrainWindowDisplacementCalculator.txx"
+#include "itkBlockMatchingStrainWindowDisplacementCalculator.hxx"
 #endif
 
 #endif

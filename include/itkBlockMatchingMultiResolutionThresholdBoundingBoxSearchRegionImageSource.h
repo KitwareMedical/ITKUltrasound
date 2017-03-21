@@ -225,7 +225,7 @@ private:
 } // end namespace BlockMatching
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingMultiResolutionThresholdBoundingBoxSearchRegionImageSource.txx"
+#include "itkBlockMatchingMultiResolutionThresholdBoundingBoxSearchRegionImageSource.hxx"
 #endif
 
 #endif

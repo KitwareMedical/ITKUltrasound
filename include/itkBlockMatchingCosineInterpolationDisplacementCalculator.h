@@ -71,7 +71,7 @@ private:
 } // end namespace BlockMatching
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingCosineInterpolationDisplacementCalculator.txx"
+#include "itkBlockMatchingCosineInterpolationDisplacementCalculator.hxx"
 #endif
 
 #endif

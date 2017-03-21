@@ -97,7 +97,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter.txx"
+#include "itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter.hxx"
 #endif
 
 #endif

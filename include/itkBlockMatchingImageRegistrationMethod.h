@@ -197,7 +197,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingImageRegistrationMethod.txx"
+#include "itkBlockMatchingImageRegistrationMethod.hxx"
 #endif
 
 #endif

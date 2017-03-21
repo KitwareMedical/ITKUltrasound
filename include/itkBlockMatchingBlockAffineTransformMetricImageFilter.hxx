@@ -1,5 +1,5 @@
-#ifndef __itkBlockMatchingBlockAffineTransformMetricImageFilter_txx
-#define __itkBlockMatchingBlockAffineTransformMetricImageFilter_txx
+#ifndef __itkBlockMatchingBlockAffineTransformMetricImageFilter_hxx
+#define __itkBlockMatchingBlockAffineTransformMetricImageFilter_hxx
 
 #include "itkBlockMatchingBlockAffineTransformMetricImageFilter.h"
 

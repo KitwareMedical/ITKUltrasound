@@ -1,5 +1,5 @@
-#ifndef __itkBlockMatchingSearchRegionImageInitializer_txx
-#define __itkBlockMatchingSearchRegionImageInitializer_txx
+#ifndef __itkBlockMatchingSearchRegionImageInitializer_hxx
+#define __itkBlockMatchingSearchRegionImageInitializer_hxx
 
 #include "itkBlockMatchingSearchRegionImageInitializer.h"
 

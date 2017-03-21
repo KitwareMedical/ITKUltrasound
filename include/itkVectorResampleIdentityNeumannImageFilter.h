@@ -210,7 +210,7 @@ private:
 } // end namespace itk
   
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkVectorResampleIdentityNeumannImageFilter.txx"
+#include "itkVectorResampleIdentityNeumannImageFilter.hxx"
 #endif
   
 #endif

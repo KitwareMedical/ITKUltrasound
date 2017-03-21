@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkBoxSigmaSqrtNMinusOneImageFilter.txx,v $
+  Module:    $RCSfile: itkBoxSigmaSqrtNMinusOneImageFilter.hxx,v $
   Language:  C++
   Date:      $Date: 2008-08-10 13:00:06 $
   Version:   $Revision: 1.3 $
@@ -15,8 +15,8 @@
 
 =========================================================================*/
 
-#ifndef __itkBoxSigmaSqrtNMinusOneImageFilter_txx
-#define __itkBoxSigmaSqrtNMinusOneImageFilter_txx
+#ifndef __itkBoxSigmaSqrtNMinusOneImageFilter_hxx
+#define __itkBoxSigmaSqrtNMinusOneImageFilter_hxx
 
 #include "itkImage.h"
 #include "itkBoxSigmaSqrtNMinusOneImageFilter.h"

@@ -113,7 +113,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingBlockAffineTransformMetricImageFilter.txx"
+#include "itkBlockMatchingBlockAffineTransformMetricImageFilter.hxx"
 #endif
 
 #endif

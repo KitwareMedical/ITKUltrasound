@@ -117,7 +117,7 @@ private:
 } // end namespace BlockMatching
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingMultiResolutionFixedSearchRegionImageSource.txx"
+#include "itkBlockMatchingMultiResolutionFixedSearchRegionImageSource.hxx"
 #endif
 
 #endif

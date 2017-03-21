@@ -65,7 +65,7 @@ private:
 } // end namespace BlockMatching
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingMaximumPixelDisplacementCalculator.txx"
+#include "itkBlockMatchingMaximumPixelDisplacementCalculator.hxx"
 #endif
 
 #endif

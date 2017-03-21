@@ -275,7 +275,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingMultiResolutionSimilarityFunctionSearchRegionImageSource.txx"
+#include "itkBlockMatchingMultiResolutionSimilarityFunctionSearchRegionImageSource.hxx"
 #endif
 
 #endif

@@ -1,5 +1,22 @@
-#ifndef __itkBlockMatchingBayesianRegularizationDisplacementCalculator_h
-#define __itkBlockMatchingBayesianRegularizationDisplacementCalculator_h
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
+#ifndef itkBlockMatchingBayesianRegularizationDisplacementCalculator_h
+#define itkBlockMatchingBayesianRegularizationDisplacementCalculator_h
 
 #include "itkConstantBoundaryCondition.h"
 #include "itkConstantImagePointerBoundaryCondition.h"
@@ -42,18 +59,15 @@ namespace BlockMatching
  * \ingroup Ultrasound
  */
 template < class TMetricImage, class TDisplacementImage >
-class ITK_EXPORT BayesianRegularizationDisplacementCalculator:
-  public itk::BlockMatching::MetricImageToDisplacementCalculator<
-    TMetricImage, TDisplacementImage >
+class ITK_TEMPLATE_EXPORT BayesianRegularizationDisplacementCalculator:
+  public MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 {
 public:
   /** Standard class typedefs. */
-  typedef BayesianRegularizationDisplacementCalculator Self;
-  typedef MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
-  Superclass;
-
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef BayesianRegularizationDisplacementCalculator                            Self;
+  typedef MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage > Superclass;
+  typedef SmartPointer< Self >                                                    Pointer;
+  typedef SmartPointer< const Self >                                              ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -63,8 +77,7 @@ public:
                       TDisplacementImage::ImageDimension);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( BayesianRegularizationDisplacementCalculator,
-                MetricImageToDisplacementCalculator );
+  itkTypeMacro( BayesianRegularizationDisplacementCalculator, MetricImageToDisplacementCalculator );
 
   typedef typename Superclass::MetricImageType        MetricImageType;
   typedef typename Superclass::MetricImagePointerType MetricImagePointerType;
@@ -272,7 +285,7 @@ private:
 } // end namespace BlockMatching
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingBayesianRegularizationDisplacementCalculator.txx"
+#include "itkBlockMatchingBayesianRegularizationDisplacementCalculator.hxx"
 #endif
 
 #endif

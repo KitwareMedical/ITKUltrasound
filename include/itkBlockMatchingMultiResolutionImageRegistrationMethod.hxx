@@ -1,5 +1,5 @@
-#ifndef __itkBlockMatchingMultiResolutionImageRegistrationMethod_txx
-#define __itkBlockMatchingMultiResolutionImageRegistrationMethod_txx
+#ifndef __itkBlockMatchingMultiResolutionImageRegistrationMethod_hxx
+#define __itkBlockMatchingMultiResolutionImageRegistrationMethod_hxx
 
 #include "itkBlockMatchingMultiResolutionImageRegistrationMethod.h"
 

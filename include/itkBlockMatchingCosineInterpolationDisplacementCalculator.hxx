@@ -1,5 +1,5 @@
-#ifndef __itkBlockMatchingCosineInterpolationDisplacementCalculator_txx
-#define __itkBlockMatchingCosineInterpolationDisplacementCalculator_txx
+#ifndef __itkBlockMatchingCosineInterpolationDisplacementCalculator_hxx
+#define __itkBlockMatchingCosineInterpolationDisplacementCalculator_hxx
 
 #include "itkBlockMatchingCosineInterpolationDisplacementCalculator.h"
 
