@@ -39,6 +39,7 @@ namespace BlockMatching
  *
  * Assumes that all metric images have th same spacing.
  *
+ * \ingroup Ultrasound
  */
 template < class TMetricImage, class TDisplacementImage >
 class ITK_EXPORT BayesianRegularizationDisplacementCalculator:
@@ -220,9 +221,7 @@ protected:
   typedef typename Superclass::ThreadFunctor  ThreadFunctor;
   typedef typename Superclass::ThreadStruct   ThreadStruct;
 
-  /** \class SubtractLowerBoundThreadFunctor
-   *
-   * We shift the minimum value of the metric image so 0 corresponds to
+  /** We shift the minimum value of the metric image so 0 corresponds to
    * the theoretical lower bound. */
   class SubtractLowerBoundThreadFunctor : public ThreadFunctor
     {
@@ -232,9 +231,7 @@ protected:
     };
   SubtractLowerBoundThreadFunctor m_SubtractLowerBoundThreadFunctor;
 
-  /** \class ScaleToUnityThreadFunctor
-   *
-   * Scale the metric images so all values sum to unity. */
+  /** Scale the metric images so all values sum to unity. */
   class ScaleToUnityThreadFunctor : public ThreadFunctor
     {
   public:
@@ -243,9 +240,7 @@ protected:
     };
   ScaleToUnityThreadFunctor m_ScaleToUnityThreadFunctor;
 
-  /** \class CopyPriorToPosteriorThreadFunctor
-   *
-   * Copy the contents of the prior metric images to the posterior metric
+  /** Copy the contents of the prior metric images to the posterior metric
    * images. */
   class CopyPriorToPosteriorThreadFunctor : public ThreadFunctor
     {
@@ -256,9 +251,7 @@ protected:
   CopyPriorToPosteriorThreadFunctor m_CopyPriorToPosteriorThreadFunctor;
 
 
-  /** \class MeanChangeThreadFunctor
-   *
-   * Calculate the mean change in probability. */
+  /** Calculate the mean change in probability. */
   class MeanChangeThreadFunctor : public ThreadFunctor
     {
   public:

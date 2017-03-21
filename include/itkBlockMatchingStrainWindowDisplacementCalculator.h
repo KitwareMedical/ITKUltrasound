@@ -35,6 +35,7 @@ namespace BlockMatching
  * The filter can be applied iteratively to remove regions of high strain with
  * SetMaximumIterations().
  *
+ * \ingroup Ultrasound
  */
 template <class TMetricImage, class TDisplacementImage, class TStrainValueType>
 class ITK_EXPORT StrainWindowDisplacementCalculator :

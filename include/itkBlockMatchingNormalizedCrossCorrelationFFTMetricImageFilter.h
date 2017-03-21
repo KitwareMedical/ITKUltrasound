@@ -23,6 +23,8 @@ namespace BlockMatching
  * calculated with FFT based correlation (multiply forward FFT's and take IFFT).
  *
  * \sa NormalizedCrossCorrelationMetricImageFilter
+ *
+ * \ingroup Ultrasound
  */
 template< class TFixedImage, class TMovingImage, class TMetricImage >
 class ITK_EXPORT NormalizedCrossCorrelationFFTMetricImageFilter :

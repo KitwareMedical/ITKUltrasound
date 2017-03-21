@@ -26,8 +26,9 @@ namespace BlockMatching
  * MultiResolutionPyramidImageFilter.
  *
  * \sa ImageRegistrationMethod
- * \ingroup RegistrationFilters
  *
+ * \ingroup RegistrationFilters
+ * \ingroup Ultrasound
  * */
 template < class TFixedImage, class TMovingImage,
   class TMetricImage, class TDisplacementImage, class TCoordRep >

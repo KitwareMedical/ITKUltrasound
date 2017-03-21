@@ -227,8 +227,9 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
  * 
  * \sa BoxSigmaImageFilter
  * \sa NormalizedCrossCorrelationMetricImageFilter
+ *
+ * \ingroup Ultrasound
  */
-
 template<class TInputImage, class TOutputImage=TInputImage>
 class ITK_EXPORT BoxSigmaSqrtNMinusOneImageFilter : 
     public BoxImageFilter<TInputImage, TOutputImage>

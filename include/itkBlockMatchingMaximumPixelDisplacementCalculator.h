@@ -14,6 +14,8 @@ namespace BlockMatching
  * value.
  *
  * This is the simplest and fastest of the MetricImageToDisplacementCalculator's.
+ *
+ * \ingroup Ultrasound
  */
 template < class TMetricImage, class TDisplacementImage >
 class ITK_EXPORT MaximumPixelDisplacementCalculator:

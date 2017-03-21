@@ -34,6 +34,7 @@ namespace BlockMatching
  * ModifyGenerateInputRequestedRegion() and
  * ModifyEnlargeOutputRequestedRegion().
  *
+ * \ingroup Ultrasound
  * */
 template <class TMetricImage, class TDisplacementImage>
 class ITK_EXPORT MetricImageToDisplacementCalculator :
@@ -134,12 +135,12 @@ protected:
   typedef ImageDuplicator<MetricImageType> MetricImageDuplicatorType;
   MetricImageToDisplacementCalculator();
 
-  /** \class The base thread functor.
-   *
-   * An inherited class provides the operation in a thread. ThreaderCallback()
+  /** An inherited class provides the operation in a thread. ThreaderCallback()
    * calls this functor on the thread region.  Watch out when inheriting this --
    * the first argument needs type Superclass and you want to dynamic_cast it
    * down to the inherited class to access private or protected members.
+   *
+   * \ingroup Ultrasound
    * */
   class ThreadFunctor
   {

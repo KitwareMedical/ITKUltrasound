@@ -27,6 +27,7 @@ class MultiResolutionImageRegistrationMethod;
  * Subclases must be able to generate the search region for all levels create by the
  * MultiResolutionPyramidImageFilter in addition to the original image.
  *
+ * \ingroup Ultrasound
  */
 template < class TFixedImage, class TMovingImage, class TDisplacementImage >
 class ITK_EXPORT MultiResolutionSearchRegionImageSource :

@@ -65,6 +65,8 @@ namespace itk
  * ThreadedGenerateData() method for its implementation.
  *
  * \sa ResampleImageFilter
+ *
+ * \ingroup Ultrasound
  */
 template <class TInputImage, class TOutputImage,
           class TInterpolatorPrecisionType = double>

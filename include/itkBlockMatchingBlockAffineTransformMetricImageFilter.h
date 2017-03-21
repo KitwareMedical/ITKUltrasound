@@ -23,6 +23,8 @@ namespace BlockMatching
  * the shearing implied by the strain image too?
  *
  * \sa MetricImageFilter
+ *
+ * \ingroup Ultrasound
  */
 template< class TFixedImage, class TMovingImage,
           class TMetricImage, class TStrainValueType >

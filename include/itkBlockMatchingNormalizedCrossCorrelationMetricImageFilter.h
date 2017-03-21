@@ -23,6 +23,8 @@ namespace BlockMatching
  * calculation.  The cross correlation is left to inherited classes.
  *
  * \sa MetricImageFilter
+ *
+ * \ingroup Ultrasound
  */
 template< class TFixedImage, class TMovingImage, class TMetricImage >
 class ITK_EXPORT NormalizedCrossCorrelationMetricImageFilter :

@@ -14,6 +14,8 @@ namespace BlockMatching
  * calculated with a neighborhood iterator.
  *
  * \sa NormalizedCrossCorrelationMetricImageFilter
+ *
+ * \ingroup Ultrasound
  */
 template< class TFixedImage, class TMovingImage, class TMetricImage >
 class ITK_EXPORT NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter :

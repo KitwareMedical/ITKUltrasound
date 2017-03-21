@@ -17,6 +17,8 @@ namespace BlockMatching
  * kernel offset by the displacement from the previous level.
  *
  * \sa MultiResolutionSearchRegionImageSource
+ *
+ * \ingroup Ultrasound
  * */
 template < class TFixedImage, class TMovingImage, class TDisplacementImage >
 class ITK_EXPORT MultiResolutionFixedSearchRegionImageSource :

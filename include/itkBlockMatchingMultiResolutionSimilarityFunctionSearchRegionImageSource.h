@@ -43,6 +43,7 @@ namespace BlockMatching
  * The search region radius will be truncated to the top level radius after
  * evaluation with the functor.
  *
+ * \ingroup Ultrasound
  * */
 template <class TFixedImage, class TMovingImage, class TMetricImage, class TDisplacementImage,
           class TFunctor, class TInterpolatorPrecisionType = double>

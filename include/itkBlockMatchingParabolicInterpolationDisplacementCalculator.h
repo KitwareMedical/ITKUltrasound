@@ -16,6 +16,7 @@ namespace BlockMatching
  * Cespedes et. al. Methods for estimation of subsample time delays of digitized
  * echo signals.  Ultrasonic Imaging 17. 142-171.  1995.  
  *
+ * \ingroup Ultrasound
  */
 template < class TMetricImage, class TDisplacementImage, class TCoordRep=double > 
 class ITK_EXPORT ParabolicInterpolationDisplacementCalculator:
@@ -67,9 +68,7 @@ protected:
   typedef typename Superclass::ThreadFunctor  ThreadFunctor;
   typedef typename Superclass::ThreadStruct   ThreadStruct;
 
-  /** \class ParabolicInterpolationThreadFunctor
-   *
-   * Use a parabolic fit to find the subsample peak. */
+  /** Use a parabolic fit to find the subsample peak. */
   class ParabolicInterpolationThreadFunctor : public ThreadFunctor
     {
   public:

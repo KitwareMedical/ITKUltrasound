@@ -49,6 +49,8 @@ namespace itk
  * ThreadedGenerateData() method for its implementation.
  *
  * \sa VectorResampleImageFilter
+ *
+ * \ingroup Ultrasound
  */
 template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType=double>
 class ITK_EXPORT VectorResampleIdentityNeumannImageFilter:

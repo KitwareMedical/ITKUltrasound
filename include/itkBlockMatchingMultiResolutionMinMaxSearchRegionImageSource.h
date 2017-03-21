@@ -17,6 +17,8 @@ namespace BlockMatching
  * linearly interpolated at in between levels.
  *
  * \todo rename this from 'MinMax' to 'TopBottomFactor'.
+ *
+ * \ingroup Ultrasound
  */
 template < class TFixedImage, class TMovingImage, class TDisplacementImage >
 class ITK_EXPORT MultiResolutionMinMaxSearchRegionImageSource :

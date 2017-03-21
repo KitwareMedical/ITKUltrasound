@@ -18,6 +18,8 @@ namespace BlockMatching
  * scales with the pyramid schedule.
  *
  * \sa MultiResolutionBlockRadiusCalculator
+ *
+ * \ingroup Ultrasound
  * */
 template< class TFixedImage >
 class ITK_EXPORT MultiResolutionFixedBlockRadiusCalculator :

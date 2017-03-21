@@ -18,6 +18,8 @@ namespace BlockMatching
  * around the fixed image blocks and evenly spaced.  Overlap between blocks may
  * be set with SetOverlap().  The input fixed image, fixed image block radius,
  * moving image, and search region radius must be set.
+ *
+ * \ingroup Ultrasound
  */
 template < class TFixedImage, class TMovingImage >
 class ITK_EXPORT SearchRegionImageInitializer:

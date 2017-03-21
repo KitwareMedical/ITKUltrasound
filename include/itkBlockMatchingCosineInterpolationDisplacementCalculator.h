@@ -15,6 +15,8 @@ namespace BlockMatching
  *
  * Cespedes et. al. Methods for estimation of subsample time delays of digitized
  * echo signals.  Ultrasonic Imaging 17. 142-171.  1995.
+ *
+ * \ingroup Ultrasound
  */
 template < class TMetricImage, class TDisplacementImage, class TCoordRep=double >
 class ITK_EXPORT CosineInterpolationDisplacementCalculator:

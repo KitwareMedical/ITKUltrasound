@@ -15,6 +15,8 @@ namespace BlockMatching
  * \todo rename this from 'MinMax' to 'TopBottom'.
  *
  * \sa MultiResolutionBlockRadiusCalculator
+ *
+ * \ingroup Ultrasound
  */
 template< class TFixedImage >
 class ITK_EXPORT MultiResolutionMinMaxBlockRadiusCalculator :

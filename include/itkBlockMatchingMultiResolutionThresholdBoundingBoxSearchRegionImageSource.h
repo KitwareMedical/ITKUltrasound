@@ -28,6 +28,7 @@ namespace BlockMatching
  * MetricImageToDisplacementCalculator.  The center of the search region is
  * taken to be the displacement.
  *
+ * \ingroup Ultrasound
  * */
 template < class TFixedImage, class TMovingImage, class TMetricImage, class TDisplacementImage >
 class ITK_EXPORT MultiResolutionThresholdBoundingBoxSearchRegionImageSource:

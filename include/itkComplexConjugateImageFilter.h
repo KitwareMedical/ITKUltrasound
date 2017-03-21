@@ -29,6 +29,8 @@ namespace itk
  * \brief Computes pixel-wise the complex conjugate of a complex image.
  * 
  * \ingroup IntensityImageFilters  Multithreaded
+ *
+ * \ingroup Ultrasound
  */
 namespace Function {  
   

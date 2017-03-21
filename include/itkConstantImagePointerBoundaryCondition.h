@@ -55,6 +55,7 @@ namespace itk
  *
  * \ingroup DataRepresentation
  * \ingroup ImageObjects
+ * \ingroup Ultrasound
  */
 template<class TImage>
 class ITK_EXPORT ConstantImagePointerBoundaryCondition

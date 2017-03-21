@@ -23,6 +23,7 @@ namespace BlockMatching
  *
  * \sa WindowedSincInterpolateImageFunction
  *
+ * \ingroup Ultrasound
  */
 template < class TMetricImage, class TDisplacementImage, class TCoordRep=double > 
   class ITK_EXPORT OptimizingInterpolationDisplacementCalculator: public
@@ -97,10 +98,7 @@ public:
 
   typedef typename OptimizerType::CostFunctionType CostFunctionType;
 
-  /** \class OptimizingInterpolationCostFunction
-   *
-   * \brief Makes the interpolator into a cost function.
-   * */
+   /** Makes the interpolator into a cost function. */
   class OptimizingInterpolationCostFunction : public CostFunctionType
   {
   public:

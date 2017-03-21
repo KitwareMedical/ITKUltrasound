@@ -17,6 +17,7 @@ namespace BlockMatching
  * This must be able to produce the fixed image block radius for every level of
  * the MultiResolutionPyramidImage filter.
  *
+ * \ingroup Ultrasound
  */
 template< class TFixedImage >
 class ITK_EXPORT MultiResolutionBlockRadiusCalculator :
