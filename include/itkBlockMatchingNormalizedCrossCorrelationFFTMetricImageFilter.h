@@ -4,9 +4,9 @@
 #include "itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter.h"
 
 #include "itkComplexConjugateImageFilter.h"
-#include "itkFFTComplexConjugateToRealImageFilter.h"
+#include "itkHalfHermitianToRealInverseFFTImageFilter.h"
 #include "itkFFTPadImageFilter.h"
-#include "itkFFTRealToComplexConjugateImageFilter.h"
+#include "itkRealToHalfHermitianForwardFFTImageFilter.h"
 #include "itkFFTShiftImageFilter.h"
 #include "itkRegionFromReferenceImageFilter.h"
 
@@ -90,11 +90,9 @@ protected:
   typedef itk::FFTShiftImageFilter< MetricImageType, MetricImageType >
   FFTShiftFilterType;
 
-  typedef itk::FFTRealToComplexConjugateImageFilter< MetricImagePixelType,
-                                                     ImageDimension > FFTFilterType;
-  typedef itk::FFTComplexConjugateToRealImageFilter< MetricImagePixelType,
-                                                     ImageDimension > IFFTFilterType;
+  typedef itk::RealToHalfHermitianForwardFFTImageFilter< MetricImageType > FFTFilterType;
   typedef typename FFTFilterType::OutputImageType ComplexImageType;
+  typedef itk::HalfHermitianToRealInverseFFTImageFilter< ComplexImageType > IFFTFilterType;
 
   typedef itk::ComplexConjugateImageFilter< ComplexImageType,
                                             ComplexImageType > ComplexConjugateFilterType;
