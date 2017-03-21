@@ -67,8 +67,7 @@ public:
   typedef typename DisplacementImageType::PointType     OriginType;
 
   /** Type of the search region image. */
-  typedef typename ::itk::Image< typename MovingImageType::RegionType, 
-    ImageDimension > SearchRegionImageType;
+  typedef Image< typename MovingImageType::RegionType, ImageDimension > SearchRegionImageType;
 
   /** Standard class typedefs. */
   typedef MultiResolutionImageRegistrationMethod  Self;
@@ -98,17 +97,17 @@ public:
   typedef typename MovingImagePyramidType::Pointer MovingImagePyramidPointer;
 
   /** Type of the registration method used at every level. */
-  typedef typename ::itk::BlockMatching::ImageRegistrationMethod< TFixedImage, TMovingImage,
+  typedef typename BlockMatching::ImageRegistrationMethod< TFixedImage, TMovingImage,
           TMetricImage, TDisplacementImage, TCoordRep > ImageRegistrationMethodType;
   typedef typename ImageRegistrationMethodType::Pointer ImageRegistrationMethodPointer;
 
   /** Type of the class to calculate the fixed image matching kernel block
    * radius at every level. */
-  typedef typename ::itk::BlockMatching::MultiResolutionBlockRadiusCalculator< TFixedImage >
+  typedef typename BlockMatching::MultiResolutionBlockRadiusCalculator< TFixedImage >
     BlockRadiusCalculatorType;
   typedef typename BlockRadiusCalculatorType::Pointer   BlockRadiusCalculatorPointer;
 
-  typedef typename ::itk::BlockMatching::MultiResolutionSearchRegionImageSource< TFixedImage,
+  typedef typename BlockMatching::MultiResolutionSearchRegionImageSource< TFixedImage,
           TMovingImage, TDisplacementImage > SearchRegionImageSourceType;
   typedef typename SearchRegionImageSourceType::Pointer SearchRegionImageSourcePointer;
 

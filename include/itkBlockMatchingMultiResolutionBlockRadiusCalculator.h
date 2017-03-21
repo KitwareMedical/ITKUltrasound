@@ -21,7 +21,7 @@ namespace BlockMatching
  */
 template< class TFixedImage >
 class ITK_TEMPLATE_EXPORT MultiResolutionBlockRadiusCalculator :
-  public ::itk::Object
+  public Object
 {
 public:
   /** Standard class typedefs. */

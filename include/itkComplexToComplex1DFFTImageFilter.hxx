@@ -37,7 +37,7 @@ typename ComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >::Pointer
 ComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
 ::New()
 {
-  Pointer smartPtr = ::itk::ObjectFactory< Self >::Create();
+  Pointer smartPtr = ObjectFactory< Self >::Create();
 
 #ifdef ITK_USE_FFTWD
   if( smartPtr.IsNull() )

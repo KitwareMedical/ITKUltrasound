@@ -49,7 +49,7 @@ MultiResolutionMinMaxSearchRegionImageSource< TFixedImage, TMovingImage, TDispla
 
   if( this->m_CurrentLevel == 0 )
     {
-    ::itk::ImageRegionIteratorWithIndex< OutputImageType > it( outputPtr, outputRegion );
+    ImageRegionIteratorWithIndex< OutputImageType > it( outputPtr, outputRegion );
     for( it.GoToBegin();
          !it.IsAtEnd();
          ++it )
@@ -69,7 +69,7 @@ MultiResolutionMinMaxSearchRegionImageSource< TFixedImage, TMovingImage, TDispla
     }
   else
     {
-    ::itk::ImageRegionIteratorWithIndex< OutputImageType > it( outputPtr, outputRegion );
+    ImageRegionIteratorWithIndex< OutputImageType > it( outputPtr, outputRegion );
     ImageRegionConstIterator< DisplacementImageType > dispIt( this->m_DisplacementResampler->GetOutput(),
                                                               outputRegion );
 

@@ -49,9 +49,8 @@ public:
   typedef typename MovingImageType::RegionType MovingRegionType;
 
   /** Type of the search region image. */
-  typedef typename::itk::Image< typename MovingImageType::RegionType,
-                                ImageDimension > OutputImageType;
-  typedef typename OutputImageType::RegionType OutputRegionType;
+  typedef Image< typename MovingImageType::RegionType, ImageDimension > OutputImageType;
+  typedef typename OutputImageType::RegionType                          OutputRegionType;
 
   /** ScheduleType typedef support. */
   typedef typename Superclass::PyramidScheduleType PyramidScheduleType;

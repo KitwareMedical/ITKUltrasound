@@ -31,8 +31,8 @@ class MultiResolutionImageRegistrationMethod;
  */
 template < class TFixedImage, class TMovingImage, class TDisplacementImage >
 class ITK_TEMPLATE_EXPORT MultiResolutionSearchRegionImageSource :
-  public ::itk::ImageSource<
-    ::itk::Image< typename TMovingImage::RegionType,
+  public ImageSource<
+    Image< typename TMovingImage::RegionType,
                   TMovingImage::ImageDimension > >
 {
 public:
@@ -52,9 +52,8 @@ public:
   typedef typename MovingImageType::RegionType MovingRegionType;
 
   /** Type of the search region image. */
-  typedef typename::itk::Image< typename MovingImageType::RegionType,
-                                ImageDimension > OutputImageType;
-  typedef typename OutputImageType::RegionType OutputRegionType;
+  typedef Image< typename MovingImageType::RegionType, ImageDimension > OutputImageType;
+  typedef typename OutputImageType::RegionType                          OutputRegionType;
 
   /** Standard class typedefs. */
   typedef MultiResolutionSearchRegionImageSource    Self;

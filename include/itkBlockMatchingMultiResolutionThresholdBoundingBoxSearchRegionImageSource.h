@@ -100,10 +100,10 @@ public:
     MultiResolutionFixedSearchRegionImageSource );
 
   /** New macro for creation of through a Smart Pointer is not used because of
-   * ambiguities with ::itk::LightObject. */
+   * ambiguities with LightObject. */
   static Pointer New(void)
   {
-    Pointer smartPtr = ::itk::ObjectFactory<Self>::Create();
+    Pointer smartPtr = ObjectFactory<Self>::Create();
     if(smartPtr.GetPointer() == NULL)
       {
       smartPtr = new Self;
@@ -111,9 +111,9 @@ public:
     smartPtr->UnRegister();
     return smartPtr;
   }
-  //virtual ::itk::LightObject::Pointer CreateAnother(void) const
+  //virtual LightObject::Pointer CreateAnother(void) const
   //{
-    //::itk::LightObject::Pointer smartPtr;
+    //LightObject::Pointer smartPtr;
     //// @todo fix me -- itk::LightObject ambiguity somewhere in the following
     //line
     //smartPtr = Self::New().GetPointer();

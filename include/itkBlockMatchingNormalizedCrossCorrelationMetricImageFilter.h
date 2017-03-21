@@ -79,17 +79,17 @@ protected:
    * an image of standard deviations (times sqrt(N-1)) for each block neighborhood. */
   virtual void GenerateHelperImages();
 
-  typedef typename ::itk::BoxMeanImageFilter< MovingImageType, MetricImageType >               BoxMeanFilterType;
-  typedef typename ::itk::BoxSigmaSqrtNMinusOneImageFilter< MovingImageType, MetricImageType > BoxPseudoSigmaFilterType;
+  typedef BoxMeanImageFilter< MovingImageType, MetricImageType >               BoxMeanFilterType;
+  typedef BoxSigmaSqrtNMinusOneImageFilter< MovingImageType, MetricImageType > BoxPseudoSigmaFilterType;
 
-  typename BoxMeanFilterType::Pointer   m_BoxMeanFilter;
+  typename BoxMeanFilterType::Pointer        m_BoxMeanFilter;
   typename BoxPseudoSigmaFilterType::Pointer m_BoxPseudoSigmaFilter;
 
 private:
   NormalizedCrossCorrelationMetricImageFilter( const Self& ); // purposely not implemented
   void operator=( const Self& ); // purposely not implemented
 
-  typedef typename ::itk::ConstantBoundaryCondition< MetricImageType > BoundaryConditionType;
+  typedef ConstantBoundaryCondition< MetricImageType > BoundaryConditionType;
   BoundaryConditionType m_BoundaryCondition;
 };
 

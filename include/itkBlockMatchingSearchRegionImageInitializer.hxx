@@ -146,7 +146,7 @@ SearchRegionImageInitializer< TFixedImage, TMovingImage >
   typename MovingImageType::SizeType unitySize;
   unitySize.Fill( 1 );
 
-  ::itk::ImageRegionIteratorWithIndex< OutputImageType > it( outputPtr, outputRegion );
+  ImageRegionIteratorWithIndex< OutputImageType > it( outputPtr, outputRegion );
   for( it.GoToBegin(); !it.IsAtEnd(); ++it )
     {
     index = it.GetIndex();
