@@ -1,19 +1,20 @@
 /*=========================================================================
-
-  Program:   Insight Segmentation & Registration Toolkit
-  Module:    itkVectorResampleIdentityNeumannImageFilter.hxx
-  Language:  C++
-  Date:      $Date$
-  Version:   $Revision$
-
-  Copyright (c) Insight Software Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-     PURPOSE.  See the above copyright notices for more information.
-
-=========================================================================*/
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkVectorResampleIdentityNeumannImageFilter_hxx
 #define itkVectorResampleIdentityNeumannImageFilter_hxx
 
@@ -27,9 +28,6 @@
 namespace itk
 {
 
-/**
- * Initialize new instance
- */
 template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
 VectorResampleIdentityNeumannImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>
 ::VectorResampleIdentityNeumannImageFilter()
@@ -41,26 +39,16 @@ VectorResampleIdentityNeumannImageFilter<TInputImage, TOutputImage, TInterpolato
   m_OutputStartIndex.Fill( 0 );
 
   m_Interpolator = VectorLinearInterpolateImageFunction<InputImageType, TInterpolatorPrecisionType>::New();
-
-// Borland does not produce reliable results for nulti processors
-#ifdef __BORLANDC__
-  this->SetNumberOfThreads(1);
-#endif
 }
 
 
-/**
- * Print out a description of self
- *
- * \todo Add details about this class
- */
 template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
-void 
+void
 VectorResampleIdentityNeumannImageFilter<TInputImage, TOutputImage,TInterpolatorPrecisionType>
 ::PrintSelf(std::ostream& os, Indent indent) const
 {
   Superclass::PrintSelf(os,indent);
-  
+
   os << indent << "Size: " << m_Size << std::endl;
   os << indent << "OutputStartIndex: " << m_OutputStartIndex << std::endl;
   os << indent << "OutputSpacing: " << m_OutputSpacing << std::endl;
@@ -71,11 +59,9 @@ VectorResampleIdentityNeumannImageFilter<TInputImage, TOutputImage,TInterpolator
   return;
 }
 
-/**
- * Set the output image spacing.
- */
+
 template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
-void 
+void
 VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
 ::SetOutputSpacing(const double* spacing)
 {
@@ -83,11 +69,9 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
   this->SetOutputSpacing( s );
 }
 
-/**
- * Set the output image origin.
- */
+
 template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
-void 
+void
 VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
 ::SetOutputOrigin(const double* origin)
 {
@@ -101,7 +85,7 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
  * has to be set up before ThreadedGenerateData
  */
 template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
-void 
+void
 VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
 ::BeforeThreadedGenerateData()
 {
@@ -120,12 +104,12 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
  * Set up state of filter after multi-threading.
  */
 template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
-void 
+void
 VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
 ::AfterThreadedGenerateData()
 {
   // Disconnect input image from the interpolator
-  m_Interpolator->SetInputImage( NULL );
+  m_Interpolator->SetInputImage( ITK_NULLPTR );
 
 }
 
@@ -133,11 +117,11 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
  * ThreadedGenerateData
  */
 template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
-void 
+void
 VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
 ::ThreadedGenerateData(
   const OutputImageRegionType& outputRegionForThread,
-  int threadId)
+  ThreadIdType threadId)
 {
   itkDebugMacro(<<"Actually executing");
 
@@ -171,8 +155,7 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
   IndexType startIndex = inputPtr->GetBufferedRegion().GetIndex();
   IndexType endIndex;
   IndexType closestIndex;
-  unsigned int i;
-  for( i = 0; i < ImageDimension; ++i )
+  for( unsigned int i = 0; i < ImageDimension; ++i )
     {
     endIndex[i] = startIndex[i] + inputPtr->GetBufferedRegion().GetSize()[i] - 1;
     }
@@ -203,14 +186,18 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
       }
     else
       {
-      for( i = 0; i < ImageDimension; ++i )
+      for( unsigned int i = 0; i < ImageDimension; ++i )
         closestIndex[i] = itk::Math::RoundHalfIntegerToEven< typename IndexType::IndexValueType, double >( inputIndex[i] );
-      for( i = 0; i < ImageDimension; ++i )
+      for( unsigned int i = 0; i < ImageDimension; ++i )
         {
         if( inputIndex[i] < startIndex[i] )
+          {
           closestIndex[i] = startIndex[i];
+          }
         if( inputIndex[i] > endIndex[i] )
+          {
           closestIndex[i] = endIndex[i];
+          }
         }
       outIt.Set( inputPtr->GetPixel( closestIndex )); // default background value
       }
@@ -221,7 +208,7 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
   return;
 }
 
-/** 
+/**
  * Inform pipeline of necessary input image region
  *
  * Determining the actual input region is non-trivial, especially
@@ -229,7 +216,7 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
  * So we do the easy thing and request the entire input image.
  */
 template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
-void 
+void
 VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
 ::GenerateInputRequestedRegion()
 {
@@ -242,7 +229,7 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
     }
 
   // get pointers to the input and output
-  InputImagePointer  inputPtr  = 
+  InputImagePointer  inputPtr  =
     const_cast< TInputImage *>( this->GetInput() );
 
   // Request the entire input image
@@ -253,11 +240,9 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
   return;
 }
 
-/** 
- * Inform pipeline of required output region
- */
+
 template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
-void 
+void
 VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
 ::GenerateOutputInformation()
 {
@@ -285,15 +270,15 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
   return;
 }
 
-/** 
+/**
  * Verify if any of the components has been modified.
  */
 template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
-unsigned long 
+unsigned long
 VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
 ::GetMTime( void ) const
 {
-  unsigned long latestTime = Object::GetMTime(); 
+  unsigned long latestTime = Object::GetMTime();
 
   if( m_Interpolator )
     {

@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingMultiResolutionFixedSearchRegionImageSource_h
 #define itkBlockMatchingMultiResolutionFixedSearchRegionImageSource_h
 
@@ -7,6 +24,7 @@ namespace itk
 {
 namespace BlockMatching
 {
+
 /** \class MultiResolutionFixedSearchRegionImageSource
  *
  * \brief The search region has a fixed radius across levels.
@@ -20,7 +38,7 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  * */
-template < class TFixedImage, class TMovingImage, class TDisplacementImage >
+template < typename TFixedImage, typename TMovingImage, typename TDisplacementImage >
 class ITK_TEMPLATE_EXPORT MultiResolutionFixedSearchRegionImageSource :
   public MultiResolutionSearchRegionImageSource < TFixedImage, TMovingImage,
                                                   TDisplacementImage >
@@ -28,14 +46,12 @@ class ITK_TEMPLATE_EXPORT MultiResolutionFixedSearchRegionImageSource :
 public:
   /** Standard class typedefs. */
   typedef MultiResolutionFixedSearchRegionImageSource    Self;
-  typedef MultiResolutionSearchRegionImageSource< TFixedImage,
-          TMovingImage, TDisplacementImage >             Superclass;
+  typedef MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >             Superclass;
   typedef SmartPointer< Self >                           Pointer;
   typedef SmartPointer< const Self >                     ConstPointer;
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int,
-                      TMovingImage::ImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, TMovingImage::ImageDimension);
 
   /** Type of the fixed image. */
   typedef TFixedImage                         FixedImageType;
@@ -98,10 +114,10 @@ public:
 protected:
   MultiResolutionFixedSearchRegionImageSource();
 
-  virtual void BeforeThreadedGenerateData();
+  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
 
   virtual void ThreadedGenerateData( const OutputRegionType& outputRegion,
-                                     int threadID );
+                                     ThreadIdType threadID ) ITK_OVERRIDE;
 
   RadiusScheduleType m_SearchRegionRadiusSchedule;
 
@@ -120,4 +136,3 @@ private:
 #endif
 
 #endif
-

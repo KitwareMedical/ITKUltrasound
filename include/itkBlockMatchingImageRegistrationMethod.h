@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingImageRegistrationMethod_h
 #define itkBlockMatchingImageRegistrationMethod_h
 
@@ -27,16 +44,15 @@ namespace BlockMatching
  * etc) determines the information in the output displacement image.
  *
  * \sa ImageRegistrationMethod
+ *
  * \ingroup RegistrationFilters
  * \ingroup Ultrasound
  */
 template<class TFixedImage, class TMovingImage,
   class TMetricImage, class TDisplacementImage, class TCoordRep >
 class ITK_TEMPLATE_EXPORT ImageRegistrationMethod :
-  public ImageToImageFilter< 
-  itk::Image< typename TMovingImage::RegionType,
-    TDisplacementImage::ImageDimension >,
-  TDisplacementImage > 
+  public ImageToImageFilter< itk::Image< typename TMovingImage::RegionType,
+    TDisplacementImage::ImageDimension >, TDisplacementImage >
 {
 public:
   /** ImageDimension enumeration. */
@@ -69,20 +85,17 @@ public:
   typedef typename ImageType::PointType     OriginType;
 
   /** Type of the search region image. */
-  typedef typename itk::Image< typename MovingImageType::RegionType, 
-    ImageDimension > SearchRegionImageType;
+  typedef Image< typename MovingImageType::RegionType, ImageDimension > SearchRegionImageType;
 
   /** Standard class typedefs. */
-  typedef ImageRegistrationMethod     Self;
-  typedef ImageToImageFilter< SearchRegionImageType, TDisplacementImage >
-    Superclass;
-
-  typedef SmartPointer< Self >           Pointer;
-  typedef SmartPointer< const Self >     ConstPointer;
+  typedef ImageRegistrationMethod                                         Self;
+  typedef ImageToImageFilter< SearchRegionImageType, TDisplacementImage > Superclass;
+  typedef SmartPointer< Self >                                            Pointer;
+  typedef SmartPointer< const Self >                                      ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
-  
+
   /** Run-time type information (and related methods). */
   itkTypeMacro(ImageRegistrationMethod, ImageSource);
 
@@ -100,7 +113,7 @@ public:
 
   /** Set the fixed image. */
   void SetFixedImage( FixedImageType * fixedImage );
-  const FixedImageType * GetFixedImage() const 
+  const FixedImageType * GetFixedImage() const
     { return this->m_FixedImage.GetPointer(); }
 
   /** Set the moving image. */
@@ -167,16 +180,16 @@ protected:
   ImageRegistrationMethod();
   virtual ~ImageRegistrationMethod() {}
 
-  virtual void GenerateOutputInformation();
+  virtual void GenerateOutputInformation() ITK_OVERRIDE;
 
-  virtual void GenerateInputRequestedRegion();
-  
-  virtual void EnlargeOutputRequestedRegion( DataObject * data );
+  virtual void GenerateInputRequestedRegion() ITK_OVERRIDE;
+
+  virtual void EnlargeOutputRequestedRegion( DataObject * data ) ITK_OVERRIDE;
 
   /** Initialize by setting the interconnects between the components. */
-  virtual void Initialize() throw (ExceptionObject);
+  virtual void Initialize();
 
-  virtual void GenerateData();
+  virtual void GenerateData() ITK_OVERRIDE;
 
   typename FixedImageType::Pointer  m_FixedImage;
   typename MovingImageType::Pointer m_MovingImage;

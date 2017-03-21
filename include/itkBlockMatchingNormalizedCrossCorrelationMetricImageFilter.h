@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter_h
 #define itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter_h
 
@@ -41,8 +58,7 @@ public:
   itkTypeMacro(NormalizedCrossCorrelationMetricImageFilter, MetricImageFilter);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int,
-                      Superclass::ImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
 
   /** Type of the fixed image. */
   typedef typename Superclass::FixedImageType   FixedImageType;
@@ -62,13 +78,13 @@ protected:
 
   /** The mean and pseudo-standarddeviation images are stored in the outputs so
     they fix in with the pipline architecture. */
-  virtual void GenerateOutputInformation();
+  virtual void GenerateOutputInformation() ITK_OVERRIDE;
 
   /** All outputs generate the largest possible region. */
-  virtual void EnlargeOutputRequestedRegion( DataObject * data );
+  virtual void EnlargeOutputRequestedRegion( DataObject * data ) ITK_OVERRIDE;
 
   /** Don't let the default mess with our output requested regions. */
-  virtual void GenerateOutputRequestedRegion( DataObject * data ) {};
+  virtual void GenerateOutputRequestedRegion( DataObject * data ) ITK_OVERRIDE {};
 
   /** Generates helper images for the calculation.  These are only needed for
    * internal calculation, but they are put on the
@@ -101,4 +117,3 @@ private:
 #endif
 
 #endif
-

@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingBayesianRegularizationDisplacementCalculator_hxx
 #define itkBlockMatchingBayesianRegularizationDisplacementCalculator_hxx
 
@@ -138,7 +155,7 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
     image = *it;
     for( dimIt2 = 0; dimIt2 < ImageDimension; dimIt2++ )
       {
-      radius[dimIt2] = static_cast< typename GaussianKernelRadiusType::SizeValueType >( vcl_ceil( 
+      radius[dimIt2] = static_cast< typename GaussianKernelRadiusType::SizeValueType >( vcl_ceil(
       displacementSpacing[dimIt] * maxStrain[dimIt2] / metricSpacing[dimIt2] ));
       size[dimIt2] = radius[dimIt2] * 2 + 1;
       index[dimIt2] = -1 * radius[dimIt2];
@@ -233,7 +250,7 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
   padFilter->SetPadUpperBound( upperBoundPad );
   padFilter->UpdateLargestPossibleRegion();
   MetricImagePointerType paddedPrior = padFilter->GetOutput();
-  
+
   MetricImageIteratorType kernelIt( m_GaussianKernels[direction],
                                     m_GaussianKernels[direction]->GetLargestPossibleRegion() );
 
@@ -375,9 +392,9 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
   ImpartLikelihoodThreadStruct *str;
   str = (ImpartLikelihoodThreadStruct *)
     (((MultiThreader::ThreadInfoStruct *)(arg))->UserData);
-  int total, threadId, threadCount;
+  ThreadIdType total, threadCount;
 
-  threadId = ((MultiThreader::ThreadInfoStruct *)(arg))->ThreadID;
+  const ThreadIdType threadId = ((MultiThreader::ThreadInfoStruct *)(arg))->ThreadID;
   threadCount = ((MultiThreader::ThreadInfoStruct *)(arg))->NumberOfThreads;
 
   RegionType splitRegion;
@@ -441,7 +458,7 @@ template < class TMetricImage, class TDisplacementImage >
 ITK_THREAD_RETURN_TYPE
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::SubtractLowerBoundThreadFunctor::operator() ( Superclass *superclass,
-  RegionType& region, int threadId )
+  RegionType& region, ThreadIdType threadId )
 {
   Self* self = dynamic_cast< Self* >( superclass );
 
@@ -472,7 +489,7 @@ template < class TMetricImage, class TDisplacementImage >
 ITK_THREAD_RETURN_TYPE
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::ScaleToUnityThreadFunctor::operator() ( Superclass *superclass,
-  RegionType& region, int threadId )
+  RegionType& region, ThreadIdType threadId )
 {
   Self* self = dynamic_cast< Self* >( superclass );
 
@@ -505,7 +522,7 @@ template < class TMetricImage, class TDisplacementImage >
 ITK_THREAD_RETURN_TYPE
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::MeanChangeThreadFunctor::operator() ( Superclass *superclass,
-  RegionType& region, int threadId )
+  RegionType& region, ThreadIdType threadId )
 {
   Self* self = dynamic_cast< Self* >( superclass );
 
@@ -550,7 +567,7 @@ template < class TMetricImage, class TDisplacementImage >
 ITK_THREAD_RETURN_TYPE
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::CopyPriorToPosteriorThreadFunctor::operator() ( Superclass *superclass,
-  RegionType& region, int threadId )
+  RegionType& region, ThreadIdType threadId )
 {
   Self* self = dynamic_cast< Self* >( superclass );
 

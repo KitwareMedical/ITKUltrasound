@@ -1,17 +1,20 @@
 /*=========================================================================
-
-  Program:   Insight Segmentation & Registration Toolkit
-  Module:    itkVectorResampleNeumannIdentityImageFilter.h
-  Language:  C++
-
-  Copyright (c) Insight Software Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-     PURPOSE.  See the above copyright notices for more information.
-
-=========================================================================*/
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkVectorResampleIdentityNeumannImageFilter_h
 #define itkVectorResampleIdentityNeumannImageFilter_h
 
@@ -36,7 +39,7 @@ namespace itk
  * Note that the choice of interpolator function can be important.
  * This function is set via SetInterpolator().  The default is
  * itk::VectorLinearInterpolateImageFunction<InputImageType, TInterpolatorPrecisionType>, which
- * is reasonable for ordinary medical images.  
+ * is reasonable for ordinary medical images.
  *
  * Since this filter produces an image which is a different size than
  * its input, it needs to override several of the methods defined
@@ -45,7 +48,7 @@ namespace itk
  * ProcessObject::GenerateInputRequestedRegion() and
  * ProcessObject::GenerateOutputInformation().
  *
- * This filter is implemented as a multithreaded filter.  It provides a 
+ * This filter is implemented as a multithreaded filter.  It provides a
  * ThreadedGenerateData() method for its implementation.
  *
  * \sa VectorResampleImageFilter
@@ -71,14 +74,13 @@ public:
   typedef typename InputImageType::RegionType   InputImageRegionType;
 
   /** Method for creation through the object factory. */
-  itkNewMacro(Self);  
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(VectorResampleIdentityNeumannImageFilter, ImageToImageFilter);
 
   /** Number of dimensions. */
-  itkStaticConstMacro(ImageDimension, unsigned int,
-                      TOutputImage::ImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, TOutputImage::ImageDimension);
 
   /** Interpolator typedef. */
   typedef VectorInterpolateImageFunction<InputImageType, TInterpolatorPrecisionType> InterpolatorType;
@@ -104,7 +106,7 @@ public:
   typedef typename TOutputImage::SpacingType   SpacingType;
   typedef typename TOutputImage::PointType     OriginPointType;
   typedef typename TOutputImage::DirectionType DirectionType;
-  
+
   /** Set the interpolator function.  The default is
    * itk::VectorLinearInterpolateImageFunction<InputImageType, TInterpolatorPrecisionType>.  */
   itkSetObjectMacro( Interpolator, InterpolatorType );
@@ -117,7 +119,7 @@ public:
 
   /** Get the size of the output image. */
   itkGetConstReferenceMacro( Size, SizeType );
-     
+
   /** Set the output image spacing. */
   itkSetMacro(OutputSpacing, SpacingType);
   virtual void SetOutputSpacing( const double* values);
@@ -136,37 +138,13 @@ public:
   itkSetMacro(OutputDirection, DirectionType);
   itkGetConstReferenceMacro(OutputDirection, DirectionType);
 
-  /** Set the start index of the output largest possible region. 
+  /** Set the start index of the output largest possible region.
    * The default is an index of all zeros. */
   itkSetMacro( OutputStartIndex, IndexType );
 
   /** Get the start index of the output largest possible region. */
   itkGetConstReferenceMacro( OutputStartIndex, IndexType );
 
-  /** VectorResampleIdentityNeumannImageFilter produces an image which is a different size
-   * than its input.  As such, it needs to provide an implementation
-   * for GenerateOutputInformation() in order to inform the pipeline
-   * execution model.  The original documentation of this method is
-   * below. \sa ProcessObject::GenerateOutputInformaton() */
-  virtual void GenerateOutputInformation();
-
-  /** VectorResampleIdentityNeumannImageFilter needs a different input requested region than
-   * the output requested region.  As such, VectorResampleIdentityNeumannImageFilter needs
-   * to provide an implementation for GenerateInputRequestedRegion()
-   * in order to inform the pipeline execution model.
-   * \sa ProcessObject::GenerateInputRequestedRegion() */
-  virtual void GenerateInputRequestedRegion();
-
-  /** This method is used to set the state of the filter before 
-   * multi-threading. */
-  virtual void BeforeThreadedGenerateData();
-
-  /** This method is used to set the state of the filter after 
-   * multi-threading. */
-  virtual void AfterThreadedGenerateData();
-
-  /** Method Compute the Modified Time based on changed to the components. */
-  unsigned long GetMTime( void ) const;
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   /** Begin concept checking */
@@ -191,7 +169,32 @@ protected:
    * \sa ImageToImageFilter::ThreadedGenerateData(),
    *     ImageToImageFilter::GenerateData() */
   void ThreadedGenerateData(const OutputImageRegionType& outputRegionForThread,
-                            int threadId );
+                            ThreadIdType threadId ) ITK_OVERRIDE;
+
+  /** VectorResampleIdentityNeumannImageFilter produces an image which is a different size
+   * than its input.  As such, it needs to provide an implementation
+   * for GenerateOutputInformation() in order to inform the pipeline
+   * execution model.  The original documentation of this method is
+   * below. \sa ProcessObject::GenerateOutputInformaton() */
+  virtual void GenerateOutputInformation() ITK_OVERRIDE;
+
+  /** VectorResampleIdentityNeumannImageFilter needs a different input requested region than
+   * the output requested region.  As such, VectorResampleIdentityNeumannImageFilter needs
+   * to provide an implementation for GenerateInputRequestedRegion()
+   * in order to inform the pipeline execution model.
+   * \sa ProcessObject::GenerateInputRequestedRegion() */
+  virtual void GenerateInputRequestedRegion() ITK_OVERRIDE;
+
+  /** This method is used to set the state of the filter before
+   * multi-threading. */
+  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
+
+  /** This method is used to set the state of the filter after
+   * multi-threading. */
+  virtual void AfterThreadedGenerateData() ITK_OVERRIDE;
+
+  /** Method Compute the Modified Time based on changed to the components. */
+  unsigned long GetMTime( void ) const;
 
 private:
   VectorResampleIdentityNeumannImageFilter(const Self&); //purposely not implemented
@@ -206,11 +209,11 @@ private:
   IndexType               m_OutputStartIndex; // output start index
 };
 
-  
+
 } // end namespace itk
-  
+
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkVectorResampleIdentityNeumannImageFilter.hxx"
 #endif
-  
+
 #endif

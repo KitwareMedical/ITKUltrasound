@@ -42,11 +42,11 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  */
-template < class TMetricImage, class TDisplacementImage, class TCoordRep=double > 
+template < typename TMetricImage, typename TDisplacementImage, typename TCoordRep=double >
   class ITK_TEMPLATE_EXPORT OptimizingInterpolationDisplacementCalculator: public
       itk::BlockMatching::MetricImageToDisplacementCalculator<
-      TMetricImage, TDisplacementImage > 
-{ 
+      TMetricImage, TDisplacementImage >
+{
 public:
   /** Standard class typedefs. */
   typedef OptimizingInterpolationDisplacementCalculator     Self;
@@ -57,33 +57,31 @@ public:
   typedef SmartPointer< const Self >     ConstPointer;
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int,
-                      Superclass::ImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
-  
+
   /** Run-time type information (and related methods). */
   itkTypeMacro( OptimizingInterpolationDisplacementCalculator, MetricImageToDisplacementCalculator );
 
-  typedef typename Superclass::MetricImageType MetricImageType;
+  typedef typename Superclass::MetricImageType        MetricImageType;
   typedef typename Superclass::MetricImagePointerType MetricImagePointerType;
-  typedef typename MetricImageType::PixelType   PixelType;
-  typedef typename MetricImageType::SpacingType SpacingType;
-
-  typedef typename Superclass::PointType PointType;
-  
-  typedef typename Superclass::IndexType IndexType;
+  typedef typename MetricImageType::PixelType         PixelType;
+  typedef typename MetricImageType::SpacingType       SpacingType;
+  typedef typename Superclass::PointType              PointType;
+  typedef typename Superclass::IndexType              IndexType;
 
   /** Type of the interpolator. */
   typedef typename itk::InterpolateImageFunction< MetricImageType, TCoordRep >
     InterpolatorType;
-  typedef typename InterpolatorType::ContinuousIndexType ContinuousIndexType;
+  typedef typename InterpolatorType::ContinuousIndexType
+    ContinuousIndexType;
 
   /** Type of the optimizer. */
-  typedef typename itk::SingleValuedNonLinearOptimizer OptimizerType;
+  typedef typename SingleValuedNonLinearOptimizer OptimizerType;
 
-  virtual void SetMetricImagePixel( const PointType & point, const IndexType& index, MetricImageType* image ); 
+  virtual void SetMetricImagePixel( const PointType & point, const IndexType& index, MetricImageType* image );
 
   virtual void Compute() {
     // We do this here instead of SetMetricImagePixel so it only has to be done
@@ -115,7 +113,7 @@ public:
 
   typedef typename OptimizerType::CostFunctionType CostFunctionType;
 
-   /** Makes the interpolator into a cost function. */
+  /** Makes the interpolator into a cost function. */
   class OptimizingInterpolationCostFunction : public CostFunctionType
   {
   public:
@@ -141,15 +139,15 @@ public:
     typedef Superclass::DerivativeType DerivativeType;
 
     /** This method returns the value of the cost function corresponding
-      * to the specified parameters.    */ 
+      * to the specified parameters.    */
     virtual MeasureType GetValue( const ParametersType & parameters ) const;
 
     /** This method returns the derivative of the cost function corresponding
-      * to the specified parameters.   */ 
+      * to the specified parameters.   */
     virtual void GetDerivative( const ParametersType & parameters,
                                 DerivativeType & derivative ) const;
 
-    /** Return the number of parameters required to compute 
+    /** Return the number of parameters required to compute
      *  this cost function.
      *  This method MUST be overloaded by derived classes. */
     virtual unsigned int GetNumberOfParameters(void) const

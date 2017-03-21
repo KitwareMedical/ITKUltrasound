@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingOptimizingInterpolationDisplacementCalculator_hxx
 #define itkBlockMatchingOptimizingInterpolationDisplacementCalculator_hxx
 
@@ -19,6 +36,7 @@ OptimizingInterpolationDisplacementCalculator< TMetricImage,
 
   // @todo sensible default optimizer and interpolator
 }
+
 
 template < class TMetricImage, class TDisplacementImage, class TCoordRep >
 void
@@ -47,13 +65,11 @@ OptimizingInterpolationDisplacementCalculator< TMetricImage,
       }
     }
 
-  unsigned int i;
-
   // If the maxIndex is on the edge of the image we don't try interpolation.
   bool onEdge = false;
   IndexType metricIndex = region.GetIndex();
   const typename MetricImageType::SizeType metricSize   = region.GetSize();
-  for( i = 0; i < ImageDimension; ++i )
+  for( unsigned int i = 0; i < ImageDimension; ++i )
     {
     if( maxIndex[i] == metricIndex[i] || maxIndex[i] == metricIndex[i] + static_cast< typename IndexType::IndexValueType >( metricSize[i] ) )
       {
@@ -70,13 +86,13 @@ OptimizingInterpolationDisplacementCalculator< TMetricImage,
   else
     {
     typename OptimizingInterpolationCostFunction::ParametersType parameters( ImageDimension );
-    for( i = 0; i < ImageDimension; i++ )
+    for( unsigned int i = 0; i < ImageDimension; ++i )
       {
       parameters[i] = static_cast< typename OptimizingInterpolationCostFunction::ParametersValueType >( maxIndex[i] );
       }
     m_Optimizer->SetInitialPosition( parameters );
     // Is this the right offset?
-    for( i = 0; i < ImageDimension; i++ )
+    for( unsigned int i = 0; i < ImageDimension; i++ )
       parameters[i] += 0.1;
     m_CostFunction->Initialize( parameters );
     m_CostFunction->GetInterpolator()->SetInputImage( metricImage );
@@ -85,7 +101,7 @@ OptimizingInterpolationDisplacementCalculator< TMetricImage,
     parameters = m_Optimizer->GetCurrentPosition();
 
     ContinuousIndexType continuousIndex;
-    for( i = 0; i < ImageDimension; i++ )
+    for( unsigned int i = 0; i < ImageDimension; i++ )
       {
       continuousIndex[i] = parameters[i];
       }
@@ -105,6 +121,7 @@ OptimizingInterpolationDisplacementCalculator< TMetricImage,
   // This is needed to compile :S
   this->m_ContinuousIndexPtr = this->m_ContinuousIndex.GetDataPointer();
 }
+
 
 template < class TMetricImage, class TDisplacementImage, class TCoordRep >
 typename OptimizingInterpolationDisplacementCalculator< TMetricImage, TDisplacementImage,
@@ -134,17 +151,16 @@ OptimizingInterpolationDisplacementCalculator< TMetricImage,
   MeasureType value;
   MeasureType centerValue;
   TCoordRep delta;
-  unsigned int i;
-  for( i = 0; i < ImageDimension; i++ )
+  for( unsigned int i = 0; i < ImageDimension; ++i )
     {
     m_ContinuousIndexPtr[i] = parameters[i];
     }
   centerValue = -1 * m_Interpolator->EvaluateAtContinuousIndex( m_ContinuousIndex );
-  for( i = 0; i < ImageDimension; i++ )
+  for( unsigned int i = 0; i < ImageDimension; ++i )
     {
     const static double acceptibleValue = 100 * NumericTraits< double >::epsilon();
     delta = parameters[i] - m_PreviousParameters[i];
-    if( vcl_abs( delta ) > acceptibleValue )
+    if( std::abs( delta ) > acceptibleValue )
       {
       m_ContinuousIndexPtr[i] += delta;
       value = -1 * m_Interpolator->EvaluateAtContinuousIndex( m_ContinuousIndex );
@@ -157,7 +173,7 @@ OptimizingInterpolationDisplacementCalculator< TMetricImage,
     m_ContinuousIndexPtr[i] = parameters[i];
     }
 
-  for( i = 0; i < ImageDimension; ++i )
+  for( unsigned int i = 0; i < ImageDimension; ++i )
     {
     m_PreviousParametersPtr[i] = parameters[i];
     }

@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #include "itkTestMain.h"
 
 void RegisterTests()
@@ -26,15 +43,15 @@ int itkBlockMatchingBayesianRegularizationDisplacementCalculatorTest( int argc, 
     }
 
   const unsigned int Dimension = 2;
-  typedef signed short InputPixelType;
+  typedef signed short                            InputPixelType;
   typedef itk::Image< InputPixelType, Dimension > InputImageType;
-  typedef InputImageType::SizeType RadiusType;
+  typedef InputImageType::SizeType                RadiusType;
 
-  typedef double MetricPixelType;
+  typedef double                                   MetricPixelType;
   typedef itk::Image< MetricPixelType, Dimension > MetricImageType;
 
   typedef itk::Vector< MetricPixelType, Dimension > VectorType;
-  typedef itk::Image< VectorType, Dimension > DisplacementImageType;
+  typedef itk::Image< VectorType, Dimension >       DisplacementImageType;
 
   typedef double CoordRepType;
 

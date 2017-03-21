@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingImageToImageMetricMetricImageFilter_hxx
 #define itkBlockMatchingImageToImageMetricMetricImageFilter_hxx
 
@@ -8,8 +25,7 @@ namespace itk
 namespace BlockMatching
 {
 
-template <class TFixedImage, class TMovingImage,
-	 class TMetricImage >
+template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
 ImageToImageMetricMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::ImageToImageMetricMetricImageFilter():
   m_MetricImageSpacingDefined( false )
@@ -17,8 +33,7 @@ ImageToImageMetricMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 }
 
 
-template <class TFixedImage, class TMovingImage,
-	 class TMetricImage >
+template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
 void
 ImageToImageMetricMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::SetMetricImageSpacing( const MetricImageSpacingType & spacing )
@@ -29,8 +44,7 @@ ImageToImageMetricMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 }
 
 
-template <class TFixedImage, class TMovingImage,
-	 class TMetricImage >
+template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
 void
 ImageToImageMetricMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::GenerateOutputInformation()
@@ -38,14 +52,14 @@ ImageToImageMetricMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
   // get origin and direction from fixed image.
   Superclass::Superclass::GenerateOutputInformation();
 
-  typename MovingImageType::ConstPointer movingPtr = this->GetInput(1);
-  if( !movingPtr )
+  const MovingImageType * moving = this->GetInput(1);
+  if( !moving )
     {
     itkExceptionMacro( << "MovingImage input has not been set" );
     }
 
-  typename MetricImageType::Pointer outputPtr = this->GetOutput(0);
-  if( !outputPtr )
+  MetricImageType * output = this->GetOutput(0);
+  if( !output )
     {
     return;
     }
@@ -55,7 +69,7 @@ ImageToImageMetricMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
     itkExceptionMacro( << "MovingImageRegion has not been set" );
     }
 
-  typename MovingImageType::SpacingType movingSpacing = movingPtr->GetSpacing();
+  typename MovingImageType::SpacingType movingSpacing = moving->GetSpacing();
 
   MetricImageRegionType metricRegion;
   typename MetricImageRegionType::IndexType metricIndex;
@@ -67,23 +81,22 @@ ImageToImageMetricMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 
   if( m_MetricImageSpacingDefined )
     {
-    for( unsigned int i = 0; i < ImageDimension; i++ )
+    for( unsigned int i = 0; i < ImageDimension; ++i )
       {
       metricSize[i] = vcl_ceil( movingSize[i] * movingSpacing[i] / m_MetricImageSpacing[i] );
       }
-    outputPtr->SetSpacing( m_MetricImageSpacing );
+    output->SetSpacing( m_MetricImageSpacing );
     }
   else
     {
     metricSize = movingSize;
-    outputPtr->SetSpacing( movingSpacing );
+    output->SetSpacing( movingSpacing );
     }
   metricRegion.SetSize( metricSize );
-  outputPtr->SetLargestPossibleRegion( metricRegion );
+  output->SetLargestPossibleRegion( metricRegion );
 }
 
 } // end namespace BlockMatching
 } // end namespace itk
 
 #endif
-

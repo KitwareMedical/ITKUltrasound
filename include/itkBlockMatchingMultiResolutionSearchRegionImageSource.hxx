@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingMultiResolutionSearchRegionImageSource_hxx
 #define itkBlockMatchingMultiResolutionSearchRegionImageSource_hxx
 
@@ -15,9 +32,10 @@ MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage,
   m_CurrentLevel( 0 )
 {
   m_PreviousDisplacements  = DisplacementImageType::New();
-  m_DisplacementDuplicator = DisplacementDuplicatorType::New(); 
+  m_DisplacementDuplicator = DisplacementDuplicatorType::New();
   m_DisplacementResampler  = DisplacementResamplerType::New();
 }
+
 
 template < class TFixedImage, class TMovingImage, class TDisplacementImage >
 void
@@ -32,6 +50,7 @@ MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage,
   m_DisplacementDuplicator->Update();
   m_PreviousDisplacements = m_DisplacementDuplicator->GetOutput();
 }
+
 
 template < class TFixedImage, class TMovingImage, class TDisplacementImage >
 void
@@ -49,17 +68,20 @@ MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage,
   m_OverlapSchedule.Fill( schedule );
 }
 
+
 template < class TFixedImage, class TMovingImage, class TDisplacement >
 void
 MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage,
                                         TDisplacement >
 ::GenerateOutputInformation()
 {
-  typename OutputImageType::Pointer outputPtr = this->GetOutput();
+  OutputImageType * outputPtr = this->GetOutput();
   if( !outputPtr )
+    {
     return;
+    }
 
-  if( m_FixedImage.GetPointer() == NULL )
+  if( m_FixedImage == ITK_NULLPTR )
     {
     itkExceptionMacro( << "Fixed Image is not present." );
     }
@@ -84,17 +106,16 @@ MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage,
     itkExceptionMacro( << "OverlapSchedule is not present." );
     }
 
-  unsigned int i;
   typename FixedImageType::IndexType fixedIndex = m_FixedImage->GetLargestPossibleRegion().GetIndex();
-  for( i = 0; i < ImageDimension; i++ )
+  for( unsigned int i = 0; i < ImageDimension; ++i )
     {
-    origin[i] = fixedOrigin[i] + 
+    origin[i] = fixedOrigin[i] +
       + ( fixedIndex[i] + m_FixedBlockRadius[i] ) * fixedSpacing[i];
     }
   outputPtr->SetOrigin( origin );
 
   typename OutputImageType::SpacingType spacing;
-  for( i = 0; i < ImageDimension; i++ )
+  for( unsigned int i = 0; i < ImageDimension; ++i )
     {
     spacing[i] = 2 * m_FixedBlockRadius[i] * fixedSpacing[i] * m_OverlapSchedule( m_CurrentLevel, i );
     }
@@ -106,7 +127,7 @@ MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage,
   region.SetIndex( index );
   typename OutputRegionType::SizeType size;
   typename FixedImageType::SizeType fixedSize = m_FixedImage->GetLargestPossibleRegion().GetSize();
-  for( i = 0; i < ImageDimension; i++ )
+  for( unsigned int i = 0; i < ImageDimension; ++i )
     {
     size[i] = static_cast< typename OutputRegionType::SizeType::SizeValueType >( vcl_floor((
     fixedSize[i] - m_FixedBlockRadius[i] - 1 ) * fixedSpacing[i] / spacing[i] ));
@@ -114,6 +135,7 @@ MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage,
   region.SetSize( size );
   outputPtr->SetLargestPossibleRegion( region );
 }
+
 
 template < class TFixedImage, class TMovingImage, class TDisplacement >
 void

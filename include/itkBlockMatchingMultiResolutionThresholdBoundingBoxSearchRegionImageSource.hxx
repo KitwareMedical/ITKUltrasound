@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingMultiResolutionThresholdBoundingBoxSearchRegionImageSource_hxx
 #define itkBlockMatchingMultiResolutionThresholdBoundingBoxSearchRegionImageSource_hxx
 
@@ -212,11 +229,13 @@ template < class TFixedImage, class TMovingImage, class TMetricImage,
 void
 MultiResolutionThresholdBoundingBoxSearchRegionImageSource<
 TFixedImage, TMovingImage, TMetricImage, TDisplacementImage >
-::ThreadedGenerateData( const OutputRegionType& outputRegion, int threadID )
+::ThreadedGenerateData( const OutputRegionType& outputRegion, ThreadIdType threadID )
 {
-  typename OutputImageType::Pointer outputPtr = this->GetOutput();
+  OutputImageType * outputPtr = this->GetOutput();
   if( !outputPtr )
+    {
     return;
+    }
 
   OutputRegionType region;
   OutputRegionType movingLargestRegion = this->m_MovingImage->GetLargestPossibleRegion();
@@ -224,16 +243,12 @@ TFixedImage, TMovingImage, TMetricImage, TDisplacementImage >
   typename MovingImageType::IndexType index;
   typename MovingImageType::SizeType unitySize;
   unitySize.Fill( 1 );
-  unsigned int i;
   RadiusType radius;
 
   if( this->m_CurrentLevel == 0 )
     {
     ImageRegionIteratorWithIndex< OutputImageType > it( outputPtr, outputRegion );
-
-    for( it.GoToBegin();
-      !it.IsAtEnd();
-      ++it )
+    for( it.GoToBegin(); !it.IsAtEnd(); ++it )
       {
       index = it.GetIndex();
       outputPtr->TransformIndexToPhysicalPoint( index, point );
@@ -254,7 +269,7 @@ TFixedImage, TMovingImage, TMetricImage, TDisplacementImage >
     IndexType startIndex = this->m_MovingImage->GetBufferedRegion().GetIndex();
     IndexType endIndex;
     IndexType closestIndex;
-    for( i = 0; i < ImageDimension; ++i )
+    for( unsigned int i = 0; i < ImageDimension; ++i )
       {
       endIndex[i] = startIndex[i] + this->m_MovingImage->GetBufferedRegion().GetSize()[i] - 1;
       }
@@ -277,7 +292,7 @@ TFixedImage, TMovingImage, TMetricImage, TDisplacementImage >
       region.SetSize( unitySize );
       // Expand the search region radius by the scaling that occured between
       // levels.
-      for( i = 0; i < ImageDimension; ++i )
+      for( unsigned int i = 0; i < ImageDimension; ++i )
         {
         radius[i] = vcl_ceil( static_cast< float >( radiusIt.Get()[i] ) *
           static_cast< float >( this->m_PyramidSchedule( this->m_CurrentLevel - 1, i )) /
@@ -289,14 +304,20 @@ TFixedImage, TMovingImage, TMetricImage, TDisplacementImage >
       if( !region.Crop( movingLargestRegion ) )
         {
         // Set to the closest index and size one.
-        for( i = 0; i < ImageDimension; ++i )
+        for( unsigned int i = 0; i < ImageDimension; ++i )
+          {
           closestIndex[i] = index[i];
-        for( i = 0; i < ImageDimension; ++i )
+          }
+        for( unsigned int i = 0; i < ImageDimension; ++i )
           {
           if( index[i] < startIndex[i] )
+            {
             closestIndex[i] = startIndex[i];
+            }
           if( index[i] > endIndex[i] )
+            {
             closestIndex[i] = endIndex[i];
+            }
           }
         region.SetIndex( closestIndex );
         region.SetSize( unitySize );

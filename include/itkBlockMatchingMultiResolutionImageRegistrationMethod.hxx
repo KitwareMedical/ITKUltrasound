@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingMultiResolutionImageRegistrationMethod_hxx
 #define itkBlockMatchingMultiResolutionImageRegistrationMethod_hxx
 
@@ -16,22 +33,23 @@ template <class TFixedImage, class TMovingImage,
 MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
                                        TMetricImage, TDisplacementImage, TCoordRep>
 ::MultiResolutionImageRegistrationMethod() :
-  m_FixedImage( NULL ),
-  m_MovingImage( NULL ),
+  m_FixedImage( ITK_NULLPTR ),
+  m_MovingImage( ITK_NULLPTR ),
   m_NumberOfLevels( 1 ),
   m_CurrentLevel( 0 ),
   m_Stop( false ),
   m_ScheduleSpecified( false ),
   m_NumberOfLevelsSpecified( false ),
-  m_ImageRegistrationMethod( NULL ),
-  m_BlockRadiusCalculator( NULL ),
-  m_SearchRegionImageSource( NULL )
+  m_ImageRegistrationMethod( ITK_NULLPTR ),
+  m_BlockRadiusCalculator( ITK_NULLPTR ),
+  m_SearchRegionImageSource( ITK_NULLPTR )
 {
   m_FixedImagePyramid  = RecursiveMultiResolutionPyramidImageFilter<
       FixedImageType, FixedImageType>::New();
   m_MovingImagePyramid = RecursiveMultiResolutionPyramidImageFilter<
       MovingImageType, MovingImageType>::New();
 }
+
 
 template <class TFixedImage, class TMovingImage,
           class TMetricImage, class TDisplacementImage, class TCoordRep>
@@ -58,6 +76,7 @@ MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
   return mtime;
 }
 
+
 template <class TFixedImage, class TMovingImage,
           class TMetricImage, class TDisplacementImage, class TCoordRep>
 void
@@ -68,13 +87,13 @@ MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
   m_Stop = true;
 }
 
+
 template <class TFixedImage, class TMovingImage,
           class TMetricImage, class TDisplacementImage, class TCoordRep>
 void
 MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
                                        TMetricImage, TDisplacementImage, TCoordRep>
 ::Initialize()
-throw (ExceptionObject)
 {
   // Sanity checks
   if( !m_ImageRegistrationMethod )
@@ -85,6 +104,7 @@ throw (ExceptionObject)
   this->PrepareBlockRadiusCalculator();
   this->PrepareSearchRegionImageSource();
 }
+
 
 /**
  * Set the schedules for the fixed and moving image pyramid.  Taken form
@@ -121,6 +141,7 @@ MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
   this->Modified();
 }
 
+
 template <class TFixedImage, class TMovingImage,
           class TMetricImage, class TDisplacementImage, class TCoordRep>
 void
@@ -138,6 +159,7 @@ MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
   m_NumberOfLevelsSpecified = true;
   this->Modified();
 }
+
 
 template <class TFixedImage, class TMovingImage,
           class TMetricImage, class TDisplacementImage, class TCoordRep>
@@ -174,6 +196,7 @@ MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
 
   output->CopyInformation( m_SearchRegionImageSource->GetOutput( 0 ) );
 }
+
 
 template <class TFixedImage, class TMovingImage,
           class TMetricImage, class TDisplacementImage, class TCoordRep>
@@ -216,6 +239,7 @@ MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
   m_MovingImagePyramid->UpdateLargestPossibleRegion();
 }
 
+
 template <class TFixedImage, class TMovingImage,
           class TMetricImage, class TDisplacementImage, class TCoordRep>
 void
@@ -232,6 +256,7 @@ MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
   m_BlockRadiusCalculator->SetFixedImage( m_FixedImage );
   m_BlockRadiusCalculator->SetPyramidSchedule( m_FixedImagePyramid->GetSchedule() );
 }
+
 
 template <class TFixedImage, class TMovingImage,
           class TMetricImage, class TDisplacementImage, class TCoordRep>
@@ -250,6 +275,7 @@ MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
   m_ImageRegistrationMethod->SetInput( m_SearchRegionImageSource->GetOutput() );
 }
 
+
 template <class TFixedImage, class TMovingImage,
           class TMetricImage, class TDisplacementImage, class TCoordRep>
 void
@@ -260,8 +286,7 @@ MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
   m_Stop = false;
 
   this->PreparePyramids();
-  for( m_CurrentLevel = 0; m_CurrentLevel < m_NumberOfLevels;
-       m_CurrentLevel++ )
+  for( m_CurrentLevel = 0; m_CurrentLevel < m_NumberOfLevels; ++m_CurrentLevel )
     {
     this->Initialize();
 

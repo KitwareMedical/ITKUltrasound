@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter_h
 #define itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter_h
 
@@ -36,8 +53,7 @@ public:
                NormalizedCrossCorrelationMetricImageFilter);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int,
-                      TFixedImage::ImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, TFixedImage::ImageDimension);
 
   /** Type of the fixed image. */
   typedef typename Superclass::FixedImageType   FixedImageType;
@@ -58,9 +74,9 @@ public:
 protected:
   NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter(){}
 
-  virtual void BeforeThreadedGenerateData();
+  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
 
-  virtual void ThreadedGenerateData( const MetricImageRegionType& outputRegion, int threadId );
+  virtual void ThreadedGenerateData( const MetricImageRegionType& outputRegion, ThreadIdType threadId ) ITK_OVERRIDE;
 
 private:
   NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter( const Self& ); // purposely not implemented

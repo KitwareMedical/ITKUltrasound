@@ -1,33 +1,34 @@
 /*=========================================================================
-
-  Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkBoxSigmaSqrtNMinusOneImageFilter.h,v $
-  Language:  C++
-  Date:      $Date: 2008-08-07 09:33:14 $
-  Version:   $Revision: 1.1 $
-
-  Copyright (c) Insight Software Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-     PURPOSE.  See the above copyright notices for more information.
-
-=========================================================================*/
-
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBoxSigmaSqrtNMinusOneImageFilter_h
 #define itkBoxSigmaSqrtNMinusOneImageFilter_h
 
 #include "itkBoxUtilities.h"
 #include "itkBoxImageFilter.h"
 
-namespace itk {
+namespace itk
+{
 
 // copied and tweaked from BoxSigmaCalculatorFunction
 template <class TInputImage, class TOutputImage>
 void
-BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage, 
-                          TOutputImage * outputImage, 
+BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
+                          TOutputImage * outputImage,
                           const typename TInputImage::RegionType & inputRegion,
                           const typename TOutputImage::RegionType & outputRegion,
                           const typename TInputImage::SizeType & Radius,
@@ -62,7 +63,7 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
   SizeType internalRadius;
   SizeType RegionLimit;
   IndexType RegionStart = inputRegion.GetIndex();
-  for( int i=0; i<TInputImage::ImageDimension; i++ )
+  for( unsigned int i = 0; i < TInputImage::ImageDimension; ++i )
     {
     kernelSize[i] = Radius[i] * 2 + 1;
     internalRadius[i] = Radius[i] + 1;
@@ -75,11 +76,11 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
   std::vector<OffsetType> RealCorners;
   std::vector<AccPixType> Weights;
   // now compute the weights
-  for (unsigned k = 0; k < UnitCorners.size(); k++)
+  for (unsigned int k = 0; k < UnitCorners.size(); ++k)
     {
     int prod = 1;
     OffsetType ThisCorner;
-    for (unsigned i = 0; i < TInputImage::ImageDimension; i++)
+    for (unsigned int i = 0; i < TInputImage::ImageDimension; ++i)
       {
       prod *= UnitCorners[k][i];
       if (UnitCorners[k][i] > 0)
@@ -106,18 +107,18 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
       // version that doesn't use neigborhood regions
       // compute the various offsets
       AccPixType pixelscount = 1;
-      for (unsigned i = 0; i < TInputImage::ImageDimension; i++)
+      for (unsigned int i = 0; i < TInputImage::ImageDimension; ++i)
         {
         pixelscount *= (AccPixType)(2*Radius[i] + 1);
         }
-      
+
       typedef ImageRegionIterator<OutputImageType>     OutputIteratorType;
       typedef ImageRegionConstIterator<InputImageType> InputIteratorType;
 
       typedef std::vector<InputIteratorType> CornerItVecType;
       CornerItVecType CornerItVec;
       // set up the iterators for each corner
-      for (unsigned k = 0; k < RealCorners.size(); k++)
+      for (unsigned int k = 0; k < RealCorners.size(); ++k)
         {
         typename InputImageType::RegionType tReg=(*fit);
         tReg.SetIndex(tReg.GetIndex() + RealCorners[k]);
@@ -133,7 +134,7 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
         AccPixType Sum = 0;
         AccPixType SquareSum = 0;
         // check each corner
-        for (unsigned k = 0; k < CornerItVec.size(); k++)
+        for (unsigned int k = 0; k < CornerItVec.size(); ++k)
           {
           const InputPixelType & i = CornerItVec[k].Get();
           Sum += Weights[k] * i[0];
@@ -162,7 +163,7 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
         // compute the region's index
         IndexType kernelRegionIdx = oIt.GetIndex();
         IndexType CentIndex = kernelRegionIdx;
-        for( int i=0; i<TInputImage::ImageDimension; i++ )
+        for( unsigned int i = 0; i < TInputImage::ImageDimension; ++i )
           {
           kernelRegionIdx[i] -= Radius[i];
           }
@@ -175,15 +176,15 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
         //               for each dimension
         //                  if dimension offset is positive -> this is
         //                  a leading edge. Crop if outside the input
-        //                  region 
+        //                  region
         //                  if dimension offset is negative -> this is
         //                  a trailing edge. Ignore if it is outside
         //                  image region
-        for (unsigned k = 0; k < RealCorners.size(); k++)
+        for (unsigned int k = 0; k < RealCorners.size(); ++k)
           {
           IndexType ThisCorner = CentIndex + RealCorners[k];
           bool IncludeCorner = true;
-          for (unsigned j = 0; j < TInputImage::ImageDimension; j++)
+          for (unsigned int j = 0; j < TInputImage::ImageDimension; ++j)
             {
             if (UnitCorners[k][j] > 0)
               {
@@ -224,14 +225,14 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
  * \brief Similar to the BoxSigmaImageFilter, that calculates the standard
  * deviation over a box, but calculates the standard deviation time sqrt( N-1 ).
  * Used in calculating the normalized cross correlation.
- * 
+ *
  * \sa BoxSigmaImageFilter
  * \sa NormalizedCrossCorrelationMetricImageFilter
  *
  * \ingroup Ultrasound
  */
 template<class TInputImage, class TOutputImage=TInputImage>
-class ITK_TEMPLATE_EXPORT BoxSigmaSqrtNMinusOneImageFilter : 
+class ITK_TEMPLATE_EXPORT BoxSigmaSqrtNMinusOneImageFilter :
     public BoxImageFilter<TInputImage, TOutputImage>
 {
 public:
@@ -240,13 +241,13 @@ public:
   typedef BoxImageFilter<TInputImage, TOutputImage>  Superclass;
   typedef SmartPointer<Self>                         Pointer;
   typedef SmartPointer<const Self>                   ConstPointer;
-  
+
   /** Standard New method. */
-  itkNewMacro(Self);  
+  itkNewMacro(Self);
 
   /** Runtime information support. */
   itkTypeMacro(BoxSigmaSqrtNMinusOneImageFilter, BoxImageFilter);
-  
+
   /** Image related typedefs. */
   typedef TInputImage                                InputImageType;
   typedef TOutputImage                               OutputImageType;
@@ -270,19 +271,19 @@ public:
   itkConceptMacro(SameDimension,
                   (Concept::SameDimension<itkGetStaticConstMacro(InputImageDimension),itkGetStaticConstMacro(OutputImageDimension)>));
 
-  
+
   /** End concept checking */
 #endif
 
-    
+
 protected:
   BoxSigmaSqrtNMinusOneImageFilter();
   ~BoxSigmaSqrtNMinusOneImageFilter() {};
 
   /** Multi-thread version GenerateData. */
-  void  ThreadedGenerateData (const OutputImageRegionType& 
+  void  ThreadedGenerateData (const OutputImageRegionType&
                               outputRegionForThread,
-                              int threadId);
+                              ThreadIdType threadId) ITK_OVERRIDE;
 
 private:
   BoxSigmaSqrtNMinusOneImageFilter(const Self&); //purposely not implemented
@@ -291,7 +292,7 @@ private:
 }; // end of class
 
 } // end namespace itk
-  
+
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkBoxSigmaSqrtNMinusOneImageFilter.hxx"
 #endif

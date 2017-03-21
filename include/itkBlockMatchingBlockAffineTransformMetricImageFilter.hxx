@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingBlockAffineTransformMetricImageFilter_hxx
 #define itkBlockMatchingBlockAffineTransformMetricImageFilter_hxx
 
@@ -16,9 +33,9 @@ BlockAffineTransformMetricImageFilter< TFixedImage, TMovingImage,
                                        TMetricImage, TStrainValueType >
 ::BlockAffineTransformMetricImageFilter()
 {
-  m_MetricImageFilter = NULL;
+  m_MetricImageFilter = ITK_NULLPTR;
 
-  m_StrainImage = NULL;
+  m_StrainImage = ITK_NULLPTR;
 
   m_Transform    = TransformType::New();
   m_Interpolator = InterpolatorType::New();
@@ -37,7 +54,7 @@ BlockAffineTransformMetricImageFilter< TFixedImage, TMovingImage,
   Superclass::GenerateInputRequestedRegion();
 
   // const cast so we can set the requested region.
-  typename FixedImageType::Pointer fixedPtr = const_cast< TFixedImage* >( this->GetInput(0) );
+  FixedImageType * fixedPtr = const_cast< TFixedImage* >( this->GetInput(0) );
   if( !fixedPtr )
     {
     return;
@@ -53,22 +70,22 @@ BlockAffineTransformMetricImageFilter< TFixedImage, TMovingImage,
                                        TMetricImage, TStrainValueType >
 ::GenerateData()
 {
-  if( m_MetricImageFilter.GetPointer() == NULL )
+  if( m_MetricImageFilter.GetPointer() == ITK_NULLPTR )
     {
     itkExceptionMacro(<< "The internal MetricImageFilter has not been set.");
     }
 
-  typename FixedImageType::Pointer fixedPtr = const_cast< TFixedImage* >( this->GetInput(0) );
-  if( !fixedPtr.GetPointer() )
+  FixedImageType * fixedPtr = const_cast< TFixedImage* >( this->GetInput(0) );
+  if( !fixedPtr )
     {
     return;
     }
-  typename MovingImageType::Pointer movingPtr = const_cast< TMovingImage* >( this->GetInput(1) );
-  if( !movingPtr.GetPointer() )
+  MovingImageType * movingPtr = const_cast< TMovingImage* >( this->GetInput(1) );
+  if( !movingPtr )
     {
     return;
     }
-  if( m_StrainImage.GetPointer() != NULL )
+  if( m_StrainImage.GetPointer() != ITK_NULLPTR )
     {
     m_TransformedFixedImage->CopyInformation( fixedPtr );
     m_TransformedFixedImage->SetRequestedRegion( this->m_FixedImageRegion );
@@ -82,8 +99,7 @@ BlockAffineTransformMetricImageFilter< TFixedImage, TMovingImage,
     fixedPtr->TransformIndexToPhysicalPoint( this->m_FixedImageRegion.GetIndex(), point );
     const typename FixedImageType::SpacingType spacing = fixedPtr->GetSpacing();
 
-    unsigned int i;
-    for( i = 0; i < ImageDimension; ++i )
+    for(unsigned int i = 0; i < ImageDimension; ++i )
       {
       center[i] = point[i] + this->m_FixedRadius[i] * spacing[i];
       }
@@ -93,7 +109,7 @@ BlockAffineTransformMetricImageFilter< TFixedImage, TMovingImage,
     m_StrainImage->TransformPhysicalPointToContinuousIndex( center, strainIndex );
     const typename StrainImageType::PixelType strainPixel = m_StrainInterpolator->EvaluateAtContinuousIndex( strainIndex );
     typename TransformType::OutputVectorType scaling;
-    for( i = 0; i < ImageDimension; ++i )
+    for(unsigned int i = 0; i < ImageDimension; ++i )
       {
       // Note that we use a minus here because of the direction of the transform
       // -- transformed fixed image to original fixed image.
@@ -101,7 +117,7 @@ BlockAffineTransformMetricImageFilter< TFixedImage, TMovingImage,
       }
     m_Transform->Scale( scaling );
 
-    m_Interpolator->SetInputImage( fixedPtr.GetPointer() );
+    m_Interpolator->SetInputImage( fixedPtr );
     ImageRegionIterator< FixedImageType > it( m_TransformedFixedImage, this->m_FixedImageRegion );
     typename FixedImageType::PointType originalPoint;
     for( it.GoToBegin(); !it.IsAtEnd(); ++it )

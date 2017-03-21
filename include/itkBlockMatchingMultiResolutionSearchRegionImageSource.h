@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingMultiResolutionSearchRegionImageSource_h
 #define itkBlockMatchingMultiResolutionSearchRegionImageSource_h
 
@@ -31,14 +48,11 @@ class MultiResolutionImageRegistrationMethod;
  */
 template < class TFixedImage, class TMovingImage, class TDisplacementImage >
 class ITK_TEMPLATE_EXPORT MultiResolutionSearchRegionImageSource :
-  public ImageSource<
-    Image< typename TMovingImage::RegionType,
-                  TMovingImage::ImageDimension > >
+  public ImageSource< Image< typename TMovingImage::RegionType, TMovingImage::ImageDimension > >
 {
 public:
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int,
-                      TMovingImage::ImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, TMovingImage::ImageDimension);
 
   /** Type of the fixed image. */
   typedef TFixedImage                         FixedImageType;
@@ -56,10 +70,10 @@ public:
   typedef typename OutputImageType::RegionType                          OutputRegionType;
 
   /** Standard class typedefs. */
-  typedef MultiResolutionSearchRegionImageSource    Self;
-  typedef ImageSource< OutputImageType >            Superclass;
-  typedef SmartPointer< Self >                      Pointer;
-  typedef SmartPointer< const Self >                ConstPointer;
+  typedef MultiResolutionSearchRegionImageSource Self;
+  typedef ImageSource< OutputImageType >         Superclass;
+  typedef SmartPointer< Self >                   Pointer;
+  typedef SmartPointer< const Self >             ConstPointer;
 
   /** ScheduleType typedef support. */
   typedef Array2D<unsigned int> PyramidScheduleType;
@@ -74,7 +88,8 @@ public:
   /** Type of the filter used to resample the deformations. */
   typedef VectorResampleIdentityNeumannImageFilter< DisplacementImageType, DisplacementImageType >
     DisplacementResamplerType;
-  typedef typename DisplacementResamplerType::Pointer DisplacementResamplerPointer;
+  typedef typename DisplacementResamplerType::Pointer
+    DisplacementResamplerPointer;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( MultiResolutionSearchRegionImageSource, ImageSource );
@@ -85,7 +100,7 @@ public:
     m_FixedImage = fixedImage;
     this->Modified();
     }
-  const FixedImageType * GetFixedImage() const 
+  const FixedImageType * GetFixedImage() const
     { return this->m_FixedImage.GetPointer(); }
 
   /** Set the moving image. */
@@ -117,7 +132,7 @@ public:
    * been generated.  This information is the available for child classes if
    * they choose to use it.  */
   virtual void SetPyramidSchedule( const PyramidScheduleType& schedule )
-    { 
+    {
     m_PyramidSchedule = schedule;
     this->Modified();
     }
@@ -162,9 +177,9 @@ protected:
 
   MultiResolutionSearchRegionImageSource();
 
-  virtual void BeforeThreadedGenerateData();
+  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
 
-  virtual void GenerateOutputInformation();
+  virtual void GenerateOutputInformation() ITK_OVERRIDE;
 
   typename FixedImageType::Pointer  m_FixedImage;
   typename MovingImageType::Pointer m_MovingImage;
@@ -176,7 +191,7 @@ protected:
 
   unsigned long m_CurrentLevel;
 
-  DisplacementImagePointer m_PreviousDisplacements;
+  DisplacementImagePointer                     m_PreviousDisplacements;
   typename DisplacementDuplicatorType::Pointer m_DisplacementDuplicator;
 
   DisplacementResamplerPointer m_DisplacementResampler;
@@ -194,4 +209,3 @@ private:
 #endif
 
 #endif
-

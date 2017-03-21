@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingMetricImageToDisplacementCalculator_h
 #define itkBlockMatchingMetricImageToDisplacementCalculator_h
 
@@ -38,15 +55,14 @@ namespace BlockMatching
  * */
 template <class TMetricImage, class TDisplacementImage>
 class ITK_TEMPLATE_EXPORT MetricImageToDisplacementCalculator :
-  public itk::Object
+  public Object
 {
 public:
   /** Standard class typedefs. */
   typedef MetricImageToDisplacementCalculator Self;
   typedef Object                              Superclass;
-
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  typedef SmartPointer<Self>                  Pointer;
+  typedef SmartPointer<const Self>            ConstPointer;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( MetricImageToDisplacementCalculator, Object );
@@ -146,7 +162,7 @@ protected:
   {
   public:
     virtual ITK_THREAD_RETURN_TYPE operator() ( Self *self,
-      RegionType& region, int threadId ) = 0;
+      RegionType& region, ThreadIdType threadId ) = 0;
     virtual ~ThreadFunctor() {};
   };
 
@@ -174,11 +190,11 @@ protected:
    * overlap. The method returns the number of pieces that the routine is
    * capable of splitting the output RequestedRegion, i.e. return value is less
    * than or equal to "num". */
-  virtual int SplitRequestedRegion( int i, int num, RegionType &
-                                    splitRegion);
+  virtual unsigned int SplitRequestedRegion( unsigned int i, unsigned int num, RegionType &
+                                    splitRegion) ITK_OVERRIDE;
 
   MultiThreader::Pointer m_Threader;
-  int                    m_NumberOfThreads;
+  ThreadIdType           m_NumberOfThreads;
 
   CenterPointsImagePointerType m_CenterPointsImage;
   MetricImageImagePointerType  m_MetricImageImage;

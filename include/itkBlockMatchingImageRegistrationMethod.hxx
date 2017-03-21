@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingImageRegistrationMethod_hxx
 #define itkBlockMatchingImageRegistrationMethod_hxx
 
@@ -20,9 +37,9 @@ ImageRegistrationMethod< TFixedImage, TMovingImage,
 ::ImageRegistrationMethod():
   m_UseStreaming( false )
 {
-  m_FixedImage = NULL;
-  m_MovingImage = NULL;
-  m_MetricImageFilter = NULL;
+  m_FixedImage = ITK_NULLPTR;
+  m_MovingImage = ITK_NULLPTR;
+  m_MetricImageFilter = ITK_NULLPTR;
   m_MetricImageToDisplacementCalculator =
     MaximumPixelDisplacementCalculator< TMetricImage,
       TDisplacementImage >::New();
@@ -127,23 +144,23 @@ ImageRegistrationMethod< TFixedImage, TMovingImage,
 
   this->Initialize();
 
-  typename ImageType::Pointer outputPtr = this->GetOutput();
+  ImageType * outputPtr = this->GetOutput();
   if( !outputPtr )
+    {
     return;
+    }
 
   RegionType requestedRegion = outputPtr->GetRequestedRegion();
-  typedef itk::ImageRegionIteratorWithIndex< ImageType > IteratorType;
+  typedef ImageRegionIteratorWithIndex< ImageType > IteratorType;
   IteratorType it( outputPtr, requestedRegion );
-  typedef itk::ImageRegionConstIterator< SearchRegionImageType > 
-    SearchRegionImageIteratorType;
+  typedef ImageRegionConstIterator< SearchRegionImageType > SearchRegionImageIteratorType;
   SearchRegionImageIteratorType searchIt( inputPtr, requestedRegion );
 
   // The fixed image region is the kernel block size, and its size is constant.
   FixedRegionType fixedRegion;
   typename FixedRegionType::SizeType  fixedSize;
   typename FixedRegionType::IndexType fixedIndex;
-  unsigned int i;
-  for( i = 0; i < ImageDimension; i++ )
+  for(unsigned int i = 0; i < ImageDimension; i++ )
     {
     fixedSize[i] = m_Radius[i] * 2 + 1;
     }
@@ -171,7 +188,7 @@ ImageRegistrationMethod< TFixedImage, TMovingImage,
     {
     outputPtr->TransformIndexToPhysicalPoint( it.GetIndex(), coord );
     m_FixedImage->TransformPhysicalPointToIndex( coord, fixedIndex );
-    for( i = 0; i < ImageDimension; i++ )
+    for( unsigned int i = 0; i < ImageDimension; ++i )
       {
       fixedIndex[i] -= m_Radius[i];
       }
@@ -193,7 +210,7 @@ template < class TFixedImage, class TMovingImage,
 void
 ImageRegistrationMethod< TFixedImage, TMovingImage,
   TMetricImage, TDisplacementImage, TCoordRep >
-::Initialize() throw(ExceptionObject)
+::Initialize()
 {
   if( !m_FixedImage )
     {

@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingSearchRegionImageInitializer_hxx
 #define itkBlockMatchingSearchRegionImageInitializer_hxx
 
@@ -15,8 +32,8 @@ SearchRegionImageInitializer< TFixedImage, TMovingImage >
 ::SearchRegionImageInitializer():
   m_Overlap( 1.0 )
 {
-  m_FixedImage  = NULL;
-  m_MovingImage = NULL;
+  m_FixedImage  = ITK_NULLPTR;
+  m_MovingImage = ITK_NULLPTR;
 
   m_FixedBlockRadius.Fill( 0 );
   m_SearchRegionRadius.Fill( 0 );
@@ -54,7 +71,7 @@ void
 SearchRegionImageInitializer< TFixedImage, TMovingImage >
 ::BeforeThreadedGenerateData()
 {
-  if( m_MovingImage.GetPointer() == NULL )
+  if( m_MovingImage.GetPointer() == ITK_NULLPTR )
     {
     itkExceptionMacro( << "Moving Image is not present." );
     }
@@ -74,11 +91,13 @@ void
 SearchRegionImageInitializer< TFixedImage, TMovingImage >
 ::GenerateOutputInformation()
 {
-  typename OutputImageType::Pointer outputPtr = this->GetOutput();
+  OutputImageType * outputPtr = this->GetOutput();
   if( !outputPtr )
+    {
     return;
+    }
 
-  if( m_FixedImage.GetPointer() == NULL )
+  if( m_FixedImage.GetPointer() == ITK_NULLPTR )
     {
     itkExceptionMacro( << "Fixed Image is not present." );
     }
@@ -98,9 +117,8 @@ SearchRegionImageInitializer< TFixedImage, TMovingImage >
     itkExceptionMacro( << "The FixedBlockRadius has not been set." );
     }
 
-  unsigned int i;
   typename FixedImageType::IndexType fixedIndex = m_FixedImage->GetLargestPossibleRegion().GetIndex();
-  for( i = 0; i < ImageDimension; i++ )
+  for( unsigned int i = 0; i < ImageDimension; ++i )
     {
     origin[i] = fixedOrigin[i] +
       + ( fixedIndex[i] + m_FixedBlockRadius[i] ) * fixedSpacing[i];
@@ -108,7 +126,7 @@ SearchRegionImageInitializer< TFixedImage, TMovingImage >
   outputPtr->SetOrigin( origin );
 
   typename OutputImageType::SpacingType spacing;
-  for( i = 0; i < ImageDimension; i++ )
+  for( unsigned int i = 0; i < ImageDimension; ++i )
     {
     spacing[i] = 2 * m_FixedBlockRadius[i] * fixedSpacing[i] * m_Overlap;
     }
@@ -120,7 +138,7 @@ SearchRegionImageInitializer< TFixedImage, TMovingImage >
   region.SetIndex( index );
   typename OutputRegionType::SizeType size;
   typename FixedImageType::SizeType fixedSize = m_FixedImage->GetLargestPossibleRegion().GetSize();
-  for( i = 0; i < ImageDimension; i++ )
+  for( unsigned int i = 0; i < ImageDimension; ++i )
     {
     size[i] = static_cast< typename OutputRegionType::SizeType::SizeValueType >( vcl_floor(
     ( fixedSize[i] - m_FixedBlockRadius[i] - 1 ) * fixedSpacing[i] / spacing[i] ));
@@ -133,11 +151,13 @@ SearchRegionImageInitializer< TFixedImage, TMovingImage >
 template < class TFixedImage, class TMovingImage >
 void
 SearchRegionImageInitializer< TFixedImage, TMovingImage >
-::ThreadedGenerateData( const OutputRegionType& outputRegion, int threadId )
+::ThreadedGenerateData( const OutputRegionType& outputRegion, ThreadIdType threadId )
 {
-  typename OutputImageType::Pointer outputPtr = this->GetOutput();
+  OutputImageType * outputPtr = this->GetOutput();
   if( !outputPtr )
+    {
     return;
+    }
 
   OutputRegionType region;
   OutputRegionType movingLargestRegion = m_MovingImage->GetLargestPossibleRegion();

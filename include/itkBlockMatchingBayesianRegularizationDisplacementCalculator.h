@@ -240,7 +240,7 @@ protected:
     {
   public:
     virtual ITK_THREAD_RETURN_TYPE operator() ( Superclass *superclass,
-      RegionType& region, int threadId );
+      RegionType& region, ThreadIdType threadId );
     };
   SubtractLowerBoundThreadFunctor m_SubtractLowerBoundThreadFunctor;
 
@@ -249,7 +249,7 @@ protected:
     {
   public:
     virtual ITK_THREAD_RETURN_TYPE operator() ( Superclass *superclass,
-      RegionType& region, int threadId );
+      RegionType& region, ThreadIdType threadId );
     };
   ScaleToUnityThreadFunctor m_ScaleToUnityThreadFunctor;
 
@@ -259,7 +259,7 @@ protected:
     {
   public:
     virtual ITK_THREAD_RETURN_TYPE operator() ( Superclass *superclass,
-      RegionType& region, int threadId );
+      RegionType& region, ThreadIdType threadId );
     };
   CopyPriorToPosteriorThreadFunctor m_CopyPriorToPosteriorThreadFunctor;
 
@@ -269,7 +269,7 @@ protected:
     {
   public:
     virtual ITK_THREAD_RETURN_TYPE operator() ( Superclass *superclass,
-      RegionType& region, int threadId );
+      RegionType& region, ThreadIdType threadId );
     };
   MeanChangeThreadFunctor m_MeanChangeThreadFunctor;
   /** Some helper quanitites for the mean change calculator. */

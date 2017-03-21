@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingMaximumPixelDisplacementCalculator_h
 #define itkBlockMatchingMaximumPixelDisplacementCalculator_h
 
@@ -19,33 +36,30 @@ namespace BlockMatching
  */
 template < class TMetricImage, class TDisplacementImage >
 class ITK_TEMPLATE_EXPORT MaximumPixelDisplacementCalculator:
-  public itk::BlockMatching::MetricImageToDisplacementCalculator<
-    TMetricImage, TDisplacementImage >
+  public MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 {
 public:
   /** Standard class typedefs. */
-  typedef MaximumPixelDisplacementCalculator     Self;
-  typedef MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
-    Superclass;
-
-  typedef SmartPointer< Self >           Pointer;
-  typedef SmartPointer< const Self >     ConstPointer;
+  typedef MaximumPixelDisplacementCalculator                                      Self;
+  typedef MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage > Superclass;
+  typedef SmartPointer< Self >                                                    Pointer;
+  typedef SmartPointer< const Self >                                              ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
-  
+
   /** Run-time type information (and related methods). */
   itkTypeMacro( MaximumPixelDisplacementCalculator, MetricImageToDisplacementCalculator );
 
-  typedef typename Superclass::MetricImageType MetricImageType;
+  typedef typename Superclass::MetricImageType        MetricImageType;
   typedef typename Superclass::MetricImagePointerType MetricImagePointerType;
-  typedef typename MetricImageType::PixelType  PixelType;
+  typedef typename MetricImageType::PixelType         PixelType;
 
   typedef typename Superclass::PointType PointType;
-  
+
   typedef typename Superclass::IndexType IndexType;
 
-  virtual void SetMetricImagePixel( const PointType & point, const IndexType& index, MetricImageType* image ); 
+  virtual void SetMetricImagePixel( const PointType & point, const IndexType& index, MetricImageType* image );
 
   virtual void Compute() {
     // We do this here instead of SetMetricImagePixel so it only has to be done
@@ -61,8 +75,8 @@ private:
   void operator=( const Self & );
 };
 
-} // end namespace itk
 } // end namespace BlockMatching
+} // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkBlockMatchingMaximumPixelDisplacementCalculator.hxx"

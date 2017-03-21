@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingImageToImageMetricMetricImageFilter_h
 #define itkBlockMatchingImageToImageMetricMetricImageFilter_h
 
@@ -24,14 +41,14 @@ class ITK_TEMPLATE_EXPORT ImageToImageMetricMetricImageFilter :
 {
 public:
   /** Standard class typedefs. */
-  typedef ImageToImageMetricMetricImageFilter			    Self;
+  typedef ImageToImageMetricMetricImageFilter                          Self;
   typedef MetricImageFilter< TFixedImage, TMovingImage, TMetricImage > Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  typedef SmartPointer<Self>                                           Pointer;
+  typedef SmartPointer<const Self>                                     ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
-  
+
   /** Run-time type information (and related methods). */
   itkTypeMacro(ImageToImageMetricMetricImageFilter, MetricImageFilter);
 
@@ -40,14 +57,14 @@ public:
                       Superclass::ImageDimension);
 
   /** Type of the Moving image. */
-  typedef typename Superclass::MovingImageType                     MovingImageType;
-  typedef typename MovingImageType::SpacingType     MovingImageSpacingType;
-  typedef typename MovingImageType::RegionType      MovingImageRegionType;
+  typedef typename Superclass::MovingImageType  MovingImageType;
+  typedef typename MovingImageType::SpacingType MovingImageSpacingType;
+  typedef typename MovingImageType::RegionType  MovingImageRegionType;
 
   /** Type of the Metric image. */
-  typedef typename Superclass::MetricImageType                     MetricImageType;
-  typedef typename MetricImageType::SpacingType     MetricImageSpacingType;
-  typedef typename MetricImageType::RegionType      MetricImageRegionType;
+  typedef typename Superclass::MetricImageType  MetricImageType;
+  typedef typename MetricImageType::SpacingType MetricImageSpacingType;
+  typedef typename MetricImageType::RegionType  MetricImageRegionType;
 
   /** Set the spacing in the output metric image.  This is optional.  If not
    * set, the spacing in the moving image will be used. */
@@ -57,10 +74,10 @@ protected:
   ImageToImageMetricMetricImageFilter();
   virtual ~ImageToImageMetricMetricImageFilter() {}
 
-  virtual void GenerateOutputInformation();
+  virtual void GenerateOutputInformation() ITK_OVERRIDE;
 
   MetricImageSpacingType m_MetricImageSpacing;
-  bool m_MetricImageSpacingDefined;
+  bool                   m_MetricImageSpacingDefined;
 
 private:
   ImageToImageMetricMetricImageFilter( const Self& ); // purposely not implemented
@@ -68,12 +85,11 @@ private:
 
 };
 
-}
-}
+} // end namespace BlockMatching
+} // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkBlockMatchingImageToImageMetricMetricImageFilter.hxx"
 #endif
 
 #endif
-

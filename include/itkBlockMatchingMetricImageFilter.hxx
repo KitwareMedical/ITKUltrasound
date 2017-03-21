@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingMetricImageFilter_hxx
 #define itkBlockMatchingMetricImageFilter_hxx
 
@@ -18,6 +35,7 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 {
 }
 
+
 template <class TFixedImage, class TMovingImage,
           class TMetricImage >
 void
@@ -26,6 +44,7 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 {
   this->SetInput( 0, fixedImage );
 }
+
 
 template <class TFixedImage, class TMovingImage,
           class TMetricImage >
@@ -36,13 +55,14 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
   this->SetInput( 1, movingImage );
 }
 
+
 template <class TFixedImage, class TMovingImage,
           class TMetricImage >
 void
 MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::SetFixedImageRegion( const FixedImageRegionType & region )
 {
-  typename FixedImageType::Pointer fixedPtr = const_cast< TFixedImage* >( this->GetInput(0) );
+  FixedImageType * fixedPtr = const_cast< TFixedImage* >( this->GetInput(0) );
   if( !fixedPtr )
     {
     itkExceptionMacro( << "The FixedImage must be set before specifying the fixed image region." );
@@ -54,7 +74,7 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
     itkExceptionMacro( << "Requested block is outside of the fixed image." );
     }
   typename FixedImageRegionType::SizeType fixedSize     = m_FixedImageRegion.GetSize();
-  for( unsigned int i = 0; i < ImageDimension; i++ )
+  for( unsigned int i = 0; i < ImageDimension; ++i )
     {
     // The radius may have been truncated if the fixed region was outside the
     // fixed image's LargestPossibleRegion.
@@ -65,7 +85,7 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
   m_FixedImageRegion.SetSize( fixedSize );
   m_FixedImageRegionDefined = true;
 
-  typename MovingImageType::Pointer movingPtr = const_cast< TMovingImage* >( this->GetInput(1) );
+  MovingImageType * movingPtr = const_cast< TMovingImage* >( this->GetInput(1) );
   if( !movingPtr )
     {
     itkExceptionMacro( << "The MovingImage must be set before specifying the fixed image region." );
@@ -76,14 +96,15 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
   typename MovingImageType::SpacingType movingSpacing = movingPtr->GetSpacing();
   if( !( fixedSpacing == movingSpacing ) )
     {
-    for( unsigned int i = 0; i < ImageDimension; i++ )
+    for( unsigned int i = 0; i < ImageDimension; ++i )
       {
-      m_MovingRadius[i] = static_cast< typename RadiusType::SizeValueType >( vcl_ceil((
+      m_MovingRadius[i] = static_cast< typename RadiusType::SizeValueType >( Math::Ceil((
       fixedSpacing[i] * m_FixedRadius[i] / movingSpacing[i] )));
       }
     }
   this->Modified();
 }
+
 
 template <class TFixedImage, class TMovingImage,
           class TMetricImage >
@@ -96,19 +117,24 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
   this->Modified();
 }
 
+
 template <class TFixedImage, class TMovingImage,
           class TMetricImage >
 void
 MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::GenerateOutputInformation()
 {
-  typename MovingImageType::ConstPointer movingPtr = this->GetInput( 1 );
+  const MovingImageType * movingPtr = this->GetInput( 1 );
   if( !movingPtr )
+    {
     return;
+    }
 
-  typename MetricImageType::Pointer outputPtr = this->GetOutput();
+  MetricImageType * outputPtr = this->GetOutput();
   if( !outputPtr )
+    {
     return;
+    }
 
   if( !m_MovingImageRegionDefined )
     {
@@ -134,16 +160,19 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
   outputPtr->SetDirection( movingPtr->GetDirection() );
 }
 
+
 template <class TFixedImage, class TMovingImage,
           class TMetricImage >
-const int &
+const ThreadIdType &
 MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::GetNumberOfThreads()
 {
-  typename MetricImageType::Pointer outputPtr = this->GetOutput();
+  MetricImageType * outputPtr = this->GetOutput();
 
   if( !outputPtr )
+    {
     return Superclass::GetNumberOfThreads();
+    }
 
   typename MetricImageRegionType::SizeType requestedRegionSize = outputPtr->GetRequestedRegion().GetSize();
   // split on the outermost dimension available
@@ -160,10 +189,10 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 
   // determine the actual number of pieces that will be generated
   typename MetricImageRegionType::SizeType::SizeValueType range = requestedRegionSize[splitAxis];
-  int valuesPerThread = Math::Ceil< int >(range / (double)Superclass::GetNumberOfThreads());
+  ThreadIdType valuesPerThread = Math::Ceil< ThreadIdType >(range / (double)Superclass::GetNumberOfThreads());
   if( valuesPerThread < m_MinimumSplitSize )
     {
-    m_SpecialThreadCount = Math::Floor< int >( range / (double)m_MinimumSplitSize );
+    m_SpecialThreadCount = Math::Floor< ThreadIdType >( range / (double)m_MinimumSplitSize );
     return m_SpecialThreadCount;
     }
 
@@ -179,13 +208,13 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
   Superclass::GenerateInputRequestedRegion();
 
   // const cast so we can set the requested region.
-  typename FixedImageType::Pointer fixedPtr = const_cast< TFixedImage* >( this->GetInput(0) );
+  FixedImageType * fixedPtr = const_cast< TFixedImage* >( this->GetInput(0) );
   if( !fixedPtr )
     {
     return;
     }
 
-  typename MovingImageType::Pointer movingPtr = const_cast< TMovingImage* >( this->GetInput(1) );
+  MovingImageType * movingPtr = const_cast< TMovingImage* >( this->GetInput(1) );
   if( !movingPtr )
     {
     return;
@@ -218,6 +247,7 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
     itkExceptionMacro(<< "Moving image requested region is at least partially outside the LargestPossibleRegion.");
     }
 }
+
 
 template <class TFixedImage, class TMovingImage,
           class TMetricImage >

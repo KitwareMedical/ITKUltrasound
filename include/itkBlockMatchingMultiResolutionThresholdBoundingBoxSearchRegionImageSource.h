@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingMultiResolutionThresholdBoundingBoxSearchRegionImageSource_h
 #define itkBlockMatchingMultiResolutionThresholdBoundingBoxSearchRegionImageSource_h
 
@@ -47,8 +64,7 @@ public:
   typedef SmartPointer< const Self >     ConstPointer;
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int,
-                      TMovingImage::ImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, TMovingImage::ImageDimension);
 
   /** Type of the fixed image. */
   typedef TFixedImage                         FixedImageType;
@@ -58,26 +74,30 @@ public:
   typedef typename FixedImageType::SizeType RadiusType;
 
   /** Type of the moving image. */
-  typedef TMovingImage  MovingImageType;
+  typedef TMovingImage                         MovingImageType;
   typedef typename MovingImageType::RegionType MovingRegionType;
 
   /** Type of the search region image. */
   typedef typename Superclass::OutputImageType OutputImageType;
   typedef typename OutputImageType::RegionType OutputRegionType;
-  typedef Image< typename itk::Vector< typename RadiusType::SizeValueType, ImageDimension >, ImageDimension > SearchRegionRadiusImageType;
-  typedef typename SearchRegionRadiusImageType::Pointer SearchRegionRadiusImagePointer;
+
+  typedef Image< typename itk::Vector< typename RadiusType::SizeValueType, ImageDimension >, ImageDimension >
+    SearchRegionRadiusImageType;
+  typedef typename SearchRegionRadiusImageType::Pointer
+    SearchRegionRadiusImagePointer;
 
   /** Type of the filter used to resample the search region images. */
   typedef VectorResampleIdentityNeumannImageFilter< SearchRegionRadiusImageType, SearchRegionRadiusImageType >
     SearchRegionRadiusResamplerType;
-  typedef typename SearchRegionRadiusResamplerType::Pointer SearchRegionRadiusResamplerPointer;
+  typedef typename SearchRegionRadiusResamplerType::Pointer
+    SearchRegionRadiusResamplerPointer;
 
   /** ScheduleType typedef support. */
   typedef typename Superclass::PyramidScheduleType  PyramidScheduleType;
 
   /** Type of the threshold. */
   typedef typename TMetricImage::PixelType ThresholdType;
-  typedef Array< ThresholdType > ThresholdScheduleType;
+  typedef Array< ThresholdType >           ThresholdScheduleType;
 
   /** OverlapScheduleType typedef support. */
   typedef typename Superclass::OverlapScheduleType  OverlapScheduleType;
@@ -88,7 +108,8 @@ public:
   /** Type of the filter used to resample the deformations. */
   typedef VectorResampleIdentityNeumannImageFilter< DisplacementImageType, DisplacementImageType >
     DisplacementResamplerType;
-  typedef typename DisplacementResamplerType::Pointer DisplacementResamplerPointer;
+  typedef typename DisplacementResamplerType::Pointer
+    DisplacementResamplerPointer;
 
   /** Types inherited from the DisplacementCalculator superclass. */
   typedef typename DisplacementCalculatorSuperclass::MetricImageType MetricImageType;
@@ -168,7 +189,7 @@ public:
     // We do this here instead of SetMetricImagePixel so it only has to be done
     // once.
     this->m_DisplacementImage->Modified();
-  };
+  }
 
   /** This is needed to avoid resolution ambiguities that occur with multiple
    * inheritance. */
@@ -197,16 +218,15 @@ public:
 protected:
   MultiResolutionThresholdBoundingBoxSearchRegionImageSource();
 
-  virtual void BeforeThreadedGenerateData();
+  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
 
   virtual void ThreadedGenerateData( const OutputRegionType& outputRegion,
-    int threadID );
+    ThreadIdType threadID ) ITK_OVERRIDE;
 
   ThresholdScheduleType m_ThresholdSchedule;
-  bool m_ThresholdScheduleSpecified;
-
-  RadiusType m_TopLevelRadius;
-  bool m_TopLevelRadiusSpecified;
+  bool                  m_ThresholdScheduleSpecified;
+  RadiusType            m_TopLevelRadius;
+  bool                  m_TopLevelRadiusSpecified;
 
   RadiusType m_MinimumSearchRegionRadius;
 

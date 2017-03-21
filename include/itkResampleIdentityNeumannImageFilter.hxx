@@ -1,20 +1,20 @@
 /*=========================================================================
-
-  Program:   Insight Segmentation & Registration Toolkit
-  Module:    itkOptResampleIdentityNeumannImageFilter.hxx
-  Language:  C++
-  Date:      $Date$
-  Version:   $Revision$
-
-  Copyright (c) Insight Software Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
-=========================================================================*/
-
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkResampleIdentityNeumannImageFilter_hxx
 #define itkResampleIdentityNeumannImageFilter_hxx
 
@@ -30,9 +30,6 @@
 namespace itk
 {
 
-/**
- * Initialize new instance
- */
 template <class TInputImage,
           class TOutputImage,
           class TInterpolatorPrecisionType>
@@ -53,11 +50,6 @@ ResampleIdentityNeumannImageFilter<TInputImage, TOutputImage,TInterpolatorPrecis
 }
 
 
-/**
- * Print out a description of self
- *
- * \todo Add details about this class
- */
 template <class TInputImage,
           class TOutputImage,
           class TInterpolatorPrecisionType>
@@ -79,9 +71,6 @@ ResampleIdentityNeumannImageFilter<TInputImage, TOutputImage,TInterpolatorPrecis
 }
 
 
-/**
- * Set the output image spacing.
- */
 template <class TInputImage,
           class TOutputImage,
           class TInterpolatorPrecisionType>
@@ -94,9 +83,6 @@ ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisi
 }
 
 
-/**
- * Set the output image origin.
- */
 template <class TInputImage,
           class TOutputImage,
           class TInterpolatorPrecisionType>
@@ -123,11 +109,7 @@ ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisi
   this->SetSize ( image->GetLargestPossibleRegion().GetSize() );
 }
 
-/**
- * Set up state of filter before multi-threading.
- * InterpolatorType::SetInputImage is not thread-safe and hence
- * has to be set up before ThreadedGenerateData
- */
+
 template <class TInputImage,
           class TOutputImage,
           class TInterpolatorPrecisionType>
@@ -145,9 +127,6 @@ ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisi
 }
 
 
-/**
- * Set up state of filter after multi-threading.
- */
 template <class TInputImage,
           class TOutputImage,
           class TInterpolatorPrecisionType>
@@ -156,19 +135,17 @@ ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisi
 ::AfterThreadedGenerateData()
 {
   // Disconnect input image from the interpolator
-  m_Interpolator->SetInputImage( NULL );
+  m_Interpolator->SetInputImage( ITK_NULLPTR );
 }
 
-/**
- * ThreadedGenerateData
- */
+
 template <class TInputImage,
           class TOutputImage,
           class TInterpolatorPrecisionType>
 void
 ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
 ::ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread,
-                        int threadId)
+                        ThreadIdType threadId)
 {
   // Get the output pointers
   OutputImagePointer      outputPtr = this->GetOutput();
@@ -209,8 +186,7 @@ ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisi
   IndexType startIndex = inputPtr->GetBufferedRegion().GetIndex();
   IndexType endIndex;
   IndexType closestIndex;
-  unsigned int i;
-  for( i = 0; i < ImageDimension; ++i )
+  for( unsigned int i = 0; i < ImageDimension; ++i )
     {
     endIndex[i] = startIndex[i] + inputPtr->GetBufferedRegion().GetSize()[i] - 1;
     }
@@ -274,7 +250,7 @@ ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisi
   // Therefore, the following routine uses a
   // precisionConstant that specifies the number of relevant bits,
   // and the value is truncated to this precision.
-  for( i = 0; i < ImageDimension; ++i)
+  for( unsigned int i = 0; i < ImageDimension; ++i)
     {
     long roundedInputIndex = (long)(inputIndex[i]);
     if(inputIndex[i]<0.0 && inputIndex[i]!=(double)roundedInputIndex)
@@ -314,7 +290,7 @@ ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisi
     // Therefore, the following routine uses a
     // precisionConstant that specifies the number of relevant bits,
     // and the value is truncated to this precision.
-    for( i = 0; i < ImageDimension; ++i)
+    for( unsigned int i = 0; i < ImageDimension; ++i)
       {
       long roundedInputIndex = (long)(inputIndex[i]);
       if(inputIndex[i]<0.0 && inputIndex[i]!=(double)roundedInputIndex)
@@ -331,14 +307,20 @@ ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisi
     if(  !outIt.IsAtEnndOfLine() &&
          !m_Interpolator->IsInsideBuffer(inputIndex) )
       {
-      for( i = 0; i < ImageDimension; ++i )
+      for( unsigned int i = 0; i < ImageDimension; ++i )
+        {
         closestIndex[i] = Math::Round( inputIndex[i] );
-      for( i = 0; i < ImageDimension; ++i )
+        }
+      for( unsigned int i = 0; i < ImageDimension; ++i )
         {
         if( inputIndex[i] < startIndex[i] )
+          {
           closestIndex[i] = startIndex[i];
+          }
         if( inputIndex[i] > endIndex[i] )
+          {
           closestIndex[i] = endIndex[i];
+          }
         }
       }
     while( !outIt.IsAtEndOfLine() &&
@@ -398,14 +380,18 @@ ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisi
         }
       else
         {
-        for( i = 0; i < ImageDimension; ++i )
+        for( unsigned int i = 0; i < ImageDimension; ++i )
           closestIndex[i] = Math::Round( inputIndex[i] );
-        for( i = 0; i < ImageDimension; ++i )
+        for( unsigned int i = 0; i < ImageDimension; ++i )
           {
           if( inputIndex[i] < startIndex[i] )
+            {
             closestIndex[i] = startIndex[i];
+            }
           if( inputIndex[i] > endIndex[i] )
+            {
             closestIndex[i] = endIndex[i];
+            }
           }
         outIt.Set( inputPtr->GetPixel( closestIndex )); // default background value
         break;
@@ -456,7 +442,7 @@ ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisi
   // get pointers to the input and output
   InputImagePointer  inputPtr  =
     const_cast< TInputImage *>( this->GetInput() );
-  
+
   // Request the entire input image
   inputPtr->SetRequestedRegionToLargestPossibleRegion();
 

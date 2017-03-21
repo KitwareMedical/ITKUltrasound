@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilter_hxx
 #define itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilter_hxx
 
@@ -58,7 +75,9 @@ NormalizedCrossCorrelationFFTMetricImageFilter< TFixedImage,
   FixedImageConstPointerType  fixedPtr  = this->GetInput( 0 );
   MovingImageConstPointerType movingPtr = this->GetInput( 1 );
   if( !fixedPtr || !movingPtr )
+    {
     return;
+    }
 
   // Our output and helper images that have been pre-computed.
   MetricImagePointerType      metricPtr       = this->GetOutput( 0 );
@@ -111,19 +130,24 @@ NormalizedCrossCorrelationFFTMetricImageFilter< TFixedImage,
        ++denomIt, ++corrIt, ++metricIt )
     {
     if( denomIt.Get() == NumericTraits< MetricImagePixelType >::Zero )
+      {
       metricIt.Set( NumericTraits< MetricImagePixelType >::Zero );
+      }
     else
       {
       normXcorr = corrIt.Get() / denomIt.Get();
       // Why does this happen?  Bug?  Funky floating point behavior?
       if( normXcorr < negativeOne || normXcorr > positiveOne )
+        {
         metricIt.Set( NumericTraits< MetricImagePixelType >::Zero );
+        }
       else
+        {
         metricIt.Set( normXcorr );
+        }
       }
     }
 }
-
 
 } // end namespace BlockMatching
 } //end namespace itk

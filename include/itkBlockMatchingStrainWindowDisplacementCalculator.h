@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingStrainWindowDisplacementCalculator_h
 #define itkBlockMatchingStrainWindowDisplacementCalculator_h
 
@@ -39,13 +56,11 @@ namespace BlockMatching
  */
 template <class TMetricImage, class TDisplacementImage, class TStrainValueType>
 class ITK_TEMPLATE_EXPORT StrainWindowDisplacementCalculator :
-  public itk::BlockMatching::MetricImageToDisplacementCalculator<
-    TMetricImage, TDisplacementImage>
+  public MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage>
 {
 public:
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int,
-                      TDisplacementImage::ImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, TDisplacementImage::ImageDimension);
 
   /** Standard class typedefs. */
   typedef StrainWindowDisplacementCalculator Self;
@@ -64,7 +79,7 @@ public:
   typedef typename Superclass::DisplacementImageType DisplacementImageType;
   typedef typename DisplacementImageType::RegionType RegionType;
 
-  typedef itk::ImageToImageFilter<DisplacementImageType,
+  typedef ImageToImageFilter<DisplacementImageType,
                                   Image<SymmetricSecondRankTensor<TStrainValueType, ImageDimension>, ImageDimension> >
   StrainImageFilterType;
   typedef typename StrainImageFilterType::OutputImagePixelType StrainTensorType;

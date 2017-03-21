@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter_hxx
 #define itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter_hxx
 
@@ -25,17 +42,20 @@ NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< TFixedImage, TM
   this->GenerateHelperImages();
 }
 
+
 template <class TFixedImage, class TMovingImage,
           class TMetricImage >
 void
 NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
-::ThreadedGenerateData( const MetricImageRegionType& outputRegion, int threadId )
+::ThreadedGenerateData( const MetricImageRegionType& outputRegion, ThreadIdType threadId )
 {
   FixedImageConstPointerType  fixedPtr   = this->GetInput( 0 );
   MovingImageConstPointerType movingPtr = this->GetInput( 1 );
 
   if( !fixedPtr || !movingPtr )
+    {
     return;
+    }
 
   // Our output and helper images that have been pre-computed.
   MetricImagePointerType      metricPtr       = this->GetOutput( 0 );
@@ -49,8 +69,7 @@ NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< TFixedImage, TM
   typename MovingImageType::SizeType radius = this->m_MovingRadius;
   typename MovingImageType::SizeType bufferedMeanSize = movingMinusMean->GetBufferedRegion().GetSize();
   typename MovingImageType::SizeType movingImageRegionSize = this->m_MovingImageRegion.GetSize();
-  unsigned int i;
-  for( i = 0; i < ImageDimension; ++i )
+  for( unsigned int i = 0; i < ImageDimension; ++i )
     {
     if( 2 * radius[i] + 1 > bufferedMeanSize[i] )
       {
@@ -71,7 +90,7 @@ NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< TFixedImage, TM
   typedef ImageRegionIterator< MetricImageType > MetricIteratorType;
   MetricImageRegionType metricRegion;
   typename MovingImageType::IndexType fitIndex;
-  typedef ImageRegionConstIterator< MetricImageType > MetricConstIteratorType;
+  typedef ImageRegionConstIterator< MetricImageType >  MetricConstIteratorType;
   typedef ConstantBoundaryCondition< MetricImageType > BoundaryConditionType;
   BoundaryConditionType boundaryCondition;
   boundaryCondition.SetConstant( NumericTraits< MetricImagePixelType >::Zero );
@@ -82,7 +101,7 @@ NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< TFixedImage, TM
   // size because the ImageKernelOperator is currently broken if CreateToRadius
   // does not have a radius corresponding to the image size.
   typename MovingImageType::SizeType fixedMinusMeanSize;
-  for( i = 0; i < ImageDimension; ++i )
+  for( unsigned int i = 0; i < ImageDimension; ++i )
     {
     fixedMinusMeanSize[i] = 2 * radius[i] + 1;
     }
@@ -110,7 +129,7 @@ NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< TFixedImage, TM
     // the beginning of the metric image.
     metricRegion = *fit;
     fitIndex = metricRegion.GetIndex();
-    for( i = 0; i < ImageDimension; i++ )
+    for( unsigned int i = 0; i < ImageDimension; i++ )
       {
       metricIndex[i] = fitIndex[i] - movingRegionIndex[i];
       }

@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingMultiResolutionSimilarityFunctionSearchRegionImageSource_hxx
 #define itkBlockMatchingMultiResolutionSimilarityFunctionSearchRegionImageSource_hxx
 
@@ -13,6 +30,7 @@ namespace itk
 {
 namespace BlockMatching
 {
+
 template <class TFixedImage, class TMovingImage, class TMetricImage,
           class TDisplacementImage, class TFunctor, class TInterpolatorPrecisionType>
 MultiResolutionSimilarityFunctionSearchRegionImageSource<
@@ -22,7 +40,7 @@ MultiResolutionSimilarityFunctionSearchRegionImageSource<
   m_TopLevelRadiusSpecified( false )
 {
   this->m_CacheMetricImage = true;
-  this->m_SearchRegionRadiusImage = NULL;
+  this->m_SearchRegionRadiusImage = ITK_NULLPTR;
 
   m_SearchRegionRadiusResampler = SearchRegionRadiusResamplerType::New();
 
@@ -37,6 +55,7 @@ MultiResolutionSimilarityFunctionSearchRegionImageSource<
                                                   TInterpolatorPrecisionType>::New();
 }
 
+
 template <class TFixedImage, class TMovingImage, class TMetricImage,
           class TDisplacementImage, class TFunctor, class TInterpolatorPrecisionType>
 void
@@ -47,7 +66,7 @@ MultiResolutionSimilarityFunctionSearchRegionImageSource<
 {
   DisplacementCalculatorSuperclass::SetDisplacementImage( image );
 
-  if( this->m_SearchRegionRadiusImage.GetPointer() == NULL )
+  if( this->m_SearchRegionRadiusImage.GetPointer() == ITK_NULLPTR )
     {
     this->m_SearchRegionRadiusImage = SearchRegionRadiusImageType::New();
     }
@@ -57,6 +76,7 @@ MultiResolutionSimilarityFunctionSearchRegionImageSource<
 
   m_DisplacementCalculator->SetDisplacementImage( image );
 }
+
 
 template <class TFixedImage, class TMovingImage, class TMetricImage,
           class TDisplacementImage, class TFunctor, class TInterpolatorPrecisionType>
@@ -71,6 +91,7 @@ MultiResolutionSimilarityFunctionSearchRegionImageSource<
   m_DisplacementCalculator->SetMetricImagePixel( point, index, metricImage );
 }
 
+
 template <class TFixedImage, class TMovingImage, class TMetricImage,
           class TDisplacementImage, class TFunctor, class TInterpolatorPrecisionType>
 void
@@ -81,7 +102,7 @@ MultiResolutionSimilarityFunctionSearchRegionImageSource<
 {
   m_DisplacementCalculator->Compute();
 
-  typename OutputImageType::Pointer outputPtr = this->GetOutput();
+  OutputImageType * outputPtr = this->GetOutput();
   if( !outputPtr )
     {
     return;
@@ -91,23 +112,22 @@ MultiResolutionSimilarityFunctionSearchRegionImageSource<
   typename MetricImageType::PixelType             metric;
   typename SearchRegionRadiusImageType::PixelType radius;
   typename OutputRegionType::SizeType             size;
-  unsigned int                                    i;
 
   // Iterate over the displacements and get the corresponding metric image value
   // at the given point.
-  itk::ImageRegionConstIteratorWithIndex<MetricImageImageType>
+  ImageRegionConstIteratorWithIndex<MetricImageImageType>
   metricImageImageConstIt( this->m_MetricImageImage,
                            this->m_MetricImageImage->GetBufferedRegion() );
-  itk::ImageRegionConstIterator<CenterPointsImageType>
+  ImageRegionConstIterator<CenterPointsImageType>
   centerPointsConstIt( this->m_CenterPointsImage,
                        this->m_CenterPointsImage->GetBufferedRegion() );
-  itk::ImageRegionConstIterator<DisplacementImageType>
+  ImageRegionConstIterator<DisplacementImageType>
   displacementIt( this->m_DisplacementImage,
                   this->m_DisplacementImage->GetBufferedRegion() );
-  itk::ImageRegionIterator<OutputImageType>
+  ImageRegionIterator<OutputImageType>
   previousSearchRegionIt( outputPtr,
                           outputPtr->GetBufferedRegion() );
-  itk::ImageRegionIterator<SearchRegionRadiusImageType>
+  ImageRegionIterator<SearchRegionRadiusImageType>
   searchRegionRadiusIt( this->m_SearchRegionRadiusImage,
                         this->m_SearchRegionRadiusImage->GetBufferedRegion() );
   for( metricImageImageConstIt.GoToBegin(),
@@ -126,13 +146,14 @@ MultiResolutionSimilarityFunctionSearchRegionImageSource<
     m_Interpolator->SetInputImage( metricImageImageConstIt.Get() );
     metric = m_Interpolator->Evaluate( point );
     size = previousSearchRegionIt.Get().GetSize();
-    for( i = 0; i < ImageDimension; ++i )
+    for( unsigned int i = 0; i < ImageDimension; ++i )
       {
       radius[i] = ( size[i] - 1 ) / 2 * m_Functor( metric );
       }
     searchRegionRadiusIt.Set( radius );
     }
 }
+
 
 template <class TFixedImage, class TMovingImage, class TMetricImage,
           class TDisplacementImage, class TFunctor, class TInterpolatorPrecisionType>
@@ -166,15 +187,16 @@ MultiResolutionSimilarityFunctionSearchRegionImageSource<
     }
 }
 
+
 template <class TFixedImage, class TMovingImage, class TMetricImage,
           class TDisplacementImage, class TFunctor, class TInterpolatorPrecisionType>
 void
 MultiResolutionSimilarityFunctionSearchRegionImageSource<
   TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TFunctor,
   TInterpolatorPrecisionType>
-::ThreadedGenerateData( const OutputRegionType & outputRegion, int threadID )
+::ThreadedGenerateData( const OutputRegionType & outputRegion, ThreadIdType threadID )
 {
-  typename OutputImageType::Pointer outputPtr = this->GetOutput();
+  OutputImageType * outputPtr = this->GetOutput();
   if( !outputPtr )
     {
     return;
@@ -186,7 +208,6 @@ MultiResolutionSimilarityFunctionSearchRegionImageSource<
   typename MovingImageType::IndexType index;
   typename MovingImageType::SizeType  unitySize;
   unitySize.Fill( 1 );
-  unsigned int i;
   RadiusType   radius;
 
   if( this->m_CurrentLevel == 0 )
@@ -217,10 +238,10 @@ MultiResolutionSimilarityFunctionSearchRegionImageSource<
     IndexType                          closestIndex;
     RadiusType                         minimumSearchRegionRadius;
     typename MovingImageType::SizeType minimumRegionSize;
-    for( i = 0; i < ImageDimension; ++i )
+    for( unsigned int i = 0; i < ImageDimension; ++i )
       {
       minimumSearchRegionRadius[i] =
-        static_cast<unsigned int>( vcl_ceil( static_cast< double >( this->m_FixedBlockRadius[i] ) *
+        static_cast<unsigned int>( Math::Ceil( static_cast< double >( this->m_FixedBlockRadius[i] ) *
                                              this->m_MinimumSearchRegionRadiusFactor[i] ) );
       // @todo figure out what the theoretical minimum required here without
       // getting weird out-of-region bounds issues.
@@ -246,7 +267,7 @@ MultiResolutionSimilarityFunctionSearchRegionImageSource<
       region.SetSize( unitySize );
       // Expand the search region radius by the scaling that occured between
       // levels.
-      for( i = 0; i < ImageDimension; ++i )
+      for( unsigned int i = 0; i < ImageDimension; ++i )
         {
         radius[i] = vcl_ceil( static_cast<float>( radiusIt.Get()[i] )
                               * static_cast<float>( this->m_PyramidSchedule( this->m_CurrentLevel - 1, i ) )
@@ -265,7 +286,7 @@ MultiResolutionSimilarityFunctionSearchRegionImageSource<
         {
         // Set to the closest index and with a valid minimumsearch region
         // radius. .
-        for( i = 0; i < ImageDimension; ++i )
+        for( unsigned int i = 0; i < ImageDimension; ++i )
           {
           closestIndex[i] = index[i];
           if( index[i] < startIndex[i] )

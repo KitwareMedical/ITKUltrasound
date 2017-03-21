@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingMetricImageToDisplacementCalculator_hxx
 #define itkBlockMatchingMetricImageToDisplacementCalculator_hxx
 
@@ -17,8 +34,8 @@ MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
   m_CacheMetricImage( false ),
   m_RegionsDefined( false )
 {
-  m_MetricImageImage  = NULL;
-  m_DisplacementImage = NULL;
+  m_MetricImageImage  = ITK_NULLPTR;
+  m_DisplacementImage = ITK_NULLPTR;
   m_MetricImageDuplicator = MetricImageDuplicatorType::New();
 
   m_Threader = MultiThreader::New();
@@ -93,17 +110,16 @@ MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::ThreaderCallback( void *arg )
 {
   ThreadStruct *str;
-  int total, threadId, threadCount;
 
-  threadId = ((MultiThreader::ThreadInfoStruct *)(arg))->ThreadID;
-  threadCount = ((MultiThreader::ThreadInfoStruct *)(arg))->NumberOfThreads;
+  const ThreadIdType threadId = ((MultiThreader::ThreadInfoStruct *)(arg))->ThreadID;
+  const ThreadIdType threadCount = ((MultiThreader::ThreadInfoStruct *)(arg))->NumberOfThreads;
 
   str = (ThreadStruct *)(((MultiThreader::ThreadInfoStruct *)(arg))->UserData);
 
   // execute the actual method with appropriate output region
   // first find out how many pieces extent can be split into.
   RegionType splitRegion;
-  total = str->self->SplitRequestedRegion( threadId,
+  const ThreadIdType total = str->self->SplitRequestedRegion( threadId,
     threadCount, splitRegion);
 
   if (threadId < total)
@@ -113,18 +129,18 @@ MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
   // else
   //   {
   //   otherwise don't use this thread. Sometimes the threads dont
-  //   break up very well and it is just as efficient to leave a 
+  //   break up very well and it is just as efficient to leave a
   //   few threads idle.
   //   }
-  
+
   return ITK_THREAD_RETURN_VALUE;
 }
 
 
 template < class TMetricImage, class TDisplacementImage >
-int
+unsigned int
 MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
-::SplitRequestedRegion( int i, int num,
+::SplitRequestedRegion( unsigned int i, unsigned int num,
                         RegionType& splitRegion)
 {
   RegionType                                   regionToSplit = this->m_DisplacementImage->GetRequestedRegion();
@@ -154,9 +170,8 @@ MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 
   // determine the actual number of pieces that will be generated
   typename TDisplacementImage::SizeType::SizeValueType range = requestedRegionSize[splitAxis];
-  int                                                  valuesPerThread = Math::Ceil<int>(range/(double)num);
-  int                                                  maxThreadIdUsed =
-    Math::Ceil<int>(range/(double)valuesPerThread) - 1;
+  const ThreadIdType valuesPerThread = Math::Ceil< ThreadIdType >( range/(double)num );
+  const ThreadIdType maxThreadIdUsed = Math::Ceil< ThreadIdType >( range/(double)valuesPerThread ) - 1;
 
   // Split the region
   if (i < maxThreadIdUsed)

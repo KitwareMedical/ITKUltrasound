@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingMetricImageFilter_h
 #define itkBlockMatchingMetricImageFilter_h
 
@@ -73,7 +90,7 @@ public:
 
   /** Set the moving image. */
   void SetMovingImage( MovingImageType * movingImage );
-  
+
   /** Set/Get the fixed image region.  This will defined the kernel in the fixed
    * image to be compared against the moving.  Every pixel in this region will
    * be compared against the moving image region to generate a pixel in the
@@ -95,7 +112,7 @@ public:
 
   /** Overload so we can decrease the number of threads according to the
    * MinimumSplitSize if need be. */
-  virtual const int & GetNumberOfThreads();
+  virtual const ThreadIdType & GetNumberOfThreads();
 
 protected:
   MetricImageFilter();

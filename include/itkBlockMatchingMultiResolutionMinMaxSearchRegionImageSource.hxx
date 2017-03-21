@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingMultiResolutionMinMaxSearchRegionImageSource_hxx
 #define itkBlockMatchingMultiResolutionMinMaxSearchRegionImageSource_hxx
 
@@ -14,11 +31,13 @@ namespace BlockMatching
 template < class TFixedImage, class TMovingImage, class TDisplacementImage >
 void
 MultiResolutionMinMaxSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >
-::ThreadedGenerateData( const OutputRegionType& outputRegion, int threadID )
+::ThreadedGenerateData( const OutputRegionType& outputRegion, ThreadIdType threadID )
 {
-  typename OutputImageType::Pointer outputPtr = this->GetOutput();
+  OutputImageType * outputPtr = this->GetOutput();
   if( !outputPtr )
+    {
     return;
+    }
 
   typedef typename MovingImageType::IndexType IndexType;
 
@@ -29,18 +48,16 @@ MultiResolutionMinMaxSearchRegionImageSource< TFixedImage, TMovingImage, TDispla
   typename MovingImageType::SizeType  unitySize;
   typename MovingImageType::SizeType  minimumRegionSize;
   unitySize.Fill( 1 );
-  unsigned int i;
   IndexType startIndex = this->m_MovingImage->GetLargestPossibleRegion().GetIndex();
   IndexType endIndex;
   IndexType closestIndex;
 
   double slope;
   RadiusType radius;
-  for( i = 0; i < ImageDimension; ++i )
+  for( unsigned int i = 0; i < ImageDimension; ++i )
     {
     slope = (this->m_MinFactor[i] - this->m_MaxFactor[i]) / (this->m_PyramidSchedule.rows() - 1.0);
-    radius[i] =
-      Math::Ceil< typename RadiusType::SizeValueType >( this->m_FixedBlockRadius[i] *
+    radius[i] = Math::Ceil< typename RadiusType::SizeValueType >( this->m_FixedBlockRadius[i] *
                                                         ( slope * this->m_CurrentLevel + this->m_MaxFactor[i] ) );
     minimumRegionSize[i] = 2 * radius[i] + 1;
     endIndex[i] = startIndex[i] + this->m_MovingImage->GetLargestPossibleRegion().GetSize()[i] - 1 -
@@ -50,9 +67,7 @@ MultiResolutionMinMaxSearchRegionImageSource< TFixedImage, TMovingImage, TDispla
   if( this->m_CurrentLevel == 0 )
     {
     ImageRegionIteratorWithIndex< OutputImageType > it( outputPtr, outputRegion );
-    for( it.GoToBegin();
-         !it.IsAtEnd();
-         ++it )
+    for( it.GoToBegin(); !it.IsAtEnd(); ++it )
       {
       index = it.GetIndex();
       outputPtr->TransformIndexToPhysicalPoint( index, point );
@@ -90,7 +105,7 @@ MultiResolutionMinMaxSearchRegionImageSource< TFixedImage, TMovingImage, TDispla
         {
         // Set to the closest index and with a valid minimumsearch region
         // radius. .
-        for( i = 0; i < ImageDimension; ++i )
+        for( unsigned int i = 0; i < ImageDimension; ++i )
           {
           closestIndex[i] = index[i];
           if( index[i] < startIndex[i] )

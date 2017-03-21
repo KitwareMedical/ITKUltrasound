@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingMultiResolutionImageRegistrationMethod_h
 #define itkBlockMatchingMultiResolutionImageRegistrationMethod_h
 
@@ -37,20 +54,20 @@ class ITK_TEMPLATE_EXPORT MultiResolutionImageRegistrationMethod :
 {
 public:
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int,
-                      TDisplacementImage::ImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, TDisplacementImage::ImageDimension);
+
   /** Type of the fixed image. */
-  typedef TFixedImage                             FixedImageType;
-  typedef typename FixedImageType::RegionType     FixedRegionType;
-  typedef typename FixedImageType::Pointer   FixedImagePointer;
+  typedef TFixedImage                         FixedImageType;
+  typedef typename FixedImageType::RegionType FixedRegionType;
+  typedef typename FixedImageType::Pointer    FixedImagePointer;
 
   /** Type of the radius used to characterized the fixed image block. */
   typedef typename FixedImageType::SizeType RadiusType;
 
   /** Type of the moving image. */
-  typedef TMovingImage                            MovingImageType;
-  typedef typename MovingImageType::RegionType    MovingRegionType;
-  typedef typename MovingImageType::Pointer  MovingImagePointer;
+  typedef TMovingImage                         MovingImageType;
+  typedef typename MovingImageType::RegionType MovingRegionType;
+  typedef typename MovingImageType::Pointer    MovingImagePointer;
 
   /** Type of the metric image. */
   typedef TMetricImage  MetricImageType;
@@ -59,8 +76,8 @@ public:
   typedef TDisplacementImage DisplacementImageType;
 
   typedef typename DisplacementImageType::RegionType RegionType;
-  typedef typename RegionType::IndexType IndexType;
-  typedef typename RegionType::SizeType  SizeType;
+  typedef typename RegionType::IndexType             IndexType;
+  typedef typename RegionType::SizeType              SizeType;
 
   typedef typename DisplacementImageType::SpacingType   SpacingType;
   typedef typename DisplacementImageType::DirectionType DirectionType;
@@ -77,7 +94,7 @@ public:
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
-  
+
   /** Run-time type information (and related methods). */
   itkTypeMacro(MultiResolutionImageRegistrationMethod, ImageSource);
 
@@ -103,9 +120,8 @@ public:
 
   /** Type of the class to calculate the fixed image matching kernel block
    * radius at every level. */
-  typedef typename BlockMatching::MultiResolutionBlockRadiusCalculator< TFixedImage >
-    BlockRadiusCalculatorType;
-  typedef typename BlockRadiusCalculatorType::Pointer   BlockRadiusCalculatorPointer;
+  typedef MultiResolutionBlockRadiusCalculator< TFixedImage > BlockRadiusCalculatorType;
+  typedef typename BlockRadiusCalculatorType::Pointer         BlockRadiusCalculatorPointer;
 
   typedef typename BlockMatching::MultiResolutionSearchRegionImageSource< TFixedImage,
           TMovingImage, TDisplacementImage > SearchRegionImageSourceType;
@@ -116,7 +132,7 @@ public:
 
   /** Set/Get the Fixed image. */
   itkSetObjectMacro( FixedImage, FixedImageType );
-  itkGetObjectMacro( FixedImage, FixedImageType ); 
+  itkGetObjectMacro( FixedImage, FixedImageType );
 
   /** Set/Get the Moving image. */
   itkSetObjectMacro( MovingImage, MovingImageType );
@@ -124,7 +140,7 @@ public:
 
   /** Set/Get the Fixed image pyramid. */
   itkSetObjectMacro( FixedImagePyramid, FixedImagePyramidType );
-  itkGetObjectMacro( FixedImagePyramid, FixedImagePyramidType ); 
+  itkGetObjectMacro( FixedImagePyramid, FixedImagePyramidType );
 
   /** Set/Get the Moving image pyramid. */
   itkSetObjectMacro( MovingImagePyramid, MovingImagePyramidType );
@@ -133,8 +149,8 @@ public:
   /** Set/Get the schedules . */
   void SetSchedules( const ScheduleType & fixedSchedule,
                     const ScheduleType & movingSchedule );
-  itkGetConstMacro( FixedImagePyramidSchedule, ScheduleType ); 
-  itkGetConstMacro( MovingImagePyramidSchedule, ScheduleType ); 
+  itkGetConstMacro( FixedImagePyramidSchedule, ScheduleType );
+  itkGetConstMacro( MovingImagePyramidSchedule, ScheduleType );
 
   /** Set/Get the number of multi-resolution levels. */
   void SetNumberOfLevels( unsigned long numberOfLevels );
@@ -145,7 +161,7 @@ public:
 
   /** Method to return the latest modified time of this object or
    * any of its cached ivars */
-  unsigned long GetMTime() const;  
+  unsigned long GetMTime() const;
 
   /** BlockMatching::ImageRegistrationMethod used to register each image at
    * every level. */
@@ -167,24 +183,24 @@ protected:
 
   /** The size and spacing of the search region image at the lowest level is
    * used to generate the information for the output image. */
-  virtual void GenerateOutputInformation();
+  virtual void GenerateOutputInformation() ITK_OVERRIDE;
 
   /** Generates the entire displacement image. */
-  virtual void EnlargeOutputRequestedRegion( DataObject* data )
+  virtual void EnlargeOutputRequestedRegion( DataObject* data ) ITK_OVERRIDE
     {
     TDisplacementImage* output = this->GetOutput( 0 );
     output->SetRequestedRegionToLargestPossibleRegion();
     }
 
-  /** Method invoked by the pipeline in order to trigger the computation of 
+  /** Method invoked by the pipeline in order to trigger the computation of
    * the registration. */
-  virtual void GenerateData ();
+  virtual void GenerateData() ITK_OVERRIDE;
 
   /** Initialize by setting the interconnects between the components.
       This method is executed at every level of the pyramid with the
       values corresponding to this resolution
    */
-  void Initialize() throw (ExceptionObject);
+  void Initialize();
 
   /** Create the image pyramids. */
   void PreparePyramids();
@@ -195,7 +211,7 @@ protected:
   /** Set up the search region image calculator. */
   void PrepareSearchRegionImageSource();
 
-  /** Set the current level to be processed */  
+  /** Set the current level to be processed */
   itkSetMacro( CurrentLevel, unsigned long );
 
   FixedImagePointer                m_FixedImage;

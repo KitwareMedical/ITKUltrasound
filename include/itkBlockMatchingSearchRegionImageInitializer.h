@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef itkBlockMatchingSearchRegionImageInitializer_h
 #define itkBlockMatchingSearchRegionImageInitializer_h
 
@@ -23,14 +40,11 @@ namespace BlockMatching
  */
 template < class TFixedImage, class TMovingImage >
 class ITK_TEMPLATE_EXPORT SearchRegionImageInitializer:
-  public ImageSource< 
-    Image< typename TMovingImage::RegionType,
-      TMovingImage::ImageDimension > >
+  public ImageSource< Image< typename TMovingImage::RegionType, TMovingImage::ImageDimension > >
 {
 public:
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int,
-                      TMovingImage::ImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, TMovingImage::ImageDimension);
 
   /** Type of the fixed image. */
   typedef TFixedImage                         FixedImageType;
@@ -40,7 +54,7 @@ public:
   typedef typename FixedImageType::SizeType RadiusType;
 
   /** Type of the moving image. */
-  typedef TMovingImage  MovingImageType;
+  typedef TMovingImage                         MovingImageType;
   typedef typename MovingImageType::RegionType MovingRegionType;
 
   /** Type of the search region image. */
@@ -61,7 +75,7 @@ public:
 
   /** Set the fixed image. */
   void SetFixedImage( FixedImageType * fixedImage );
-  const FixedImageType * GetFixedImage() const 
+  const FixedImageType * GetFixedImage() const
     { return this->m_FixedImage.GetPointer(); }
 
   /** Set the moving image. */
@@ -114,11 +128,11 @@ public:
 protected:
   SearchRegionImageInitializer();
 
-  virtual void GenerateOutputInformation();
+  virtual void GenerateOutputInformation() ITK_OVERRIDE;
 
-  virtual void BeforeThreadedGenerateData();
+  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
 
-  virtual void ThreadedGenerateData( const OutputRegionType& outputRegion, int threadId );
+  virtual void ThreadedGenerateData( const OutputRegionType& outputRegion, ThreadIdType threadId ) ITK_OVERRIDE;
 
   typename FixedImageType::Pointer  m_FixedImage;
   typename MovingImageType::Pointer m_MovingImage;
@@ -141,4 +155,3 @@ private:
 #endif
 
 #endif
-
