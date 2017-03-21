@@ -14,8 +14,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkConstantImagePointerBoundaryCondition_h
-#define __itkConstantImagePointerBoundaryCondition_h
+#ifndef itkConstantImagePointerBoundaryCondition_h
+#define itkConstantImagePointerBoundaryCondition_h
 #include "itkNeighborhood.h"
 #include "itkNumericTraits.h"
 #include "itkImageBoundaryCondition.h"

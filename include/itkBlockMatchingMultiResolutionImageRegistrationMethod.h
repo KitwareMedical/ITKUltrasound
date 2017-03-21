@@ -1,5 +1,5 @@
-#ifndef __itkBlockMatchingMultiResolutionImageRegistrationMethod_h
-#define __itkBlockMatchingMultiResolutionImageRegistrationMethod_h
+#ifndef itkBlockMatchingMultiResolutionImageRegistrationMethod_h
+#define itkBlockMatchingMultiResolutionImageRegistrationMethod_h
 
 #include "itkImageSource.h"
 #include "itkMultiResolutionPyramidImageFilter.h"

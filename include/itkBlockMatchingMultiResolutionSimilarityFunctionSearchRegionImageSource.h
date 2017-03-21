@@ -1,5 +1,5 @@
-#ifndef __itkBlockMatchingMultiResolutionSimilarityFunctionSearchRegionImageSource_h
-#define __itkBlockMatchingMultiResolutionSimilarityFunctionSearchRegionImageSource_h
+#ifndef itkBlockMatchingMultiResolutionSimilarityFunctionSearchRegionImageSource_h
+#define itkBlockMatchingMultiResolutionSimilarityFunctionSearchRegionImageSource_h
 
 #include "itkArray.h"
 #include "itkInterpolateImageFunction.h"

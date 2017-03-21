@@ -1,5 +1,5 @@
-#ifndef __itkBlockMatchingMultiResolutionSearchRegionImageSource_hxx
-#define __itkBlockMatchingMultiResolutionSearchRegionImageSource_hxx
+#ifndef itkBlockMatchingMultiResolutionSearchRegionImageSource_hxx
+#define itkBlockMatchingMultiResolutionSearchRegionImageSource_hxx
 
 #include "itkBlockMatchingMultiResolutionSearchRegionImageSource.h"
 

@@ -1,5 +1,5 @@
-#ifndef __itkBlockMatchingMultiResolutionSearchRegionImageSource_h
-#define __itkBlockMatchingMultiResolutionSearchRegionImageSource_h
+#ifndef itkBlockMatchingMultiResolutionSearchRegionImageSource_h
+#define itkBlockMatchingMultiResolutionSearchRegionImageSource_h
 
 #include "itkVectorResampleIdentityNeumannImageFilter.h"
 

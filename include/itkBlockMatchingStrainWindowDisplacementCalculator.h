@@ -1,5 +1,5 @@
-#ifndef __itkBlockMatchingStrainWindowDisplacementCalculator_h
-#define __itkBlockMatchingStrainWindowDisplacementCalculator_h
+#ifndef itkBlockMatchingStrainWindowDisplacementCalculator_h
+#define itkBlockMatchingStrainWindowDisplacementCalculator_h
 
 #include "itkBlockMatchingMetricImageToDisplacementCalculator.h"
 

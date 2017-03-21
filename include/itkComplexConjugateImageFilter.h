@@ -14,8 +14,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkComplexConjugateImageFilter_h
-#define __itkComplexConjugateImageFilter_h
+#ifndef itkComplexConjugateImageFilter_h
+#define itkComplexConjugateImageFilter_h
 
 #include "itkUnaryFunctorImageFilter.h"
 #include "vnl/vnl_math.h"

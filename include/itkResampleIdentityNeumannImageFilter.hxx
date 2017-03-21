@@ -15,8 +15,8 @@
 
 =========================================================================*/
 
-#ifndef __itkResampleIdentityNeumannImageFilter_hxx
-#define __itkResampleIdentityNeumannImageFilter_hxx
+#ifndef itkResampleIdentityNeumannImageFilter_hxx
+#define itkResampleIdentityNeumannImageFilter_hxx
 
 #include "itkResampleIdentityNeumannImageFilter.h"
 #include "itkObjectFactory.h"

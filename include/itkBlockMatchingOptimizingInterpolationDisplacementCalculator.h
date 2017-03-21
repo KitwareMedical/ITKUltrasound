@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkBlockMatchingOptimizingInterpolationDisplacementCalculator_h
-#define __itkBlockMatchingOptimizingInterpolationDisplacementCalculator_h
+#ifndef itkBlockMatchingOptimizingInterpolationDisplacementCalculator_h
+#define itkBlockMatchingOptimizingInterpolationDisplacementCalculator_h
 
 #include "itkBlockMatchingMetricImageToDisplacementCalculator.h"
 

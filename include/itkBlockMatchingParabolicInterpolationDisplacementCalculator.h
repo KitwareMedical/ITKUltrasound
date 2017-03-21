@@ -1,5 +1,5 @@
-#ifndef __itkBlockMatchingParabolicInterpolationDisplacementCalculator_h
-#define __itkBlockMatchingParabolicInterpolationDisplacementCalculator_h
+#ifndef itkBlockMatchingParabolicInterpolationDisplacementCalculator_h
+#define itkBlockMatchingParabolicInterpolationDisplacementCalculator_h
 
 #include "itkBlockMatchingMetricImageToDisplacementCalculator.h"
 

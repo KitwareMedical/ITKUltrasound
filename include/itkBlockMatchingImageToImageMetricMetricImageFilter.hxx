@@ -1,5 +1,5 @@
-#ifndef __itkBlockMatchingImageToImageMetricMetricImageFilter_hxx
-#define __itkBlockMatchingImageToImageMetricMetricImageFilter_hxx
+#ifndef itkBlockMatchingImageToImageMetricMetricImageFilter_hxx
+#define itkBlockMatchingImageToImageMetricMetricImageFilter_hxx
 
 #include "itkBlockMatchingImageToImageMetricMetricImageFilter.h"
 

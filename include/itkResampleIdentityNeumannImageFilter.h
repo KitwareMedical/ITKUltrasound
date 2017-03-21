@@ -14,8 +14,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkResampleIdentityNeumannImageFilter_h
-#define __itkResampleIdentityNeumannImageFilter_h
+#ifndef itkResampleIdentityNeumannImageFilter_h
+#define itkResampleIdentityNeumannImageFilter_h
 
 #include "itkFixedArray.h"
 #include "itkTransform.h"

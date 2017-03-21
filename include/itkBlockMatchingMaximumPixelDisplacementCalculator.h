@@ -1,5 +1,5 @@
-#ifndef __itkBlockMatchingMaximumPixelDisplacementCalculator_h
-#define __itkBlockMatchingMaximumPixelDisplacementCalculator_h
+#ifndef itkBlockMatchingMaximumPixelDisplacementCalculator_h
+#define itkBlockMatchingMaximumPixelDisplacementCalculator_h
 
 #include "itkBlockMatchingMetricImageToDisplacementCalculator.h"
 

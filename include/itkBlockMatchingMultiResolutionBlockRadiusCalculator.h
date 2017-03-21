@@ -1,5 +1,5 @@
-#ifndef __itkBlockMatchingMultiResolutionBlockRadiusCalculator_h
-#define __itkBlockMatchingMultiResolutionBlockRadiusCalculator_h
+#ifndef itkBlockMatchingMultiResolutionBlockRadiusCalculator_h
+#define itkBlockMatchingMultiResolutionBlockRadiusCalculator_h
 
 #include "itkArray2D.h"
 #include "itkObject.h"

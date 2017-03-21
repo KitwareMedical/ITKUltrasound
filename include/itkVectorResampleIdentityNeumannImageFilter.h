@@ -12,8 +12,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkVectorResampleIdentityNeumannImageFilter_h
-#define __itkVectorResampleIdentityNeumannImageFilter_h
+#ifndef itkVectorResampleIdentityNeumannImageFilter_h
+#define itkVectorResampleIdentityNeumannImageFilter_h
 
 #include "itkImageFunction.h"
 #include "itkImageRegionIterator.h"

@@ -14,8 +14,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkVectorResampleIdentityNeumannImageFilter_hxx
-#define __itkVectorResampleIdentityNeumannImageFilter_hxx
+#ifndef itkVectorResampleIdentityNeumannImageFilter_hxx
+#define itkVectorResampleIdentityNeumannImageFilter_hxx
 
 #include "itkMath.h"
 #include "itkVectorResampleIdentityNeumannImageFilter.h"

@@ -1,5 +1,5 @@
-#ifndef __itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter_h
-#define __itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter_h
+#ifndef itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter_h
+#define itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter_h
 
 #include "itkBoxMeanImageFilter.h"
 #include "itkBoxSigmaSqrtNMinusOneImageFilter.h"

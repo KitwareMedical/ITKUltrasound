@@ -1,5 +1,5 @@
-#ifndef __itkBlockMatchingCosineInterpolationDisplacementCalculator_h
-#define __itkBlockMatchingCosineInterpolationDisplacementCalculator_h
+#ifndef itkBlockMatchingCosineInterpolationDisplacementCalculator_h
+#define itkBlockMatchingCosineInterpolationDisplacementCalculator_h
 
 #include "itkBlockMatchingMetricImageToDisplacementCalculator.h"
 

@@ -1,5 +1,5 @@
-#ifndef __itkBlockMatchingStrainWindowDisplacementCalculator_hxx
-#define __itkBlockMatchingStrainWindowDisplacementCalculator_hxx
+#ifndef itkBlockMatchingStrainWindowDisplacementCalculator_hxx
+#define itkBlockMatchingStrainWindowDisplacementCalculator_hxx
 
 #include "itkBlockMatchingStrainWindowDisplacementCalculator.h"
 

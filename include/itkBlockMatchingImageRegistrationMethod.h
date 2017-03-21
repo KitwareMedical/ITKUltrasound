@@ -1,5 +1,5 @@
-#ifndef __itkBlockMatchingImageRegistrationMethod_h
-#define __itkBlockMatchingImageRegistrationMethod_h
+#ifndef itkBlockMatchingImageRegistrationMethod_h
+#define itkBlockMatchingImageRegistrationMethod_h
 
 #include "itkImageToImageFilter.h"
 

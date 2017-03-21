@@ -1,5 +1,5 @@
-#ifndef __itkBlockMatchingMultiResolutionMinMaxBlockRadiusCalculator_h
-#define __itkBlockMatchingMultiResolutionMinMaxBlockRadiusCalculator_h
+#ifndef itkBlockMatchingMultiResolutionMinMaxBlockRadiusCalculator_h
+#define itkBlockMatchingMultiResolutionMinMaxBlockRadiusCalculator_h
 
 #include "itkBlockMatchingMultiResolutionBlockRadiusCalculator.h"
 

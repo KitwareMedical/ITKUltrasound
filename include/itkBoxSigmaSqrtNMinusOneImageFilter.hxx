@@ -15,8 +15,8 @@
 
 =========================================================================*/
 
-#ifndef __itkBoxSigmaSqrtNMinusOneImageFilter_hxx
-#define __itkBoxSigmaSqrtNMinusOneImageFilter_hxx
+#ifndef itkBoxSigmaSqrtNMinusOneImageFilter_hxx
+#define itkBoxSigmaSqrtNMinusOneImageFilter_hxx
 
 #include "itkImage.h"
 #include "itkBoxSigmaSqrtNMinusOneImageFilter.h"

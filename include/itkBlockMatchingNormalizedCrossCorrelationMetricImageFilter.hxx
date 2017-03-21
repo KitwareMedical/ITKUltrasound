@@ -1,5 +1,5 @@
-#ifndef __itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter_hxx
-#define __itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter_hxx
+#ifndef itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter_hxx
+#define itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter_hxx
 
 #include "itkBlockMatchingImageToImageMetricMetricImageFilter.h"
 

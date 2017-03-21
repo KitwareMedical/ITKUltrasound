@@ -1,5 +1,5 @@
-#ifndef __itkBlockMatchingImageRegistrationMethod_hxx
-#define __itkBlockMatchingImageRegistrationMethod_hxx
+#ifndef itkBlockMatchingImageRegistrationMethod_hxx
+#define itkBlockMatchingImageRegistrationMethod_hxx
 
 #include "itkImageRegionConstIterator.h"
 #include "itkImageRegionIteratorWithIndex.h"
