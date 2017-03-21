@@ -13,6 +13,7 @@ itk_module(Ultrasound
     ITKImageIntensity
     ITKIOImageBase
     ITKTransform
+    ITKRegistrationCommon
     ${_fft_depends}
   PRIVATE_DEPENDS
     ITKHDF5
