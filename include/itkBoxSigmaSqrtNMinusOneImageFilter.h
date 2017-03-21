@@ -18,6 +18,7 @@
 #ifndef __itkBoxSigmaSqrtNMinusOneImageFilter_h
 #define __itkBoxSigmaSqrtNMinusOneImageFilter_h
 
+#include "itkBoxUtilities.h"
 #include "itkBoxImageFilter.h"
 
 namespace itk {
