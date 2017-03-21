@@ -2,6 +2,7 @@
 #define __itkBlockMatchingMultiResolutionFixedBlockRadiusCalculator_h
 
 #include "itkBlockMatchingMultiResolutionBlockRadiusCalculator.h"
+#include "itkObjectFactory.h"
 
 namespace itk
 {
