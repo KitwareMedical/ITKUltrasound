@@ -22,7 +22,7 @@
 
 #include "itkComplexConjugateImageFilter.h"
 #include "itkHalfHermitianToRealInverseFFTImageFilter.h"
-#include "itkFFTPadImageFilter.h"
+#include "itkConstantPadImageFilter.h"
 #include "itkRealToHalfHermitianForwardFFTImageFilter.h"
 #include "itkFFTShiftImageFilter.h"
 #include "itkRegionFromReferenceImageFilter.h"
@@ -90,51 +90,35 @@ public:
    * A greatest prime factor of 2 produce a size which is a power of 2, and thus
    * is suitable for vnl base fft filters.
    * A greatest prime factor of 1 or less - typically 0 - disable the extra padding.
-   *
-   * Warning: this parameter is not used (and useful) only when ITK is built with
-   * FFTW support.
    */
-  itkGetConstMacro(GreatestPrimeFactor, int);
-  itkSetMacro(GreatestPrimeFactor, int);
+  itkGetConstMacro(SizeGreatestPrimeFactor, SizeValueType);
+  itkSetMacro(SizeGreatestPrimeFactor, SizeValueType);
 
 protected:
   NormalizedCrossCorrelationFFTMetricImageFilter();
 
   virtual void GenerateData() ITK_OVERRIDE;
 
-  typedef FFTPadImageFilter< MetricImageType, MetricImageType > PadFilterType;
+  typedef ConstantPadImageFilter< MetricImageType, MetricImageType >                  PadFilterType;
+  typedef FFTShiftImageFilter< MetricImageType, MetricImageType >                     FFTShiftFilterType;
+  typedef RealToHalfHermitianForwardFFTImageFilter< MetricImageType >                 FFTFilterType;
+  typedef typename FFTFilterType::OutputImageType                                     ComplexImageType;
+  typedef HalfHermitianToRealInverseFFTImageFilter< ComplexImageType >                IFFTFilterType;
+  typedef ComplexConjugateImageFilter< ComplexImageType, ComplexImageType >           ComplexConjugateFilterType;
+  typedef MultiplyImageFilter< ComplexImageType, ComplexImageType, ComplexImageType > MultiplyFilterType;
+  typedef RegionFromReferenceImageFilter< MetricImageType, MetricImageType >          CropFilterType;
 
-  typedef FFTShiftImageFilter< MetricImageType, MetricImageType > FFTShiftFilterType;
-
-  typedef RealToHalfHermitianForwardFFTImageFilter< MetricImageType > FFTFilterType;
-  typedef typename FFTFilterType::OutputImageType ComplexImageType;
-  typedef HalfHermitianToRealInverseFFTImageFilter< ComplexImageType > IFFTFilterType;
-
-  typedef ComplexConjugateImageFilter< ComplexImageType,
-                                            ComplexImageType > ComplexConjugateFilterType;
-
-  typedef MultiplyImageFilter< ComplexImageType, ComplexImageType,
-                                    ComplexImageType > MultiplyFilterType;
-
-  typedef RegionFromReferenceImageFilter< MetricImageType,
-                                               MetricImageType > CropFilterType;
-
-  typename PadFilterType::Pointer m_PadFilter;
-
-  typename FFTShiftFilterType::Pointer  m_FFTShiftFilter;
-
-  typename FFTFilterType::Pointer m_KernelFFTFilter;
-  typename FFTFilterType::Pointer m_MovingFFTFilter;
-
+  typename PadFilterType::Pointer              m_KernelPadFilter;
+  typename PadFilterType::Pointer              m_MovingPadFilter;
+  typename FFTShiftFilterType::Pointer         m_FFTShiftFilter;
+  typename FFTFilterType::Pointer              m_KernelFFTFilter;
+  typename FFTFilterType::Pointer              m_MovingFFTFilter;
   typename ComplexConjugateFilterType::Pointer m_ComplexConjugateImageFilter;
+  typename MultiplyFilterType::Pointer         m_MultiplyFilter;
+  typename IFFTFilterType::Pointer             m_IFFTFilter;
+  typename CropFilterType::Pointer             m_CropFilter;
 
-  typename MultiplyFilterType::Pointer  m_MultiplyFilter;
-
-  typename IFFTFilterType::Pointer m_IFFTFilter;
-
-  typename CropFilterType::Pointer m_CropFilter;
-
-  int m_GreatestPrimeFactor;
+  SizeValueType m_SizeGreatestPrimeFactor;
 
 private:
   NormalizedCrossCorrelationFFTMetricImageFilter( const Self& ); // purposely not implemented

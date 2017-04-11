@@ -98,8 +98,8 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
     {
     for( unsigned int i = 0; i < ImageDimension; ++i )
       {
-      m_MovingRadius[i] = static_cast< typename RadiusType::SizeValueType >( Math::Ceil((
-      fixedSpacing[i] * m_FixedRadius[i] / movingSpacing[i] )));
+      m_MovingRadius[i] = Math::Ceil< typename RadiusType::SizeValueType >(
+      fixedSpacing[i] * m_FixedRadius[i] / movingSpacing[i] );
       }
     }
   this->Modified();
@@ -167,16 +167,16 @@ const ThreadIdType &
 MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::GetNumberOfThreads()
 {
-  MetricImageType * outputPtr = this->GetOutput();
+  const MetricImageType * output = this->GetOutput();
 
-  if( !outputPtr )
+  if( !output )
     {
     return Superclass::GetNumberOfThreads();
     }
 
-  typename MetricImageRegionType::SizeType requestedRegionSize = outputPtr->GetRequestedRegion().GetSize();
+  typename MetricImageRegionType::SizeType requestedRegionSize = output->GetRequestedRegion().GetSize();
   // split on the outermost dimension available
-  int splitAxis = outputPtr->GetImageDimension() - 1;
+  int splitAxis = output->GetImageDimension() - 1;
   while ( requestedRegionSize[splitAxis] == 1 )
     {
     --splitAxis;
@@ -192,8 +192,7 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
   ThreadIdType valuesPerThread = Math::Ceil< ThreadIdType >(range / (double)Superclass::GetNumberOfThreads());
   if( valuesPerThread < m_MinimumSplitSize )
     {
-    m_SpecialThreadCount = Math::Floor< ThreadIdType >( range / (double)m_MinimumSplitSize );
-    return m_SpecialThreadCount;
+    this->SetNumberOfThreads( Math::Floor< ThreadIdType >( range / (double)m_MinimumSplitSize ));
     }
 
   return Superclass::GetNumberOfThreads();

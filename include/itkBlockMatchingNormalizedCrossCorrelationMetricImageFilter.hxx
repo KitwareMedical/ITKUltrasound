@@ -46,7 +46,7 @@ NormalizedCrossCorrelationMetricImageFilter< TFixedImage, TMovingImage, TMetricI
   // 5.  Moving image of ones.
   // 6.  FixedPseudoSigmaImage.
   // 7.  FixedMinusMeanSquared.
-  this->SetNumberOfOutputs( 7 );
+  this->SetNumberOfIndexedOutputs( 7 );
   // ImageSource only does this for the first output.
   for( unsigned int i = 1; i < 7; i++ )
     this->SetNthOutput( i, this->MakeOutput( i ) );

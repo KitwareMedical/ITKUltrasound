@@ -22,6 +22,7 @@
 
 #include "itkImageDuplicator.h"
 #include "itkImageSource.h"
+#include "itkArray2D.h"
 
 namespace itk
 {

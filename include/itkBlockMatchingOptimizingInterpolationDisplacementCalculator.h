@@ -79,7 +79,7 @@ public:
     ContinuousIndexType;
 
   /** Type of the optimizer. */
-  typedef typename SingleValuedNonLinearOptimizer OptimizerType;
+  typedef SingleValuedNonLinearOptimizer OptimizerType;
 
   virtual void SetMetricImagePixel( const PointType & point, const IndexType& index, MetricImageType* image );
 

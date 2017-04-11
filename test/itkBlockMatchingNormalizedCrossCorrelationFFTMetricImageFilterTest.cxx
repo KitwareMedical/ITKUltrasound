@@ -15,13 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkTestMain.h"
-
-void RegisterTests()
-{
-  REGISTER_TEST( itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilterTest );
-}
-
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 

@@ -22,6 +22,7 @@
 
 #include "itkImageRegionConstIterator.h"
 #include "itkImageRegionIterator.h"
+#include "itkConstantBoundaryCondition.h"
 
 namespace itk
 {
@@ -32,20 +33,22 @@ template <class TFixedImage, class TMovingImage, class TMetricImage >
 NormalizedCrossCorrelationFFTMetricImageFilter< TFixedImage,
   TMovingImage, TMetricImage >
 ::NormalizedCrossCorrelationFFTMetricImageFilter():
-  m_GreatestPrimeFactor( 13 )
+  m_SizeGreatestPrimeFactor( 13 )
 {
-  m_PadFilter = PadFilterType::New();
   // Zero pad.
-  m_PadFilter->SetPadMethod( 2 );
+  m_KernelPadFilter = PadFilterType::New();
+  m_MovingPadFilter = PadFilterType::New();
 
   m_FFTShiftFilter  = FFTShiftFilterType::New();
-  m_FFTShiftFilter->SetInput( m_PadFilter->GetOutputKernel() );
+  m_FFTShiftFilter->SetInput( m_KernelPadFilter->GetOutput() );
   m_FFTShiftFilter->SetInverse( true );
 
   m_KernelFFTFilter = FFTFilterType::New();
   m_KernelFFTFilter->SetInput( m_FFTShiftFilter->GetOutput() );
   m_MovingFFTFilter = FFTFilterType::New();
-  m_MovingFFTFilter->SetInput( m_PadFilter->GetOutput() );
+  m_MovingFFTFilter->SetInput( m_MovingPadFilter->GetOutput() );
+
+  m_SizeGreatestPrimeFactor = m_MovingFFTFilter->GetSizeGreatestPrimeFactor();
 
   m_ComplexConjugateImageFilter = ComplexConjugateFilterType::New();
   m_ComplexConjugateImageFilter->SetInput( m_KernelFFTFilter->GetOutput() );
@@ -86,18 +89,11 @@ NormalizedCrossCorrelationFFTMetricImageFilter< TFixedImage,
   MetricImageConstPointerType movingMinusMean = this->GetOutput( 3 );
 
   // The moving search region for this thread.
-  m_PadFilter->SetInput( movingMinusMean );
-  m_PadFilter->SetInputKernel( fixedMinusMean );
-  m_PadFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
-  // vnl filters need a size which is a power of 2
-  if( std::string( m_KernelFFTFilter->GetNameOfClass()).find("Vnl") == 0 )
-    {
-    m_PadFilter->SetPadToPowerOfTwo( true );
-    }
-  else
-    {
-    m_PadFilter->SetGreatestPrimeFactor( m_GreatestPrimeFactor );
-    }
+  m_MovingPadFilter->SetInput( movingMinusMean );
+  m_KernelPadFilter->SetInput( fixedMinusMean );
+  m_MovingPadFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
+  m_KernelPadFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
+
 
   m_FFTShiftFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
 
