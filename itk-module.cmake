@@ -14,7 +14,6 @@ itk_module(Ultrasound
     ITKIOImageBase
     ITKTransform
     ITKRegistrationCommon
-    Strain
     ${_fft_depends}
   PRIVATE_DEPENDS
     ITKHDF5
