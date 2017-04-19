@@ -44,7 +44,7 @@ RUN pip3 install ipywidgets
 WORKDIR /usr/src
 RUN git clone git://cmake.org/cmake.git CMake && \
   cd CMake && \
-  git checkout v3.5.1 && \
+  git checkout v3.8.0 && \
   mkdir ../CMake-build && \
   cd ../CMake-build && \
   /usr/src/CMake/bootstrap \
