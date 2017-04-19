@@ -231,6 +231,16 @@ itk_add_test(NAME itkReplaceNonFiniteImageFilterTest
   itkReplaceNonFiniteImageFilterTest
     ${ITK_TEST_OUTPUT_DIR}/itkReplaceNonFiniteImageFilterTestOutput.mha
   )
+itk_add_test(NAME itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilterTest
+  COMMAND UltrasoundTestDriver
+  --compare
+    DATA{Baseline/itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilterTestBaseline.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilterTestOutput.mha
+  itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilterTest
+    DATA{Input/rf_pre15.mha}
+    DATA{Input/rf_post15.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilterTestOutput.mha
+  )
 
 if(use_fftw)
   itk_add_test(NAME itkFFTWForward1DFFTImageFilterTest
