@@ -73,7 +73,7 @@ RUN git clone https://github.com/Kitware/KWStyle.git && \
 
 # Build and install VTK from source
 RUN git clone https://gitlab.kitware.com/vtk/vtk.git VTK && \
-  cd VTK && git checkout v7.0.0 && cd .. && \
+  cd VTK && git checkout v7.1.0 && cd .. && \
   mkdir VTK-build && \
   cd VTK-build && \
   cmake \
