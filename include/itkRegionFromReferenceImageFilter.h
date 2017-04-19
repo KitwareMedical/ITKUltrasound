@@ -112,6 +112,8 @@ protected:
     }
   ~RegionFromReferenceImageFilter() {}
 
+  virtual void VerifyInputInformation() ITK_OVERRIDE;
+
   virtual void GenerateOutputInformation() ITK_OVERRIDE;
 
 private:
