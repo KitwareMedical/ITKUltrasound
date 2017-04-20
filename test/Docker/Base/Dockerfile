@@ -1,4 +1,4 @@
-FROM thewtex/jupyter-notebook-debian:latest
+FROM jupyter/scipy-notebook:latest
 MAINTAINER Matt McCormick <matt.mccormick@kitware.com>
 
 USER root
@@ -16,14 +16,6 @@ RUN apt-get update && \
   libssl-dev \
   make \
   ninja-build \
-  python3 \
-  python3-dev \
-  python3-matplotlib \
-  python3-numpy \
-  python3-nose \
-  python3-pip \
-  python3-scipy \
-  python3-setuptools \
   sed \
   tar \
   vim \
@@ -37,8 +29,6 @@ RUN apt-get update && \
   xserver-xorg-input-void \
   libxt-dev \
   zlib1g-dev
-
-RUN pip3 install ipywidgets
 
 # Build and install CMake from source.
 WORKDIR /usr/src
@@ -106,7 +96,6 @@ RUN git clone https://itk.org/ITK.git && \
     -DITKGroup_IO:BOOL=ON \
     -DModule_ITKHDF5:BOOL=ON \
     -DITK_WRAP_PYTHON:BOOL=ON \
-    -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python3 \
     -DITK_USE_FFTWD:BOOL=ON \
     -DITK_USE_FFTWF:BOOL=ON \
     -DITK_USE_SYSTEM_FFTW:BOOL=ON \
