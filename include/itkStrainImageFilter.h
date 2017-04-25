@@ -57,6 +57,7 @@ namespace itk
  * \sa TransformToStrainFilter
  *
  * \ingroup Strain
+ * \ingroup Ultrasound
  *
  */
 template< typename TInputImage, typename TOperatorValueType=float, typename TOutputValueType=float >

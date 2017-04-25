@@ -36,6 +36,7 @@ namespace itk
  * It puts an image on every output corresponding to each component.
  *
  * \ingroup SplitComponents
+ * \ingroup Ultrasound
  *
  * \sa VectorImageToImageAdaptor
  * \sa Vector
