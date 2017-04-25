@@ -36,8 +36,11 @@ NormalizedCrossCorrelationFFTMetricImageFilter< TFixedImage,
   m_SizeGreatestPrimeFactor( 13 )
 {
   // Zero pad.
+  m_InternalBoundaryCondition.SetConstant( NumericTraits< MetricImagePixelType >::ZeroValue() );
   m_KernelPadFilter = PadFilterType::New();
+  m_KernelPadFilter->SetBoundaryCondition( &m_InternalBoundaryCondition );
   m_MovingPadFilter = PadFilterType::New();
+  m_MovingPadFilter->SetBoundaryCondition( &m_InternalBoundaryCondition );
 
   m_FFTShiftFilter  = FFTShiftFilterType::New();
   m_FFTShiftFilter->SetInput( m_KernelPadFilter->GetOutput() );
@@ -91,6 +94,8 @@ NormalizedCrossCorrelationFFTMetricImageFilter< TFixedImage,
   // The moving search region for this thread.
   m_MovingPadFilter->SetInput( movingMinusMean );
   m_KernelPadFilter->SetInput( fixedMinusMean );
+  m_MovingPadFilter->SetSizeGreatestPrimeFactor( m_SizeGreatestPrimeFactor );
+  m_KernelPadFilter->SetSizeGreatestPrimeFactor( m_SizeGreatestPrimeFactor );
   m_MovingPadFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
   m_KernelPadFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
 

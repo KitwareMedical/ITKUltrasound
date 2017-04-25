@@ -22,7 +22,7 @@
 
 #include "itkComplexConjugateImageFilter.h"
 #include "itkHalfHermitianToRealInverseFFTImageFilter.h"
-#include "itkConstantPadImageFilter.h"
+#include "itkFFTPadImageFilter.h"
 #include "itkRealToHalfHermitianForwardFFTImageFilter.h"
 #include "itkFFTShiftImageFilter.h"
 #include "itkRegionFromReferenceImageFilter.h"
@@ -90,7 +90,7 @@ public:
    * A greatest prime factor of 2 produce a size which is a power of 2, and thus
    * is suitable for vnl base fft filters.
    * A greatest prime factor of 1 or less - typically 0 - disable the extra padding.
-   */
+e  */
   itkGetConstMacro(SizeGreatestPrimeFactor, SizeValueType);
   itkSetMacro(SizeGreatestPrimeFactor, SizeValueType);
 
@@ -99,7 +99,7 @@ protected:
 
   virtual void GenerateData() ITK_OVERRIDE;
 
-  typedef ConstantPadImageFilter< MetricImageType, MetricImageType >                  PadFilterType;
+  typedef FFTPadImageFilter< MetricImageType, MetricImageType >                       PadFilterType;
   typedef FFTShiftImageFilter< MetricImageType, MetricImageType >                     FFTShiftFilterType;
   typedef RealToHalfHermitianForwardFFTImageFilter< MetricImageType >                 FFTFilterType;
   typedef typename FFTFilterType::OutputImageType                                     ComplexImageType;
@@ -118,7 +118,8 @@ protected:
   typename IFFTFilterType::Pointer             m_IFFTFilter;
   typename CropFilterType::Pointer             m_CropFilter;
 
-  SizeValueType m_SizeGreatestPrimeFactor;
+  SizeValueType                                                 m_SizeGreatestPrimeFactor;
+  ConstantBoundaryCondition< MetricImageType, MetricImageType > m_InternalBoundaryCondition;
 
 private:
   NormalizedCrossCorrelationFFTMetricImageFilter( const Self& ); // purposely not implemented
