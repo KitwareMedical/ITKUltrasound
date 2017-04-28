@@ -22,7 +22,7 @@
 
 #include "itkComplexConjugateImageFilter.h"
 #include "itkHalfHermitianToRealInverseFFTImageFilter.h"
-#include "itkFFTPadImageFilter.h"
+#include "itkConstantPadImageFilter.h"
 #include "itkRealToHalfHermitianForwardFFTImageFilter.h"
 #include "itkFFTShiftImageFilter.h"
 #include "itkRegionFromReferenceImageFilter.h"
@@ -99,7 +99,7 @@ protected:
 
   virtual void GenerateData() ITK_OVERRIDE;
 
-  typedef FFTPadImageFilter< MetricImageType, MetricImageType >                       PadFilterType;
+  typedef ConstantPadImageFilter< MetricImageType, MetricImageType >                  PadFilterType;
   typedef FFTShiftImageFilter< MetricImageType, MetricImageType >                     FFTShiftFilterType;
   typedef RealToHalfHermitianForwardFFTImageFilter< MetricImageType >                 FFTFilterType;
   typedef typename FFTFilterType::OutputImageType                                     ComplexImageType;
@@ -119,7 +119,6 @@ protected:
   typename CropFilterType::Pointer             m_CropFilter;
 
   SizeValueType                                                 m_SizeGreatestPrimeFactor;
-  ConstantBoundaryCondition< MetricImageType, MetricImageType > m_InternalBoundaryCondition;
 
 private:
   NormalizedCrossCorrelationFFTMetricImageFilter( const Self& ); // purposely not implemented

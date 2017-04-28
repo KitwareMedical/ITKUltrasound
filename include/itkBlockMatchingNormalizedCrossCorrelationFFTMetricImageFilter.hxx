@@ -22,7 +22,6 @@
 
 #include "itkImageRegionConstIterator.h"
 #include "itkImageRegionIterator.h"
-#include "itkConstantBoundaryCondition.h"
 
 namespace itk
 {
@@ -32,15 +31,11 @@ namespace BlockMatching
 template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
 NormalizedCrossCorrelationFFTMetricImageFilter< TFixedImage,
   TMovingImage, TMetricImage >
-::NormalizedCrossCorrelationFFTMetricImageFilter():
-  m_SizeGreatestPrimeFactor( 13 )
+::NormalizedCrossCorrelationFFTMetricImageFilter()
 {
   // Zero pad.
-  m_InternalBoundaryCondition.SetConstant( NumericTraits< MetricImagePixelType >::ZeroValue() );
   m_KernelPadFilter = PadFilterType::New();
-  m_KernelPadFilter->SetBoundaryCondition( &m_InternalBoundaryCondition );
   m_MovingPadFilter = PadFilterType::New();
-  m_MovingPadFilter->SetBoundaryCondition( &m_InternalBoundaryCondition );
 
   m_FFTShiftFilter  = FFTShiftFilterType::New();
   m_FFTShiftFilter->SetInput( m_KernelPadFilter->GetOutput() );
@@ -94,20 +89,63 @@ NormalizedCrossCorrelationFFTMetricImageFilter< TFixedImage,
   // The moving search region for this thread.
   m_MovingPadFilter->SetInput( movingMinusMean );
   m_KernelPadFilter->SetInput( fixedMinusMean );
-  m_MovingPadFilter->SetSizeGreatestPrimeFactor( m_SizeGreatestPrimeFactor );
-  m_KernelPadFilter->SetSizeGreatestPrimeFactor( m_SizeGreatestPrimeFactor );
+
+  const MetricImageRegionType & fixedMinusMeanRegion = fixedMinusMean->GetLargestPossibleRegion();
+  const typename MetricImageRegionType::SizeType & fixedMinusMeanSize = fixedMinusMeanRegion.GetSize();
+  const typename MetricImageRegionType::IndexType & fixedMinusMeanIndex = fixedMinusMeanRegion.GetIndex();
+  const MetricImageRegionType & movingMinusMeanRegion = movingMinusMean->GetLargestPossibleRegion();
+  const typename MetricImageRegionType::SizeType & movingMinusMeanSize = movingMinusMeanRegion.GetSize();
+  const typename MetricImageRegionType::IndexType & movingMinusMeanIndex = movingMinusMeanRegion.GetIndex();
+  typename MetricImageRegionType::IndexType paddedIndex;
+  typename MetricImageRegionType::SizeType paddedSize;
+  for( unsigned int ii = 0; ii < ImageDimension; ++ii )
+    {
+    SizeValueType padSize = std::max( static_cast< SizeValueType >( 0 ), fixedMinusMeanSize[ii] - 1 );
+    if( m_SizeGreatestPrimeFactor > 1 )
+      {
+      while( Math::GreatestPrimeFactor( movingMinusMeanSize[ii] + padSize ) > m_SizeGreatestPrimeFactor )
+        {
+        ++padSize;
+        }
+      }
+    else if( m_SizeGreatestPrimeFactor == 1 )
+      {
+      // make sure the total size is even
+      padSize += ( movingMinusMeanSize[ii] + padSize ) % 2;
+      }
+    paddedIndex[ii] = movingMinusMeanIndex.GetIndex()[ii] - padSize/2;
+    paddedSize[ii] = movingMinusMeanSize[ii] + padSize;
+    }
+
+  typename MetricImageRegionType::SizeType padding;
+  for( unsigned int ii = 0; ii < ImageDimension; ++ii )
+    {
+    padding[ii] = movingMinusMeanIndex[ii] - paddedIndex[ii];
+    }
+  m_MovingPadFilter->SetPadLowerBound( padding );
+  for( unsigned int ii = 0; ii < ImageDimension; ++ii )
+    {
+    padding[ii] = paddedSize[ii] - ( movingMinusMeanIndex[ii] - paddedIndex[ii] + movingMinusMeanSize[ii] );
+    }
+  m_MovingPadFilter->SetPadUpperBound( padding );
+  for( unsigned int ii = 0; ii < ImageDimension; ++ii )
+    {
+    padding[ii] = fixedMinusMeanIndex[ii] - paddedIndex[ii];
+    }
+  m_KernelPadFilter->SetPadLowerBound( padding );
+  for( unsigned int ii = 0; ii < ImageDimension; ++ii )
+    {
+    padding[ii] = paddedSize[ii] - ( fixedMinusMeanIndex[ii] - paddedIndex[ii] + fixedMinusMeanSize[ii] );
+    }
+  m_KernelPadFilter->SetPadUpperBound( padding );
+
   m_MovingPadFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
   m_KernelPadFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
-
-
   m_FFTShiftFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
-
   m_KernelFFTFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
   m_MovingFFTFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
   m_ComplexConjugateImageFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
-
   m_MultiplyFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
-
   m_IFFTFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
 
   m_CropFilter->SetReferenceImage( denom );

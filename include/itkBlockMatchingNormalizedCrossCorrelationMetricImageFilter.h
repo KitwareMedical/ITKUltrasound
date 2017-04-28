@@ -73,6 +73,7 @@ public:
   typedef typename Superclass::MetricImageType MetricImageType;
   typedef typename MetricImageType::Pointer    MetricImagePointerType;
   typedef typename MetricImageType::PixelType  MetricImagePixelType;
+
 protected:
   NormalizedCrossCorrelationMetricImageFilter();
 
