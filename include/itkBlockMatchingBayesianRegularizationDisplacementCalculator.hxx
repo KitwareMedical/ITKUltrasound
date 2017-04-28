@@ -35,7 +35,7 @@ namespace BlockMatching
 
 static SimpleFastMutexLock mutex;
 
-template < class TMetricImage, class TDisplacementImage >
+template< typename TMetricImage, typename TDisplacementImage >
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::BayesianRegularizationDisplacementCalculator():
   m_MaximumIterations( 3 ),
@@ -62,7 +62,7 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 }
 
 
-template < class TMetricImage, class TDisplacementImage >
+template< typename TMetricImage, typename TDisplacementImage >
 void
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::AllocatePriorPrImage()
@@ -94,7 +94,7 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 }
 
 
-template < class TMetricImage, class TDisplacementImage >
+template< typename TMetricImage, typename TDisplacementImage >
 void
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::ScaleToUnity()
@@ -112,7 +112,7 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 }
 
 
-template < class TMetricImage, class TDisplacementImage >
+template< typename TMetricImage, typename TDisplacementImage >
 void
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::GenerateGaussianLikeKernels()
@@ -185,7 +185,7 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 }
 
 
-template < class TMetricImage, class TDisplacementImage >
+template< typename TMetricImage, typename TDisplacementImage >
 void
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::ImpartLikelihood( MetricImagePointerType& postImage,
@@ -290,7 +290,7 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 }
 
 
-template < class TMetricImage, class TDisplacementImage >
+template< typename TMetricImage, typename TDisplacementImage >
 void
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::Compute()
@@ -384,7 +384,7 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 }
 
 
-template < class TMetricImage, class TDisplacementImage >
+template< typename TMetricImage, typename TDisplacementImage >
 ITK_THREAD_RETURN_TYPE
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::ImpartLikelihoodThreaderCallback( void *arg )
@@ -454,7 +454,7 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 }
 
 
-template < class TMetricImage, class TDisplacementImage >
+template< typename TMetricImage, typename TDisplacementImage >
 ITK_THREAD_RETURN_TYPE
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::SubtractLowerBoundThreadFunctor::operator() ( Superclass *superclass,
@@ -485,7 +485,7 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 }
 
 
-template < class TMetricImage, class TDisplacementImage >
+template< typename TMetricImage, typename TDisplacementImage >
 ITK_THREAD_RETURN_TYPE
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::ScaleToUnityThreadFunctor::operator() ( Superclass *superclass,
@@ -518,7 +518,7 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 }
 
 
-template < class TMetricImage, class TDisplacementImage >
+template< typename TMetricImage, typename TDisplacementImage >
 ITK_THREAD_RETURN_TYPE
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::MeanChangeThreadFunctor::operator() ( Superclass *superclass,
@@ -563,7 +563,7 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
   return ITK_THREAD_RETURN_VALUE;
 }
 
-template < class TMetricImage, class TDisplacementImage >
+template< typename TMetricImage, typename TDisplacementImage >
 ITK_THREAD_RETURN_TYPE
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::CopyPriorToPosteriorThreadFunctor::operator() ( Superclass *superclass,

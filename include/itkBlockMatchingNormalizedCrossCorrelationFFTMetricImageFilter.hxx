@@ -29,7 +29,7 @@ namespace itk
 namespace BlockMatching
 {
 
-template <class TFixedImage, class TMovingImage, class TMetricImage >
+template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
 NormalizedCrossCorrelationFFTMetricImageFilter< TFixedImage,
   TMovingImage, TMetricImage >
 ::NormalizedCrossCorrelationFFTMetricImageFilter():
@@ -69,7 +69,7 @@ NormalizedCrossCorrelationFFTMetricImageFilter< TFixedImage,
 }
 
 
-template <class TFixedImage, class TMovingImage, class TMetricImage >
+template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
 void
 NormalizedCrossCorrelationFFTMetricImageFilter< TFixedImage,
   TMovingImage, TMetricImage >

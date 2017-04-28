@@ -35,7 +35,7 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  */
-template < class TMetricImage, class TDisplacementImage, class TCoordRep=double >
+template< typename TMetricImage, typename TDisplacementImage, typename TCoordRep=double >
 class ITK_TEMPLATE_EXPORT CosineInterpolationDisplacementCalculator:
   public MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 {

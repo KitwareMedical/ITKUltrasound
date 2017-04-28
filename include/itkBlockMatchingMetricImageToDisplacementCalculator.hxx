@@ -28,7 +28,7 @@ namespace itk
 namespace BlockMatching
 {
 
-template < class TMetricImage, class TDisplacementImage >
+template < typename TMetricImage, typename TDisplacementImage >
 MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::MetricImageToDisplacementCalculator():
   m_CacheMetricImage( false ),
@@ -43,7 +43,7 @@ MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 }
 
 
-template < class TMetricImage, class TDisplacementImage >
+template < typename TMetricImage, typename TDisplacementImage >
 void
 MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::SetMetricImagePixel( const PointType& point, const IndexType& index,
@@ -60,7 +60,7 @@ MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 }
 
 
-template < class TMetricImage, class TDisplacementImage >
+template < typename TMetricImage, typename TDisplacementImage >
 void
 MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::SetDisplacementImage( DisplacementImageType * image )
@@ -90,7 +90,7 @@ MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 }
 
 
-template < class TMetricImage, class TDisplacementImage >
+template < typename TMetricImage, typename TDisplacementImage >
 void
 MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::ApplyThreadFunctor( ThreadFunctor& functor )
@@ -104,7 +104,7 @@ MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 }
 
 
-template < class TMetricImage, class TDisplacementImage >
+template < typename TMetricImage, typename TDisplacementImage >
 ITK_THREAD_RETURN_TYPE
 MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::ThreaderCallback( void *arg )
@@ -137,7 +137,7 @@ MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 }
 
 
-template < class TMetricImage, class TDisplacementImage >
+template < typename TMetricImage, typename TDisplacementImage >
 unsigned int
 MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::SplitRequestedRegion( unsigned int i, unsigned int num,

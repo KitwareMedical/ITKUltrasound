@@ -30,8 +30,8 @@ namespace itk
 namespace BlockMatching
 {
 
-template < class TFixedImage, class TMovingImage,
-   class TMetricImage, class TDisplacementImage, class TCoordRep >
+template< typename TFixedImage, typename TMovingImage,
+   typename TMetricImage, typename TDisplacementImage, typename TCoordRep >
 ImageRegistrationMethod< TFixedImage, TMovingImage,
   TMetricImage, TDisplacementImage, TCoordRep >
 ::ImageRegistrationMethod():
@@ -48,8 +48,8 @@ ImageRegistrationMethod< TFixedImage, TMovingImage,
 }
 
 
-template < class TFixedImage, class TMovingImage,
-  class TMetricImage, class TDisplacementImage, class TCoordRep >
+template< typename TFixedImage, typename TMovingImage,
+  typename TMetricImage, typename TDisplacementImage, typename TCoordRep >
 void
 ImageRegistrationMethod< TFixedImage, TMovingImage,
   TMetricImage, TDisplacementImage, TCoordRep >
@@ -63,8 +63,8 @@ ImageRegistrationMethod< TFixedImage, TMovingImage,
 }
 
 
-template < class TFixedImage, class TMovingImage,
-  class TMetricImage, class TDisplacementImage, class TCoordRep >
+template< typename TFixedImage, typename TMovingImage,
+  typename TMetricImage, typename TDisplacementImage, typename TCoordRep >
 void
 ImageRegistrationMethod< TFixedImage, TMovingImage,
   TMetricImage, TDisplacementImage, TCoordRep >
@@ -78,8 +78,8 @@ ImageRegistrationMethod< TFixedImage, TMovingImage,
 }
 
 
-template < class TFixedImage, class TMovingImage,
-  class TMetricImage, class TDisplacementImage, class TCoordRep >
+template< typename TFixedImage, typename TMovingImage,
+  typename TMetricImage, typename TDisplacementImage, typename TCoordRep >
 void
 ImageRegistrationMethod< TFixedImage, TMovingImage,
   TMetricImage, TDisplacementImage, TCoordRep >
@@ -99,8 +99,8 @@ ImageRegistrationMethod< TFixedImage, TMovingImage,
 }
 
 
-template < class TFixedImage, class TMovingImage,
-  class TMetricImage, class TDisplacementImage, class TCoordRep >
+template< typename TFixedImage, typename TMovingImage,
+  typename TMetricImage, typename TDisplacementImage, typename TCoordRep >
 void
 ImageRegistrationMethod< TFixedImage, TMovingImage,
   TMetricImage, TDisplacementImage, TCoordRep >
@@ -122,8 +122,8 @@ ImageRegistrationMethod< TFixedImage, TMovingImage,
 }
 
 
-template < class TFixedImage, class TMovingImage,
-  class TMetricImage, class TDisplacementImage, class TCoordRep >
+template< typename TFixedImage, typename TMovingImage,
+  typename TMetricImage, typename TDisplacementImage, typename TCoordRep >
 void
 ImageRegistrationMethod< TFixedImage, TMovingImage,
   TMetricImage, TDisplacementImage, TCoordRep >
@@ -133,8 +133,8 @@ ImageRegistrationMethod< TFixedImage, TMovingImage,
     ->ModifyEnlargeOutputRequestedRegion( data );
 }
 
-template < class TFixedImage, class TMovingImage,
-  class TMetricImage, class TDisplacementImage, class TCoordRep >
+template < typename TFixedImage, typename TMovingImage,
+  typename TMetricImage, typename TDisplacementImage, typename TCoordRep >
 void
 ImageRegistrationMethod< TFixedImage, TMovingImage,
   TMetricImage, TDisplacementImage, TCoordRep >
@@ -205,8 +205,8 @@ ImageRegistrationMethod< TFixedImage, TMovingImage,
 }
 
 
-template < class TFixedImage, class TMovingImage,
-  class TMetricImage, class TDisplacementImage, class TCoordRep >
+template< typename TFixedImage, typename TMovingImage,
+  typename TMetricImage, typename TDisplacementImage, typename TCoordRep >
 void
 ImageRegistrationMethod< TFixedImage, TMovingImage,
   TMetricImage, TDisplacementImage, TCoordRep >

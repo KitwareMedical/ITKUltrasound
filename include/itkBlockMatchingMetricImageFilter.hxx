@@ -25,8 +25,7 @@ namespace itk
 namespace BlockMatching
 {
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage >
+template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
 MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::MetricImageFilter() :
   m_FixedImageRegionDefined( false ),
@@ -36,8 +35,7 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 }
 
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage >
+template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
 void
 MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::SetFixedImage( FixedImageType * fixedImage )
@@ -46,8 +44,7 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 }
 
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage >
+template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
 void
 MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::SetMovingImage( MovingImageType * movingImage )
@@ -56,8 +53,7 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 }
 
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage >
+template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
 void
 MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::SetFixedImageRegion( const FixedImageRegionType & region )
@@ -106,8 +102,7 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 }
 
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage >
+template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
 void
 MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::SetMovingImageRegion( const MovingImageRegionType & region )
@@ -118,8 +113,7 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 }
 
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage >
+template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
 void
 MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::GenerateOutputInformation()
@@ -161,8 +155,7 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 }
 
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage >
+template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
 const ThreadIdType &
 MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::GetNumberOfThreads()
@@ -198,8 +191,7 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
   return Superclass::GetNumberOfThreads();
 }
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage >
+template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
 void
 MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::GenerateInputRequestedRegion()
@@ -248,8 +240,7 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 }
 
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage >
+template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
 void
 MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::EnlargeOutputRequestedRegion(DataObject *data)

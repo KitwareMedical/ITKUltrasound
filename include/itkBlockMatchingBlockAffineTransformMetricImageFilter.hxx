@@ -27,8 +27,8 @@ namespace itk
 namespace BlockMatching
 {
 
-template <class TFixedImage,  class TMovingImage,
-          class TMetricImage, class TStrainValueType >
+template< typename TFixedImage,  typename TMovingImage,
+          typename TMetricImage, typename TStrainValueType >
 BlockAffineTransformMetricImageFilter< TFixedImage, TMovingImage,
                                        TMetricImage, TStrainValueType >
 ::BlockAffineTransformMetricImageFilter()
@@ -44,8 +44,8 @@ BlockAffineTransformMetricImageFilter< TFixedImage, TMovingImage,
   m_TransformedFixedImage = FixedImageType::New();
 }
 
-template <class TFixedImage,  class TMovingImage,
-          class TMetricImage, class TStrainValueType >
+template< typename TFixedImage,  typename TMovingImage,
+          typename TMetricImage, typename TStrainValueType >
 void
 BlockAffineTransformMetricImageFilter< TFixedImage, TMovingImage,
                                        TMetricImage, TStrainValueType >
@@ -63,8 +63,8 @@ BlockAffineTransformMetricImageFilter< TFixedImage, TMovingImage,
   fixedPtr->SetRequestedRegionToLargestPossibleRegion();
 }
 
-template <class TFixedImage,  class TMovingImage,
-          class TMetricImage, class TStrainValueType >
+template< typename TFixedImage,  typename TMovingImage,
+          typename TMetricImage, typename TStrainValueType >
 void
 BlockAffineTransformMetricImageFilter< TFixedImage, TMovingImage,
                                        TMetricImage, TStrainValueType >

@@ -27,14 +27,14 @@ namespace itk
 namespace BlockMatching
 {
 
-template < class TMetricImage, class TDisplacementImage, class TCoordRep >
+template< typename TMetricImage, typename TDisplacementImage, typename TCoordRep >
 CosineInterpolationDisplacementCalculator< TMetricImage, TDisplacementImage,
   TCoordRep >
 ::CosineInterpolationDisplacementCalculator()
 {
 }
 
-template < class TMetricImage, class TDisplacementImage, class TCoordRep >
+template< typename TMetricImage, typename TDisplacementImage, typename TCoordRep >
 void
 CosineInterpolationDisplacementCalculator< TMetricImage, TDisplacementImage,
   TCoordRep >

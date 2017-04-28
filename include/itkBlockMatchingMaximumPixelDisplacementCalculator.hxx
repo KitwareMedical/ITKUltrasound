@@ -27,7 +27,7 @@ namespace itk
 namespace BlockMatching
 {
 
-template < class TMetricImage, class TDisplacementImage >
+template< typename TMetricImage, typename TDisplacementImage >
 void
 MaximumPixelDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::SetMetricImagePixel( const PointType& point, const IndexType& index,

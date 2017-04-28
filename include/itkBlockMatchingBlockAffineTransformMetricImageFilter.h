@@ -43,8 +43,8 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  */
-template< class TFixedImage, class TMovingImage,
-          class TMetricImage, class TStrainValueType >
+template< typename TFixedImage, typename TMovingImage,
+          typename TMetricImage, typename TStrainValueType >
 class ITK_TEMPLATE_EXPORT BlockAffineTransformMetricImageFilter :
   public MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 {

@@ -48,8 +48,8 @@ namespace BlockMatching
  * \ingroup RegistrationFilters
  * \ingroup Ultrasound
  */
-template<class TFixedImage, class TMovingImage,
-  class TMetricImage, class TDisplacementImage, class TCoordRep >
+template< typename TFixedImage, typename TMovingImage,
+  typename TMetricImage, typename TDisplacementImage, typename TCoordRep >
 class ITK_TEMPLATE_EXPORT ImageRegistrationMethod :
   public ImageToImageFilter< itk::Image< typename TMovingImage::RegionType,
     TDisplacementImage::ImageDimension >, TDisplacementImage >
