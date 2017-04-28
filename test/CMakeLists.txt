@@ -28,6 +28,7 @@ set(UltrasoundTests
   itkVnlComplexToComplex1DFFTImageFilterTest.cxx
   itkVnlForward1DFFTImageFilterTest.cxx
   itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilterTest.cxx
+  itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilterTest.cxx
   )
 if(use_fftw)
   list(APPEND UltrasoundTests
@@ -240,6 +241,16 @@ itk_add_test(NAME itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilter
     DATA{Input/rf_pre15.mha}
     DATA{Input/rf_post15.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilterTestOutput.mha
+  )
+itk_add_test(NAME itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilterTest
+  COMMAND UltrasoundTestDriver
+  --compare
+    DATA{Baseline/itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilterTestBaseline.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilterTestOutput.mha
+  itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilterTest
+    DATA{Input/rf_pre15.mha}
+    DATA{Input/rf_post15.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilterTestOutput.mha
   )
 
 if(use_fftw)
