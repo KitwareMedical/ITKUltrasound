@@ -8,6 +8,7 @@ RUN apt-get update && \
   build-essential \
   bzip2 \
   curl \
+  file \
   git \
   libcurl4-openssl-dev \
   libncurses5-dev \
@@ -62,7 +63,7 @@ RUN git clone https://github.com/Kitware/KWStyle.git && \
   rm -rf KWStyle KWStyle-build
 
 # Build and install VTK from source
-RUN git clone https://gitlab.kitware.com/vtk/vtk.git VTK && \
+RUN git clone https://github.com/Kitware/VTK.git VTK && \
   cd VTK && git checkout v7.1.0 && cd .. && \
   mkdir VTK-build && \
   cd VTK-build && \
@@ -71,6 +72,8 @@ RUN git clone https://gitlab.kitware.com/vtk/vtk.git VTK && \
     -DCMAKE_BUILD_TYPE:STRING=Release \
     -DVTK_Group_Rendering:BOOL=OFF \
     -DVTK_WRAP_PYTHON:STRING=ON \
+    -DPYTHON_EXECUTABLE:FILEPATH=/opt/conda/bin/python \
+    -DVTK_PYTHON_VERSION:STRING=3 \
     -DCMAKE_INSTALL_PREFIX:PATH=/usr \
       ../VTK && \
   ninja && \
@@ -79,13 +82,14 @@ RUN git clone https://gitlab.kitware.com/vtk/vtk.git VTK && \
 
 # Build and install ITK from source.
 # 2017-04-19 master
-RUN git clone https://itk.org/ITK.git && \
+RUN git clone https://github.com/InsightSoftwareConsortium/ITK.git && \
   cd /usr/src/ITK && \
   git checkout 46350ec90671385d688e71aaa7058030bca6e23a && \
   mkdir /usr/src/ITK-build && \
   cd /usr/src/ITK-build && \
   cmake -G Ninja \
     -DCMAKE_BUILD_TYPE:STRING=MinSizeRel \
+    -DPYTHON_EXECUTABLE:FILEPATH=/opt/conda/bin/python \
     -DCMAKE_INSTALL_PREFIX:PATH=/usr \
     -DBUILD_TESTING:BOOL=OFF \
     -DBUILD_EXAMPLES:BOOL=OFF \
@@ -100,11 +104,9 @@ RUN git clone https://itk.org/ITK.git && \
     -DITK_USE_FFTWF:BOOL=ON \
     -DITK_USE_SYSTEM_FFTW:BOOL=ON \
     -DITK_USE_SYSTEM_SWIG:BOOL=OFF \
-    -DITK_USE_SYSTEM_GDCM:BOOL=OFF \
-    -DITK_USE_SYSTEM_LIBRARIES:BOOL=ON \
       /usr/src/ITK && \
   ninja && \
-  cp /usr/src/ITK-build/Wrapping/Generators/Python/WrapITK.pth /usr/lib/python3/dist-packages/ && \
+  cp /usr/src/ITK-build/Wrapping/Generators/Python/WrapITK.pth /opt/conda/lib/python3.5/site-packages && \
   find ./Wrapping -name '*.cpp' -delete -o -name '*.xml' -delete && \
   find . -name '*.o' -delete
 
