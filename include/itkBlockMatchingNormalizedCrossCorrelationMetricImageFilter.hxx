@@ -18,7 +18,7 @@
 #ifndef itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter_hxx
 #define itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter_hxx
 
-#include "itkBlockMatchingImageToImageMetricMetricImageFilter.h"
+#include "itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter.h"
 
 #include "itkConstNeighborhoodIterator.h"
 #include "itkImageKernelOperator.h"
@@ -32,8 +32,7 @@ namespace itk
 namespace BlockMatching
 {
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage >
+template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
 NormalizedCrossCorrelationMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::NormalizedCrossCorrelationMetricImageFilter()
 {
@@ -58,8 +57,7 @@ NormalizedCrossCorrelationMetricImageFilter< TFixedImage, TMovingImage, TMetricI
 }
 
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage >
+template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
 void
 NormalizedCrossCorrelationMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::GenerateOutputInformation()
@@ -140,8 +138,7 @@ NormalizedCrossCorrelationMetricImageFilter< TFixedImage, TMovingImage, TMetricI
 }
 
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage >
+template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
 void
 NormalizedCrossCorrelationMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::EnlargeOutputRequestedRegion(DataObject *data)
@@ -152,8 +149,7 @@ NormalizedCrossCorrelationMetricImageFilter< TFixedImage, TMovingImage, TMetricI
 }
 
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage >
+template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
 void
 NormalizedCrossCorrelationMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::GenerateHelperImages()
