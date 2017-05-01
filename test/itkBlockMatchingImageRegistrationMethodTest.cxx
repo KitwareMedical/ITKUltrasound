@@ -15,13 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkTestMain.h"
-
-void RegisterTests()
-{
-  REGISTER_TEST( itkBlockMatchingImageRegistrationMethodTest );
-}
-
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 #include "itkVector.h"
