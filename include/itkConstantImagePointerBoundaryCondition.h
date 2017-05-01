@@ -58,9 +58,9 @@ namespace itk
  * \ingroup ImageObjects
  * \ingroup Ultrasound
  */
-template<class TImage>
+template< typename TImage >
 class ITK_TEMPLATE_EXPORT ConstantImagePointerBoundaryCondition
-  : public ImageBoundaryCondition<TImage>
+  : public ImageBoundaryCondition< TImage >
 {
 public:
   /** Self & superclass typedefs */
@@ -115,6 +115,17 @@ public:
     * the associated iterator's neighborhood or if it has some limited
     * subset (such as none) that it relies upon. */
   bool RequiresCompleteNeighborhood() { return false; }
+
+  PixelType GetPixel( const IndexType & index, const TImage * image ) const
+    {
+    typename TImage::RegionType imageRegion = image->GetLargestPossibleRegion();
+    if ( imageRegion.IsInside( index ) )
+      {
+      return static_cast< PixelType >( image->GetPixel( index ) );
+      }
+
+    return m_Constant;
+    }
 
 private:
   PixelType m_Constant;
