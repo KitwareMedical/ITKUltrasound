@@ -25,9 +25,8 @@ namespace itk
 namespace BlockMatching
 {
 
-template < class TFixedImage, class TMovingImage, class TDisplacementImage >
-MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage,
-  TDisplacementImage >
+template< typename TFixedImage, typename TMovingImage, typename TDisplacementImage >
+MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >
 ::MultiResolutionSearchRegionImageSource():
   m_CurrentLevel( 0 )
 {
@@ -37,10 +36,9 @@ MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage,
 }
 
 
-template < class TFixedImage, class TMovingImage, class TDisplacementImage >
+template< typename TFixedImage, typename TMovingImage, typename TDisplacementImage >
 void
-MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage,
-                                        TDisplacementImage >
+MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >
 ::SetPreviousDisplacements( const DisplacementImageType* displacements )
 {
   // We make a copy because the ImageRegistrationMethods will mess with the
@@ -52,10 +50,9 @@ MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage,
 }
 
 
-template < class TFixedImage, class TMovingImage, class TDisplacementImage >
+template< typename TFixedImage, typename TMovingImage, typename TDisplacementImage >
 void
-MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage,
-                                        TDisplacementImage >
+MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >
 ::SetOverlapSchedule( const double& schedule )
 {
   // Check to make sure the PyramidSchedule has been set.
@@ -69,10 +66,9 @@ MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage,
 }
 
 
-template < class TFixedImage, class TMovingImage, class TDisplacement >
+template < typename TFixedImage, typename TMovingImage, typename TDisplacement >
 void
-MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage,
-                                        TDisplacement >
+MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacement >
 ::GenerateOutputInformation()
 {
   OutputImageType * outputPtr = this->GetOutput();
@@ -81,7 +77,7 @@ MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage,
     return;
     }
 
-  if( m_FixedImage == ITK_NULLPTR )
+  if( m_FixedImage.IsNull() )
     {
     itkExceptionMacro( << "Fixed Image is not present." );
     }
@@ -137,10 +133,9 @@ MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage,
 }
 
 
-template < class TFixedImage, class TMovingImage, class TDisplacement >
+template< typename TFixedImage, typename TMovingImage, typename TDisplacement >
 void
-MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage,
-                                        TDisplacement >
+MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacement >
 ::BeforeThreadedGenerateData()
 {
   if( this->m_CurrentLevel != 0 )
