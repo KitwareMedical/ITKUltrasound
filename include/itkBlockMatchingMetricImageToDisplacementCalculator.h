@@ -139,8 +139,8 @@ public:
   virtual void ModifyEnlargeOutputRequestedRegion( DataObject* data ) {}
 
   /** Get/Set the number of threads to create when executing. */
-  itkSetClampMacro( NumberOfThreads, int, 1, ITK_MAX_THREADS );
-  itkGetConstReferenceMacro( NumberOfThreads, int );
+  itkSetClampMacro( NumberOfThreads, ThreadIdType, 1, ITK_MAX_THREADS );
+  itkGetConstReferenceMacro( NumberOfThreads, ThreadIdType );
 
   /** Return the multithreader used by this class. */
   MultiThreader * GetMultiThreader()
