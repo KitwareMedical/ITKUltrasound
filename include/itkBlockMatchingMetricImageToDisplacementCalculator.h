@@ -190,8 +190,7 @@ protected:
    * overlap. The method returns the number of pieces that the routine is
    * capable of splitting the output RequestedRegion, i.e. return value is less
    * than or equal to "num". */
-  virtual unsigned int SplitRequestedRegion( unsigned int i, unsigned int num, RegionType &
-                                    splitRegion) ITK_OVERRIDE;
+  virtual unsigned int SplitRequestedRegion( unsigned int i, unsigned int num, RegionType & splitRegion);
 
   MultiThreader::Pointer m_Threader;
   ThreadIdType           m_NumberOfThreads;
@@ -204,6 +203,7 @@ protected:
   bool m_RegionsDefined;
 
   typename MetricImageDuplicatorType::Pointer m_MetricImageDuplicator;
+
 private:
   MetricImageToDisplacementCalculator( const Self & ); // purposely not
                                                        // implemented

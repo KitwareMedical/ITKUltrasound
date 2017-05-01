@@ -29,6 +29,7 @@ set(UltrasoundTests
   itkVnlForward1DFFTImageFilterTest.cxx
   itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilterTest.cxx
   itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilterTest.cxx
+  itkBlockMatchingBayesianRegularizationDisplacementCalculatorTest.cxx
   )
 if(use_fftw)
   list(APPEND UltrasoundTests

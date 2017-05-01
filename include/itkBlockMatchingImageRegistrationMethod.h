@@ -194,9 +194,8 @@ protected:
   typename FixedImageType::Pointer  m_FixedImage;
   typename MovingImageType::Pointer m_MovingImage;
 
-  typename MetricImageFilterType::Pointer  m_MetricImageFilter;
-  typename MetricImageToDisplacementCalculatorType::Pointer
-    m_MetricImageToDisplacementCalculator;
+  typename MetricImageFilterType::Pointer                   m_MetricImageFilter;
+  typename MetricImageToDisplacementCalculatorType::Pointer m_MetricImageToDisplacementCalculator;
 
   bool          m_UseStreaming;
   RadiusType    m_Radius;
