@@ -253,6 +253,19 @@ itk_add_test(NAME itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIterator
     DATA{Input/rf_post15.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilterTestOutput.mha
   )
+itk_add_test(NAME itkBlockMatchingBayesianRegularizationDisplacementCalculatorTest
+  COMMAND UltrasoundTestDriver
+  --compare
+    DATA{Baseline/itkBlockMatchingBayesianRegularizationDisplacementCalculatorTestBaselineComponent0.mha}
+    itkBlockMatchingBayesianRegularizationDisplacementCalculatorTestOutputComponent0.mha
+  --compare
+    DATA{Baseline/itkBlockMatchingBayesianRegularizationDisplacementCalculatorTestBaselineComponent1.mha}
+    itkBlockMatchingBayesianRegularizationDisplacementCalculatorTestOutputComponent1.mha
+  itkBlockMatchingBayesianRegularizationDisplacementCalculatorTest
+  DATA{Input/rf_pre15.mha}
+  DATA{Input/rf_post15.mha}
+  itkBlockMatchingBayesianRegularizationDisplacementCalculatorTestOutput
+  )
 
 if(use_fftw)
   itk_add_test(NAME itkFFTWForward1DFFTImageFilterTest
