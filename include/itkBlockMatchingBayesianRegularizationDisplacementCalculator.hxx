@@ -99,14 +99,14 @@ void
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::ScaleToUnity()
 {
-  ApplyThreadFunctor( m_ScaleToUnityThreadFunctor );
+  this->ApplyThreadFunctor( m_ScaleToUnityThreadFunctor );
 
   if( m_MeanChangeThresholdDefined && m_CurrentIteration > 0 )
     {
     m_ChangeSum = 0.0;
     m_ChangeCount = 0;
     // This adds up m_ChangeSum and m_ChangeCount.
-    ApplyThreadFunctor( m_MeanChangeThreadFunctor );
+    this->ApplyThreadFunctor( m_MeanChangeThreadFunctor );
     m_MeanChange = m_ChangeSum / static_cast< double >( m_ChangeCount );
     }
 }
@@ -303,7 +303,7 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
     {
     itkExceptionMacro( << "The metric lower bound must be specified." );
     }
-  ApplyThreadFunctor( m_SubtractLowerBoundThreadFunctor );
+  this->ApplyThreadFunctor( m_SubtractLowerBoundThreadFunctor );
 
   // Scale so every metric image sums to unity like it is a probability image.
   this->ScaleToUnity();
@@ -344,7 +344,7 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
     m_PriorPr = this->m_MetricImageImage;
     this->m_MetricImageImage = tempMetricImageImagePtr;
 
-    ApplyThreadFunctor( m_CopyPriorToPosteriorThreadFunctor );
+    this->ApplyThreadFunctor( m_CopyPriorToPosteriorThreadFunctor );
 
     for( fit = faceList.begin(); fit != faceList.end(); ++fit )
       {
