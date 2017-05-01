@@ -1,4 +1,4 @@
-FROM thewtex/jupyter-notebook-debian:latest
+FROM jupyter/scipy-notebook:latest
 MAINTAINER Matt McCormick <matt.mccormick@kitware.com>
 
 USER root
@@ -8,6 +8,7 @@ RUN apt-get update && \
   build-essential \
   bzip2 \
   curl \
+  file \
   git \
   libcurl4-openssl-dev \
   libncurses5-dev \
@@ -16,14 +17,6 @@ RUN apt-get update && \
   libssl-dev \
   make \
   ninja-build \
-  python3 \
-  python3-dev \
-  python3-matplotlib \
-  python3-numpy \
-  python3-nose \
-  python3-pip \
-  python3-scipy \
-  python3-setuptools \
   sed \
   tar \
   vim \
@@ -38,13 +31,11 @@ RUN apt-get update && \
   libxt-dev \
   zlib1g-dev
 
-RUN pip3 install ipywidgets
-
 # Build and install CMake from source.
 WORKDIR /usr/src
 RUN git clone git://cmake.org/cmake.git CMake && \
   cd CMake && \
-  git checkout v3.5.1 && \
+  git checkout v3.8.0 && \
   mkdir ../CMake-build && \
   cd ../CMake-build && \
   /usr/src/CMake/bootstrap \
@@ -72,8 +63,8 @@ RUN git clone https://github.com/Kitware/KWStyle.git && \
   rm -rf KWStyle KWStyle-build
 
 # Build and install VTK from source
-RUN git clone https://gitlab.kitware.com/vtk/vtk.git VTK && \
-  cd VTK && git checkout v7.0.0 && cd .. && \
+RUN git clone https://github.com/Kitware/VTK.git VTK && \
+  cd VTK && git checkout v7.1.0 && cd .. && \
   mkdir VTK-build && \
   cd VTK-build && \
   cmake \
@@ -81,6 +72,8 @@ RUN git clone https://gitlab.kitware.com/vtk/vtk.git VTK && \
     -DCMAKE_BUILD_TYPE:STRING=Release \
     -DVTK_Group_Rendering:BOOL=OFF \
     -DVTK_WRAP_PYTHON:STRING=ON \
+    -DPYTHON_EXECUTABLE:FILEPATH=/opt/conda/bin/python \
+    -DVTK_PYTHON_VERSION:STRING=3 \
     -DCMAKE_INSTALL_PREFIX:PATH=/usr \
       ../VTK && \
   ninja && \
@@ -88,14 +81,15 @@ RUN git clone https://gitlab.kitware.com/vtk/vtk.git VTK && \
   cd .. && rm -rf VTK VTK-build
 
 # Build and install ITK from source.
-# 2016-05-29 master
-RUN git clone https://itk.org/ITK.git && \
+# 2017-04-19 master
+RUN git clone https://github.com/InsightSoftwareConsortium/ITK.git && \
   cd /usr/src/ITK && \
-  git checkout f4f57b4d0decf430bd979bebe6945f832b113387 && \
+  git checkout 46350ec90671385d688e71aaa7058030bca6e23a && \
   mkdir /usr/src/ITK-build && \
   cd /usr/src/ITK-build && \
   cmake -G Ninja \
     -DCMAKE_BUILD_TYPE:STRING=MinSizeRel \
+    -DPYTHON_EXECUTABLE:FILEPATH=/opt/conda/bin/python \
     -DCMAKE_INSTALL_PREFIX:PATH=/usr \
     -DBUILD_TESTING:BOOL=OFF \
     -DBUILD_EXAMPLES:BOOL=OFF \
@@ -106,16 +100,13 @@ RUN git clone https://itk.org/ITK.git && \
     -DITKGroup_IO:BOOL=ON \
     -DModule_ITKHDF5:BOOL=ON \
     -DITK_WRAP_PYTHON:BOOL=ON \
-    -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python3 \
     -DITK_USE_FFTWD:BOOL=ON \
     -DITK_USE_FFTWF:BOOL=ON \
     -DITK_USE_SYSTEM_FFTW:BOOL=ON \
     -DITK_USE_SYSTEM_SWIG:BOOL=OFF \
-    -DITK_USE_SYSTEM_GDCM:BOOL=OFF \
-    -DITK_USE_SYSTEM_LIBRARIES:BOOL=ON \
       /usr/src/ITK && \
   ninja && \
-  cp /usr/src/ITK-build/Wrapping/Generators/Python/WrapITK.pth /usr/lib/python3/dist-packages/ && \
+  cp /usr/src/ITK-build/Wrapping/Generators/Python/WrapITK.pth /opt/conda/lib/python3.5/site-packages && \
   find ./Wrapping -name '*.cpp' -delete -o -name '*.xml' -delete && \
   find . -name '*.o' -delete
 

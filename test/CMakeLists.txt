@@ -27,6 +27,11 @@ set(UltrasoundTests
   itkVnlInverse1DFFTImageFilterTest.cxx
   itkVnlComplexToComplex1DFFTImageFilterTest.cxx
   itkVnlForward1DFFTImageFilterTest.cxx
+  itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilterTest.cxx
+  itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilterTest.cxx
+  itkBlockMatchingBayesianRegularizationDisplacementCalculatorTest.cxx
+  itkBlockMatchingImageRegistrationMethodTest.cxx
+  itkBlockMatchingMultiResolutionImageRegistrationMethodTest.cxx
   )
 if(use_fftw)
   list(APPEND UltrasoundTests
@@ -230,6 +235,59 @@ itk_add_test(NAME itkReplaceNonFiniteImageFilterTest
   itkReplaceNonFiniteImageFilterTest
     ${ITK_TEST_OUTPUT_DIR}/itkReplaceNonFiniteImageFilterTestOutput.mha
   )
+itk_add_test(NAME itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilterTest
+  COMMAND UltrasoundTestDriver
+  --compare
+    DATA{Baseline/itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilterTestBaseline.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilterTestOutput.mha
+  itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilterTest
+    DATA{Input/rf_pre15.mha}
+    DATA{Input/rf_post15.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilterTestOutput.mha
+  )
+itk_add_test(NAME itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilterTest
+  COMMAND UltrasoundTestDriver
+  --compare
+    DATA{Baseline/itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilterTestBaseline.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilterTestOutput.mha
+  itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilterTest
+    DATA{Input/rf_pre15.mha}
+    DATA{Input/rf_post15.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilterTestOutput.mha
+  )
+itk_add_test(NAME itkBlockMatchingBayesianRegularizationDisplacementCalculatorTest
+  COMMAND UltrasoundTestDriver
+  --compare
+    DATA{Baseline/itkBlockMatchingBayesianRegularizationDisplacementCalculatorTestBaselineComponent0.mha}
+    itkBlockMatchingBayesianRegularizationDisplacementCalculatorTestOutputComponent0.mha
+  --compare
+    DATA{Baseline/itkBlockMatchingBayesianRegularizationDisplacementCalculatorTestBaselineComponent1.mha}
+    itkBlockMatchingBayesianRegularizationDisplacementCalculatorTestOutputComponent1.mha
+  itkBlockMatchingBayesianRegularizationDisplacementCalculatorTest
+  DATA{Input/rf_pre15.mha}
+  DATA{Input/rf_post15.mha}
+  itkBlockMatchingBayesianRegularizationDisplacementCalculatorTestOutput
+  )
+itk_add_test(NAME itkBlockMatchingImageRegistrationMethodTest
+  COMMAND UltrasoundTestDriver
+  --compare DATA{Baseline/itkBlockMatchingImageRegistrationMethodTestBaseline.mha}
+    itkBlockMatchingImageRegistrationMethodTestOutput.mha
+  itkBlockMatchingImageRegistrationMethodTest
+  DATA{Input/rf_pre15.mha}
+  DATA{Input/rf_post15.mha}
+  itkBlockMatchingImageRegistrationMethodTestOutput.mha
+  )
+itk_add_test(NAME itkBlockMatchingMultiResolutionImageRegistrationMethodTest
+  COMMAND UltrasoundTestDriver
+  --compare DATA{Baseline/itkBlockMatchingMultiResolutionImageRegistrationMethodTestBaseline.mha}
+    itkBlockMatchingMultiResolutionImageRegistrationMethodTestOutput.mha
+  itkBlockMatchingMultiResolutionImageRegistrationMethodTest
+  DATA{Input/rf_pre15.mha}
+  DATA{Input/rf_post15.mha}
+  itkBlockMatchingMultiResolutionImageRegistrationMethodTestOutput.mha
+  )
+
+
 
 if(use_fftw)
   itk_add_test(NAME itkFFTWForward1DFFTImageFilterTest

@@ -40,10 +40,9 @@ namespace itk
  *
  * Use SetDirection() to define the axis of propagation.
  *
- * \ingroup Ultrasound
- *
  * \sa AnalyticSignalImageFilter
  *
+ * \ingroup Ultrasound
  */
 template < typename TInputImage, typename TOutputImage=TInputImage, typename TComplexImage=Image< std::complex< typename TInputImage::PixelType >, TInputImage::ImageDimension > >
 class BModeImageFilter :

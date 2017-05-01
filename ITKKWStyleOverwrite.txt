@@ -1,1 +1,5 @@
 include/itkUltrasoundImageFileReader\.hxx Namespace Disable
+include/itkBlockMatchingBayesianRegularizationDisplacementCalculator\.h Comments Disable
+include/itkBlockMatchingMetricImageToDisplacementCalculator\.h Comments Disable
+include/itkBlockMatchingOptimizingInterpolationDisplacementCalculator\.h Comments Disable
+include/itkBlockMatchingParabolicInterpolationDisplacementCalculator\.h Comments Disable

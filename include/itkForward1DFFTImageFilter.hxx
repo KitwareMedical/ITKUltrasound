@@ -71,7 +71,7 @@ typename Forward1DFFTImageFilter< TInputImage, TOutputImage >::Pointer
 Forward1DFFTImageFilter< TInputImage, TOutputImage >
 ::New()
 {
-  Pointer smartPtr = ::itk::ObjectFactory< Self >::Create();
+  Pointer smartPtr = ObjectFactory< Self >::Create();
 
   if( smartPtr.IsNull() )
     {

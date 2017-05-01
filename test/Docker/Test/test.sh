@@ -17,7 +17,7 @@ cmake \
   -G Ninja \
   -DITK_DIR:PATH=/usr/src/ITK-build \
   -DITKUltrasound_USE_VTK:BOOL=ON \
-  -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python3 \
+  -DPYTHON_EXECUTABLE:FILEPATH=/opt/conda/bin/python \
   -DCMAKE_BUILD_TYPE:STRING=Release \
   -DBUILDNAME:STRING=External-Ultrasound-${branch}-${date}-${sha} \
     /usr/src/ITKUltrasound

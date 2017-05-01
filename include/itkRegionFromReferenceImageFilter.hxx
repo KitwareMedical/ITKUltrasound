@@ -26,6 +26,14 @@ namespace itk
 template <typename TInputImage, typename TOutputImage>
 void
 RegionFromReferenceImageFilter<TInputImage, TOutputImage>
+::VerifyInputInformation()
+{
+}
+
+
+template <typename TInputImage, typename TOutputImage>
+void
+RegionFromReferenceImageFilter<TInputImage, TOutputImage>
 ::GenerateOutputInformation()
 {
   if( !this->GetInput() || !this->GetReferenceImage() )
