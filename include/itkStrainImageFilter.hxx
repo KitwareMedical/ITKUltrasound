@@ -27,8 +27,7 @@
 namespace itk
 {
 
-template < typename TInputImage, typename TOperatorValueType,
-           typename TOutputValueType >
+template< typename TInputImage, typename TOperatorValueType, typename TOutputValueType >
 StrainImageFilter< TInputImage, TOperatorValueType, TOutputValueType >
 ::StrainImageFilter():
   m_StrainForm( INFINITESIMAL )
@@ -51,8 +50,8 @@ StrainImageFilter< TInputImage, TOperatorValueType, TOutputValueType >
   this->m_VectorGradientFilter = NULL;
 }
 
-template < typename TInputImage, typename TOperatorValueType,
-           typename TOutputValueType >
+
+template< typename TInputImage, typename TOperatorValueType, typename TOutputValueType >
 void
 StrainImageFilter< TInputImage, TOperatorValueType, TOutputValueType >
 ::BeforeThreadedGenerateData()
@@ -93,20 +92,16 @@ StrainImageFilter< TInputImage, TOperatorValueType, TOutputValueType >
 }
 
 
-template < typename TInputImage, typename TOperatorValueType,
-           typename TOutputValueType >
+template< typename TInputImage, typename TOperatorValueType, typename TOutputValueType >
 void
 StrainImageFilter< TInputImage, TOperatorValueType, TOutputValueType >
-::ThreadedGenerateData( const OutputRegionType& region,
-                        ThreadIdType itkNotUsed( threadId ) )
+::ThreadedGenerateData( const OutputRegionType& region, ThreadIdType itkNotUsed( threadId ) )
 {
   typename InputImageType::ConstPointer input = this->GetInput();
 
   OutputImageType * output = this->GetOutput();
 
   ImageRegionIterator< OutputImageType > outputIt( output, region );
-
-  std::cout << "DisplacementFieldToStrain" << std::endl;
 
   // e_ij += 1/2( du_i/dx_j + du_j/dx_i )
   for( unsigned int i = 0; i < ImageDimension; ++i )
@@ -125,18 +120,13 @@ StrainImageFilter< TInputImage, TOperatorValueType, TOutputValueType >
       for( unsigned int j = 0; j < i; ++j )
         {
         outputPixel( i, j ) += gradientPixel[j] / static_cast< TOutputValueType >( 2 );
-        std::cout << "gradientPixel[j]: " << i << j << " " << gradientPixel[j] << std::endl;
         }
       // j == i
       outputPixel( i, i ) += gradientPixel[i];
-      std::cout << "gradientPixel[i]: " << i << i << " " << gradientPixel[i] << std::endl;
       for( unsigned int j = i + 1; j < ImageDimension; ++j )
         {
         outputPixel( i, j ) += gradientPixel[j] / static_cast< TOutputValueType >( 2 );
-        std::cout << "gradientPixel[j]: " << i << j << " " << gradientPixel[j] << std::endl;
         }
-      std::cout << "output(0, 1):     " << 0 << 1 <<  " " << outputPixel(0, 1) << std::endl;
-      std::cout << "output(ii,ii):    " << i << i << " " << outputPixel(i, i) << std::endl;
       outputIt.Set( outputPixel );
       }
     }
