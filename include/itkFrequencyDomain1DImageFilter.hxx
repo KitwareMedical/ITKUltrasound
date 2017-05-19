@@ -15,43 +15,33 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef itkAnalyticSignalImageFilter_hxx
-#define itkAnalyticSignalImageFilter_hxx
+#ifndef itkFrequencyDomain1DImageFilter_hxx
+#define itkFrequencyDomain1DImageFilter_hxx
 
-#include "itkAnalyticSignalImageFilter.h"
-
-#include "itkVnlForward1DFFTImageFilter.h"
-#include "itkVnlComplexToComplex1DFFTImageFilter.h"
-
-#if defined(ITK_USE_FFTWD) || defined(ITK_USE_FFTWF)
-#include "itkFFTWForward1DFFTImageFilter.h"
-#include "itkFFTWComplexToComplex1DFFTImageFilter.h"
-#endif
+#include "itkFrequencyDomain1DImageFilter.h"
 
 #include "itkImageLinearConstIteratorWithIndex.h"
 #include "itkImageLinearIteratorWithIndex.h"
 #include "itkMetaDataObject.h"
+#include "itkMath.h"
 
 namespace itk
 {
 
 template< typename TInputImage, typename TOutputImage >
-AnalyticSignalImageFilter< TInputImage, TOutputImage >
-::AnalyticSignalImageFilter()
+FrequencyDomain1DImageFilter< TInputImage, TOutputImage >
+::FrequencyDomain1DImageFilter()
 {
-  m_FFTRealToComplexFilter = FFTRealToComplexType::New();
-  m_FFTComplexToComplexFilter = FFTComplexToComplexType::New();
-  m_FFTComplexToComplexFilter->SetTransformDirection( FFTComplexToComplexType::INVERSE );
-
+  
   this->SetDirection( 0 );
-
+  this->m_FilterFunction = FrequencyDomain1DFilterFunction::New();
   this->m_ImageRegionSplitter = ImageRegionSplitterDirection::New();
 }
 
 
 template< typename TInputImage, typename TOutputImage >
 void
-AnalyticSignalImageFilter< TInputImage, TOutputImage >
+FrequencyDomain1DImageFilter< TInputImage, TOutputImage >
 ::GenerateInputRequestedRegion()
 {
   // call the superclass' implementation of this method
@@ -98,7 +88,7 @@ AnalyticSignalImageFilter< TInputImage, TOutputImage >
 
 template< typename TInputImage, typename TOutputImage >
 void
-AnalyticSignalImageFilter< TInputImage, TOutputImage >
+FrequencyDomain1DImageFilter< TInputImage, TOutputImage >
 ::EnlargeOutputRequestedRegion(DataObject *output)
 {
   OutputImageType* outputPtr = dynamic_cast< OutputImageType* >( output );
@@ -131,26 +121,18 @@ AnalyticSignalImageFilter< TInputImage, TOutputImage >
 
 template< typename TInputImage, typename TOutputImage >
 void
-AnalyticSignalImageFilter< TInputImage, TOutputImage >
+FrequencyDomain1DImageFilter< TInputImage, TOutputImage >
 ::PrintSelf( std::ostream& os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
 
-  const unsigned int direction = this->GetDirection();
-  os << indent << "Direction: " << direction << std::endl;
-
-  os << indent << "FFTRealToComplexFilter: " << std::endl;
-  m_FFTRealToComplexFilter->Print( os, indent );
-  os << indent << "FrequencyFilter: " << std::endl;
-  m_FrequencyFilter->Print( os, indent );
-  os << indent << "FFTComplexToComplexFilter: " << std::endl;
-  m_FFTComplexToComplexFilter->Print( os, indent );
+  os << indent << "FilterFunction: " << m_FilterFunction << std::endl;
 }
 
 
 template< typename TInputImage, typename TOutputImage >
 const ImageRegionSplitterBase *
-AnalyticSignalImageFilter< TInputImage, TOutputImage >
+FrequencyDomain1DImageFilter< TInputImage, TOutputImage >
 ::GetImageRegionSplitter() const
 {
   return this->m_ImageRegionSplitter.GetPointer();
@@ -159,98 +141,54 @@ AnalyticSignalImageFilter< TInputImage, TOutputImage >
 
 template< typename TInputImage, typename TOutputImage >
 void
-AnalyticSignalImageFilter< TInputImage, TOutputImage >
+FrequencyDomain1DImageFilter< TInputImage, TOutputImage >
 ::BeforeThreadedGenerateData()
 {
   this->m_ImageRegionSplitter->SetDirection( this->GetDirection() );
-
-  m_FFTRealToComplexFilter->SetInput( this->GetInput() );
-  if( m_FrequencyFilter.IsNotNull() )
-    {
-    m_FrequencyFilter->SetInput( m_FFTRealToComplexFilter->GetOutput() );
-    m_FrequencyFilter->GetOutput()->SetRequestedRegion( this->GetOutput()->GetRequestedRegion() );
-    m_FrequencyFilter->GetOutput()->SetLargestPossibleRegion( this->GetOutput()->GetLargestPossibleRegion() );
-    m_FrequencyFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
-    m_FrequencyFilter->Update();
-    }
-  else
-    { 
-    m_FFTRealToComplexFilter->GetOutput()->SetRequestedRegion( this->GetOutput()->GetRequestedRegion() );
-    m_FFTRealToComplexFilter->GetOutput()->SetLargestPossibleRegion( this->GetOutput()->GetLargestPossibleRegion() );
-    m_FFTRealToComplexFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
-    m_FFTRealToComplexFilter->Update();
-    }
 }
 
 
 template< typename TInputImage, typename TOutputImage >
 void
-AnalyticSignalImageFilter< TInputImage, TOutputImage >
+FrequencyDomain1DImageFilter< TInputImage, TOutputImage >
 ::ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread, ThreadIdType itkNotUsed( threadId ) )
 {
   // get pointers to the input and output
-  const typename FFTRealToComplexType::OutputImageType * inputPtr ;
-  if( m_FrequencyFilter.IsNotNull() )
-    {
-    inputPtr = m_FrequencyFilter->GetOutput();
-    }
-  else
-   {
-   inputPtr = m_FFTRealToComplexFilter->GetOutput();
-   }
+  const typename InputImageType * inputPtr = this->GetInput();
   OutputImageType * outputPtr = this->GetOutput();
 
-  const typename FFTRealToComplexType::OutputImageType::SizeType & inputSize = inputPtr->GetRequestedRegion().GetSize();
+  const typename OutputImageType::SizeType &inputSize = inputPtr->GetRequestedRegion().GetSize();
   const unsigned int direction = this->GetDirection ();
   const unsigned int size = inputSize[direction];
-  unsigned int dub_size;
-  bool even;
-  if( size % 2 == 0 )
-    {
-    even = true;
-    dub_size = size / 2 - 1;
-    }
-  else
-    {
-    even = false;
-    dub_size = (size + 1) / 2 - 1;
-    }
 
-  typedef ImageLinearConstIteratorWithIndex< typename FFTRealToComplexType::OutputImageType > InputIteratorType;
-  typedef ImageLinearIteratorWithIndex< OutputImageType >                                     OutputIteratorType;
+  typedef ImageLinearConstIteratorWithIndex< OutputImageType > InputIteratorType;
+  typedef ImageLinearIteratorWithIndex< OutputImageType >      OutputIteratorType;
   InputIteratorType inputIt( inputPtr, outputRegionForThread );
   OutputIteratorType outputIt( outputPtr, outputRegionForThread );
   inputIt.SetDirection( direction );
   outputIt.SetDirection( direction );
 
-  unsigned int i;
   // for every fft line
   for( inputIt.GoToBegin(), outputIt.GoToBegin(); !inputIt.IsAtEnd();
     outputIt.NextLine(), inputIt.NextLine() )
     {
+    unsigned int i = 0;
     inputIt.GoToBeginOfLine();
     outputIt.GoToBeginOfLine();
-
-    // DC
-    outputIt.Set( inputIt.Get() );
-    ++inputIt;
-    ++outputIt;
-    for( i = 0; i < dub_size; i++ )
-      {
-      outputIt.Set( inputIt.Get() * static_cast< typename TInputImage::PixelType >( 2 ) );
-      ++outputIt;
-      ++inputIt;
-      }
-    if( even )
-      {
-      outputIt.Set( inputIt.Get() );
-      ++inputIt;
-      ++outputIt;
-      }
     while( !outputIt.IsAtEndOfLine() )
       {
-      outputIt.Set( static_cast< typename TInputImage::PixelType >( 0 ) );
+      //TODO: what is the correct radian factor
+      double f  = i * Math::pi / (size); 
+      if( f > Math::pi_over_2 )
+        {
+        f = -(Math::pi - f);
+        }
+      outputIt.Set( inputIt.Get() * 
+            static_cast< typename TInputImage::PixelType>( 
+                 m_FilterFunction->Evaluate( f ) ) );
       ++outputIt;
+      ++inputIt;
+      ++i;
       }
     }
 }
@@ -258,18 +196,13 @@ AnalyticSignalImageFilter< TInputImage, TOutputImage >
 
 template< typename TInputImage, typename TOutputImage >
 void
-AnalyticSignalImageFilter< TInputImage, TOutputImage >
+FrequencyDomain1DImageFilter< TInputImage, TOutputImage >
 ::AfterThreadedGenerateData()
 {
-  // Trippy, eh?
-  m_FFTComplexToComplexFilter->SetInput( this->GetOutput() );
-  m_FFTComplexToComplexFilter->GetOutput()->SetRequestedRegion( this->GetOutput()->GetRequestedRegion() );
-  m_FFTComplexToComplexFilter->GetOutput()->SetLargestPossibleRegion( this->GetOutput()->GetLargestPossibleRegion() );
-  m_FFTComplexToComplexFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
-  m_FFTComplexToComplexFilter->Update ();
-  this->GraftOutput( m_FFTComplexToComplexFilter->GetOutput() );
+  //??
+  this->GraftOutput( this->GetOutput() );
 }
 
 } // end namespace itk
 
-#endif // itkAnalyticSignalImageFilter_hxx
+#endif // itkFrequencyDomain1DImageFilter_hxx

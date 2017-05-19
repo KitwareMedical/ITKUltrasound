@@ -107,8 +107,8 @@ public:
   /** Set/Get the minimum size in the split requested region's split direction
    * (the last dimension by default).  Set this to a reasonably large number to
    * improve performance and prevent breakage. */
-  itkSetMacro( MinimumSplitSize, int );
-  itkGetConstMacro( MinimumSplitSize, int );
+  itkSetMacro( MinimumSplitSize, unsigned int );
+  itkGetConstMacro( MinimumSplitSize, unsigned int );
 
   /** Overload so we can decrease the number of threads according to the
    * MinimumSplitSize if need be. */
@@ -141,7 +141,7 @@ protected:
   // different.
   RadiusType m_MovingRadius;
 
-  int m_MinimumSplitSize;
+  unsigned int m_MinimumSplitSize;
 
   // Because it returns a reference?
   mutable int m_SpecialThreadCount;
