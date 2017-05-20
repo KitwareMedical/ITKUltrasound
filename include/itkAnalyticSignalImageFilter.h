@@ -98,12 +98,12 @@ public:
 
   virtual void SetFrequencyFilter(typename FrequencyFilterType::Pointer filter)
    {
-   if( filter != this->m_FrequencyFilter )
-     {
+   //if( filter != this->m_FrequencyFilter )
+   //  {
      this->m_FrequencyFilter = filter;
      this->m_FrequencyFilter->SetDirection( this->GetDirection() );
      this->Modified();
-     }
+   //  }
    }
  
 protected:

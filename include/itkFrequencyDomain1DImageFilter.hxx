@@ -145,6 +145,13 @@ FrequencyDomain1DImageFilter< TInputImage, TOutputImage >
 ::BeforeThreadedGenerateData()
 {
   this->m_ImageRegionSplitter->SetDirection( this->GetDirection() );
+  
+  const typename InputImageType * inputPtr = this->GetInput();
+  const typename OutputImageType::SizeType &inputSize = inputPtr->GetRequestedRegion().GetSize();
+  const unsigned int direction = this->GetDirection ();
+  const SizeValueType size = inputSize[direction];
+  
+  this->m_FilterFunction->SetSignalSize( size );
 }
 
 
@@ -168,8 +175,6 @@ FrequencyDomain1DImageFilter< TInputImage, TOutputImage >
   inputIt.SetDirection( direction );
   outputIt.SetDirection( direction );
 
-  //
-  m_FilterFunction->SetSignalSize( size );
   // for every fft line
   for( inputIt.GoToBegin(), outputIt.GoToBegin(); !inputIt.IsAtEnd();
     outputIt.NextLine(), inputIt.NextLine() )
