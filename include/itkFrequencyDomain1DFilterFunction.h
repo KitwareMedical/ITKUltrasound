@@ -5,6 +5,8 @@
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
+ * *
+ *  Copyright Insight Software Consortium
  *
  *         http://www.apache.org/licenses/LICENSE-2.0.txt
  *
@@ -22,7 +24,7 @@
 
 namespace itk
 {
-/** \class FrequencyDomain1DImageFilter
+/** \class FrequencyDomain1DFilterFunction
  * \brief
  * Class to implment filter functions for FrequencyDomain1DImageFilter
  *
@@ -92,7 +94,7 @@ public:
   virtual double EvaluateFrequency(double frequency)
     {
     return 1.0;
-    };
+    }
 
   virtual void Modified( ) const ITK_OVERRIDE
     {
@@ -141,9 +143,9 @@ private:
       }
     }
 
-  bool m_UseCache;
+  bool                  m_UseCache;
   std::vector< double > m_Cache;
-  SizeValueType m_SignalSize;
+  SizeValueType         m_SignalSize;
 };
 
 }

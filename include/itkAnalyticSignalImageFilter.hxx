@@ -141,8 +141,11 @@ AnalyticSignalImageFilter< TInputImage, TOutputImage >
 
   os << indent << "FFTRealToComplexFilter: " << std::endl;
   m_FFTRealToComplexFilter->Print( os, indent );
-  os << indent << "FrequencyFilter: " << std::endl;
-  m_FrequencyFilter->Print( os, indent );
+  if( m_FrequencyFilter.IsNotNull() )
+    {
+    os << indent << "FrequencyFilter: " << std::endl;
+    m_FrequencyFilter->Print( os, indent );
+    }
   os << indent << "FFTComplexToComplexFilter: " << std::endl;
   m_FFTComplexToComplexFilter->Print( os, indent );
 }
@@ -174,7 +177,7 @@ AnalyticSignalImageFilter< TInputImage, TOutputImage >
     m_FrequencyFilter->Update();
     }
   else
-    { 
+    {
     m_FFTRealToComplexFilter->GetOutput()->SetRequestedRegion( this->GetOutput()->GetRequestedRegion() );
     m_FFTRealToComplexFilter->GetOutput()->SetLargestPossibleRegion( this->GetOutput()->GetLargestPossibleRegion() );
     m_FFTRealToComplexFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
@@ -189,7 +192,7 @@ AnalyticSignalImageFilter< TInputImage, TOutputImage >
 ::ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread, ThreadIdType itkNotUsed( threadId ) )
 {
   // get pointers to the input and output
-  const typename FFTRealToComplexType::OutputImageType * inputPtr ;
+  const typename FFTRealToComplexType::OutputImageType * inputPtr;
   if( m_FrequencyFilter.IsNotNull() )
     {
     inputPtr = m_FrequencyFilter->GetOutput();

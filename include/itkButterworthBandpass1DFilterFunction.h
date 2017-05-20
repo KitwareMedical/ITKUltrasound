@@ -1,5 +1,6 @@
 /*=========================================================================
  *
+ *  Copyright Insight Software Consortium*
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,8 +20,9 @@
 
 #include "itkFrequencyDomain1DFilterFunction.h"
 #include "itkMath.h"
-namespace itk{
 
+namespace itk
+{
 class ButterworthBandpass1DFilterFunction:
   public FrequencyDomain1DFilterFunction
 {
@@ -83,8 +85,8 @@ protected:
 private:
 
   unsigned int m_Order;
-  double m_LowerFrequency;
-  double m_UpperFrequency;
+  double       m_LowerFrequency;
+  double       m_UpperFrequency;
 };
 
 }
