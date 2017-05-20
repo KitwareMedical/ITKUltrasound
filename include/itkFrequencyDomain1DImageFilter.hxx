@@ -32,7 +32,7 @@ template< typename TInputImage, typename TOutputImage >
 FrequencyDomain1DImageFilter< TInputImage, TOutputImage >
 ::FrequencyDomain1DImageFilter()
 {
-  
+
   this->SetDirection( 0 );
   this->m_FilterFunction = FrequencyDomain1DFilterFunction::New();
   this->m_ImageRegionSplitter = ImageRegionSplitterDirection::New();
@@ -145,12 +145,12 @@ FrequencyDomain1DImageFilter< TInputImage, TOutputImage >
 ::BeforeThreadedGenerateData()
 {
   this->m_ImageRegionSplitter->SetDirection( this->GetDirection() );
-  
-  const typename InputImageType * inputPtr = this->GetInput();
+
+  const InputImageType * inputPtr = this->GetInput();
   const typename OutputImageType::SizeType &inputSize = inputPtr->GetRequestedRegion().GetSize();
   const unsigned int direction = this->GetDirection ();
   const SizeValueType size = inputSize[direction];
-  
+
   this->m_FilterFunction->SetSignalSize( size );
 }
 
@@ -161,7 +161,7 @@ FrequencyDomain1DImageFilter< TInputImage, TOutputImage >
 ::ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread, ThreadIdType itkNotUsed( threadId ) )
 {
   // get pointers to the input and output
-  const typename InputImageType * inputPtr = this->GetInput();
+  const InputImageType * inputPtr = this->GetInput();
   OutputImageType * outputPtr = this->GetOutput();
 
   const typename OutputImageType::SizeType &inputSize = inputPtr->GetRequestedRegion().GetSize();
@@ -184,8 +184,8 @@ FrequencyDomain1DImageFilter< TInputImage, TOutputImage >
     outputIt.GoToBeginOfLine();
     while( !outputIt.IsAtEndOfLine() )
       {
-      outputIt.Set( inputIt.Get() * 
-            static_cast< typename TInputImage::PixelType>( 
+      outputIt.Set( inputIt.Get() *
+            static_cast< typename TInputImage::PixelType>(
                  m_FilterFunction->EvaluateIndex( i ) ) );
       ++outputIt;
       ++inputIt;

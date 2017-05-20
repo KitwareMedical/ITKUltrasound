@@ -25,12 +25,12 @@ namespace itk
 /** \class FrequencyDomain1DImageFilter
  * \brief
  * Class to implment filter functions for FrequencyDomain1DImageFilter
- * 
+ *
  * \ingroup FourierTransform
  * \ingroup Ultrasound
  */
 class FrequencyDomain1DFilterFunction:
-  public Object 
+  public Object
 {
 public:
 
@@ -46,8 +46,8 @@ public:
 
   /** discrete frequency index such as retunr by FFTW, i.e.
    * 0 is DC component
-   * i / SignalSize * 2*pi is the frequency, 
-   * i.e., first half positive frequencies and 
+   * i / SignalSize * 2*pi is the frequency,
+   * i.e., first half positive frequencies and
    * second half negative frequencies in reverse order.
    */
   double EvaluateIndex(SizeValueType &i)
@@ -84,10 +84,10 @@ public:
    itkSetMacro( UseCache, bool );
    itkGetMacro( UseCache, bool );
 
-  /** 
+  /**
    * Override this function to implement a specific filter.
-   * The input ranges from -1 to 1 
-   * Default is identity function. 
+   * The input ranges from -1 to 1
+   * Default is identity function.
    */
   virtual double EvaluateFrequency(double frequency)
     {
@@ -112,32 +112,38 @@ protected:
     os << indent << "CacheSize: " << m_Cache.size() << std::endl;
     }
 
+    FrequencyDomain1DFilterFunction()
+      {
+      m_UseCache = true;
+      m_SignalSize = 0;
+      }
+
 private:
-  
+
   double GetFrequency(SizeValueType &i)
     {
-    double f = (2.0 * i ) / m_SignalSize; 
+    double f = (2.0 * i ) / m_SignalSize;
     if( f > 1.0 )
       {
-      f = f - 2.0; 
+      f = f - 2.0;
       }
     return f;
     }
- 
+
   void UpdateCache()
     {
     if( this->m_UseCache )
       {
       for( SizeValueType i=0; i < m_Cache.size(); i++)
         {
-        this->m_Cache[i] = this->EvaluateFrequency( this->GetFrequency(i) );          
+        this->m_Cache[i] = this->EvaluateFrequency( this->GetFrequency(i) );
         }
       }
     }
- 
-  bool m_UseCache = true;
+
+  bool m_UseCache;
   std::vector< double > m_Cache;
-  SizeValueType m_SignalSize = 0;
+  SizeValueType m_SignalSize;
 };
 
 }

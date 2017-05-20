@@ -22,7 +22,7 @@
 namespace itk{
 
 class ButterworthBandpass1DFilterFunction:
-  public FrequencyDomain1DFilterFunction 
+  public FrequencyDomain1DFilterFunction
 {
 public:
   /** Standard class typedefs. */
@@ -52,17 +52,24 @@ public:
    return x * y;
   };
 
-  itkSetMacro( UpperFrequency, double) 
-  itkGetMacro( UpperFrequency, double) 
-  
-  itkSetMacro( LowerFrequency, double) 
-  itkGetMacro( LowerFrequency, double) 
+  itkSetMacro( UpperFrequency, double)
+  itkGetMacro( UpperFrequency, double)
 
-  itkSetMacro( Order, unsigned int) 
-  itkGetMacro( Order, unsigned int) 
+  itkSetMacro( LowerFrequency, double)
+  itkGetMacro( LowerFrequency, double)
+
+  itkSetMacro( Order, unsigned int)
+  itkGetMacro( Order, unsigned int)
 
 
 protected:
+
+  ButterworthBandpass1DFilterFunction()
+    {
+    m_Order = 1;
+    m_LowerFrequency = 0.0;
+    m_UpperFrequency = 1.0;
+    }
 
   virtual void PrintSelf( std::ostream& os, Indent indent ) const ITK_OVERRIDE
     {
@@ -75,9 +82,9 @@ protected:
 
 private:
 
-  unsigned int m_Order = 1;
-  double m_LowerFrequency = 0.0;
-  double m_UpperFrequency = 1.0;
+  unsigned int m_Order;
+  double m_LowerFrequency;
+  double m_UpperFrequency;
 };
 
 }
