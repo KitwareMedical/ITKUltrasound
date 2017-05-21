@@ -125,7 +125,7 @@ protected:
 
 private:
 
-  double GetFrequency(SizeValueType &i)
+  double GetFrequency(SizeValueType &i) const
     {
     double f = (2.0 * i ) / m_SignalSize;
     if( f > 1.0 )
