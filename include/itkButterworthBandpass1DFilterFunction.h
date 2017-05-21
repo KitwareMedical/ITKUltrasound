@@ -1,6 +1,6 @@
 /*=========================================================================
  *
- *  Copyright Insight Software Consortium*
+ *  Copyright Insight Software Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,14 +30,14 @@ public:
   /** Standard class typedefs. */
 
   typedef ButterworthBandpass1DFilterFunction    Self;
-  typedef itk::FrequencyDomain1DFilterFunction   Superclass;
-  typedef itk::SmartPointer< Self >              Pointer;
-  typedef itk::SmartPointer< const Self >        ConstPointer;
+  typedef FrequencyDomain1DFilterFunction   Superclass;
+  typedef SmartPointer< Self >              Pointer;
+  typedef SmartPointer< const Self >        ConstPointer;
 
-  itkTypeMacro( ButterworthBandpass1DFilterFunction, itk::FrequencyDomain1DFilterFunction);
+  itkTypeMacro( ButterworthBandpass1DFilterFunction, FrequencyDomain1DFilterFunction);
   itkNewMacro( Self );
 
-  virtual double EvaluateFrequency(double f)
+  virtual double EvaluateFrequency(double f) const
     {
     //highpass
     double x = 1.0;

@@ -200,7 +200,6 @@ void
 FrequencyDomain1DImageFilter< TInputImage, TOutputImage >
 ::AfterThreadedGenerateData()
 {
-  //??
   this->GraftOutput( this->GetOutput() );
 }
 

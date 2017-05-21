@@ -5,8 +5,6 @@
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- * *
- *  Copyright Insight Software Consortium
  *
  *         http://www.apache.org/licenses/LICENSE-2.0.txt
  *
@@ -27,6 +25,11 @@ namespace itk
 /** \class FrequencyDomain1DFilterFunction
  * \brief
  * Class to implment filter functions for FrequencyDomain1DImageFilter
+ *
+ * Supports caching of precomputed function values (SetUseCache) for applying 
+ * the function to multiple signals of the same length.
+ * For the caching to work properly make sure this->Modified gets called in subclasses
+ * whenever a parmater is changed that changes the function values.
  *
  * \ingroup FourierTransform
  * \ingroup Ultrasound
@@ -52,7 +55,7 @@ public:
    * i.e., first half positive frequencies and
    * second half negative frequencies in reverse order.
    */
-  double EvaluateIndex(SizeValueType &i)
+  double EvaluateIndex(SizeValueType &i) const
     {
     if( m_UseCache )
       {
@@ -78,7 +81,7 @@ public:
       }
     }
 
-  SizeValueType GetSignalSize()
+  SizeValueType GetSignalSize() const
     {
     return m_SignalSize;
     }
@@ -91,14 +94,14 @@ public:
    * The input ranges from -1 to 1
    * Default is identity function.
    */
-  virtual double EvaluateFrequency(double frequency)
+  virtual double EvaluateFrequency(double frequency) const
     {
     return 1.0;
     }
 
   virtual void Modified( ) const ITK_OVERRIDE
     {
-    //TODO: is there a better way to update the cache
+    //Force a chache update
     const_cast< FrequencyDomain1DFilterFunction *>(this)->UpdateCache();
     Superclass::Modified();
     }
