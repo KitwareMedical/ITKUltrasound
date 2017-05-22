@@ -30,9 +30,9 @@ public:
   /** Standard class typedefs. */
 
   typedef ButterworthBandpass1DFilterFunction    Self;
-  typedef FrequencyDomain1DFilterFunction   Superclass;
-  typedef SmartPointer< Self >              Pointer;
-  typedef SmartPointer< const Self >        ConstPointer;
+  typedef FrequencyDomain1DFilterFunction        Superclass;
+  typedef SmartPointer< Self >                   Pointer;
+  typedef SmartPointer< const Self >             ConstPointer;
 
   itkTypeMacro( ButterworthBandpass1DFilterFunction, FrequencyDomain1DFilterFunction);
   itkNewMacro( Self );
