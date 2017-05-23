@@ -18,6 +18,7 @@
 #ifndef itkFrequencyDomain1DImageFilter_h
 #define itkFrequencyDomain1DImageFilter_h
 
+#include "itkImageToImageFilter.h"
 #include "itkImageRegionSplitterDirection.h"
 #include "itkFrequencyDomain1DFilterFunction.h"
 

@@ -1,0 +1,9 @@
+itk_wrap_include("itkCurvilinearArraySpecialCoordinatesImage.h")
+
+itk_wrap_class("itk::FrequencyDomain1DImageFilter" POINTER_WITH_SUPERCLASS )
+  itk_wrap_image_filter("${WRAP_ITK_COMPLEX_REAL}" 2 2+)
+  foreach(t3 ${WRAP_ITK_COMPLEX_REAL})
+      itk_wrap_template("CASCI${ITKM_${t3}}${d}CASCI${ITKM_${t3}}${d}" 
+        "itk::CurvilinearArraySpecialCoordinatesImage<  ${ITKT_${t3}}, 2>, itk::CurvilinearArraySpecialCoordinatesImage<  ${ITKT_${t3}}, 2 >")
+  endforeach()
+itk_end_wrap_class()
