@@ -40,6 +40,9 @@ namespace itk
  *
  * Use SetDirection() to define the axis of propagation.
  *
+ * Use SetFrequencyFilter() to add a filtering step before the analytic
+ * signal computation.
+ * 
  * \sa AnalyticSignalImageFilter
  *
  * \ingroup Ultrasound
@@ -86,6 +89,8 @@ public:
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
 
+  typedef FrequencyDomain1DImageFilter< ComplexImageType, ComplexImageType > FrequencyFilterType;
+  
   /** Set the direction in which the envelope is to be calculated. */
   virtual void SetDirection( unsigned int direction )
     {
@@ -97,6 +102,11 @@ public:
   virtual unsigned int GetDirection() const
     {
     return m_AnalyticFilter->GetDirection();
+    }
+
+  void SetFrequencyFilter(FrequencyFilterType *filter)
+    {
+    m_AnalyticFilter->SetFrequencyFilter( filter );
     }
 
 protected:

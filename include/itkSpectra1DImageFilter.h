@@ -96,7 +96,7 @@ private:
   typedef ImageRegionConstIterator< InputImageType > InputImageIteratorType;
   typedef vnl_fft_1d< ScalarType >                   FFT1DType;
 
-  typedef Spectra1DSupportWindowImageFilter< OutputImageType >     Spectra1DSupportWindowFilterType;
+  typedef Spectra1DSupportWindowImageFilter< InputImageType >     Spectra1DSupportWindowFilterType;
   typedef typename Spectra1DSupportWindowFilterType::FFT1DSizeType FFT1DSizeType;
 
   typedef std::map< FFT1DSizeType, SpectraVectorType > LineWindowMapType;

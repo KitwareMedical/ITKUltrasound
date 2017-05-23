@@ -23,6 +23,7 @@
 #include "itkComplexToComplex1DFFTImageFilter.h"
 #include "itkForward1DFFTImageFilter.h"
 #include "itkImageRegionSplitterDirection.h"
+#include "itkFrequencyDomain1DImageFilter.h"
 
 namespace itk
 {
@@ -72,6 +73,8 @@ public:
   itkTypeMacro( AnalyticSignalImageFilter, ImageToImageFilter );
   itkNewMacro( Self );
 
+  typedef FrequencyDomain1DImageFilter< OutputImageType, OutputImageType > FrequencyFilterType;
+
   /** Get the direction in which the filter is to be applied. */
   virtual unsigned int GetDirection() const
     {
@@ -85,10 +88,24 @@ public:
       {
       this->m_FFTRealToComplexFilter->SetDirection( direction );
       this->m_FFTComplexToComplexFilter->SetDirection( direction );
+      if( this->m_FrequencyFilter.IsNotNull() )
+        {
+        this->m_FrequencyFilter->SetDirection( direction );
+        } 
       this->Modified();
       }
     }
 
+  virtual void SetFrequencyFilter(FrequencyFilterType *filter)
+   {
+   //if( filter != this->m_FrequencyFilter )
+   //  {
+     this->m_FrequencyFilter = filter;
+     this->m_FrequencyFilter->SetDirection( this->GetDirection() );
+     this->Modified();
+   //  }
+   }
+ 
 protected:
   AnalyticSignalImageFilter();
   virtual ~AnalyticSignalImageFilter() {}
@@ -108,7 +125,8 @@ protected:
 
   typename FFTRealToComplexType::Pointer    m_FFTRealToComplexFilter;
   typename FFTComplexToComplexType::Pointer m_FFTComplexToComplexFilter;
-
+ 
+ 
   /** Override to return a splitter that does not split along the direction we
    * are performing the transform. */
   virtual const ImageRegionSplitterBase* GetImageRegionSplitter() const ITK_OVERRIDE;
@@ -117,6 +135,7 @@ private:
   AnalyticSignalImageFilter( const Self& ) ITK_DELETE_FUNCTION;
   void operator=( const Self& ) ITK_DELETE_FUNCTION;
 
+  typename FrequencyFilterType::Pointer m_FrequencyFilter;
   ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;
 };
 }

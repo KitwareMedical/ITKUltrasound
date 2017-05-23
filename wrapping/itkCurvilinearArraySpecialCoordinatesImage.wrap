@@ -1,9 +1,13 @@
 itk_wrap_include("deque")
+itk_wrap_include("complex")
 
 itk_wrap_class("itk::CurvilinearArraySpecialCoordinatesImage" POINTER_WITH_SUPERCLASS)
   foreach(d ${ITK_WRAP_DIMS})
     foreach(t ${WRAP_ITK_SCALAR})
       itk_wrap_template("${ITKM_${t}}${d}" "${ITKT_${t}}, ${d}")
+    endforeach()
+    foreach(t3 ${WRAP_ITK_COMPLEX_REAL})
+      itk_wrap_template("${ITKM_${t3}}${d}" "${ITKT_${t3}}, ${d}")
     endforeach()
   endforeach()
 itk_end_wrap_class()
@@ -44,7 +48,11 @@ itk_wrap_class("itk::ImageToImageFilter" POINTER_WITH_SUPERCLASS)
       foreach(t2 ${WRAP_ITK_SCALAR})
         itk_wrap_template("CASCI${ITKM_${t}}${d}CASCI${ITKM_${t2}}${d}"
           "itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t2}}, ${d} >")
-      endforeach()
+      endforeach() 
+    endforeach()
+    foreach(t3 ${WRAP_ITK_COMPLEX_REAL})
+      itk_wrap_template("CASCI${ITKM_${t3}}${d}CASCI${ITKM_${t3}}${d}" 
+        "itk::CurvilinearArraySpecialCoordinatesImage<  ${ITKT_${t3}}, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage<  ${ITKT_${t3}}, ${d} >")
     endforeach()
   endforeach()
 itk_end_wrap_class()
@@ -88,3 +96,4 @@ itk_wrap_class("itk::Spectra1DSupportWindowToMaskImageFilter" POINTER_WITH_2_SUP
     endforeach()
   endforeach()
 itk_end_wrap_class()
+

@@ -89,7 +89,7 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
         }
       else
         {
-        ThisCorner[i] = -(Radius[i]+1);
+        ThisCorner[i] = -( (int) Radius[i]+1);
         }
       }
     Weights.push_back((AccPixType)prod);
