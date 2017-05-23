@@ -4,7 +4,7 @@ itk_wrap_include("itkFrequencyDomain1DImageFilter.h")
 itk_wrap_class("itk::BModeImageFilter" POINTER)
   itk_wrap_image_filter("${WRAP_ITK_REAL}" 2)
   foreach(t ${WRAP_ITK_REAL})
-    itk_wrap_template("CASCI${ITKM_${t}}2CASCI${ITKM_${t}}2CASCI${ITKM_${t}}2"
+    itk_wrap_template("CASCI${ITKM_${t}}2CASCI${ITKM_${t}}2CASCcomplexI${ITKM_${t}}2"
           "itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, 2 >, itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, 2 >, itk::CurvilinearArraySpecialCoordinatesImage< std::complex< ${ITKT_${t}} >, 2 >")
   endforeach()
 itk_end_wrap_class()
