@@ -54,14 +54,14 @@ public:
    return x * y;
   };
 
-  itkSetMacro( UpperFrequency, double)
-  itkGetMacro( UpperFrequency, double)
+  itkSetMacro( UpperFrequency, double )
+  itkGetMacro( UpperFrequency, double )
 
-  itkSetMacro( LowerFrequency, double)
-  itkGetMacro( LowerFrequency, double)
+  itkSetMacro( LowerFrequency, double )
+  itkGetMacro( LowerFrequency, double )
 
-  itkSetMacro( Order, unsigned int)
-  itkGetMacro( Order, unsigned int)
+  itkSetMacro( Order, unsigned int )
+  itkGetMacro( Order, unsigned int )
 
 
 protected:
