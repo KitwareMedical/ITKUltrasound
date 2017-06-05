@@ -91,7 +91,7 @@ public:
       if( this->m_FrequencyFilter.IsNotNull() )
         {
         this->m_FrequencyFilter->SetDirection( direction );
-        } 
+        }
       this->Modified();
       }
     }
@@ -105,7 +105,7 @@ public:
      this->Modified();
    //  }
    }
- 
+
 protected:
   AnalyticSignalImageFilter();
   virtual ~AnalyticSignalImageFilter() {}
@@ -125,8 +125,8 @@ protected:
 
   typename FFTRealToComplexType::Pointer    m_FFTRealToComplexFilter;
   typename FFTComplexToComplexType::Pointer m_FFTComplexToComplexFilter;
- 
- 
+
+
   /** Override to return a splitter that does not split along the direction we
    * are performing the transform. */
   virtual const ImageRegionSplitterBase* GetImageRegionSplitter() const ITK_OVERRIDE;
