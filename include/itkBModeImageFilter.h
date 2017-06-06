@@ -42,7 +42,7 @@ namespace itk
  *
  * Use SetFrequencyFilter() to add a filtering step before the analytic
  * signal computation.
- * 
+ *
  * \sa AnalyticSignalImageFilter
  *
  * \ingroup Ultrasound
@@ -90,7 +90,7 @@ public:
   itkNewMacro( Self );
 
   typedef FrequencyDomain1DImageFilter< ComplexImageType, ComplexImageType > FrequencyFilterType;
-  
+
   /** Set the direction in which the envelope is to be calculated. */
   virtual void SetDirection( unsigned int direction )
     {

@@ -32,6 +32,7 @@ set(UltrasoundTests
   itkBlockMatchingBayesianRegularizationDisplacementCalculatorTest.cxx
   itkBlockMatchingImageRegistrationMethodTest.cxx
   itkBlockMatchingMultiResolutionImageRegistrationMethodTest.cxx
+  itkButterworthBandpass1DFilterTest.cxx
   )
 if(use_fftw)
   list(APPEND UltrasoundTests
@@ -286,7 +287,14 @@ itk_add_test(NAME itkBlockMatchingMultiResolutionImageRegistrationMethodTest
   DATA{Input/rf_post15.mha}
   itkBlockMatchingMultiResolutionImageRegistrationMethodTestOutput.mha
   )
-
+itk_add_test(NAME itkButterworthBandpass1DFilterTest
+  COMMAND UltrasoundTestDriver
+  --compare DATA{Baseline/itkButterworthBandpass1DFilterTestOutputBaseline.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkButterworthBandpass1DFilterTestOutput.mha
+  itkButterworthBandpass1DFilterTest
+    DATA{Input/rf_voltage_15_freq_0005000000_2017-5-31_12-36-44.nrrd}
+    ${ITK_TEST_OUTPUT_DIR}/itkButterworthBandpass1DFilterTestOutput.mha
+  )
 
 
 if(use_fftw)
