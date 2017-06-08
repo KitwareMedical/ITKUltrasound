@@ -113,7 +113,7 @@ private:
   PerThreadDataContainerType m_PerThreadDataContainer;
 
   SpectraLineType ComputeSpectra( const IndexType & lineIndex, ThreadIdType threadId );
-  void AddLineWindow( FFT1DSizeType length, LineWindowMapType & lineWindowMap );
+  static void AddLineWindow( FFT1DSizeType length, LineWindowMapType & lineWindowMap );
 };
 
 } // end namespace itk
