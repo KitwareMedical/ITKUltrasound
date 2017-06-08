@@ -26,7 +26,8 @@
 #include "vnl/algo/vnl_fft_1d.h"
 
 #include <utility>
-#include <map>
+
+#include "itksys/hash_map.hxx"
 
 #include "itkSpectra1DSupportWindowImageFilter.h"
 
@@ -99,7 +100,7 @@ private:
   typedef Spectra1DSupportWindowImageFilter< InputImageType >     Spectra1DSupportWindowFilterType;
   typedef typename Spectra1DSupportWindowFilterType::FFT1DSizeType FFT1DSizeType;
 
-  typedef std::map< FFT1DSizeType, SpectraVectorType > LineWindowMapType;
+  typedef itksys::hash_map< FFT1DSizeType, SpectraVectorType > LineWindowMapType;
 
   struct PerThreadData
     {
