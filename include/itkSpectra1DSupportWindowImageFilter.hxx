@@ -55,6 +55,9 @@ Spectra1DSupportWindowImageFilter< TInputImage >
   typename OutputImageType::SpacingType outputSpacing = input->GetSpacing();
   outputSpacing[0] *= this->GetStep();
   output->SetSpacing( outputSpacing );
+
+  MetaDataDictionary & dict = output->GetMetaDataDictionary();
+  EncapsulateMetaData< FFT1DSizeType >( dict, "FFT1DSize", this->GetFFT1DSize() );
 }
 
 
@@ -135,9 +138,6 @@ void
 Spectra1DSupportWindowImageFilter< TInputImage >
 ::AfterThreadedGenerateData()
 {
-  OutputImageType * output = this->GetOutput();
-  MetaDataDictionary & dict = output->GetMetaDataDictionary();
-  EncapsulateMetaData< FFT1DSizeType >( dict, "FFT1DSize", this->GetFFT1DSize() );
 }
 
 
