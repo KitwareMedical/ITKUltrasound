@@ -92,10 +92,9 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
   // Currently using a Hamming Window
   SpectraVectorType window( length );
   ScalarType sum = NumericTraits< ScalarType >::ZeroValue();
-  const ScalarType twopi = 2 * vnl_math::pi;
   for( FFT1DSizeType sample = 0; sample < length; ++sample )
     {
-    window[sample] = 0.54 + 0.46 * std::cos( (twopi * sample) / (length - 1) );
+    window[sample] = 0.54 + 0.46 * std::cos( (Math::twopi * sample) / (length - 1) );
     sum += window[sample];
     }
   for( FFT1DSizeType sample = 0; sample < length; ++sample )
