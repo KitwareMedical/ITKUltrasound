@@ -21,6 +21,7 @@
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 #include "itkPermuteAxesImageFilter.h"
+#include "itkTestingMacros.h"
 
 int itkSpectra1DSupportWindowImageFilterTest( int argc, char* argv[] )
 {
@@ -40,6 +41,7 @@ int itkSpectra1DSupportWindowImageFilterTest( int argc, char* argv[] )
   typedef itk::ImageFileReader< ImageType > ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
+  TRY_EXPECT_NO_EXCEPTION( reader->UpdateLargestPossibleRegion() );
 
   // Want RF to be along direction 0
   typedef itk::PermuteAxesImageFilter< ImageType > PermuteAxesFilterType;

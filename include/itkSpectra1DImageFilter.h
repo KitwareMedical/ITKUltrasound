@@ -89,7 +89,7 @@ private:
 
   typedef vcl_complex< ScalarType >                  ComplexType;
   typedef vnl_vector< ComplexType >                  ComplexVectorType;
-  typedef vnl_vector< ScalarType >                   SpectraVectorType;
+  typedef std::vector< ScalarType >                  SpectraVectorType;
   typedef typename InputImageType::IndexType         IndexType;
   typedef std::pair< IndexType, SpectraVectorType >  SpectraLineType;
   typedef std::deque< SpectraLineType >              SpectraLinesContainerType;
@@ -112,7 +112,7 @@ private:
   typedef std::vector< PerThreadData > PerThreadDataContainerType;
   PerThreadDataContainerType m_PerThreadDataContainer;
 
-  SpectraLineType ComputeSpectra( const IndexType & lineIndex, ThreadIdType threadId );
+  void ComputeSpectra( const IndexType & lineIndex, ThreadIdType threadId, SpectraLineType & spectraLine );
   static void AddLineWindow( FFT1DSizeType length, LineWindowMapType & lineWindowMap );
 };
 
