@@ -82,6 +82,7 @@ protected:
   virtual void GenerateOutputInformation() ITK_OVERRIDE;
   virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
   virtual void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId ) ITK_OVERRIDE;
+  virtual void VerifyInputInformation() ITK_OVERRIDE;
 
 private:
   Spectra1DImageFilter( const Self & ); // purposely not implemented

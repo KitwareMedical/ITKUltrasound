@@ -44,8 +44,12 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
 ::GenerateOutputInformation()
 {
   Superclass::GenerateOutputInformation();
-
+  OutputImageType * output = this->GetOutput();
   const SupportWindowImageType * supportWindowImage = this->GetSupportWindowImage();
+
+  output->SetSpacing( supportWindowImage->GetSpacing() );
+  output->SetLargestPossibleRegion( supportWindowImage->GetLargestPossibleRegion() );
+
   const MetaDataDictionary & dict = supportWindowImage->GetMetaDataDictionary();
   FFT1DSizeType fft1DSize = 32;
   ExposeMetaData< FFT1DSizeType >( dict, "FFT1DSize", fft1DSize );
@@ -53,7 +57,6 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
   // with 50% overlap
   const FFT1DSizeType spectraComponents = fft1DSize / 2 / 2 - 1;
 
-  OutputImageType * output = this->GetOutput();
   output->SetVectorLength( spectraComponents );
 }
 
@@ -79,6 +82,14 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
     perThreadData.LineImageRegionSize.Fill( 1 );
     perThreadData.LineImageRegionSize[0] = fft1DSize;
     }
+}
+
+
+template< typename TInputImage, typename TSupportWindowImage, typename TOutputImage >
+void
+Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
+::VerifyInputInformation()
+{
 }
 
 

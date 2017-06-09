@@ -66,7 +66,8 @@ int itkSpectra1DImageFilterTest( int argc, char* argv[] )
   typedef itk::Spectra1DSupportWindowImageFilter< ImageType > SpectraSupportWindowFilterType;
   SpectraSupportWindowFilterType::Pointer spectraSupportWindowFilter = SpectraSupportWindowFilterType::New();
   spectraSupportWindowFilter->SetInput( sideLines );
-  spectraSupportWindowFilter->SetFFT1DSize( 64 );
+  spectraSupportWindowFilter->SetFFT1DSize( 128 );
+  spectraSupportWindowFilter->SetStep( 16 );
   TRY_EXPECT_NO_EXCEPTION( spectraSupportWindowFilter->UpdateLargestPossibleRegion() );
 
   typedef SpectraSupportWindowFilterType::OutputImageType                                  SupportWindowImageType;
