@@ -26,7 +26,8 @@
 #include "vnl/algo/vnl_fft_1d.h"
 
 #include <utility>
-#include <map>
+
+#include "itksys/hash_map.hxx"
 
 #include "itkSpectra1DSupportWindowImageFilter.h"
 
@@ -81,6 +82,7 @@ protected:
   virtual void GenerateOutputInformation() ITK_OVERRIDE;
   virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
   virtual void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId ) ITK_OVERRIDE;
+  virtual void VerifyInputInformation() ITK_OVERRIDE;
 
 private:
   Spectra1DImageFilter( const Self & ); // purposely not implemented
@@ -88,7 +90,7 @@ private:
 
   typedef vcl_complex< ScalarType >                  ComplexType;
   typedef vnl_vector< ComplexType >                  ComplexVectorType;
-  typedef vnl_vector< ScalarType >                   SpectraVectorType;
+  typedef std::vector< ScalarType >                  SpectraVectorType;
   typedef typename InputImageType::IndexType         IndexType;
   typedef std::pair< IndexType, SpectraVectorType >  SpectraLineType;
   typedef std::deque< SpectraLineType >              SpectraLinesContainerType;
@@ -99,7 +101,7 @@ private:
   typedef Spectra1DSupportWindowImageFilter< InputImageType >     Spectra1DSupportWindowFilterType;
   typedef typename Spectra1DSupportWindowFilterType::FFT1DSizeType FFT1DSizeType;
 
-  typedef std::map< FFT1DSizeType, SpectraVectorType > LineWindowMapType;
+  typedef itksys::hash_map< FFT1DSizeType, SpectraVectorType > LineWindowMapType;
 
   struct PerThreadData
     {
@@ -111,8 +113,8 @@ private:
   typedef std::vector< PerThreadData > PerThreadDataContainerType;
   PerThreadDataContainerType m_PerThreadDataContainer;
 
-  SpectraLineType ComputeSpectra( const IndexType & lineIndex, ThreadIdType threadId );
-  void AddLineWindow( FFT1DSizeType length, LineWindowMapType & lineWindowMap );
+  void ComputeSpectra( const IndexType & lineIndex, ThreadIdType threadId, SpectraLineType & spectraLine );
+  static void AddLineWindow( FFT1DSizeType length, LineWindowMapType & lineWindowMap );
 };
 
 } // end namespace itk

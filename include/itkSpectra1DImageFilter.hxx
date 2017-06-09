@@ -44,14 +44,19 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
 ::GenerateOutputInformation()
 {
   Superclass::GenerateOutputInformation();
-
+  OutputImageType * output = this->GetOutput();
   const SupportWindowImageType * supportWindowImage = this->GetSupportWindowImage();
+
+  output->SetSpacing( supportWindowImage->GetSpacing() );
+  output->SetLargestPossibleRegion( supportWindowImage->GetLargestPossibleRegion() );
+
   const MetaDataDictionary & dict = supportWindowImage->GetMetaDataDictionary();
   FFT1DSizeType fft1DSize = 32;
   ExposeMetaData< FFT1DSizeType >( dict, "FFT1DSize", fft1DSize );
-  const FFT1DSizeType spectraComponents = fft1DSize / 2 - 1;
+  // Divide by two for Hermitian symmetry. Divide by two for Welch's method
+  // with 50% overlap
+  const FFT1DSizeType spectraComponents = fft1DSize / 2 / 2 - 1;
 
-  OutputImageType * output = this->GetOutput();
   output->SetVectorLength( spectraComponents );
 }
 
@@ -65,18 +70,26 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
   const MetaDataDictionary & dict = supportWindowImage->GetMetaDataDictionary();
   FFT1DSizeType fft1DSize = 32;
   ExposeMetaData< FFT1DSizeType >( dict, "FFT1DSize", fft1DSize );
-  const FFT1DSizeType spectraComponents = fft1DSize / 2 - 1;
+  const FFT1DSizeType spectraComponents = fft1DSize / 2 / 2 - 1;
 
   const ThreadIdType numberOfThreads = this->GetNumberOfThreads();
   this->m_PerThreadDataContainer.resize( numberOfThreads );
   for( ThreadIdType threadId = 0; threadId < numberOfThreads; ++threadId )
     {
     PerThreadData & perThreadData = this->m_PerThreadDataContainer[threadId];
-    perThreadData.ComplexVector.set_size( fft1DSize );
-    perThreadData.SpectraVector.set_size( spectraComponents );
+    perThreadData.ComplexVector.set_size( fft1DSize / 2 );
+    perThreadData.SpectraVector.resize( spectraComponents );
     perThreadData.LineImageRegionSize.Fill( 1 );
     perThreadData.LineImageRegionSize[0] = fft1DSize;
     }
+}
+
+
+template< typename TInputImage, typename TSupportWindowImage, typename TOutputImage >
+void
+Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
+::VerifyInputInformation()
+{
 }
 
 
@@ -92,10 +105,9 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
   // Currently using a Hamming Window
   SpectraVectorType window( length );
   ScalarType sum = NumericTraits< ScalarType >::ZeroValue();
-  const ScalarType twopi = 2 * vnl_math::pi;
   for( FFT1DSizeType sample = 0; sample < length; ++sample )
     {
-    window[sample] = 0.54 + 0.46 * std::cos( (twopi * sample) / (length - 1) );
+    window[sample] = 0.54 + 0.46 * std::cos( (Math::twopi * sample) / (length - 1) );
     sum += window[sample];
     }
   for( FFT1DSizeType sample = 0; sample < length; ++sample )
@@ -107,41 +119,59 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
 
 
 template< typename TInputImage, typename TSupportWindowImage, typename TOutputImage >
-typename Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >::SpectraLineType
+void
 Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
-::ComputeSpectra( const IndexType & lineIndex, ThreadIdType threadId )
+::ComputeSpectra( const IndexType & lineIndex, ThreadIdType threadId, SpectraLineType & spectraLine )
 {
   const InputImageType * input = this->GetInput();
   PerThreadData & perThreadData = this->m_PerThreadDataContainer[threadId];
 
-  const FFT1DSizeType fft1DSize = static_cast< FFT1DSizeType >( perThreadData.ComplexVector.size() );
+  const FFT1DSizeType fftSize = static_cast< FFT1DSizeType >( perThreadData.ComplexVector.size() );
 
   const typename InputImageType::RegionType lineRegion( lineIndex, perThreadData.LineImageRegionSize );
   InputImageIteratorType inputIt( input, lineRegion );
   inputIt.GoToBegin();
   perThreadData.ComplexVector.fill( 0 );
   typename ComplexVectorType::iterator complexVectorIt = perThreadData.ComplexVector.begin();
-  typename SpectraVectorType::const_iterator windowIt = perThreadData.LineWindowMap[fft1DSize].begin();
-  while( !inputIt.IsAtEnd() )
-    {
-    *complexVectorIt = inputIt.Value() * *windowIt;
-    ++inputIt;
-    ++complexVectorIt;
-    ++windowIt;
-    }
-  FFT1DType fft1D( fft1DSize );
-  fft1D.bwd_transform( perThreadData.ComplexVector );
+  const typename ComplexVectorType::iterator complexVectorEnd = perThreadData.ComplexVector.end();
+  typename SpectraVectorType::const_iterator windowIt = perThreadData.LineWindowMap[fftSize].begin();
   typename ComplexVectorType::const_iterator complexVectorConstIt = perThreadData.ComplexVector.begin();
   typename SpectraVectorType::iterator spectraVectorIt = perThreadData.SpectraVector.begin();
-  // drop DC component
-  ++complexVectorConstIt;
   const size_t highFreq = perThreadData.SpectraVector.size();
   for( size_t freq = 0; freq < highFreq; ++freq )
     {
-    spectraVectorIt[freq] = std::real(*complexVectorConstIt * std::conj(*complexVectorConstIt));
-    ++complexVectorConstIt;
+    spectraVectorIt[freq] = 0.0f;
     }
-  return std::make_pair( lineIndex, perThreadData.SpectraVector );
+  const double overlap = 0.5;
+  IndexType segmentIndex( lineIndex );
+  for( unsigned int segment = 0; segment < 3; ++ segment )
+    {
+    segmentIndex[0] = static_cast< IndexValueType >( lineIndex[0] + segment * perThreadData.LineImageRegionSize[0] * overlap / 3.0 );
+    inputIt.SetIndex( segmentIndex );
+    complexVectorIt = perThreadData.ComplexVector.begin();
+    windowIt = perThreadData.LineWindowMap[fftSize].begin();
+    while( complexVectorIt != complexVectorEnd )
+      {
+      *complexVectorIt = inputIt.Value() * *windowIt;
+      ++inputIt;
+      ++complexVectorIt;
+      ++windowIt;
+      }
+    FFT1DType fft1D( fftSize );
+    fft1D.bwd_transform( perThreadData.ComplexVector );
+    complexVectorConstIt = perThreadData.ComplexVector.begin();
+    spectraVectorIt = perThreadData.SpectraVector.begin();
+    // drop DC component
+    ++complexVectorConstIt;
+    for( size_t freq = 0; freq < highFreq; ++freq )
+      {
+      spectraVectorIt[freq] += std::real(*complexVectorConstIt * std::conj(*complexVectorConstIt)) / 3.0f;
+      ++complexVectorConstIt;
+      }
+    }
+
+  spectraLine.first = lineIndex;
+  spectraLine.second = perThreadData.SpectraVector;
 }
 
 
@@ -158,23 +188,16 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
   outputIt.SetDirection( 1 );
 
   const MetaDataDictionary & dict = supportWindowImage->GetMetaDataDictionary();
-  FFT1DSizeType fft1DSize = 32;
-  ExposeMetaData< FFT1DSizeType >( dict, "FFT1DSize", fft1DSize );
   PerThreadData & perThreadData = this->m_PerThreadDataContainer[threadId];
-  this->AddLineWindow( fft1DSize, perThreadData.LineWindowMap );
+  this->AddLineWindow( perThreadData.ComplexVector.size(), perThreadData.LineWindowMap );
 
-  ComplexVectorType complexVector( fft1DSize );
-  SpectraVectorType spectraVector( fft1DSize );
-  typename InputImageType::SizeType lineImageRegionSize;
-  lineImageRegionSize.Fill( 1 );
-  lineImageRegionSize[0] = fft1DSize;
-  vnl_fft_1d< ScalarType > fft1D( fft1DSize );
   SpectraLinesContainerType spectraLines;
 
   typedef ImageLinearConstIteratorWithIndex< SupportWindowImageType > SupportWindowIteratorType;
   SupportWindowIteratorType supportWindowIt( supportWindowImage, outputRegionForThread );
   supportWindowIt.SetDirection( 1 );
 
+  SpectraLineType spectraLine;
   for( outputIt.GoToBegin(), supportWindowIt.GoToBegin();
        !outputIt.IsAtEnd();
        outputIt.NextLine(), supportWindowIt.NextLine() )
@@ -192,7 +215,7 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
              ++windowLine )
           {
           const IndexType & lineIndex = *windowLine;
-          const SpectraLineType & spectraLine = this->ComputeSpectra( lineIndex, threadId );
+          this->ComputeSpectra( lineIndex, threadId, spectraLine );
           spectraLines.push_back( spectraLine );
           }
         }
@@ -213,14 +236,14 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
           const IndexType & lineIndex = *windowLine;
           if( spectraLinesIt == spectraLinesEnd ) // past the end of the previously processed lines
             {
-            const SpectraLineType & spectraLine = this->ComputeSpectra( lineIndex, threadId );
+            this->ComputeSpectra( lineIndex, threadId, spectraLine );
             spectraLines.push_back( spectraLine );
             }
           else if( lineIndex[1] == (spectraLinesIt->first)[1] ) // one of the same lines that was previously computed
             {
             if( lineIndex[0] != (spectraLinesIt->first)[0] )
               {
-              const SpectraLineType & spectraLine = this->ComputeSpectra( lineIndex, threadId );
+              this->ComputeSpectra( lineIndex, threadId, spectraLine );
               *spectraLinesIt = spectraLine;
               }
             ++spectraLinesIt;
@@ -232,16 +255,18 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
           }
         }
 
+      // lateral window and sum
       const size_t spectraLinesCount = spectraLines.size();
       this->AddLineWindow( spectraLinesCount, perThreadData.LineWindowMap );
       typename OutputImageType::PixelType outputPixel;
-      outputPixel.SetSize( fft1DSize );
+      const FFT1DSizeType spectralComponents = perThreadData.SpectraVector.size();
+      outputPixel.SetSize( spectralComponents );
       outputPixel.Fill( NumericTraits< ScalarType >::ZeroValue() );
       typename SpectraVectorType::const_iterator windowIt = perThreadData.LineWindowMap[spectraLinesCount].begin();
       for( size_t line = 0; line < spectraLinesCount; ++line )
         {
         typename SpectraVectorType::const_iterator spectraIt = spectraLines[line].second.begin();
-        for( FFT1DSizeType sample = 0; sample < fft1DSize; ++sample )
+        for( FFT1DSizeType sample = 0; sample < spectralComponents; ++sample )
           {
           outputPixel[sample] += *windowIt * *spectraIt;
           ++spectraIt;

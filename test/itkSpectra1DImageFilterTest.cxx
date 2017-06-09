@@ -20,6 +20,7 @@
 #include "itkImageFileWriter.h"
 #include "itkPermuteAxesImageFilter.h"
 #include "itkVectorImage.h"
+#include "itkTestingMacros.h"
 
 #include "itkSpectra1DSupportWindowImageFilter.h"
 #include "itkSpectra1DImageFilter.h"
@@ -43,6 +44,7 @@ int itkSpectra1DImageFilterTest( int argc, char* argv[] )
   typedef itk::ImageFileReader< ImageType > ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
+  TRY_EXPECT_NO_EXCEPTION( reader->UpdateLargestPossibleRegion() );
 
   // Want RF to be along direction 0
   typedef itk::PermuteAxesImageFilter< ImageType > PermuteAxesFilterType;
@@ -52,15 +54,7 @@ int itkSpectra1DImageFilterTest( int argc, char* argv[] )
   permuteOrder[1] = 0;
   permuteAxesFilter->SetOrder( permuteOrder );
   permuteAxesFilter->SetInput( reader->GetOutput() );
-  try
-    {
-    permuteAxesFilter->UpdateOutputInformation();
-    }
-  catch( itk::ExceptionObject & error )
-    {
-    std::cout << "Error: " << error << std::endl;
-    return EXIT_FAILURE;
-    }
+  TRY_EXPECT_NO_EXCEPTION( permuteAxesFilter->UpdateOutputInformation() );
   ImageType::ConstPointer rfImage = permuteAxesFilter->GetOutput();
 
   ImageType::Pointer sideLines = ImageType::New();
@@ -72,6 +66,9 @@ int itkSpectra1DImageFilterTest( int argc, char* argv[] )
   typedef itk::Spectra1DSupportWindowImageFilter< ImageType > SpectraSupportWindowFilterType;
   SpectraSupportWindowFilterType::Pointer spectraSupportWindowFilter = SpectraSupportWindowFilterType::New();
   spectraSupportWindowFilter->SetInput( sideLines );
+  spectraSupportWindowFilter->SetFFT1DSize( 128 );
+  spectraSupportWindowFilter->SetStep( 16 );
+  TRY_EXPECT_NO_EXCEPTION( spectraSupportWindowFilter->UpdateLargestPossibleRegion() );
 
   typedef SpectraSupportWindowFilterType::OutputImageType                                  SupportWindowImageType;
   typedef float                                                                            SpectraComponentType;
@@ -80,21 +77,14 @@ int itkSpectra1DImageFilterTest( int argc, char* argv[] )
   SpectraFilterType::Pointer spectraFilter = SpectraFilterType::New();
   spectraFilter->SetInput( rfImage );
   spectraFilter->SetSupportWindowImage( spectraSupportWindowFilter->GetOutput() );
+  spectraFilter->UpdateLargestPossibleRegion();
 
   typedef itk::ImageFileWriter< SpectraImageType > WriterType;
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFileName );
-  writer->SetInput( spectraFilter->GetOutput() );
+  TRY_EXPECT_NO_EXCEPTION( writer->SetInput( spectraFilter->GetOutput() ) );
 
-  try
-    {
-    writer->UpdateLargestPossibleRegion();
-    }
-  catch( itk::ExceptionObject & error )
-    {
-    std::cout << "Error: " << error << std::endl;
-    return EXIT_FAILURE;
-    }
+  TRY_EXPECT_NO_EXCEPTION( writer->UpdateLargestPossibleRegion() );
 
   return EXIT_SUCCESS;
 }
