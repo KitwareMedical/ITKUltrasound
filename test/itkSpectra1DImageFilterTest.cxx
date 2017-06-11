@@ -18,7 +18,6 @@
 
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
-#include "itkPermuteAxesImageFilter.h"
 #include "itkVectorImage.h"
 #include "itkTestingMacros.h"
 
@@ -45,17 +44,7 @@ int itkSpectra1DImageFilterTest( int argc, char* argv[] )
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
   TRY_EXPECT_NO_EXCEPTION( reader->UpdateLargestPossibleRegion() );
-
-  // Want RF to be along direction 0
-  typedef itk::PermuteAxesImageFilter< ImageType > PermuteAxesFilterType;
-  PermuteAxesFilterType::Pointer permuteAxesFilter = PermuteAxesFilterType::New();
-  PermuteAxesFilterType::PermuteOrderArrayType permuteOrder;
-  permuteOrder[0] = 1;
-  permuteOrder[1] = 0;
-  permuteAxesFilter->SetOrder( permuteOrder );
-  permuteAxesFilter->SetInput( reader->GetOutput() );
-  TRY_EXPECT_NO_EXCEPTION( permuteAxesFilter->UpdateOutputInformation() );
-  ImageType::ConstPointer rfImage = permuteAxesFilter->GetOutput();
+  ImageType::ConstPointer rfImage = reader->GetOutput();
 
   ImageType::Pointer sideLines = ImageType::New();
   sideLines->CopyInformation( rfImage );
@@ -77,7 +66,7 @@ int itkSpectra1DImageFilterTest( int argc, char* argv[] )
   SpectraFilterType::Pointer spectraFilter = SpectraFilterType::New();
   spectraFilter->SetInput( rfImage );
   spectraFilter->SetSupportWindowImage( spectraSupportWindowFilter->GetOutput() );
-  spectraFilter->UpdateLargestPossibleRegion();
+  TRY_EXPECT_NO_EXCEPTION( spectraFilter->UpdateLargestPossibleRegion() );
 
   typedef itk::ImageFileWriter< SpectraImageType > WriterType;
   WriterType::Pointer writer = WriterType::New();

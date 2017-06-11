@@ -23,6 +23,8 @@
 #include "itkImageLinearConstIteratorWithIndex.h"
 #include "itkImageLinearIteratorWithIndex.h"
 #include "itkImageRegionConstIterator.h"
+#include "itkImageScanlineIterator.h"
+#include "itkImageScanlineConstIterator.h"
 #include "itkMetaDataObject.h"
 
 #include "itkSpectra1DSupportWindowImageFilter.h"
@@ -277,6 +279,42 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
 
       ++outputIt;
       ++supportWindowIt;
+      }
+    }
+
+  const OutputImageType * referenceSpectra = this->GetReferenceSpectraImage();
+  if( referenceSpectra != ITK_NULLPTR )
+    {
+    typedef ImageScanlineConstIterator< OutputImageType > ReferenceSpectraIteratorType;
+    ReferenceSpectraIteratorType referenceSpectraIt( referenceSpectra, outputRegionForThread );
+
+    typedef ImageScanlineIterator< OutputImageType >      PopulatedOutputIteratorType;
+    PopulatedOutputIteratorType populatedOutputIt( output, outputRegionForThread );
+
+    const unsigned int numberOfComponents = referenceSpectra->GetNumberOfComponentsPerPixel();
+    if( numberOfComponents != output->GetNumberOfComponentsPerPixel() )
+      {
+      itkExceptionMacro( "ReferenceSpectraImage has " << numberOfComponents << " while the output image has " << output->GetNumberOfComponentsPerPixel() << " components" );
+      }
+
+    for( referenceSpectraIt.GoToBegin(), populatedOutputIt.GoToBegin(); !populatedOutputIt.IsAtEnd();)
+      {
+      while( !populatedOutputIt.IsAtEndOfLine() )
+        {
+        typedef typename OutputImageType::PixelType PixelType;
+        PixelType outputPixel = populatedOutputIt.Get();
+        const PixelType referencePixel = referenceSpectraIt.Get();
+        for( unsigned int component = 0; component < numberOfComponents; ++component )
+          {
+          outputPixel[component] /= referencePixel[component];
+          }
+        populatedOutputIt.Set( outputPixel );
+
+        ++populatedOutputIt;
+        ++referenceSpectraIt;
+        }
+      populatedOutputIt.NextLine();
+      referenceSpectraIt.NextLine();
       }
     }
 }
