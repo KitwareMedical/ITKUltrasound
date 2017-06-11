@@ -146,7 +146,7 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
     }
   const double overlap = 0.5;
   IndexType segmentIndex( lineIndex );
-  for( unsigned int segment = 0; segment < 3; ++ segment )
+  for( unsigned int segment = 0; segment < 3; ++segment )
     {
     segmentIndex[0] = static_cast< IndexValueType >( lineIndex[0] + segment * perThreadData.LineImageRegionSize[0] * overlap / 3.0 );
     inputIt.SetIndex( segmentIndex );
@@ -306,7 +306,14 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
         const PixelType referencePixel = referenceSpectraIt.Get();
         for( unsigned int component = 0; component < numberOfComponents; ++component )
           {
-          outputPixel[component] /= referencePixel[component];
+          if( Math::FloatAlmostEqual( referencePixel[component], NumericTraits< typename PixelType::ValueType >::Zero ) )
+            {
+            outputPixel[component] = NumericTraits< typename PixelType::ValueType >::Zero;
+            }
+          else
+            {
+            outputPixel[component] /= referencePixel[component];
+            }
           }
         populatedOutputIt.Set( outputPixel );
 
