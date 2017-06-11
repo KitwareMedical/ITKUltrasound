@@ -69,10 +69,10 @@ Spectra1DSupportWindowImageFilter< TInputImage >
   OutputImageType * output = this->GetOutput();
   const InputImageType * input = this->GetInput();
 
-  const OutputImageRegionType outputLargestRegion = output->GetLargestPossibleRegion();
+  const typename InputImageType::RegionType & inputLargestRegion = input->GetLargestPossibleRegion();
   typedef typename OutputImageType::IndexType IndexType;
-  const IndexType largestIndexStart = outputLargestRegion.GetIndex();
-  IndexType largestIndexStop = largestIndexStart + outputLargestRegion.GetSize();
+  const IndexType largestIndexStart = inputLargestRegion.GetIndex();
+  IndexType largestIndexStop = largestIndexStart + inputLargestRegion.GetSize();
   for( unsigned int dim = 0; dim < ImageDimension; ++dim )
     {
     largestIndexStop[dim] -= 1;
@@ -84,7 +84,7 @@ Spectra1DSupportWindowImageFilter< TInputImage >
   OutputIteratorType outputIt( output, outputRegionForThread );
   const FFT1DSizeType fftSize = this->GetFFT1DSize();
   const SizeValueType sampleStep = this->GetStep();
-  if( outputLargestRegion.GetSize()[0] < fftSize )
+  if( inputLargestRegion.GetSize()[0] < fftSize )
     {
     itkExceptionMacro( "Insufficient size in the FFT direction." );
     }
