@@ -146,6 +146,7 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
     }
   const double overlap = 0.5;
   IndexType segmentIndex( lineIndex );
+  const double spectralScale = 1.0 / (fftSize * fftSize);
   for( unsigned int segment = 0; segment < 3; ++segment )
     {
     segmentIndex[0] = static_cast< IndexValueType >( lineIndex[0] + segment * perThreadData.LineImageRegionSize[0] * overlap / 3.0 );
@@ -167,7 +168,7 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
     ++complexVectorConstIt;
     for( size_t freq = 0; freq < highFreq; ++freq )
       {
-      spectraVectorIt[freq] += std::real(*complexVectorConstIt * std::conj(*complexVectorConstIt)) / 3.0f;
+      spectraVectorIt[freq] += std::real(*complexVectorConstIt * std::conj(*complexVectorConstIt)) / 3.0 * spectralScale;
       ++complexVectorConstIt;
       }
     }
