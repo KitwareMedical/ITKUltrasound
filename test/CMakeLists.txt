@@ -159,7 +159,8 @@ itk_add_test( NAME itkVnlInverse1DFFTImageFilterTest
 itk_add_test(NAME itkSpectra1DImageFilterTest
   COMMAND UltrasoundTestDriver
   itkSpectra1DImageFilterTest
-    DATA{Input/uniform_phantom_8.9_MHz.mha}
+    DATA{Input/rf_voltage_15_freq_0005000000_2017-5-31_12-36-44.nrrd}
+    DATA{Input/rf_voltage_15_freq_0005000000_2017-5-31_12-36-44_ReferenceSpectrum_side_lines_03_fft1d_size_128.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkSpectra1DImageFilterTest.mha
     )
 itk_add_test(NAME itkSpectra1DSupportWindowImageFilterTest

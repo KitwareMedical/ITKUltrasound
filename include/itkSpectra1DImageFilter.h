@@ -46,8 +46,7 @@ namespace itk
  */
 template< typename TInputImage, typename TSupportWindowImage, typename TOutputImage >
 class Spectra1DImageFilter:
-  public ImageToImageFilter< TInputImage,
-                             TOutputImage >
+  public ImageToImageFilter< TInputImage, TOutputImage >
 {
 public:
   itkStaticConstMacro( ImageDimension, unsigned int, TInputImage::ImageDimension );
@@ -72,6 +71,11 @@ public:
    * computation. */
   itkSetInputMacro( SupportWindowImage, SupportWindowImageType );
   itkGetInputMacro( SupportWindowImage, SupportWindowImageType );
+
+  /** Set/get an optional reference spectra image use to normalize the
+   * output.*/
+  itkSetInputMacro( ReferenceSpectraImage, OutputImageType );
+  itkGetInputMacro( ReferenceSpectraImage, OutputImageType );
 
 protected:
   Spectra1DImageFilter();
@@ -112,6 +116,8 @@ private:
     };
   typedef std::vector< PerThreadData > PerThreadDataContainerType;
   PerThreadDataContainerType m_PerThreadDataContainer;
+
+  typename OutputImageType::Pointer m_ReferenceSpectraImage;
 
   void ComputeSpectra( const IndexType & lineIndex, ThreadIdType threadId, SpectraLineType & spectraLine );
   static void AddLineWindow( FFT1DSizeType length, LineWindowMapType & lineWindowMap );

@@ -18,7 +18,6 @@
 
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
-#include "itkPermuteAxesImageFilter.h"
 #include "itkVectorImage.h"
 #include "itkTestingMacros.h"
 
@@ -35,7 +34,8 @@ int itkSpectra1DImageFilterTest( int argc, char* argv[] )
     return EXIT_FAILURE;
     }
   const char * inputImageFileName = argv[1];
-  const char * outputImageFileName = argv[2];
+  const char * referenceSpectraImageFileName = argv[2];
+  const char * outputImageFileName = argv[3];
 
   const unsigned int Dimension = 2;
   typedef short                              PixelType;
@@ -45,17 +45,7 @@ int itkSpectra1DImageFilterTest( int argc, char* argv[] )
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
   TRY_EXPECT_NO_EXCEPTION( reader->UpdateLargestPossibleRegion() );
-
-  // Want RF to be along direction 0
-  typedef itk::PermuteAxesImageFilter< ImageType > PermuteAxesFilterType;
-  PermuteAxesFilterType::Pointer permuteAxesFilter = PermuteAxesFilterType::New();
-  PermuteAxesFilterType::PermuteOrderArrayType permuteOrder;
-  permuteOrder[0] = 1;
-  permuteOrder[1] = 0;
-  permuteAxesFilter->SetOrder( permuteOrder );
-  permuteAxesFilter->SetInput( reader->GetOutput() );
-  TRY_EXPECT_NO_EXCEPTION( permuteAxesFilter->UpdateOutputInformation() );
-  ImageType::ConstPointer rfImage = permuteAxesFilter->GetOutput();
+  ImageType::ConstPointer rfImage = reader->GetOutput();
 
   ImageType::Pointer sideLines = ImageType::New();
   sideLines->CopyInformation( rfImage );
@@ -70,14 +60,33 @@ int itkSpectra1DImageFilterTest( int argc, char* argv[] )
   spectraSupportWindowFilter->SetStep( 16 );
   TRY_EXPECT_NO_EXCEPTION( spectraSupportWindowFilter->UpdateLargestPossibleRegion() );
 
-  typedef SpectraSupportWindowFilterType::OutputImageType                                  SupportWindowImageType;
-  typedef float                                                                            SpectraComponentType;
-  typedef itk::VectorImage< SpectraComponentType, Dimension >                              SpectraImageType;
+  typedef SpectraSupportWindowFilterType::OutputImageType     SupportWindowImageType;
+  SupportWindowImageType * supportWindowImage = spectraSupportWindowFilter->GetOutput();
+
+  typedef float                                               SpectraComponentType;
+  typedef itk::VectorImage< SpectraComponentType, Dimension > SpectraImageType;
+
+  typedef itk::ImageFileReader< SpectraImageType > ReferenceSpectraReaderType;
+  ReferenceSpectraReaderType::Pointer referenceSpectraReader = ReferenceSpectraReaderType::New();
+  referenceSpectraReader->SetFileName( referenceSpectraImageFileName );
+  TRY_EXPECT_NO_EXCEPTION( referenceSpectraReader->UpdateLargestPossibleRegion() );
+  typedef SpectraImageType::PixelType SpectraPixelType;
+  SpectraImageType::IndexType referenceIndex;
+  referenceIndex.Fill( 0 );
+  const SpectraPixelType referenceSpectra = referenceSpectraReader->GetOutput()->GetPixel( referenceIndex );
+  SpectraImageType::Pointer referenceSpectraImage = SpectraImageType::New();
+  referenceSpectraImage->CopyInformation( supportWindowImage );
+  referenceSpectraImage->SetRegions( supportWindowImage->GetLargestPossibleRegion() );
+  referenceSpectraImage->SetNumberOfComponentsPerPixel( referenceSpectraReader->GetOutput()->GetNumberOfComponentsPerPixel() );
+  referenceSpectraImage->Allocate();
+  referenceSpectraImage->FillBuffer( referenceSpectra );
+
   typedef itk::Spectra1DImageFilter< ImageType, SupportWindowImageType, SpectraImageType > SpectraFilterType;
   SpectraFilterType::Pointer spectraFilter = SpectraFilterType::New();
   spectraFilter->SetInput( rfImage );
   spectraFilter->SetSupportWindowImage( spectraSupportWindowFilter->GetOutput() );
-  spectraFilter->UpdateLargestPossibleRegion();
+  spectraFilter->SetReferenceSpectraImage( referenceSpectraImage );
+  TRY_EXPECT_NO_EXCEPTION( spectraFilter->UpdateLargestPossibleRegion() );
 
   typedef itk::ImageFileWriter< SpectraImageType > WriterType;
   WriterType::Pointer writer = WriterType::New();

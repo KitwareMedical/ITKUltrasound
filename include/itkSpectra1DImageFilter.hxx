@@ -23,6 +23,8 @@
 #include "itkImageLinearConstIteratorWithIndex.h"
 #include "itkImageLinearIteratorWithIndex.h"
 #include "itkImageRegionConstIterator.h"
+#include "itkImageScanlineIterator.h"
+#include "itkImageScanlineConstIterator.h"
 #include "itkMetaDataObject.h"
 
 #include "itkSpectra1DSupportWindowImageFilter.h"
@@ -144,7 +146,8 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
     }
   const double overlap = 0.5;
   IndexType segmentIndex( lineIndex );
-  for( unsigned int segment = 0; segment < 3; ++ segment )
+  const double spectralScale = 1.0 / (fftSize * fftSize);
+  for( unsigned int segment = 0; segment < 3; ++segment )
     {
     segmentIndex[0] = static_cast< IndexValueType >( lineIndex[0] + segment * perThreadData.LineImageRegionSize[0] * overlap / 3.0 );
     inputIt.SetIndex( segmentIndex );
@@ -165,7 +168,7 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
     ++complexVectorConstIt;
     for( size_t freq = 0; freq < highFreq; ++freq )
       {
-      spectraVectorIt[freq] += std::real(*complexVectorConstIt * std::conj(*complexVectorConstIt)) / 3.0f;
+      spectraVectorIt[freq] += std::real(*complexVectorConstIt * std::conj(*complexVectorConstIt)) / 3.0 * spectralScale;
       ++complexVectorConstIt;
       }
     }
@@ -277,6 +280,49 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
 
       ++outputIt;
       ++supportWindowIt;
+      }
+    }
+
+  const OutputImageType * referenceSpectra = this->GetReferenceSpectraImage();
+  if( referenceSpectra != ITK_NULLPTR )
+    {
+    typedef ImageScanlineConstIterator< OutputImageType > ReferenceSpectraIteratorType;
+    ReferenceSpectraIteratorType referenceSpectraIt( referenceSpectra, outputRegionForThread );
+
+    typedef ImageScanlineIterator< OutputImageType >      PopulatedOutputIteratorType;
+    PopulatedOutputIteratorType populatedOutputIt( output, outputRegionForThread );
+
+    const unsigned int numberOfComponents = referenceSpectra->GetNumberOfComponentsPerPixel();
+    if( numberOfComponents != output->GetNumberOfComponentsPerPixel() )
+      {
+      itkExceptionMacro( "ReferenceSpectraImage has " << numberOfComponents << " while the output image has " << output->GetNumberOfComponentsPerPixel() << " components" );
+      }
+
+    for( referenceSpectraIt.GoToBegin(), populatedOutputIt.GoToBegin(); !populatedOutputIt.IsAtEnd();)
+      {
+      while( !populatedOutputIt.IsAtEndOfLine() )
+        {
+        typedef typename OutputImageType::PixelType PixelType;
+        PixelType outputPixel = populatedOutputIt.Get();
+        const PixelType referencePixel = referenceSpectraIt.Get();
+        for( unsigned int component = 0; component < numberOfComponents; ++component )
+          {
+          if( Math::FloatAlmostEqual( referencePixel[component], NumericTraits< typename PixelType::ValueType >::Zero ) )
+            {
+            outputPixel[component] = NumericTraits< typename PixelType::ValueType >::Zero;
+            }
+          else
+            {
+            outputPixel[component] /= referencePixel[component];
+            }
+          }
+        populatedOutputIt.Set( outputPixel );
+
+        ++populatedOutputIt;
+        ++referenceSpectraIt;
+        }
+      populatedOutputIt.NextLine();
+      referenceSpectraIt.NextLine();
       }
     }
 }
