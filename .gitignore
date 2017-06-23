@@ -1,1 +1,14 @@
 notebooks/.ipynb_checkpoints/
+ITK-cp27-cp27m-manylinux1_x64
+ITK-cp27-cp27mu-manylinux1_x64
+ITK-cp34-cp34m-manylinux1_x64
+ITK-cp35-cp35m-manylinux1_x64
+ITKPythonBuilds-linux.tar
+ITKPythonBuilds-linux.tar.zst
+ITKPythonPackage/
+_skbuild/
+itk_ultrasound.egg-info/
+standalone-x64-build
+zstd-1.2.0-linux.tar
+zstd-1.2.0-linux.tar.gz
+zstd-1.2.0-linux/
