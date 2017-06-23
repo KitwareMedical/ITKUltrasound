@@ -46,7 +46,7 @@ setup(
         ],
     license='Apache',
     keywords='ITK InsightToolkit ultrasound imaging',
-    url=r'https://itk.org/',
+    url=r'http://www.insight-journal.org/browse/publication/722',
     install_requires=[
         r'itk'
     ]
