@@ -60,8 +60,8 @@ public:
   itkSetMacro( LowerFrequency, double )
   itkGetMacro( LowerFrequency, double )
 
-  itkSetMacro( Order, unsigned int )
-  itkGetMacro( Order, unsigned int )
+  itkSetMacro( Order, int )
+  itkGetMacro( Order, int )
 
 
 protected:
@@ -84,9 +84,9 @@ protected:
 
 private:
 
-  unsigned int m_Order;
-  double       m_LowerFrequency;
-  double       m_UpperFrequency;
+  int    m_Order;
+  double m_LowerFrequency;
+  double m_UpperFrequency;
 };
 
 }
