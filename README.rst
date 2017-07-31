@@ -2,7 +2,7 @@
 ITKUltrasound
 ==================
 
-.. image:: https://circleci.com/gh/KitwareMedical/ITKUltrasound.svg?style=svg
+.. image:: https://circleci.com/gh/KitwareMedical/ITKUltrasound.svg?style=shield
     :target: https://circleci.com/gh/KitwareMedical/ITKUltrasound
 
 .. image:: https://travis-ci.org/KitwareMedical/ITKUltrasound.svg?branch=master
@@ -11,8 +11,8 @@ ITKUltrasound
 Purpose
 =======
 
-This module contains filters for use with the `Insight Toolkit
-<https://itk.org/> (ITK)`_ that image formation and analysis of ultrasound
+This module contains filters for use with the `Insight Toolkit (ITK)
+<https://itk.org/>`_ that image formation and analysis of ultrasound
 images.
 
 Python Packages
