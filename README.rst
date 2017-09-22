@@ -8,6 +8,9 @@ ITKUltrasound
 .. image:: https://travis-ci.org/KitwareMedical/ITKUltrasound.svg?branch=master
     :target: https://travis-ci.org/KitwareMedical/ITKUltrasound
 
+.. image:: https://img.shields.io/appveyor/ci/thewtex/itkultrasound.svg
+    :target: https://ci.appveyor.com/project/thewtex/itkultrasound
+
 Purpose
 =======
 
@@ -18,7 +21,7 @@ images.
 Python Packages
 ===============
 
-Python packages are available for Linux and macOS. Install with::
+Python packages are available for Linux, macOS, and Windows. Install with::
 
   python -m pip install --upgrade pip
   python -m pip install itk-ultrasound

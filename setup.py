@@ -12,7 +12,7 @@ except ImportError:
 
 setup(
     name='itk-ultrasound',
-    version='0.1.0',
+    version='0.2.0',
     author='Matthew McCormick',
     author_email='matt.mccormick@kitware.com',
     packages=['itk'],
