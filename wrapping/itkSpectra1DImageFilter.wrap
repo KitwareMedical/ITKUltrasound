@@ -1,11 +1,11 @@
-itk_wrap_include("deque")
+itk_wrap_include("list")
 
 itk_wrap_class("itk::Spectra1DImageFilter" POINTER)
   foreach(d ${ITK_WRAP_DIMS})
     foreach(scalar_t ${WRAP_ITK_SCALAR})
       foreach(real_t ${WRAP_ITK_REAL})
-        itk_wrap_template("${ITKM_I${scalar_t}${d}}IdequeitkIndex${d}${d}${ITKM_VI${real_t}${d}}"
-          "${ITKT_I${scalar_t}${d}}, itk::Image< std::deque< itk::Index< ${d} > >, ${d} >, ${ITKT_VI${real_t}${d}}")
+        itk_wrap_template("${ITKM_I${scalar_t}${d}}IlistitkIndex${d}${d}${ITKM_VI${real_t}${d}}"
+          "${ITKT_I${scalar_t}${d}}, itk::Image< std::list< itk::Index< ${d} > >, ${d} >, ${ITKT_VI${real_t}${d}}")
         endforeach(real_t)
     endforeach(scalar_t)
   endforeach(d)

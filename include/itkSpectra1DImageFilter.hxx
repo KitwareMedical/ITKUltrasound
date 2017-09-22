@@ -224,8 +224,8 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
         }
       else // subsequent window along a line
         {
-        const IndexValueType desiredFirstLine = supportWindow[0][1];
-        while( spectraLines[0].first[1] < desiredFirstLine )
+        const IndexValueType desiredFirstLine = supportWindow.front()[1];
+        while( spectraLines.front().first[1] < desiredFirstLine )
           {
           spectraLines.pop_front();
           }
@@ -266,15 +266,17 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
       outputPixel.SetSize( spectralComponents );
       outputPixel.Fill( NumericTraits< ScalarType >::ZeroValue() );
       typename SpectraVectorType::const_iterator windowIt = perThreadData.LineWindowMap[spectraLinesCount].begin();
+      typename SpectraLinesContainerType::iterator linesIt = spectraLines.begin();
       for( size_t line = 0; line < spectraLinesCount; ++line )
         {
-        typename SpectraVectorType::const_iterator spectraIt = spectraLines[line].second.begin();
+        typename SpectraVectorType::const_iterator spectraIt = linesIt->second.begin();
         for( FFT1DSizeType sample = 0; sample < spectralComponents; ++sample )
           {
           outputPixel[sample] += *windowIt * *spectraIt;
           ++spectraIt;
           }
         ++windowIt;
+        ++linesIt;
         }
       outputIt.Set( outputPixel );
 
