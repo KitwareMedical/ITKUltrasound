@@ -11,6 +11,7 @@ cache:
   directories:
     - "$HOME/deps"
     - "$HOME/ExternalData"
+    - "$HOME/Library/Caches/Homebrew"
 script:
 - curl -L https://rawgit.com/InsightSoftwareConsortium/ITKPythonPackage/master/scripts/macpython-download-cache-and-build-module-wheels.sh -O
 - chmod u+x macpython-download-cache-and-build-module-wheels.sh
