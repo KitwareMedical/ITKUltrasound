@@ -1,4 +1,4 @@
-itk_wrap_include("deque")
+itk_wrap_include("list")
 itk_wrap_include("complex")
 
 itk_wrap_class("itk::CurvilinearArraySpecialCoordinatesImage" POINTER_WITH_SUPERCLASS)
@@ -91,8 +91,8 @@ itk_wrap_include("itkSpectra1DSupportWindowToMaskImageFilter.h")
 itk_wrap_class("itk::Spectra1DSupportWindowToMaskImageFilter" POINTER_WITH_2_SUPERCLASSES)
   foreach(d ${ITK_WRAP_DIMS})
     foreach(t ${WRAP_ITK_INT})
-      itk_wrap_template("IdequeitkIndex${d}${d}CASCI${ITKM_${t}}${d}"
-        "itk::Image< std::deque< itk::Index< ${d} > >, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >")
+      itk_wrap_template("IlistitkIndex${d}${d}CASCI${ITKM_${t}}${d}"
+        "itk::Image< std::list< itk::Index< ${d} > >, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >")
     endforeach()
   endforeach()
 itk_end_wrap_class()

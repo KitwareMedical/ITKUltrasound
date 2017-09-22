@@ -97,7 +97,7 @@ private:
   typedef std::vector< ScalarType >                  SpectraVectorType;
   typedef typename InputImageType::IndexType         IndexType;
   typedef std::pair< IndexType, SpectraVectorType >  SpectraLineType;
-  typedef std::deque< SpectraLineType >              SpectraLinesContainerType;
+  typedef std::list< SpectraLineType >               SpectraLinesContainerType;
   typedef typename SupportWindowImageType::PixelType SupportWindowType;
   typedef ImageRegionConstIterator< InputImageType > InputImageIteratorType;
   typedef vnl_fft_1d< ScalarType >                   FFT1DType;

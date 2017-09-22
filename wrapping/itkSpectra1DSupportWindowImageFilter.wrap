@@ -1,16 +1,8 @@
-itk_wrap_include("deque")
-
-set(WRAPPER_AUTO_INCLUDE_HEADERS OFF)
-itk_wrap_class("std::deque" )
-  foreach(d ${ITK_WRAP_DIMS})
-    itk_wrap_template("itkIndex${d}" "itk::Index< ${d} >")
-  endforeach(d)
-itk_end_wrap_class()
-set(WRAPPER_AUTO_INCLUDE_HEADERS ON)
+itk_wrap_include("list")
 
 itk_wrap_class("itk::Image" POINTER)
   foreach(d ${ITK_WRAP_DIMS})
-    itk_wrap_template("dequeitkIndex${d}${d}" "std::deque< itk::Index< ${d} > >, ${d}")
+    itk_wrap_template("listitkIndex${d}${d}" "std::list< itk::Index< ${d} > >, ${d}")
   endforeach(d)
 itk_end_wrap_class()
 
