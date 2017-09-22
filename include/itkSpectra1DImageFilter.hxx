@@ -266,7 +266,7 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
       outputPixel.SetSize( spectralComponents );
       outputPixel.Fill( NumericTraits< ScalarType >::ZeroValue() );
       typename SpectraVectorType::const_iterator windowIt = perThreadData.LineWindowMap[spectraLinesCount].begin();
-      SpectraLinesContainerType::iterator linesIt = spectraLines.begin();
+      typename SpectraLinesContainerType::iterator linesIt = spectraLines.begin();
       for( size_t line = 0; line < spectraLinesCount; ++line )
         {
         typename SpectraVectorType::const_iterator spectraIt = linesIt->second.begin();
