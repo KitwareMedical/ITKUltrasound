@@ -4,13 +4,8 @@ os:
 - osx
 compiler:
 - gcc
-env:
-  global:
-    - ExternalData_OBJECT_STORES=$HOME/ExternalData
 cache:
   directories:
-    - "$HOME/deps"
-    - "$HOME/ExternalData"
     - "$HOME/Library/Caches/Homebrew"
 script:
 - curl -L https://rawgit.com/InsightSoftwareConsortium/ITKPythonPackage/master/scripts/macpython-download-cache-and-build-module-wheels.sh -O
