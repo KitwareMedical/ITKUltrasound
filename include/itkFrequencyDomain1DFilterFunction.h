@@ -19,6 +19,7 @@
 #define itkFrequencyDomain1DFilterFunction_h
 
 #include "itkObject.h"
+#include "itkObjectFactory.h"
 
 namespace itk
 {
