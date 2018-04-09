@@ -104,8 +104,8 @@ protected:
   virtual ~ReplaceNonFiniteImageFilter() {}
 
 private:
-  ReplaceNonFiniteImageFilter(const Self &) ITK_DELETE_FUNCTION;
-  void operator=(const Self &) ITK_DELETE_FUNCTION;
+  ReplaceNonFiniteImageFilter(const Self &) ITK_DELETED_FUNCTION;
+  void operator=(const Self &) ITK_DELETED_FUNCTION;
 };
 
 } // end namespace itk

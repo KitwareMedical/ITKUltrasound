@@ -87,8 +87,8 @@ protected:
   virtual void PrintSelf(std::ostream & os, Indent indent) const ITK_OVERRIDE;
 
 private:
-  HDF5UltrasoundImageIO(const Self &) ITK_DELETE_FUNCTION;
-  void operator=(const Self &) ITK_DELETE_FUNCTION;
+  HDF5UltrasoundImageIO(const Self &) ITK_DELETED_FUNCTION;
+  void operator=(const Self &) ITK_DELETED_FUNCTION;
 
   template <typename TScalar>
   std::vector<TScalar> ReadVector(const std::string &dataSetName);

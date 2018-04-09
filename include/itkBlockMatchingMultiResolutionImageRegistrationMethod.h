@@ -132,19 +132,19 @@ public:
 
   /** Set/Get the Fixed image. */
   itkSetObjectMacro( FixedImage, FixedImageType );
-  itkGetObjectMacro( FixedImage, FixedImageType );
+  itkGetConstObjectMacro( FixedImage, FixedImageType );
 
   /** Set/Get the Moving image. */
   itkSetObjectMacro( MovingImage, MovingImageType );
-  itkGetObjectMacro( MovingImage, MovingImageType );
+  itkGetConstObjectMacro( MovingImage, MovingImageType );
 
   /** Set/Get the Fixed image pyramid. */
   itkSetObjectMacro( FixedImagePyramid, FixedImagePyramidType );
-  itkGetObjectMacro( FixedImagePyramid, FixedImagePyramidType );
+  itkGetConstObjectMacro( FixedImagePyramid, FixedImagePyramidType );
 
   /** Set/Get the Moving image pyramid. */
   itkSetObjectMacro( MovingImagePyramid, MovingImagePyramidType );
-  itkGetObjectMacro( MovingImagePyramid, MovingImagePyramidType );
+  itkGetConstObjectMacro( MovingImagePyramid, MovingImagePyramidType );
 
   /** Set/Get the schedules . */
   void SetSchedules( const ScheduleType & fixedSchedule,
@@ -166,16 +166,16 @@ public:
   /** BlockMatching::ImageRegistrationMethod used to register each image at
    * every level. */
   itkSetObjectMacro( ImageRegistrationMethod, ImageRegistrationMethodType );
-  itkGetObjectMacro( ImageRegistrationMethod, ImageRegistrationMethodType );
+  itkGetConstObjectMacro( ImageRegistrationMethod, ImageRegistrationMethodType );
 
   /** Set the object used to generate the block radii in the fixed image at
    * every level. */
   itkSetObjectMacro( BlockRadiusCalculator, BlockRadiusCalculatorType );
-  itkGetObjectMacro( BlockRadiusCalculator, BlockRadiusCalculatorType );
+  itkGetConstObjectMacro( BlockRadiusCalculator, BlockRadiusCalculatorType );
 
   /** Set the object used to generate the search regions. */
   itkSetObjectMacro( SearchRegionImageSource, SearchRegionImageSourceType );
-  itkGetObjectMacro( SearchRegionImageSource, SearchRegionImageSourceType );
+  itkGetConstObjectMacro( SearchRegionImageSource, SearchRegionImageSourceType );
 
 protected:
   MultiResolutionImageRegistrationMethod();

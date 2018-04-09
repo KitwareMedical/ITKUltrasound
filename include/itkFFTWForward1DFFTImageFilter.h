@@ -81,8 +81,8 @@ protected:
   void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) ITK_OVERRIDE;
 
 private:
-  FFTWForward1DFFTImageFilter(const Self&) ITK_DELETE_FUNCTION;
-  void operator=(const Self&) ITK_DELETE_FUNCTION;
+  FFTWForward1DFFTImageFilter(const Self&) ITK_DELETED_FUNCTION;
+  void operator=(const Self&) ITK_DELETED_FUNCTION;
 
   /** Destroy FFTW Plans and associated buffers. */
   void DestroyPlans();
