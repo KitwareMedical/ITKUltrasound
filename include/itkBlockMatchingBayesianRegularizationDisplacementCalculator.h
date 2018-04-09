@@ -166,7 +166,7 @@ public:
    * displacements after regularization.  Defaults to a
    * MaximumPixelDisplacementCalcultor. */
   itkSetObjectMacro( DisplacementCalculator, Superclass );
-  itkGetObjectMacro( DisplacementCalculator, Superclass );
+  itkGetConstObjectMacro( DisplacementCalculator, Superclass );
 
 protected:
   BayesianRegularizationDisplacementCalculator();

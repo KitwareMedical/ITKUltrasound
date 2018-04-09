@@ -84,8 +84,8 @@ protected:
   unsigned int m_Direction;
 
 private:
-  Inverse1DFFTImageFilter( const Self& ) ITK_DELETE_FUNCTION;
-  void operator=( const Self& ) ITK_DELETE_FUNCTION;
+  Inverse1DFFTImageFilter( const Self& ) ITK_DELETED_FUNCTION;
+  void operator=( const Self& ) ITK_DELETED_FUNCTION;
 
   ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;
 };

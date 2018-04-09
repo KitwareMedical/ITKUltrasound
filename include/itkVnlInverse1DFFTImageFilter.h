@@ -59,8 +59,8 @@ protected:
   virtual ~VnlInverse1DFFTImageFilter() { }
 
 private:
-  VnlInverse1DFFTImageFilter(const Self&) ITK_DELETE_FUNCTION;
-  void operator=(const Self&) ITK_DELETE_FUNCTION;
+  VnlInverse1DFFTImageFilter(const Self&) ITK_DELETED_FUNCTION;
+  void operator=(const Self&) ITK_DELETED_FUNCTION;
 };
 
 } // end namespace itk

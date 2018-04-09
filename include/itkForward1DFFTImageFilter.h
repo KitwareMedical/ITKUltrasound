@@ -81,8 +81,8 @@ protected:
   virtual const ImageRegionSplitterBase* GetImageRegionSplitter() const ITK_OVERRIDE;
 
 private:
-  Forward1DFFTImageFilter( const Self& ) ITK_DELETE_FUNCTION;
-  void operator=( const Self& ) ITK_DELETE_FUNCTION;
+  Forward1DFFTImageFilter( const Self& ) ITK_DELETED_FUNCTION;
+  void operator=( const Self& ) ITK_DELETED_FUNCTION;
 
   ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;
 
