@@ -31,7 +31,7 @@ namespace itk
 
 /**
  * \class UltrasoundImageFileReader
- * 
+ *
  * Read an ultrasound itk::SpecialCoordinatesImage and populate its parameters
  * based on its itk::MetaDataDictionary entries.
  *
@@ -43,7 +43,7 @@ namespace itk
  *
  */
 template < typename TOutputImage >
-class UltrasoundImageFileReader :
+class ITK_TEMPLATE_EXPORT UltrasoundImageFileReader :
   public ImageFileReader< TOutputImage >
 {
 public:

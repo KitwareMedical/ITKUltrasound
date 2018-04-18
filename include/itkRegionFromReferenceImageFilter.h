@@ -37,7 +37,7 @@ namespace itk
  * \ingroup Ultrasound
  */
 template< typename TInputImage, typename TOutputImage=TInputImage >
-class RegionFromReferenceImageFilter:
+class ITK_TEMPLATE_EXPORT RegionFromReferenceImageFilter:
     public ExtractImageFilter<TInputImage,TOutputImage>
 {
 public:

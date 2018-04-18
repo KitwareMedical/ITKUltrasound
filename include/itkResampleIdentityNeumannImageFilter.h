@@ -117,7 +117,7 @@ public:
   /** Image pixel value typedef. */
   typedef typename TOutputImage::PixelType   PixelType;
   typedef typename TInputImage::PixelType    InputPixelType;
-  
+
   /** Typedef to describe the output image region type. */
   typedef typename TOutputImage::RegionType OutputImageRegionType;
 
@@ -145,7 +145,7 @@ public:
 
   /** Get the size of the output image. */
   itkGetConstReferenceMacro( Size, SizeType );
-     
+
   /** Set the output image spacing. */
   itkSetMacro( OutputSpacing, SpacingType );
   virtual void SetOutputSpacing( const double* values );
@@ -167,7 +167,7 @@ public:
   /** Helper method to set the output parameters based on this image */
   void SetOutputParametersFromImage ( const ImageBaseType * image );
 
-  /** Set the start index of the output largest possible region. 
+  /** Set the start index of the output largest possible region.
    * The default is an index of all zeros. */
   itkSetMacro( OutputStartIndex, IndexType );
 
@@ -178,7 +178,7 @@ public:
    *  the information is specified with the SetOutputSpacing, Origin,
    *  and Direction methods. UseReferenceImage must be On and a
    *  Reference image must be present to override the defaul behavior.
-   *  NOTE: This function seems redundant with the 
+   *  NOTE: This function seems redundant with the
    *  SetOutputParametersFromImage( image ) function */
   void SetReferenceImage ( const TOutputImage *image );
   const TOutputImage * GetReferenceImage( void ) const;
@@ -187,43 +187,31 @@ public:
   itkBooleanMacro( UseReferenceImage );
   itkGetConstMacro( UseReferenceImage, bool );
 
+protected:
+  ResampleIdentityNeumannImageFilter( void );
+  ~ResampleIdentityNeumannImageFilter( void ) {};
+
   /** ResampleIdentityNeumannImageFilter produces an image which is a different size
    * than its input.  As such, it needs to provide an implementation
    * for GenerateOutputInformation() in order to inform the pipeline
    * execution model.  The original documentation of this method is
    * below. \sa ProcessObject::GenerateOutputInformaton() */
-  virtual void GenerateOutputInformation( void );
+  void GenerateOutputInformation() ITK_OVERRIDE;
 
   /** ResampleIdentityNeumannImageFilter needs a different input requested region than
    * the output requested region.  As such, ResampleIdentityNeumannImageFilter needs
    * to provide an implementation for GenerateInputRequestedRegion()
    * in order to inform the pipeline execution model.
    * \sa ProcessObject::GenerateInputRequestedRegion() */
-  virtual void GenerateInputRequestedRegion( void );
+  void GenerateInputRequestedRegion() ITK_OVERRIDE;
 
-  /** This method is used to set the state of the filter before 
+  /** This method is used to set the state of the filter before
    * multi-threading. */
-  virtual void BeforeThreadedGenerateData( void );
+  void BeforeThreadedGenerateData() ITK_OVERRIDE;
 
-  /** This method is used to set the state of the filter after 
+  /** This method is used to set the state of the filter after
    * multi-threading. */
-  virtual void AfterThreadedGenerateData( void );
-
-  /** Method Compute the Modified Time based on changed to the components. */
-  unsigned long GetMTime( void ) const;
-
-#ifdef ITK_USE_CONCEPT_CHECKING
-  /** Begin concept checking */
-  itkConceptMacro(OutputHasNumericTraitsCheck,
-                  (Concept::HasNumericTraits<PixelType>));
-  /** End concept checking */
-#endif
-
-protected:
-  ResampleIdentityNeumannImageFilter( void );
-  ~ResampleIdentityNeumannImageFilter( void ) {};
-
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+  void AfterThreadedGenerateData() ITK_OVERRIDE;
 
   /** ResampleIdentityNeumannImageFilter can be implemented as a multithreaded filter.  Therefore,
    * this implementation provides a ThreadedGenerateData() routine which
@@ -235,6 +223,19 @@ protected:
    *     ImageToImageFilter::GenerateData() */
   void ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread,
                              ThreadIdType threadId ) ITK_OVERRIDE;
+
+  /** Method Compute the Modified Time based on changed to the components. */
+  unsigned long GetMTime( void ) const ITK_OVERRIDE;
+
+#ifdef ITK_USE_CONCEPT_CHECKING
+  /** Begin concept checking */
+  itkConceptMacro(OutputHasNumericTraitsCheck,
+                  (Concept::HasNumericTraits<PixelType>));
+  /** End concept checking */
+#endif
+
+
+  void PrintSelf( std::ostream& os, Indent indent ) const ITK_OVERRIDE;
 
 private:
   ResampleIdentityNeumannImageFilter( const Self& ); //purposely not implemented

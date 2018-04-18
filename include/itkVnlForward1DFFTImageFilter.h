@@ -32,7 +32,7 @@ namespace itk
  * \ingroup Ultrasound
  */
 template< typename TInputImage, typename TOutputImage=Image< std::complex< typename TInputImage::PixelType >, TInputImage::ImageDimension > >
-class VnlForward1DFFTImageFilter :
+class ITK_TEMPLATE_EXPORT VnlForward1DFFTImageFilter :
     public Forward1DFFTImageFilter< TInputImage, TOutputImage >
 {
 public:

@@ -33,7 +33,7 @@ namespace itk
  * \ingroup Ultrasound
  */
 template< typename TInputImage, typename TOutputImage=Image< std::complex< typename TInputImage::PixelType >, TInputImage::ImageDimension > >
-class FFTWForward1DFFTImageFilter :
+class ITK_TEMPLATE_EXPORT FFTWForward1DFFTImageFilter :
     public Forward1DFFTImageFilter< TInputImage, TOutputImage >
 {
 public:
@@ -77,8 +77,8 @@ protected:
     }
   }
 
-  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
-  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) ITK_OVERRIDE;
+  void BeforeThreadedGenerateData() ITK_OVERRIDE;
+  void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) ITK_OVERRIDE;
 
 private:
   FFTWForward1DFFTImageFilter(const Self&) ITK_DELETE_FUNCTION;

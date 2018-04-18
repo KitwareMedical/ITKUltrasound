@@ -33,7 +33,7 @@ namespace itk
  * \ingroup Ultrasound
  */
 template< typename TInputImage >
-class SpecialCoordinatesImageToVTKStructuredGridFilter: public ProcessObject
+class ITK_TEMPLATE_EXPORT SpecialCoordinatesImageToVTKStructuredGridFilter: public ProcessObject
 {
 public:
   /** Standard class typedefs. */

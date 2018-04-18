@@ -68,7 +68,7 @@ public:
     { m_Radius = radius; }
   itkGetConstReferenceMacro( Radius, RadiusType );
 
-  virtual const RadiusType& Compute( unsigned long level )
+  const RadiusType& Compute( unsigned long level ) ITK_OVERRIDE
     {
     return m_Radius;
     }

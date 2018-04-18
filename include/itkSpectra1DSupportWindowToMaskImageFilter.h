@@ -29,7 +29,7 @@ namespace itk
  * \ingroup Ultrasound
  */
 template< typename TInputImage, typename TOutputImage >
-class Spectra1DSupportWindowToMaskImageFilter:
+class ITK_TEMPLATE_EXPORT Spectra1DSupportWindowToMaskImageFilter:
   public ImageToImageFilter< TInputImage,
                              TOutputImage >
 {

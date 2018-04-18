@@ -39,7 +39,7 @@ namespace itk
  * \ingroup Ultrasound
  */
 template< typename TInputImage >
-class Spectra1DSupportWindowImageFilter:
+class ITK_TEMPLATE_EXPORT Spectra1DSupportWindowImageFilter:
   public ImageToImageFilter< TInputImage,
                              Image< std::list< typename TInputImage::IndexType >, TInputImage::ImageDimension > >
 {

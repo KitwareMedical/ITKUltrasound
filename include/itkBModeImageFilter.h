@@ -48,7 +48,7 @@ namespace itk
  * \ingroup Ultrasound
  */
 template < typename TInputImage, typename TOutputImage=TInputImage, typename TComplexImage=Image< std::complex< typename TInputImage::PixelType >, TInputImage::ImageDimension > >
-class BModeImageFilter :
+class ITK_TEMPLATE_EXPORT BModeImageFilter :
   public ImageToImageFilter< TInputImage, TOutputImage >
 {
 public:

@@ -35,7 +35,7 @@ namespace itk
  * \ingroup Ultrasound
  * */
 template< typename TInputImage, typename TOutputImage = TInputImage >
-class TimeGainCompensationImageFilter:
+class ITK_TEMPLATE_EXPORT TimeGainCompensationImageFilter:
   public ImageToImageFilter< TInputImage, TOutputImage >
 {
 public:

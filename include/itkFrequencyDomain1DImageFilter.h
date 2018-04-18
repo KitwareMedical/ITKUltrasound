@@ -39,7 +39,7 @@ namespace itk
  * \ingroup Ultrasound
  */
 template< typename TInputImage, typename TOutputImage = TInputImage >
-class FrequencyDomain1DImageFilter:
+class ITK_TEMPLATE_EXPORT FrequencyDomain1DImageFilter:
   public ImageToImageFilter< TInputImage, TOutputImage >
 {
 public:

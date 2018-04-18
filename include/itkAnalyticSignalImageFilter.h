@@ -54,7 +54,7 @@ namespace itk
  * \ingroup Ultrasound
  */
 template< typename TInputImage, typename TOutputImage >
-class AnalyticSignalImageFilter:
+class ITK_TEMPLATE_EXPORT AnalyticSignalImageFilter:
   public ImageToImageFilter< TInputImage, TOutputImage >
 {
 public:

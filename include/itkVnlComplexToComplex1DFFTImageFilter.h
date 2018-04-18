@@ -32,7 +32,7 @@ namespace itk
  * \ingroup Ultrasound
  */
 template< typename TInputImage, typename TOutputImage >
-class VnlComplexToComplex1DFFTImageFilter:
+class ITK_TEMPLATE_EXPORT VnlComplexToComplex1DFFTImageFilter:
     public ComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
 {
 public:

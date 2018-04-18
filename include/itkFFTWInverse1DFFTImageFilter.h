@@ -32,7 +32,7 @@ namespace itk
  */
 
 template< typename TInputImage, typename TOutputImage=Image< typename NumericTraits< typename TInputImage::PixelType >::ValueType, TInputImage::ImageDimension > >
-class FFTWInverse1DFFTImageFilter:
+class ITK_TEMPLATE_EXPORT FFTWInverse1DFFTImageFilter:
   public Inverse1DFFTImageFilter< TInputImage, TOutputImage >
 {
 public:

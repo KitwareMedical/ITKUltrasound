@@ -85,7 +85,7 @@ namespace itk
  * \ingroup ImageObjects
  */
 template< typename TPixel, unsigned int VDimension >
-class CurvilinearArraySpecialCoordinatesImage:
+class ITK_TEMPLATE_EXPORT CurvilinearArraySpecialCoordinatesImage:
   public SpecialCoordinatesImage< TPixel, VDimension >
 {
 public:
