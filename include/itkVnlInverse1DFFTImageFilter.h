@@ -32,7 +32,7 @@ namespace itk
  * \ingroup Ultrasound
  */
 template< typename TInputImage, typename TOutputImage=Image< typename NumericTraits< typename TInputImage::PixelType >::ValueType, TInputImage::ImageDimension > >
-class VnlInverse1DFFTImageFilter:
+class ITK_TEMPLATE_EXPORT VnlInverse1DFFTImageFilter:
   public Inverse1DFFTImageFilter< TInputImage, TOutputImage >
 {
 public:
@@ -53,14 +53,14 @@ public:
   itkTypeMacro( VnlInverse1DFFTImageFilter, Inverse1DFFTImageFilter );
 
 protected:
-  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID );
+  void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) ITK_OVERRIDE;
 
   VnlInverse1DFFTImageFilter() { }
   virtual ~VnlInverse1DFFTImageFilter() { }
 
 private:
-  VnlInverse1DFFTImageFilter(const Self&) ITK_DELETE_FUNCTION;
-  void operator=(const Self&) ITK_DELETE_FUNCTION;
+  VnlInverse1DFFTImageFilter(const Self&) ITK_DELETED_FUNCTION;
+  void operator=(const Self&) ITK_DELETED_FUNCTION;
 };
 
 } // end namespace itk

@@ -19,6 +19,7 @@
 #define itkBlockMatchingStrainWindowDisplacementCalculator_hxx
 
 #include "itkBlockMatchingStrainWindowDisplacementCalculator.h"
+#include "itkBlockMatchingMaximumPixelDisplacementCalculator.h"
 
 #include "itkStrainImageFilter.h"
 

@@ -54,7 +54,7 @@ namespace itk
  * \ingroup Ultrasound
  */
 template< typename TInputImage, typename TOutputImage >
-class AnalyticSignalImageFilter:
+class ITK_TEMPLATE_EXPORT AnalyticSignalImageFilter:
   public ImageToImageFilter< TInputImage, TOutputImage >
 {
 public:
@@ -132,8 +132,8 @@ protected:
   virtual const ImageRegionSplitterBase* GetImageRegionSplitter() const ITK_OVERRIDE;
 
 private:
-  AnalyticSignalImageFilter( const Self& ) ITK_DELETE_FUNCTION;
-  void operator=( const Self& ) ITK_DELETE_FUNCTION;
+  AnalyticSignalImageFilter( const Self& ) ITK_DELETED_FUNCTION;
+  void operator=( const Self& ) ITK_DELETED_FUNCTION;
 
   typename FrequencyFilterType::Pointer m_FrequencyFilter;
   ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;

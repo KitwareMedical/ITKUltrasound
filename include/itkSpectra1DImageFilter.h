@@ -45,7 +45,7 @@ namespace itk
  * \sa Spectra1DSupportWindowImageFilter
  */
 template< typename TInputImage, typename TSupportWindowImage, typename TOutputImage >
-class Spectra1DImageFilter:
+class ITK_TEMPLATE_EXPORT Spectra1DImageFilter:
   public ImageToImageFilter< TInputImage, TOutputImage >
 {
 public:

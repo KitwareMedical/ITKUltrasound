@@ -50,7 +50,7 @@ namespace itk
  * \ingroup ImageObjects
  */
 template< typename TSliceImage, typename TTransform, typename TPixel=typename TSliceImage::PixelType, unsigned int VDimension=TSliceImage::ImageDimension + 1 >
-class SliceSeriesSpecialCoordinatesImage:
+class ITK_TEMPLATE_EXPORT SliceSeriesSpecialCoordinatesImage:
   public SpecialCoordinatesImage< TPixel, VDimension >
 {
 public:

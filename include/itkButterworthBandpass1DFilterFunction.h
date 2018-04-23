@@ -37,7 +37,7 @@ public:
   itkTypeMacro( ButterworthBandpass1DFilterFunction, FrequencyDomain1DFilterFunction);
   itkNewMacro( Self );
 
-  virtual double EvaluateFrequency(double f) const
+  double EvaluateFrequency(double f) const ITK_OVERRIDE
     {
     //highpass
     double x = 1.0;

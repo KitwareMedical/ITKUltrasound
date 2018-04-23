@@ -32,7 +32,7 @@ namespace itk
  */
 
 template< typename TInputImage, typename TOutputImage=Image< typename NumericTraits< typename TInputImage::PixelType >::ValueType, TInputImage::ImageDimension > >
-class FFTWInverse1DFFTImageFilter:
+class ITK_TEMPLATE_EXPORT FFTWInverse1DFFTImageFilter:
   public Inverse1DFFTImageFilter< TInputImage, TOutputImage >
 {
 public:
@@ -80,8 +80,8 @@ protected:
   virtual void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadID ) ITK_OVERRIDE;
 
 private:
-  FFTWInverse1DFFTImageFilter(const Self&) ITK_DELETE_FUNCTION;
-  void operator=(const Self&) ITK_DELETE_FUNCTION;
+  FFTWInverse1DFFTImageFilter(const Self&) ITK_DELETED_FUNCTION;
+  void operator=(const Self&) ITK_DELETED_FUNCTION;
 
   /** Destroy FFTW Plans and associated buffers. */
   void DestroyPlans();

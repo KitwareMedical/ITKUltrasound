@@ -1,4 +1,7 @@
 notebooks/.ipynb_checkpoints/
+examples/Notebooks/.ipynb_checkpoints/
+examples/Notebooks/EyeRoundOverChuck_5.0MHz_20V.mha
+
 ITK-cp27-cp27m-manylinux1_x64
 ITK-cp27-cp27mu-manylinux1_x64
 ITK-cp34-cp34m-manylinux1_x64

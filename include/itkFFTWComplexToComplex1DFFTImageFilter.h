@@ -33,7 +33,7 @@ namespace itk
  * \ingroup Ultrasound
  */
 template< typename TInputImage, typename TOutputImage >
-class FFTWComplexToComplex1DFFTImageFilter :
+class ITK_TEMPLATE_EXPORT FFTWComplexToComplex1DFFTImageFilter :
     public ComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
 {
 public:

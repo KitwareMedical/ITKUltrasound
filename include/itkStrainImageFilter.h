@@ -61,7 +61,7 @@ namespace itk
  *
  */
 template< typename TInputImage, typename TOperatorValueType=float, typename TOutputValueType=float >
-class StrainImageFilter : public
+class ITK_TEMPLATE_EXPORT StrainImageFilter : public
   ImageToImageFilter< TInputImage,
     Image< SymmetricSecondRankTensor< TOutputValueType, TInputImage::ImageDimension >,
                                   TInputImage::ImageDimension > >

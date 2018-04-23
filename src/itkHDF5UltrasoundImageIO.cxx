@@ -140,7 +140,7 @@ PredTypeToComponentType(const H5::DataType & type)
       }
     else if(sizeof(unsigned int) == sizeof(unsigned long long))
       {
-      return ImageIOBase::ULONG;
+      return ImageIOBase::ULONGLONG;
       }
     }
   else if(type ==  H5::PredType::NATIVE_LONG)
@@ -151,7 +151,7 @@ PredTypeToComponentType(const H5::DataType & type)
       }
     else if(sizeof(int) == sizeof(long long))
       {
-      return ImageIOBase::LONG;
+      return ImageIOBase::LONGLONG;
       }
     }
   itkGenericExceptionMacro(<< "unsupported data type "
@@ -177,8 +177,12 @@ ComponentToPredType(ImageIOBase::IOComponentType cType)
       return H5::PredType::NATIVE_INT;
     case ImageIOBase::ULONG:
       return H5::PredType::NATIVE_ULONG;
+    case ImageIOBase::ULONGLONG:
+      return H5::PredType::NATIVE_ULLONG;
     case ImageIOBase::LONG:
       return H5::PredType::NATIVE_LONG;
+    case ImageIOBase::LONGLONG:
+      return H5::PredType::NATIVE_LLONG;
     case ImageIOBase::FLOAT:
       return H5::PredType::NATIVE_FLOAT;
     case ImageIOBase::DOUBLE:

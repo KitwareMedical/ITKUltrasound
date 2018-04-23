@@ -3,7 +3,7 @@ jobs:
   build-and-test:
     working_directory: /ITKUltrasound-build
     docker:
-      - image: insighttoolkit/module-ci:latest
+      - image: insighttoolkit/module-ci:v4.13
     steps:
       - checkout:
           path: /ITKUltrasound

@@ -33,7 +33,7 @@ namespace itk
  * \ingroup Ultrasound
  */
 template< typename TInputImage >
-class SpecialCoordinatesImageToVTKStructuredGridFilter: public ProcessObject
+class ITK_TEMPLATE_EXPORT SpecialCoordinatesImageToVTKStructuredGridFilter: public ProcessObject
 {
 public:
   /** Standard class typedefs. */
@@ -75,8 +75,8 @@ protected:
   virtual void GenerateData() ITK_OVERRIDE;
 
 private:
-  SpecialCoordinatesImageToVTKStructuredGridFilter(const Self &) ITK_DELETE_FUNCTION;
-  void operator=(const Self&) ITK_DELETE_FUNCTION;
+  SpecialCoordinatesImageToVTKStructuredGridFilter(const Self &) ITK_DELETED_FUNCTION;
+  void operator=(const Self&) ITK_DELETED_FUNCTION;
 
   vtkSmartPointer< vtkStructuredGrid > m_StructuredGrid;
 };
