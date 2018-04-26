@@ -21,6 +21,7 @@
 #include "itkBlockMatchingBlockAffineTransformMetricImageFilter.h"
 
 #include "itkImageRegionIteratorWithIndex.h"
+#include "itkImageRegionIterator.h"
 
 namespace itk
 {
