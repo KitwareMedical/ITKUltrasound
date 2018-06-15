@@ -41,16 +41,9 @@ int itkBModeImageFilterTestTiming( int argc, char* argv[] )
   const unsigned int Dimension = 3;
   typedef itk::Image< PixelType, Dimension > ImageType;
 
-  typedef itk::ImageFileReader               < ImageType            > ReaderType;
-  typedef itk::BModeImageFilter              < ImageType, ImageType > BModeFilterType;
-  typedef itk::IntensityWindowingImageFilter < ImageType, ImageType > WindowingType;
-
-  ReaderType::Pointer reader     = ReaderType::New();
-  BModeFilterType::Pointer bMode = BModeFilterType::New();
-  WindowingType::Pointer window  = WindowingType::New();
-
+  typedef itk::ImageFileReader< ImageType > ReaderType;
+  ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
-
   try
     {
     reader->Update();
@@ -62,7 +55,13 @@ int itkBModeImageFilterTestTiming( int argc, char* argv[] )
     }
   ImageType::Pointer input = reader->GetOutput();
   input->DisconnectPipeline();
+
+  typedef itk::BModeImageFilter< ImageType, ImageType > BModeFilterType;
+  BModeFilterType::Pointer bMode = BModeFilterType::New();
   bMode->SetInput( input );
+
+  typedef itk::IntensityWindowingImageFilter< ImageType, ImageType > WindowingType;
+  WindowingType::Pointer window  = WindowingType::New();
   window->SetInput( bMode->GetOutput() );
 
   itk::TimeProbe clock;
