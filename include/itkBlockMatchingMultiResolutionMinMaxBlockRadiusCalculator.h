@@ -18,6 +18,7 @@
 #ifndef itkBlockMatchingMultiResolutionMinMaxBlockRadiusCalculator_h
 #define itkBlockMatchingMultiResolutionMinMaxBlockRadiusCalculator_h
 
+#include "itkObjectFactory.h"
 #include "itkBlockMatchingMultiResolutionBlockRadiusCalculator.h"
 
 namespace itk
