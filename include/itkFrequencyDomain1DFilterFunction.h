@@ -27,7 +27,7 @@ namespace itk
  * \brief
  * Class to implment filter functions for FrequencyDomain1DImageFilter
  *
- * Supports caching of precomputed function values (SetUseCache) for applying 
+ * Supports caching of precomputed function values (SetUseCache) for applying
  * the function to multiple signals of the same length.
  * For the caching to work properly make sure this->Modified gets called in subclasses
  * whenever a parmater is changed that changes the function values.
@@ -95,7 +95,7 @@ public:
    * The input ranges from -1 to 1
    * Default is identity function.
    */
-  virtual double EvaluateFrequency(double frequency) const
+  virtual double EvaluateFrequency( double itkNotUsed( frequency ) ) const
     {
     return 1.0;
     }
