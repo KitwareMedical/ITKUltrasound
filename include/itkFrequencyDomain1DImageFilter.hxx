@@ -164,9 +164,7 @@ FrequencyDomain1DImageFilter< TInputImage, TOutputImage >
   const InputImageType * inputPtr = this->GetInput();
   OutputImageType * outputPtr = this->GetOutput();
 
-  const typename OutputImageType::SizeType &inputSize = inputPtr->GetRequestedRegion().GetSize();
   const unsigned int direction = this->GetDirection ();
-  const SizeValueType size = inputSize[direction];
 
   typedef ImageLinearConstIteratorWithIndex< OutputImageType > InputIteratorType;
   typedef ImageLinearIteratorWithIndex< OutputImageType >      OutputIteratorType;
