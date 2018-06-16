@@ -39,13 +39,11 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
   typedef typename TInputImage::RegionType                    RegionType;
   typedef typename TInputImage::SizeType                      SizeType;
   typedef typename TInputImage::IndexType                     IndexType;
-  typedef typename TInputImage::PixelType                     PixelType;
   typedef typename TInputImage::OffsetType                    OffsetType;
   typedef typename TInputImage::OffsetValueType               OffsetValueType;
   typedef TOutputImage                                        OutputImageType;
   typedef typename TOutputImage::PixelType                    OutputPixelType;
   typedef typename TInputImage::PixelType                     InputPixelType;
-  typedef typename InputPixelType::ValueType                  ValueType;
    // use the face generator for speed
   typedef typename NeighborhoodAlgorithm::ImageBoundaryFacesCalculator<InputImageType>
                                                               FaceCalculatorType;
