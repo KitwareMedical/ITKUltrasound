@@ -46,6 +46,8 @@ AnalyticSignalImageFilter< TInputImage, TOutputImage >
   this->SetDirection( 0 );
 
   this->m_ImageRegionSplitter = ImageRegionSplitterDirection::New();
+
+  this->DynamicMultiThreadingOff();
 }
 
 

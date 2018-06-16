@@ -94,7 +94,7 @@ template < class TFixedImage, class TMovingImage, class TDisplacementImage >
 void
 MultiResolutionFixedSearchRegionImageSource< TFixedImage, TMovingImage,
                                              TDisplacementImage >
-::ThreadedGenerateData( const OutputRegionType& outputRegion, ThreadIdType threadID )
+::DynamicThreadedGenerateData( const OutputRegionType& outputRegion )
 {
   OutputImageType * outputPtr = this->GetOutput();
   if( !outputPtr )

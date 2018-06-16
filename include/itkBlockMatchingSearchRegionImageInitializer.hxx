@@ -151,7 +151,7 @@ SearchRegionImageInitializer< TFixedImage, TMovingImage >
 template < class TFixedImage, class TMovingImage >
 void
 SearchRegionImageInitializer< TFixedImage, TMovingImage >
-::ThreadedGenerateData( const OutputRegionType& outputRegion, ThreadIdType threadId )
+::DynamicThreadedGenerateData( const OutputRegionType& outputRegion )
 {
   OutputImageType * outputPtr = this->GetOutput();
   if( !outputPtr )

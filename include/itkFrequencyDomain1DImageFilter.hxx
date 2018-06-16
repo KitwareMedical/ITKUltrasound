@@ -32,6 +32,7 @@ template< typename TInputImage, typename TOutputImage >
 FrequencyDomain1DImageFilter< TInputImage, TOutputImage >
 ::FrequencyDomain1DImageFilter()
 {
+  this->DynamicMultiThreadingOff();
 
   this->SetDirection( 0 );
   this->m_FilterFunction = FrequencyDomain1DFilterFunction::New();

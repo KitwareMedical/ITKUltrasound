@@ -89,9 +89,9 @@ protected:
   virtual ~SplitComponentsImageFilter() {}
 
   /** Do not allocate outputs that we will not populate. */
-  virtual void AllocateOutputs();
+  void AllocateOutputs() override;
 
-  virtual void ThreadedGenerateData( const OutputRegionType& outputRegion, ThreadIdType threadId );
+  void DynamicThreadedGenerateData( const OutputRegionType& outputRegion ) override;
 
 private:
   ITK_DISALLOW_COPY_AND_ASSIGN(SplitComponentsImageFilter);

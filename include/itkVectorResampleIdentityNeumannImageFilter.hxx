@@ -22,7 +22,6 @@
 #include "itkVectorResampleIdentityNeumannImageFilter.h"
 #include "itkObjectFactory.h"
 #include "itkVectorLinearInterpolateImageFunction.h"
-#include "itkProgressReporter.h"
 #include "itkImageRegionIteratorWithIndex.h"
 
 namespace itk
@@ -119,9 +118,8 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
 template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
 void
 VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
-::ThreadedGenerateData(
-  const OutputImageRegionType& outputRegionForThread,
-  ThreadIdType threadId)
+::DynamicThreadedGenerateData(
+  const OutputImageRegionType& outputRegionForThread )
 {
   itkDebugMacro(<<"Actually executing");
 
@@ -145,9 +143,6 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
   ContinuousIndexType inputIndex;
 
   const unsigned int numberOfComponents = PixelType::GetNumberOfComponents();
-
-  // Support for progress methods/callbacks
-  ProgressReporter progress(this, threadId, outputRegionForThread.GetNumberOfPixels());
 
   typedef typename InterpolatorType::OutputType OutputType;
 
@@ -202,11 +197,11 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
       outIt.Set( inputPtr->GetPixel( closestIndex )); // default background value
       }
 
-    progress.CompletedPixel();
     ++outIt;
     }
   return;
 }
+
 
 /**
  * Inform pipeline of necessary input image region

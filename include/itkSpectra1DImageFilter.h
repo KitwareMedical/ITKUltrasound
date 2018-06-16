@@ -83,10 +83,10 @@ protected:
 
   typedef typename OutputImageType::RegionType OutputImageRegionType;
 
-  virtual void GenerateOutputInformation() ITK_OVERRIDE;
-  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
-  virtual void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId ) ITK_OVERRIDE;
-  virtual void VerifyInputInformation() ITK_OVERRIDE;
+  void GenerateOutputInformation() override;
+  void BeforeThreadedGenerateData() override;
+  void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId ) override;
+  void VerifyInputInformation() override;
 
 private:
   Spectra1DImageFilter( const Self & ); // purposely not implemented
