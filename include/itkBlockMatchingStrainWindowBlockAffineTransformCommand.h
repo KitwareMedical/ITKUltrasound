@@ -43,7 +43,7 @@ namespace BlockMatching
 template <typename TStrainWindowDisplacemenCalculator,
           typename TBlockAffineTransformMetricImageFilter,
           typename TStrainImageFilter>
-class StrainWindowBlockAffineTransformCommand :
+class ITK_TEMPLATE_EXPORT StrainWindowBlockAffineTransformCommand :
   public Command
 {
 public:
