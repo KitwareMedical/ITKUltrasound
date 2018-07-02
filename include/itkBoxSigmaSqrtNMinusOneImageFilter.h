@@ -31,8 +31,7 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
                           TOutputImage * outputImage,
                           const typename TInputImage::RegionType & inputRegion,
                           const typename TOutputImage::RegionType & outputRegion,
-                          const typename TInputImage::SizeType & Radius,
-                          ProgressReporter &progress)
+                          const typename TInputImage::SizeType & Radius)
 {
   // typedefs
   typedef TInputImage                                         InputImageType;
@@ -142,7 +141,6 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
           }
 
         oIt.Set(static_cast<OutputPixelType>( vcl_sqrt(  SquareSum - Sum*Sum/pixelscount ) ) );
-        progress.CompletedPixel();
         }
       }
     else
@@ -211,7 +209,6 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
           }
 
         oIt.Set(static_cast<OutputPixelType>( vcl_sqrt( SquareSum - Sum*Sum/edgepixelscount ) ) );
-        progress.CompletedPixel();
         }
       }
     }
@@ -279,9 +276,7 @@ protected:
   ~BoxSigmaSqrtNMinusOneImageFilter() {};
 
   /** Multi-thread version GenerateData. */
-  void  ThreadedGenerateData (const OutputImageRegionType&
-                              outputRegionForThread,
-                              ThreadIdType threadId) ITK_OVERRIDE;
+  void DynamicThreadedGenerateData (const OutputImageRegionType& outputRegionForThread) override;
 
 private:
   BoxSigmaSqrtNMinusOneImageFilter(const Self&); //purposely not implemented

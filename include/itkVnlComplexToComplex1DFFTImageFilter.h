@@ -55,10 +55,10 @@ public:
   itkTypeMacro( VnlComplexToComplex1DFFTImageFilter, ComplexToComplex1DFFTImageFilter );
 
 protected:
-  VnlComplexToComplex1DFFTImageFilter() {}
+  VnlComplexToComplex1DFFTImageFilter();
   virtual ~VnlComplexToComplex1DFFTImageFilter() {}
 
-  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) ITK_OVERRIDE;
+  void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) override;
 
 private:
   VnlComplexToComplex1DFFTImageFilter(const Self&) ITK_DELETED_FUNCTION;

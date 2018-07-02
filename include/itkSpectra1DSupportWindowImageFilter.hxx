@@ -33,6 +33,7 @@ Spectra1DSupportWindowImageFilter< TInputImage >
   m_FFT1DSize( 32 ),
   m_Step( 1 )
 {
+  this->DynamicMultiThreadingOff();
 }
 
 

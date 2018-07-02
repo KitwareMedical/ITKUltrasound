@@ -33,6 +33,14 @@ namespace itk
 {
 
 template< typename TInputImage, typename TOutputImage >
+VnlComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
+::VnlComplexToComplex1DFFTImageFilter()
+{
+  this->DynamicMultiThreadingOff();
+}
+
+
+template< typename TInputImage, typename TOutputImage >
 void
 VnlComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
 ::ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType itkNotUsed( threadID ) )

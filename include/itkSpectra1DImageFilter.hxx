@@ -37,6 +37,7 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
 ::Spectra1DImageFilter()
 {
   this->AddRequiredInputName( "SupportWindowImage" );
+  this->DynamicMultiThreadingOff();
 }
 
 

@@ -22,7 +22,6 @@
 #include "itkBoxSigmaSqrtNMinusOneImageFilter.h"
 #include "itkImageRegionIteratorWithIndex.h"
 #include "itkOffset.h"
-#include "itkProgressAccumulator.h"
 #include "itkNumericTraits.h"
 #include "itkNeighborhoodAlgorithm.h"
 #include "itkShapedNeighborhoodIterator.h"
@@ -41,7 +40,7 @@ BoxSigmaSqrtNMinusOneImageFilter<TInputImage, TOutputImage>
 template<class TInputImage, class TOutputImage>
 void
 BoxSigmaSqrtNMinusOneImageFilter<TInputImage, TOutputImage>
-::ThreadedGenerateData(const OutputImageRegionType& outputRegionForThread, ThreadIdType threadId)
+::DynamicThreadedGenerateData(const OutputImageRegionType& outputRegionForThread)
 {
 
   // Accumulate type is too small
@@ -62,21 +61,17 @@ BoxSigmaSqrtNMinusOneImageFilter<TInputImage, TOutputImage>
   accumRegion.PadByRadius(internalRadius);
   accumRegion.Crop(inputImage->GetRequestedRegion());
 
-  ProgressReporter progress(this, threadId, 2*accumRegion.GetNumberOfPixels());
-
   typename AccumImageType::Pointer accImage = AccumImageType::New();
   accImage->SetRegions(accumRegion);
   accImage->Allocate();
 
   BoxSquareAccumulateFunction<TInputImage, AccumImageType >(inputImage, accImage,
                                                      accumRegion,
-                                                     accumRegion,
-                                                     progress);
+                                                     accumRegion);
   BoxSigmaSqrtNMinusOneCalculatorFunction<AccumImageType, TOutputImage>(accImage, outputImage,
                                                           accumRegion,
                                                           outputRegionForThread,
-                                                          this->GetRadius(),
-                                                          progress);
+                                                          this->GetRadius());
 }
 
 

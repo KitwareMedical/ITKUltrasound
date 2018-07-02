@@ -34,9 +34,17 @@ namespace itk
 {
 
 template< typename TInputImage, typename TOutputImage >
+VnlForward1DFFTImageFilter< TInputImage, TOutputImage >
+::VnlForward1DFFTImageFilter()
+{
+  this->DynamicMultiThreadingOff();
+}
+
+
+template< typename TInputImage, typename TOutputImage >
 void
 VnlForward1DFFTImageFilter< TInputImage, TOutputImage >
-::ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType itkNotUsed( threadID ) )
+::ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType )
 {
   // get pointers to the input and output
   const typename Superclass::InputImageType * inputPtr = this->GetInput();

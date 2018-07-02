@@ -47,7 +47,7 @@ template <class TFixedImage, class TMovingImage,
           class TMetricImage >
 void
 NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
-::ThreadedGenerateData( const MetricImageRegionType& outputRegion, ThreadIdType threadId )
+::DynamicThreadedGenerateData( const MetricImageRegionType& outputRegion )
 {
   FixedImageConstPointerType  fixedPtr   = this->GetInput( 0 );
   MovingImageConstPointerType movingPtr = this->GetInput( 1 );

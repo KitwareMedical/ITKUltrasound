@@ -75,7 +75,7 @@ SplitComponentsImageFilter< TInputImage, TOutputImage, TComponents >
 template< class TInputImage, class TOutputImage, unsigned int TComponents >
 void
 SplitComponentsImageFilter< TInputImage, TOutputImage, TComponents >
-::ThreadedGenerateData( const OutputRegionType& outputRegion, ThreadIdType itkNotUsed(threadId) )
+::DynamicThreadedGenerateData( const OutputRegionType& outputRegion )
 {
   typename InputImageType::ConstPointer input = this->GetInput();
   ProcessObject::DataObjectPointerArray outputs = this->GetOutputs();
