@@ -109,7 +109,7 @@ public:
   typedef typename Superclass::PointType             PointType;
   typedef typename PointType::VectorType             VectorType;
 
-  virtual void Compute();
+  void Compute() ITK_OVERRIDE;
 
   /** Maximum number of iterations before regularization stops. */
   itkSetMacro( MaximumIterations, unsigned int );
@@ -152,12 +152,12 @@ public:
   /** The current iteration. */
   itkGetConstMacro( CurrentIteration, unsigned int );
 
-  virtual void ModifyGenerateInputRequestedRegion( RegionType & region )
+  void ModifyGenerateInputRequestedRegion( RegionType & region ) ITK_OVERRIDE
     {
     region = this->m_DisplacementImage->GetLargestPossibleRegion();
     }
 
-  virtual void ModifyEnlargeOutputRequestedRegion( DataObject* data )
+  void ModifyEnlargeOutputRequestedRegion( DataObject* data ) ITK_OVERRIDE
     {
     data->SetRequestedRegionToLargestPossibleRegion();
     }
