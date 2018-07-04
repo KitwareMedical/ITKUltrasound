@@ -41,7 +41,11 @@ BoxSigmaSqrtNMinusOneImageFilter<TInputImage, TOutputImage>
 template<class TInputImage, class TOutputImage>
 void
 BoxSigmaSqrtNMinusOneImageFilter<TInputImage, TOutputImage>
+#if ITK_VERSION_MAJOR < 5
 ::ThreadedGenerateData(const OutputImageRegionType& outputRegionForThread, ThreadIdType threadId)
+#else
+::DynamicThreadedGenerateData(const OutputImageRegionType& outputRegionForThread)
+#endif
 {
 
   // Accumulate type is too small
@@ -62,21 +66,29 @@ BoxSigmaSqrtNMinusOneImageFilter<TInputImage, TOutputImage>
   accumRegion.PadByRadius(internalRadius);
   accumRegion.Crop(inputImage->GetRequestedRegion());
 
-  ProgressReporter progress(this, threadId, 2*accumRegion.GetNumberOfPixels());
+#if ITK_VERSION_MAJOR < 5 || defined(ITKV4_COMPATIBILITY)
+  // Dummy reporter for compatibility
+  ProgressReporter progress(this, 1, 2*accumRegion.GetNumberOfPixels());
+#endif
 
   typename AccumImageType::Pointer accImage = AccumImageType::New();
   accImage->SetRegions(accumRegion);
   accImage->Allocate();
 
-  BoxSquareAccumulateFunction<TInputImage, AccumImageType >(inputImage, accImage,
-                                                     accumRegion,
-                                                     accumRegion,
-                                                     progress);
-  BoxSigmaSqrtNMinusOneCalculatorFunction<AccumImageType, TOutputImage>(accImage, outputImage,
-                                                          accumRegion,
-                                                          outputRegionForThread,
-                                                          this->GetRadius(),
-                                                          progress);
+  BoxSquareAccumulateFunction< TInputImage, AccumImageType >(inputImage,
+    accImage.GetPointer(),
+    accumRegion,
+    accumRegion
+#if ITK_VERSION_MAJOR < 5 || defined(ITKV4_COMPATIBILITY)
+                                                       , progress);
+#else
+                                                       );
+#endif
+  BoxSigmaSqrtNMinusOneCalculatorFunction<AccumImageType, TOutputImage>(accImage.GetPointer(),
+    outputImage,
+    accumRegion,
+    outputRegionForThread,
+    this->GetRadius());
 }
 
 

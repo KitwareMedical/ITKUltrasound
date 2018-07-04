@@ -158,7 +158,7 @@ public:
 protected:
   VectorResampleIdentityNeumannImageFilter();
   ~VectorResampleIdentityNeumannImageFilter() {};
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
 
   /** VectorResampleIdentityNeumannImageFilter can be implemented as a multithreaded filter.  Therefore,
    * this implementation provides a ThreadedGenerateData() routine which
@@ -194,7 +194,7 @@ protected:
   virtual void AfterThreadedGenerateData() ITK_OVERRIDE;
 
   /** Method Compute the Modified Time based on changed to the components. */
-  unsigned long GetMTime( void ) const;
+  unsigned long GetMTime() const ITK_OVERRIDE;
 
 private:
   VectorResampleIdentityNeumannImageFilter(const Self&); //purposely not implemented
