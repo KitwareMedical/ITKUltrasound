@@ -1,14 +1,7 @@
 from __future__ import print_function
 from os import sys
 
-try:
-    from skbuild import setup
-except ImportError:
-    print('scikit-build is required to build from source.', file=sys.stderr)
-    print('Please run:', file=sys.stderr)
-    print('', file=sys.stderr)
-    print('  python -m pip install scikit-build')
-    sys.exit(1)
+from skbuild import setup
 
 setup(
     name='itk-ultrasound',
