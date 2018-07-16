@@ -21,6 +21,7 @@
 #include "itkImageToImageFilter.h"
 #include "itkConstNeighborhoodIterator.h"
 #include "itkCovariantVector.h"
+#include "itkNeighborhoodAlgorithm.h"
 
 namespace itk
 {
