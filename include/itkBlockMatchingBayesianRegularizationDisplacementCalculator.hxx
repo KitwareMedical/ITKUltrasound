@@ -99,14 +99,26 @@ void
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::ScaleToUnity()
 {
-  this->ApplyThreadFunctor( m_ScaleToUnityThreadFunctor );
+  this->m_MultiThreader->template ParallelizeImageRegion<ImageDimension>(
+    this->m_DisplacementImage->GetRequestedRegion(),
+    [this]( const RegionType & outputRegion )
+        {
+        this->ThreadedScaleToUnity( outputRegion );
+        },
+    nullptr);
 
   if( m_MeanChangeThresholdDefined && m_CurrentIteration > 0 )
     {
     m_ChangeSum = 0.0;
     m_ChangeCount = 0;
     // This adds up m_ChangeSum and m_ChangeCount.
-    this->ApplyThreadFunctor( m_MeanChangeThreadFunctor );
+    this->m_MultiThreader->template ParallelizeImageRegion<ImageDimension>(
+      this->m_DisplacementImage->GetRequestedRegion(),
+      [this]( const RegionType & outputRegion )
+          {
+          this->ThreadedMeanChange( outputRegion );
+          },
+      nullptr);
     m_MeanChange = m_ChangeSum / static_cast< double >( m_ChangeCount );
     }
 }
@@ -295,15 +307,19 @@ void
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::Compute()
 {
-  this->m_Threader->SetNumberOfThreads( this->GetNumberOfThreads() );
-
   // First we shift the minimum value of the metric image so 0 corresponds to
   // the theoretical lower bound.
   if( !m_MetricLowerBoundDefined )
     {
     itkExceptionMacro( << "The metric lower bound must be specified." );
     }
-  this->ApplyThreadFunctor( m_SubtractLowerBoundThreadFunctor );
+  this->m_MultiThreader->template ParallelizeImageRegion<ImageDimension>(
+    this->m_DisplacementImage->GetRequestedRegion(),
+    [this]( const RegionType & outputRegion )
+        {
+        this->ThreadedSubtractLowerBound( outputRegion );
+        },
+    nullptr);
 
   // Scale so every metric image sums to unity like it is a probability image.
   this->ScaleToUnity();
@@ -328,7 +344,7 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
   MetricImagePointerType      postImage;
   MetricImagePointerType      priorImage;
   m_CurrentIteration = 0;
-  // Hcak to make the SplitRequestedRegion method operate on the face list
+  // Hack to make the SplitRequestedRegion method operate on the face list
   // regions;
   const RegionType requestedRegion =
     this->m_DisplacementImage->GetRequestedRegion();
@@ -344,19 +360,28 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
     m_PriorPr = this->m_MetricImageImage;
     this->m_MetricImageImage = tempMetricImageImagePtr;
 
-    this->ApplyThreadFunctor( m_CopyPriorToPosteriorThreadFunctor );
+    this->m_MultiThreader->template ParallelizeImageRegion<ImageDimension>(
+      this->m_DisplacementImage->GetRequestedRegion(),
+      [this]( const RegionType & outputRegion )
+          {
+          this->ThreadedCopyPriorToPosterior( outputRegion );
+          },
+      nullptr);
 
+    const ThreadIdType workUnits = this->m_MultiThreader->GetNumberOfWorkUnits();
     for( fit = faceList.begin(); fit != faceList.end(); ++fit )
       {
-      ImpartLikelihoodThreadStruct str;
-      str.self = this;
-      this->m_DisplacementImage->SetRequestedRegion( *fit );
-      this->m_Threader->SetSingleMethod(
-        this->ImpartLikelihoodThreaderCallback, &str );
-      this->m_Threader->SingleMethodExecute();
+      // TODO: FIX-ME: hangs if this is not set
+      this->m_MultiThreader->SetNumberOfWorkUnits( 2 );
+      this->m_MultiThreader->template ParallelizeImageRegion<ImageDimension>(
+        *fit,
+        [this]( const RegionType & outputRegion )
+            {
+            this->ThreadedImpartLikelihood( outputRegion );
+            },
+        nullptr);
       }
-    // Undo hack.
-    this->m_DisplacementImage->SetRequestedRegion( requestedRegion );
+    this->m_MultiThreader->SetNumberOfWorkUnits( workUnits );
 
     ++m_CurrentIteration;
 
@@ -385,89 +410,65 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 
 
 template< typename TMetricImage, typename TDisplacementImage >
-ITK_THREAD_RETURN_TYPE
+void
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
-::ImpartLikelihoodThreaderCallback( void *arg )
+::ThreadedImpartLikelihood( const RegionType &splitRegion )
 {
-  ImpartLikelihoodThreadStruct *str;
-  str = (ImpartLikelihoodThreadStruct *)
-    (((MultiThreader::ThreadInfoStruct *)(arg))->UserData);
-  ThreadIdType total, threadCount;
+  MetricImageImageIteratorType imageImageIt( this->m_MetricImageImage,
+    splitRegion );
+  // The radius for regularization.
+  typename  MetricImageImageType::SizeType regRadius;
+  regRadius.Fill( 1 );
+  MetricImageImageNeighborhoodIteratorType priorImageImageIt( regRadius, this->m_PriorPr, splitRegion );
+  priorImageImageIt.OverrideBoundaryCondition( &(this->m_ImageImageBoundaryCondition ) );
 
-  const ThreadIdType threadId = ((MultiThreader::ThreadInfoStruct *)(arg))->ThreadID;
-  threadCount = ((MultiThreader::ThreadInfoStruct *)(arg))->NumberOfThreads;
+  MetricImagePointerType postImage;
+  MetricImagePointerType priorImage;
 
-  RegionType splitRegion;
-  total = str->self->SplitRequestedRegion( threadId,
-    threadCount, splitRegion);
+  unsigned int direction;
+  VectorType   shift;
+  const SpacingType  spacing = this->m_DisplacementImage->GetSpacing();
 
-  if (threadId < total)
+  for( imageImageIt.GoToBegin(), priorImageImageIt.GoToBegin();
+       !imageImageIt.IsAtEnd();
+       ++imageImageIt, ++priorImageImageIt )
     {
-    MetricImageImageIteratorType imageImageIt( str->self->m_MetricImageImage,
-      splitRegion );
-    // The radius for regularization.
-    typename  MetricImageImageType::SizeType regRadius;
-    regRadius.Fill( 1 );
-    MetricImageImageNeighborhoodIteratorType priorImageImageIt( regRadius,
-      str->self->m_PriorPr, splitRegion );
-    priorImageImageIt.OverrideBoundaryCondition(
-      &(str->self->m_ImageImageBoundaryCondition ) );
+    postImage = imageImageIt.Get();
 
-    MetricImagePointerType postImage;
-    MetricImagePointerType priorImage;
-
-    unsigned int direction;
-    VectorType   shift;
-    SpacingType  spacing = str->self->m_DisplacementImage->GetSpacing();
-
-    for( imageImageIt.GoToBegin(), priorImageImageIt.GoToBegin();
-         !imageImageIt.IsAtEnd();
-         ++imageImageIt, ++priorImageImageIt )
+    // perform regularization along every direction;
+    for( direction = 0; direction < ImageDimension; ++direction )
       {
-      postImage = imageImageIt.Get();
-
-      // perform regularization along every direction;
-      for( direction = 0; direction < ImageDimension; ++direction )
+      priorImage = priorImageImageIt.GetPrevious( direction );
+      // If we are inside the boundary.
+      if( priorImage.GetPointer() != nullptr )
         {
-        priorImage = priorImageImageIt.GetPrevious( direction );
-        // If we are inside the boundary.
-        if( priorImage.GetPointer() != NULL )
-          {
-          shift.Fill( 0.0 );
-          shift[direction] = -1 * spacing[direction];
-          str->self->ImpartLikelihood( postImage,
-                                       priorImage, direction, shift );
-          }
-        priorImage = priorImageImageIt.GetNext( direction );
-        if( priorImage.GetPointer() != NULL )
-          {
-          shift.Fill( 0.0 );
-          shift[direction] = spacing[direction];
-          str->self->ImpartLikelihood( postImage,
-                                       priorImage, direction, shift );
-          }
-        } // for every direction
-      }   // for every probability image
-    }     // if we are in a needed thread
-
-  return ITK_THREAD_RETURN_VALUE;
+        shift.Fill( 0.0 );
+        shift[direction] = -1 * spacing[direction];
+        this->ImpartLikelihood( postImage, priorImage, direction, shift );
+        }
+      priorImage = priorImageImageIt.GetNext( direction );
+      if( priorImage.GetPointer() != nullptr )
+        {
+        shift.Fill( 0.0 );
+        shift[direction] = spacing[direction];
+        this->ImpartLikelihood( postImage, priorImage, direction, shift );
+        }
+      } // for every direction
+    }   // for every probability image
 }
 
 
 template< typename TMetricImage, typename TDisplacementImage >
-ITK_THREAD_RETURN_TYPE
+void
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
-::SubtractLowerBoundThreadFunctor::operator() ( Superclass *superclass,
-  RegionType& region, ThreadIdType threadId )
+::ThreadedSubtractLowerBound( const RegionType& region )
 {
-  Self* self = dynamic_cast< Self* >( superclass );
-
-  MetricImageImageIteratorType imageImageIt( self->m_MetricImageImage,
+  MetricImageImageIteratorType imageImageIt( this->m_MetricImageImage,
     region );
   MetricImagePointerType image;
   // We add eps so we don't take the log of zero, and having a probability of
   // 0.0 is ... pessimistic ;-)
-  const PixelType lowerBound = self->m_MetricLowerBound +
+  const PixelType lowerBound = this->m_MetricLowerBound +
     NumericTraits< PixelType >::epsilon();
   for( imageImageIt.GoToBegin(); !imageImageIt.IsAtEnd(); ++imageImageIt )
     {
@@ -480,20 +481,15 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
       it.Value() -= lowerBound;
       }
     }
-
-  return ITK_THREAD_RETURN_VALUE;
 }
 
 
 template< typename TMetricImage, typename TDisplacementImage >
-ITK_THREAD_RETURN_TYPE
+void
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
-::ScaleToUnityThreadFunctor::operator() ( Superclass *superclass,
-  RegionType& region, ThreadIdType threadId )
+::ThreadedScaleToUnity( const RegionType& region )
 {
-  Self* self = dynamic_cast< Self* >( superclass );
-
-  MetricImageImageIteratorType imageImageIt( self->m_MetricImageImage,
+  MetricImageImageIteratorType imageImageIt( this->m_MetricImageImage,
     region );
   MetricImagePointerType image;
   for( imageImageIt.GoToBegin(); !imageImageIt.IsAtEnd(); ++imageImageIt )
@@ -513,23 +509,18 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
       it.Value() /= sum;
       }
     }
-
-  return ITK_THREAD_RETURN_VALUE;
 }
 
 
 template< typename TMetricImage, typename TDisplacementImage >
-ITK_THREAD_RETURN_TYPE
+void
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
-::MeanChangeThreadFunctor::operator() ( Superclass *superclass,
-  RegionType& region, ThreadIdType threadId )
+::ThreadedMeanChange( const RegionType& region )
 {
-  Self* self = dynamic_cast< Self* >( superclass );
-
-  MetricImageImageIteratorType imageImageIt( self->m_MetricImageImage,
+  MetricImageImageIteratorType imageImageIt( this->m_MetricImageImage,
                                              region );
 
-  MetricImageImageIteratorType priorImageImageIt( self->m_PriorPr,
+  MetricImageImageIteratorType priorImageImageIt( this->m_PriorPr,
     region );
   MetricImagePointerType image;
   MetricImagePointerType priorPtr;
@@ -556,25 +547,20 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
       }
     }
   mutex.Lock();
-  self->m_ChangeSum += changeSum;
-  self->m_ChangeCount += changeCount;
+  this->m_ChangeSum += changeSum;
+  this->m_ChangeCount += changeCount;
   mutex.Unlock();
-
-  return ITK_THREAD_RETURN_VALUE;
 }
 
 template< typename TMetricImage, typename TDisplacementImage >
-ITK_THREAD_RETURN_TYPE
+void
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
-::CopyPriorToPosteriorThreadFunctor::operator() ( Superclass *superclass,
-  RegionType& region, ThreadIdType threadId )
+::ThreadedCopyPriorToPosterior( const RegionType& region )
 {
-  Self* self = dynamic_cast< Self* >( superclass );
-
-  MetricImageImageIteratorType imageImageIt( self->m_MetricImageImage,
+  MetricImageImageIteratorType imageImageIt( this->m_MetricImageImage,
                                              region );
 
-  MetricImageImageIteratorType priorImageImageIt( self->m_PriorPr,
+  MetricImageImageIteratorType priorImageImageIt( this->m_PriorPr,
     region );
   MetricImagePointerType image;
   MetricImagePointerType priorPtr;
@@ -597,8 +583,6 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
       it.Set( priorIt.Get() );
       }
     }
-
-  return ITK_THREAD_RETURN_VALUE;
 }
 
 } // end namespace BlockMatching

@@ -48,6 +48,8 @@ class ITK_TEMPLATE_EXPORT NormalizedCrossCorrelationMetricImageFilter :
   public MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(NormalizedCrossCorrelationMetricImageFilter);
+
   /** Standard class typedefs. */
   typedef NormalizedCrossCorrelationMetricImageFilter                  Self;
   typedef MetricImageFilter< TFixedImage, TMovingImage, TMetricImage > Superclass;
@@ -103,9 +105,6 @@ protected:
   typename BoxPseudoSigmaFilterType::Pointer m_BoxPseudoSigmaFilter;
 
 private:
-  NormalizedCrossCorrelationMetricImageFilter( const Self& ); // purposely not implemented
-  void operator=( const Self& ); // purposely not implemented
-
   typedef ConstantBoundaryCondition< MetricImageType > BoundaryConditionType;
   BoundaryConditionType m_BoundaryCondition;
 };

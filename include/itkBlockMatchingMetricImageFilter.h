@@ -56,6 +56,8 @@ class ITK_TEMPLATE_EXPORT MetricImageFilter :
   public ImageToImageFilter< TFixedImage, TMetricImage >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(MetricImageFilter);
+
   /** Standard class typedefs. */
   typedef MetricImageFilter                               Self;
   typedef ImageToImageFilter< TFixedImage, TMetricImage > Superclass;
@@ -104,28 +106,18 @@ public:
   void SetMovingImageRegion( const MovingImageRegionType& region );
   itkGetConstReferenceMacro( MovingImageRegion, MovingImageRegionType );
 
-  /** Set/Get the minimum size in the split requested region's split direction
-   * (the last dimension by default).  Set this to a reasonably large number to
-   * improve performance and prevent breakage. */
-  itkSetMacro( MinimumSplitSize, unsigned int );
-  itkGetConstMacro( MinimumSplitSize, unsigned int );
-
-  /** Overload so we can decrease the number of threads according to the
-   * MinimumSplitSize if need be. */
-  virtual const ThreadIdType & GetNumberOfThreads();
-
 protected:
   MetricImageFilter();
   virtual ~MetricImageFilter() {};
 
-  virtual void GenerateOutputInformation() ITK_OVERRIDE;
+  void GenerateOutputInformation() ITK_OVERRIDE;
 
   /** We set the fixed and moving image's requested region.  The fixed image's
    * requested region is equal to FixedImageRegion and the moving image's requested region is equal to the MovingImageRegion dilated by a radius related to the FixedImageRegion's size. */
-  virtual void GenerateInputRequestedRegion() ITK_OVERRIDE;
+  void GenerateInputRequestedRegion() ITK_OVERRIDE;
 
   /** This filter produces the LargestPossibleRegion. */
-  virtual void EnlargeOutputRequestedRegion( DataObject * data ) ITK_OVERRIDE;
+  void EnlargeOutputRequestedRegion( DataObject * data ) ITK_OVERRIDE;
 
   FixedImageRegionType  m_FixedImageRegion;
   MovingImageRegionType m_MovingImageRegion;
@@ -141,15 +133,7 @@ protected:
   // different.
   RadiusType m_MovingRadius;
 
-  unsigned int m_MinimumSplitSize;
-
-  // Because it returns a reference?
-  mutable int m_SpecialThreadCount;
-
 private:
-  MetricImageFilter( const Self & ); // purposely not implemented
-  void operator=( const Self& );     // purposely not implemented
-
 };
 
 } // end namespace BlockMatching

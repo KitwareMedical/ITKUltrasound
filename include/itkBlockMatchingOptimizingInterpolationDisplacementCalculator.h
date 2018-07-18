@@ -43,18 +43,17 @@ namespace BlockMatching
  * \ingroup Ultrasound
  */
 template < typename TMetricImage, typename TDisplacementImage, typename TCoordRep=double >
-  class ITK_TEMPLATE_EXPORT OptimizingInterpolationDisplacementCalculator: public
-      itk::BlockMatching::MetricImageToDisplacementCalculator<
-      TMetricImage, TDisplacementImage >
+class ITK_TEMPLATE_EXPORT OptimizingInterpolationDisplacementCalculator:
+  public MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 {
 public:
-  /** Standard class typedefs. */
-  typedef OptimizingInterpolationDisplacementCalculator     Self;
-  typedef MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
-    Superclass;
+  ITK_DISALLOW_COPY_AND_ASSIGN(OptimizingInterpolationDisplacementCalculator);
 
-  typedef SmartPointer< Self >           Pointer;
-  typedef SmartPointer< const Self >     ConstPointer;
+  /** Standard class typedefs. */
+  typedef OptimizingInterpolationDisplacementCalculator                           Self;
+  typedef MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage > Superclass;
+  typedef SmartPointer< Self >                                                    Pointer;
+  typedef SmartPointer< const Self >                                              ConstPointer;
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
@@ -83,7 +82,7 @@ public:
 
   virtual void SetMetricImagePixel( const PointType & point, const IndexType& index, MetricImageType* image );
 
-  virtual void Compute() {
+  void Compute() ITK_OVERRIDE {
     // We do this here instead of SetMetricImagePixel so it only has to be done
     // once.
     this->m_DisplacementImage->Modified();
@@ -150,7 +149,7 @@ public:
     /** Return the number of parameters required to compute
      *  this cost function.
      *  This method MUST be overloaded by derived classes. */
-    virtual unsigned int GetNumberOfParameters(void) const
+    virtual unsigned int GetNumberOfParameters() const
       { return ImageDimension; }
 
     /** Set the previous parameters before the start of optimization.  Used for
@@ -184,8 +183,6 @@ protected:
   typename OptimizerType::Pointer m_Optimizer;
 
 private:
-  OptimizingInterpolationDisplacementCalculator( const Self & );
-  void operator=( const Self & );
 };
 
 

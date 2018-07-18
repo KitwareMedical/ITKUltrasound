@@ -106,7 +106,7 @@ StrainWindowDisplacementCalculator<TMetricImage, TDisplacementImage, TStrainValu
     m_NthElementAdaptor->SelectNthElement( i );
     // this will be correct after this is multi-threaded and a fixer-uper for
     // now
-    m_BoxMeanFilter->SetNumberOfThreads( 1 );
+    m_BoxMeanFilter->SetNumberOfWorkUnits( 1 );
     m_BoxMeanFilter->Update();
     ImageRegionIterator< MetricImageType > strainCompIt( m_BoxMeanFilter->GetOutput(), region );
 

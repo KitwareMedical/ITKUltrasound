@@ -83,7 +83,7 @@ TimeGainCompensationImageFilter< TInputImage, TOutputImage >
 template< typename TInputImage, typename TOutputImage >
 void
 TimeGainCompensationImageFilter< TInputImage, TOutputImage >
-::ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType itkNotUsed( threadId ) )
+::DynamicThreadedGenerateData( const OutputImageRegionType & outputRegionForThread )
 {
   const InputImageType * inputImage = this->GetInput();
   OutputImageType * outputImage = this->GetOutput();

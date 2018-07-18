@@ -43,6 +43,8 @@ class ITK_TEMPLATE_EXPORT FrequencyDomain1DImageFilter:
   public ImageToImageFilter< TInputImage, TOutputImage >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(FrequencyDomain1DImageFilter);
+
   /** Standard class typedefs. */
   typedef TInputImage                                         InputImageType;
   typedef TOutputImage                                        OutputImageType;
@@ -71,24 +73,21 @@ protected:
   FrequencyDomain1DImageFilter();
   virtual ~FrequencyDomain1DImageFilter() {}
 
-  virtual void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
 
   // These behave like their analogs in Forward1DFFTImageFilter.
-  virtual void GenerateInputRequestedRegion() ITK_OVERRIDE;
-  virtual void EnlargeOutputRequestedRegion(DataObject *output) ITK_OVERRIDE;
+  void GenerateInputRequestedRegion() ITK_OVERRIDE;
+  void EnlargeOutputRequestedRegion(DataObject *output) ITK_OVERRIDE;
 
-  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
-  virtual void ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread, ThreadIdType threadId ) ITK_OVERRIDE;
-  virtual void AfterThreadedGenerateData() ITK_OVERRIDE;
+  void BeforeThreadedGenerateData() ITK_OVERRIDE;
+  void ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread, ThreadIdType threadId ) ITK_OVERRIDE;
+  void AfterThreadedGenerateData() ITK_OVERRIDE;
 
   /** Override to return a splitter that does not split along the direction we
    * are performing the transform. */
   virtual const ImageRegionSplitterBase* GetImageRegionSplitter() const ITK_OVERRIDE;
 
 private:
-  FrequencyDomain1DImageFilter( const Self& ) ITK_DELETED_FUNCTION;
-  void operator=( const Self& ) ITK_DELETED_FUNCTION;
-
   ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;
 
   FrequencyDomain1DFilterFunction::Pointer m_FilterFunction;

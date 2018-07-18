@@ -29,19 +29,17 @@ namespace itk
 namespace BlockMatching
 {
 
-template < class TFixedImage, class TMovingImage, class TDisplacementImage >
-MultiResolutionFixedSearchRegionImageSource< TFixedImage, TMovingImage,
-                                             TDisplacementImage >
+template < typename TFixedImage, typename TMovingImage, typename TDisplacementImage >
+MultiResolutionFixedSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >
 ::MultiResolutionFixedSearchRegionImageSource():
   m_SearchRegionRadiusSet( false )
 {
 }
 
 
-template < class TFixedImage, class TMovingImage, class TDisplacementImage >
+template < typename TFixedImage, typename TMovingImage, typename TDisplacementImage >
 void
-MultiResolutionFixedSearchRegionImageSource< TFixedImage, TMovingImage,
-                                             TDisplacementImage >
+MultiResolutionFixedSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >
 ::SetSearchRegionRadiusSchedule( const unsigned int rad )
 {
   RadiusType radius;
@@ -50,10 +48,9 @@ MultiResolutionFixedSearchRegionImageSource< TFixedImage, TMovingImage,
 }
 
 
-template < class TFixedImage, class TMovingImage, class TDisplacementImage >
+template < typename TFixedImage, typename TMovingImage, typename TDisplacementImage >
 void
-MultiResolutionFixedSearchRegionImageSource< TFixedImage, TMovingImage,
-                                             TDisplacementImage >
+MultiResolutionFixedSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >
 ::SetSearchRegionRadiusSchedule( const RadiusType& radius )
 {
   // Check to make sure the PyramidSchedule has been set.
@@ -75,10 +72,9 @@ MultiResolutionFixedSearchRegionImageSource< TFixedImage, TMovingImage,
 }
 
 
-template < class TFixedImage, class TMovingImage, class TDisplacementImage >
+template < typename TFixedImage, typename TMovingImage, typename TDisplacementImage >
 void
-MultiResolutionFixedSearchRegionImageSource< TFixedImage, TMovingImage,
-                                             TDisplacementImage >
+MultiResolutionFixedSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >
 ::BeforeThreadedGenerateData()
 {
   Superclass::BeforeThreadedGenerateData();
@@ -90,11 +86,10 @@ MultiResolutionFixedSearchRegionImageSource< TFixedImage, TMovingImage,
 }
 
 
-template < class TFixedImage, class TMovingImage, class TDisplacementImage >
+template < typename TFixedImage, typename TMovingImage, typename TDisplacementImage >
 void
-MultiResolutionFixedSearchRegionImageSource< TFixedImage, TMovingImage,
-                                             TDisplacementImage >
-::ThreadedGenerateData( const OutputRegionType& outputRegion, ThreadIdType threadID )
+MultiResolutionFixedSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >
+::DynamicThreadedGenerateData( const OutputRegionType& outputRegion )
 {
   OutputImageType * outputPtr = this->GetOutput();
   if( !outputPtr )

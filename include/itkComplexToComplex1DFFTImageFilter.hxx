@@ -75,9 +75,11 @@ ComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
 template< typename TInputImage, typename TOutputImage >
 ComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
 ::ComplexToComplex1DFFTImageFilter():
- m_Direction(0), m_TransformDirection( DIRECT )
+ m_Direction(0),
+  m_TransformDirection( DIRECT )
 {
   this->m_ImageRegionSplitter = ImageRegionSplitterDirection::New();
+  this->DynamicMultiThreadingOff();
 }
 
 

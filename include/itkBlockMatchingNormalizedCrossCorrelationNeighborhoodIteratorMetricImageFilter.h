@@ -34,11 +34,13 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  */
-template< class TFixedImage, class TMovingImage, class TMetricImage >
+template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
 class ITK_TEMPLATE_EXPORT NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter :
   public NormalizedCrossCorrelationMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter);
+
   /** Standard class typedefs. */
   typedef NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter                        Self;
   typedef NormalizedCrossCorrelationMetricImageFilter< TFixedImage, TMovingImage, TMetricImage > Superclass;
@@ -57,30 +59,23 @@ public:
 
   /** Type of the fixed image. */
   typedef typename Superclass::FixedImageType   FixedImageType;
-  typedef typename FixedImageType::ConstPointer FixedImageConstPointerType;
 
   /** Type of the moving image. */
   typedef typename Superclass::MovingImageType   MovingImageType;
-  typedef typename MovingImageType::ConstPointer MovingImageConstPointerType;
-
 
   /** Type of the metric image. */
   typedef typename Superclass::MetricImageType   MetricImageType;
-  typedef typename MetricImageType::Pointer      MetricImagePointerType;
-  typedef typename MetricImageType::ConstPointer MetricImageConstPointerType;
   typedef typename MetricImageType::RegionType   MetricImageRegionType;
   typedef typename MetricImageType::PixelType    MetricImagePixelType;
 
 protected:
   NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter(){}
 
-  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
+  void BeforeThreadedGenerateData() ITK_OVERRIDE;
 
-  virtual void ThreadedGenerateData( const MetricImageRegionType& outputRegion, ThreadIdType threadId ) ITK_OVERRIDE;
+  void DynamicThreadedGenerateData( const MetricImageRegionType& outputRegion ) ITK_OVERRIDE;
 
 private:
-  NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter( const Self& ); // purposely not implemented
-  void operator=( const Self& ); // purposely not implemented
 };
 
 } // end namespace BlockMatching

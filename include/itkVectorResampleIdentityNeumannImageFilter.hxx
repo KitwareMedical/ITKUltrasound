@@ -22,13 +22,12 @@
 #include "itkVectorResampleIdentityNeumannImageFilter.h"
 #include "itkObjectFactory.h"
 #include "itkVectorLinearInterpolateImageFunction.h"
-#include "itkProgressReporter.h"
 #include "itkImageRegionIteratorWithIndex.h"
 
 namespace itk
 {
 
-template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
 VectorResampleIdentityNeumannImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>
 ::VectorResampleIdentityNeumannImageFilter()
 {
@@ -42,7 +41,7 @@ VectorResampleIdentityNeumannImageFilter<TInputImage, TOutputImage, TInterpolato
 }
 
 
-template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
 void
 VectorResampleIdentityNeumannImageFilter<TInputImage, TOutputImage,TInterpolatorPrecisionType>
 ::PrintSelf(std::ostream& os, Indent indent) const
@@ -60,7 +59,7 @@ VectorResampleIdentityNeumannImageFilter<TInputImage, TOutputImage,TInterpolator
 }
 
 
-template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
 void
 VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
 ::SetOutputSpacing(const double* spacing)
@@ -70,7 +69,7 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
 }
 
 
-template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
 void
 VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
 ::SetOutputOrigin(const double* origin)
@@ -84,7 +83,7 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
  * InterpolatorType::SetInputImage is not thread-safe and hence
  * has to be set up before ThreadedGenerateData
  */
-template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
 void
 VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
 ::BeforeThreadedGenerateData()
@@ -103,7 +102,7 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
 /**
  * Set up state of filter after multi-threading.
  */
-template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
 void
 VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
 ::AfterThreadedGenerateData()
@@ -113,18 +112,12 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
 
 }
 
-/**
- * ThreadedGenerateData
- */
-template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
+
+template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
 void
 VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
-::ThreadedGenerateData(
-  const OutputImageRegionType& outputRegionForThread,
-  ThreadIdType threadId)
+::DynamicThreadedGenerateData( const OutputImageRegionType& outputRegionForThread )
 {
-  itkDebugMacro(<<"Actually executing");
-
   // Get the output pointers
   OutputImagePointer      outputPtr = this->GetOutput();
 
@@ -145,9 +138,6 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
   ContinuousIndexType inputIndex;
 
   const unsigned int numberOfComponents = PixelType::GetNumberOfComponents();
-
-  // Support for progress methods/callbacks
-  ProgressReporter progress(this, threadId, outputRegionForThread.GetNumberOfPixels());
 
   typedef typename InterpolatorType::OutputType OutputType;
 
@@ -202,7 +192,6 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
       outIt.Set( inputPtr->GetPixel( closestIndex )); // default background value
       }
 
-    progress.CompletedPixel();
     ++outIt;
     }
   return;
@@ -215,7 +204,7 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
  * when we cannot assume anything about the transform being used.
  * So we do the easy thing and request the entire input image.
  */
-template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
 void
 VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
 ::GenerateInputRequestedRegion()
@@ -241,7 +230,7 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
 }
 
 
-template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
 void
 VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
 ::GenerateOutputInformation()
@@ -273,10 +262,10 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
 /**
  * Verify if any of the components has been modified.
  */
-template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
 unsigned long
 VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
-::GetMTime( void ) const
+::GetMTime() const
 {
   unsigned long latestTime = Object::GetMTime();
 

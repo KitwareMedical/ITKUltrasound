@@ -26,6 +26,12 @@ Python packages are available for Linux, macOS, and Windows. Install with::
   python -m pip install --upgrade pip
   python -m pip install itk-ultrasound
 
+Build
+=====
+
+Build against ITK 5 or later. ITK should be configured with
+*Module_SplitComponents* set to *ON*.
+
 References
 ==========
 

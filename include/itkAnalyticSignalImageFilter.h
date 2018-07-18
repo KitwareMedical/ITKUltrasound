@@ -58,6 +58,8 @@ class ITK_TEMPLATE_EXPORT AnalyticSignalImageFilter:
   public ImageToImageFilter< TInputImage, TOutputImage >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(AnalyticSignalImageFilter);
+
   /** Standard class typedefs. */
   typedef TInputImage                                         InputImageType;
   typedef TOutputImage                                        OutputImageType;
@@ -110,15 +112,15 @@ protected:
   AnalyticSignalImageFilter();
   virtual ~AnalyticSignalImageFilter() {}
 
-  virtual void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
 
   // These behave like their analogs in Forward1DFFTImageFilter.
   virtual void GenerateInputRequestedRegion() ITK_OVERRIDE;
   virtual void EnlargeOutputRequestedRegion(DataObject *output) ITK_OVERRIDE;
 
-  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
-  virtual void ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread, ThreadIdType threadId ) ITK_OVERRIDE;
-  virtual void AfterThreadedGenerateData() ITK_OVERRIDE;
+  void BeforeThreadedGenerateData() ITK_OVERRIDE;
+  void ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread, ThreadIdType threadId ) ITK_OVERRIDE;
+  void AfterThreadedGenerateData() ITK_OVERRIDE;
 
   typedef Forward1DFFTImageFilter< InputImageType, OutputImageType > FFTRealToComplexType;
   typedef ComplexToComplex1DFFTImageFilter< OutputImageType, OutputImageType >      FFTComplexToComplexType;
@@ -132,9 +134,6 @@ protected:
   virtual const ImageRegionSplitterBase* GetImageRegionSplitter() const ITK_OVERRIDE;
 
 private:
-  AnalyticSignalImageFilter( const Self& ) ITK_DELETED_FUNCTION;
-  void operator=( const Self& ) ITK_DELETED_FUNCTION;
-
   typename FrequencyFilterType::Pointer m_FrequencyFilter;
   ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;
 };

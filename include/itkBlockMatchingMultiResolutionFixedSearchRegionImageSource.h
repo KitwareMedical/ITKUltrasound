@@ -40,10 +40,11 @@ namespace BlockMatching
  * */
 template < typename TFixedImage, typename TMovingImage, typename TDisplacementImage >
 class ITK_TEMPLATE_EXPORT MultiResolutionFixedSearchRegionImageSource :
-  public MultiResolutionSearchRegionImageSource < TFixedImage, TMovingImage,
-                                                  TDisplacementImage >
+  public MultiResolutionSearchRegionImageSource < TFixedImage, TMovingImage, TDisplacementImage >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionFixedSearchRegionImageSource);
+
   /** Standard class typedefs. */
   typedef MultiResolutionFixedSearchRegionImageSource    Self;
   typedef MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >             Superclass;
@@ -114,18 +115,15 @@ public:
 protected:
   MultiResolutionFixedSearchRegionImageSource();
 
-  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
+  void BeforeThreadedGenerateData() ITK_OVERRIDE;
 
-  virtual void ThreadedGenerateData( const OutputRegionType& outputRegion,
-                                     ThreadIdType threadID ) ITK_OVERRIDE;
+  void DynamicThreadedGenerateData( const OutputRegionType& outputRegion ) ITK_OVERRIDE;
 
   RadiusScheduleType m_SearchRegionRadiusSchedule;
 
   bool m_SearchRegionRadiusSet;
 
 private:
-  MultiResolutionFixedSearchRegionImageSource( const Self& );
-  void operator=( const Self& );
 };
 
 } // end namespace itk

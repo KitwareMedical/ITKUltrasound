@@ -109,6 +109,7 @@ Inverse1DFFTImageFilter< TInputImage, TOutputImage >
 ::BeforeThreadedGenerateData()
 {
   this->m_ImageRegionSplitter->SetDirection( this->GetDirection() );
+  this->DynamicMultiThreadingOff();
 }
 
 

@@ -28,7 +28,7 @@ namespace itk
 namespace BlockMatching
 {
 
-template < class TMetricImage, class TDisplacementImage, class TCoordRep >
+template < typename TMetricImage, typename TDisplacementImage, typename TCoordRep >
 ParabolicInterpolationDisplacementCalculator< TMetricImage, TDisplacementImage,
                                               TCoordRep >
 ::ParabolicInterpolationDisplacementCalculator()
@@ -37,14 +37,11 @@ ParabolicInterpolationDisplacementCalculator< TMetricImage, TDisplacementImage,
 }
 
 
-template < class TMetricImage, class TDisplacementImage, class TCoordRep >
-ITK_THREAD_RETURN_TYPE
+template < typename TMetricImage, typename TDisplacementImage, typename TCoordRep >
+void
 ParabolicInterpolationDisplacementCalculator< TMetricImage, TDisplacementImage, TCoordRep >
-::ParabolicInterpolationThreadFunctor::operator() ( Superclass *superclass,
-                                                    RegionType& region, ThreadIdType threadId )
+::ThreadedParabolicInterpolation( const RegionType& region )
 {
-  Self* self = dynamic_cast< Self* >( superclass );
-
   // Find index of the maximum value.
   PixelType max = NumericTraits< PixelType >::min();
   IndexType maxIndex;
@@ -59,10 +56,10 @@ ParabolicInterpolationDisplacementCalculator< TMetricImage, TDisplacementImage, 
   IndexType    tempIndex = maxIndex;
   RegionType   metricImageRegion;
 
-  MetricImageImageIteratorType imageImageIt( self->m_MetricImageImage,
+  MetricImageImageIteratorType imageImageIt( this->m_MetricImageImage,
     region );
-  ImageRegionConstIterator< CenterPointsImageType > centerPointsIt( self->m_CenterPointsImage, region );
-  ImageRegionIterator< DisplacementImageType > displacementIt( self->m_DisplacementImage, region );
+  ImageRegionConstIterator< CenterPointsImageType > centerPointsIt( this->m_CenterPointsImage, region );
+  ImageRegionIterator< DisplacementImageType > displacementIt( this->m_DisplacementImage, region );
   MetricImagePointerType metricImage;
   for( imageImageIt.GoToBegin(), centerPointsIt.GoToBegin(), displacementIt.GoToBegin();
        !imageImageIt.IsAtEnd();
@@ -112,19 +109,21 @@ ParabolicInterpolationDisplacementCalculator< TMetricImage, TDisplacementImage, 
 
     displacementIt.Set( maxPoint - centerPointsIt.Get() );
     }
-
-  return ITK_THREAD_RETURN_VALUE;
 }
 
 
-template < class TMetricImage, class TDisplacementImage, class TCoordRep >
+template < typename TMetricImage, typename TDisplacementImage, typename TCoordRep >
 void
-ParabolicInterpolationDisplacementCalculator< TMetricImage, TDisplacementImage,
-                                              TCoordRep >
+ParabolicInterpolationDisplacementCalculator< TMetricImage, TDisplacementImage, TCoordRep >
 ::Compute()
 {
-  this->m_Threader->SetNumberOfThreads( this->GetNumberOfThreads() );
-  ApplyThreadFunctor( m_ParabolicInterpolationThreadFunctor );
+  this->m_MultiThreader->template ParallelizeImageRegion<ImageDimension>(
+    this->m_DisplacementImage->GetRequestedRegion(),
+    [this]( const RegionType & outputRegion )
+        {
+        this->ThreadedParabolicInterpolation( outputRegion );
+        },
+    nullptr);
   this->m_DisplacementImage->Modified();
 }
 

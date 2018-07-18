@@ -44,6 +44,8 @@ class ITK_TEMPLATE_EXPORT ComplexToComplex1DFFTImageFilter:
   public ImageToImageFilter< TInputImage, TOutputImage >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(ComplexToComplex1DFFTImageFilter);
+
   /** Standard class typedefs. */
   typedef TInputImage                          InputImageType;
   typedef TOutputImage                         OutputImageType;
@@ -88,14 +90,14 @@ protected:
 
   void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
 
-  virtual void GenerateInputRequestedRegion() ITK_OVERRIDE;
-  virtual void EnlargeOutputRequestedRegion(DataObject *output) ITK_OVERRIDE;
+  void GenerateInputRequestedRegion() ITK_OVERRIDE;
+  void EnlargeOutputRequestedRegion(DataObject *output) ITK_OVERRIDE;
 
-  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
+  void BeforeThreadedGenerateData() ITK_OVERRIDE;
 
   /** Override to return a splitter that does not split along the direction we
    * are performing the transform. */
-  virtual const ImageRegionSplitterBase* GetImageRegionSplitter() const ITK_OVERRIDE;
+  const ImageRegionSplitterBase* GetImageRegionSplitter() const ITK_OVERRIDE;
 
   /** Direction in which the filter is to be applied
    * this should be in the range [0,ImageDimension-1]. */
@@ -105,9 +107,6 @@ protected:
   TransformDirectionType m_TransformDirection;
 
 private:
-  ComplexToComplex1DFFTImageFilter( const Self& );
-  void operator=( const Self& );
-
   ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;
 };
 }
