@@ -85,10 +85,10 @@ protected:
 
   typedef typename OutputImageType::RegionType OutputImageRegionType;
 
-  void GenerateOutputInformation() ITK_OVERRIDE;
-  void BeforeThreadedGenerateData() ITK_OVERRIDE;
-  void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId ) ITK_OVERRIDE;
-  void VerifyInputInformation() ITK_OVERRIDE;
+  void GenerateOutputInformation() override;
+  void BeforeThreadedGenerateData() override;
+  void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId ) override;
+  void VerifyInputInformation() override;
 
 private:
   typedef vcl_complex< ScalarType >                  ComplexType;

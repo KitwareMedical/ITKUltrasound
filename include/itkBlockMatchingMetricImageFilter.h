@@ -110,14 +110,14 @@ protected:
   MetricImageFilter();
   virtual ~MetricImageFilter() {};
 
-  void GenerateOutputInformation() ITK_OVERRIDE;
+  void GenerateOutputInformation() override;
 
   /** We set the fixed and moving image's requested region.  The fixed image's
    * requested region is equal to FixedImageRegion and the moving image's requested region is equal to the MovingImageRegion dilated by a radius related to the FixedImageRegion's size. */
-  void GenerateInputRequestedRegion() ITK_OVERRIDE;
+  void GenerateInputRequestedRegion() override;
 
   /** This filter produces the LargestPossibleRegion. */
-  void EnlargeOutputRequestedRegion( DataObject * data ) ITK_OVERRIDE;
+  void EnlargeOutputRequestedRegion( DataObject * data ) override;
 
   FixedImageRegionType  m_FixedImageRegion;
   MovingImageRegionType m_MovingImageRegion;

@@ -71,9 +71,9 @@ public:
 protected:
   NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter(){}
 
-  void BeforeThreadedGenerateData() ITK_OVERRIDE;
+  void BeforeThreadedGenerateData() override;
 
-  void DynamicThreadedGenerateData( const MetricImageRegionType& outputRegion ) ITK_OVERRIDE;
+  void DynamicThreadedGenerateData( const MetricImageRegionType& outputRegion ) override;
 
 private:
 };

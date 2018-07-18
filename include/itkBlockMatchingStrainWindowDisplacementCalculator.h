@@ -104,7 +104,7 @@ public:
     const IndexType& index,
     MetricImageType * image );
 
-  void Compute() ITK_OVERRIDE;
+  void Compute() override;
 
   /** Set/Get the internal displacement calculator that is used to calculate the
    * displacements after regularization.  Defaults to a

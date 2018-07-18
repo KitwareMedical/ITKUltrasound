@@ -88,16 +88,16 @@ protected:
   ComplexToComplex1DFFTImageFilter();
   virtual ~ComplexToComplex1DFFTImageFilter() {}
 
-  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
+  void PrintSelf(std::ostream& os, Indent indent) const override;
 
-  void GenerateInputRequestedRegion() ITK_OVERRIDE;
-  void EnlargeOutputRequestedRegion(DataObject *output) ITK_OVERRIDE;
+  void GenerateInputRequestedRegion() override;
+  void EnlargeOutputRequestedRegion(DataObject *output) override;
 
-  void BeforeThreadedGenerateData() ITK_OVERRIDE;
+  void BeforeThreadedGenerateData() override;
 
   /** Override to return a splitter that does not split along the direction we
    * are performing the transform. */
-  const ImageRegionSplitterBase* GetImageRegionSplitter() const ITK_OVERRIDE;
+  const ImageRegionSplitterBase* GetImageRegionSplitter() const override;
 
   /** Direction in which the filter is to be applied
    * this should be in the range [0,ImageDimension-1]. */

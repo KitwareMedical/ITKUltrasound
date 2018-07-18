@@ -77,8 +77,8 @@ protected:
     }
   }
 
-  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
-  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) ITK_OVERRIDE;
+  virtual void BeforeThreadedGenerateData() override;
+  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) override;
 
 private:
   FFTWComplexToComplex1DFFTImageFilter(const Self&); //purposely not implemented

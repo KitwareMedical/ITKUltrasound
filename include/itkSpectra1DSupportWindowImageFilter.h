@@ -80,12 +80,12 @@ protected:
 
   typedef typename OutputImageType::RegionType OutputImageRegionType;
 
-  void GenerateOutputInformation() ITK_OVERRIDE;
+  void GenerateOutputInformation() override;
 
-  void DynamicThreadedGenerateData( const OutputImageRegionType & outputRegionForThread ) ITK_OVERRIDE;
-  void AfterThreadedGenerateData() ITK_OVERRIDE;
+  void DynamicThreadedGenerateData( const OutputImageRegionType & outputRegionForThread ) override;
+  void AfterThreadedGenerateData() override;
 
-  void PrintSelf( std::ostream & os, Indent indent ) const ITK_OVERRIDE;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
 private:
   FFT1DSizeType m_FFT1DSize;

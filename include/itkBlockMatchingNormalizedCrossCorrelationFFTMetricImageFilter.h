@@ -97,7 +97,7 @@ e  */
 protected:
   NormalizedCrossCorrelationFFTMetricImageFilter();
 
-  virtual void GenerateData() ITK_OVERRIDE;
+  virtual void GenerateData() override;
 
   typedef ConstantPadImageFilter< MetricImageType, MetricImageType >                  PadFilterType;
   typedef FFTShiftImageFilter< MetricImageType, MetricImageType >                     FFTShiftFilterType;

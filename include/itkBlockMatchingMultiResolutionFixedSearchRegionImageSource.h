@@ -115,9 +115,9 @@ public:
 protected:
   MultiResolutionFixedSearchRegionImageSource();
 
-  void BeforeThreadedGenerateData() ITK_OVERRIDE;
+  void BeforeThreadedGenerateData() override;
 
-  void DynamicThreadedGenerateData( const OutputRegionType& outputRegion ) ITK_OVERRIDE;
+  void DynamicThreadedGenerateData( const OutputRegionType& outputRegion ) override;
 
   RadiusScheduleType m_SearchRegionRadiusSchedule;
 

@@ -82,7 +82,7 @@ public:
 
   virtual void SetMetricImagePixel( const PointType & point, const IndexType& index, MetricImageType* image );
 
-  void Compute() ITK_OVERRIDE {
+  void Compute() override {
     // We do this here instead of SetMetricImagePixel so it only has to be done
     // once.
     this->m_DisplacementImage->Modified();

@@ -178,9 +178,9 @@ protected:
 
   MultiResolutionSearchRegionImageSource();
 
-  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
+  virtual void BeforeThreadedGenerateData() override;
 
-  virtual void GenerateOutputInformation() ITK_OVERRIDE;
+  virtual void GenerateOutputInformation() override;
 
   typename FixedImageType::Pointer  m_FixedImage;
   typename MovingImageType::Pointer m_MovingImage;

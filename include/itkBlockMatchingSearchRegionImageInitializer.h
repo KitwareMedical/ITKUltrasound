@@ -130,11 +130,11 @@ public:
 protected:
   SearchRegionImageInitializer();
 
-  void GenerateOutputInformation() ITK_OVERRIDE;
+  void GenerateOutputInformation() override;
 
-  void BeforeThreadedGenerateData() ITK_OVERRIDE;
+  void BeforeThreadedGenerateData() override;
 
-  void DynamicThreadedGenerateData( const OutputRegionType& outputRegion ) ITK_OVERRIDE;
+  void DynamicThreadedGenerateData( const OutputRegionType& outputRegion ) override;
 
   typename FixedImageType::Pointer  m_FixedImage;
   typename MovingImageType::Pointer m_MovingImage;

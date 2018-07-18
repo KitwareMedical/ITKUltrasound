@@ -37,7 +37,7 @@ public:
   itkTypeMacro( ButterworthBandpass1DFilterFunction, FrequencyDomain1DFilterFunction);
   itkNewMacro( Self );
 
-  double EvaluateFrequency(double f) const ITK_OVERRIDE
+  double EvaluateFrequency(double f) const override
     {
     //highpass
     double x = 1.0;
@@ -73,7 +73,7 @@ protected:
     m_UpperFrequency = 1.0;
     }
 
-  virtual void PrintSelf( std::ostream& os, Indent indent ) const ITK_OVERRIDE
+  virtual void PrintSelf( std::ostream& os, Indent indent ) const override
     {
     Superclass::PrintSelf( os, indent );
 

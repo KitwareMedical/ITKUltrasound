@@ -66,25 +66,25 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro(HDF5UltrasoundImageIO, StreamingImageIOBase);
 
-  virtual bool CanReadFile(const char * fileNameToRead) ITK_OVERRIDE;
+  virtual bool CanReadFile(const char * fileNameToRead) override;
 
-  virtual void ReadImageInformation() ITK_OVERRIDE;
+  virtual void ReadImageInformation() override;
 
-  virtual void Read(void *buffer) ITK_OVERRIDE;
+  virtual void Read(void *buffer) override;
 
-  virtual bool CanWriteFile(const char * fileNameToWrite) ITK_OVERRIDE;
+  virtual bool CanWriteFile(const char * fileNameToWrite) override;
 
-  virtual void WriteImageInformation() ITK_OVERRIDE;
+  virtual void WriteImageInformation() override;
 
-  virtual void Write(const void *buffer) ITK_OVERRIDE;
+  virtual void Write(const void *buffer) override;
 
 protected:
   HDF5UltrasoundImageIO();
   ~HDF5UltrasoundImageIO();
 
-  virtual SizeType GetHeaderSize() const ITK_OVERRIDE;
+  virtual SizeType GetHeaderSize() const override;
 
-  virtual void PrintSelf(std::ostream & os, Indent indent) const ITK_OVERRIDE;
+  virtual void PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
   HDF5UltrasoundImageIO(const Self &) ITK_DELETED_FUNCTION;

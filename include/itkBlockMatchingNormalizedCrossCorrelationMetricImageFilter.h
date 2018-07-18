@@ -81,13 +81,13 @@ protected:
 
   /** The mean and pseudo-standarddeviation images are stored in the outputs so
     they fix in with the pipline architecture. */
-  virtual void GenerateOutputInformation() ITK_OVERRIDE;
+  virtual void GenerateOutputInformation() override;
 
   /** All outputs generate the largest possible region. */
-  virtual void EnlargeOutputRequestedRegion( DataObject * data ) ITK_OVERRIDE;
+  virtual void EnlargeOutputRequestedRegion( DataObject * data ) override;
 
   /** Don't let the default mess with our output requested regions. */
-  virtual void GenerateOutputRequestedRegion( DataObject * data ) ITK_OVERRIDE {};
+  virtual void GenerateOutputRequestedRegion( DataObject * data ) override {};
 
   /** Generates helper images for the calculation.  These are only needed for
    * internal calculation, but they are put on the

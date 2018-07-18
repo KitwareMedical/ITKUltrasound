@@ -70,16 +70,16 @@ protected:
   Forward1DFFTImageFilter();
   virtual ~Forward1DFFTImageFilter() {}
 
-  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
+  void PrintSelf(std::ostream& os, Indent indent) const override;
 
-  void GenerateInputRequestedRegion() ITK_OVERRIDE;
-  void EnlargeOutputRequestedRegion(DataObject *output) ITK_OVERRIDE;
+  void GenerateInputRequestedRegion() override;
+  void EnlargeOutputRequestedRegion(DataObject *output) override;
 
-  void BeforeThreadedGenerateData() ITK_OVERRIDE;
+  void BeforeThreadedGenerateData() override;
 
   /** Override to return a splitter that does not split along the direction we
    * are performing the transform. */
-  virtual const ImageRegionSplitterBase* GetImageRegionSplitter() const ITK_OVERRIDE;
+  virtual const ImageRegionSplitterBase* GetImageRegionSplitter() const override;
 
 private:
   ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;

@@ -170,7 +170,7 @@ public:
    * simply calls CopyInformation() and copies the region ivars.
    * The implementation here refers to the superclass' implementation
    * and then copies over the pixel container. */
-  virtual void Graft(const DataObject *data) ITK_OVERRIDE;
+  virtual void Graft(const DataObject *data) override;
 
   /** \brief Get the continuous index from a physical point
    *
@@ -541,15 +541,15 @@ public:
   const NeighborhoodAccessorFunctorType GetNeighborhoodAccessor() const
   { return NeighborhoodAccessorFunctorType(); }
 
-  virtual void SetLargestPossibleRegion(const RegionType & region) ITK_OVERRIDE;
+  virtual void SetLargestPossibleRegion(const RegionType & region) override;
 
-  virtual void CopyInformation( const DataObject * data ) ITK_OVERRIDE;
+  virtual void CopyInformation( const DataObject * data ) override;
 
 protected:
   SliceSeriesSpecialCoordinatesImage();
 
   virtual ~SliceSeriesSpecialCoordinatesImage() {}
-  virtual void PrintSelf(std::ostream & os, Indent indent) const ITK_OVERRIDE;
+  virtual void PrintSelf(std::ostream & os, Indent indent) const override;
 
   const TransformType * GetSliceInverseTransform( IndexValueType sliceIndex ) const;
 

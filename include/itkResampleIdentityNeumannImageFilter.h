@@ -196,22 +196,22 @@ protected:
    * for GenerateOutputInformation() in order to inform the pipeline
    * execution model.  The original documentation of this method is
    * below. \sa ProcessObject::GenerateOutputInformaton() */
-  void GenerateOutputInformation() ITK_OVERRIDE;
+  void GenerateOutputInformation() override;
 
   /** ResampleIdentityNeumannImageFilter needs a different input requested region than
    * the output requested region.  As such, ResampleIdentityNeumannImageFilter needs
    * to provide an implementation for GenerateInputRequestedRegion()
    * in order to inform the pipeline execution model.
    * \sa ProcessObject::GenerateInputRequestedRegion() */
-  void GenerateInputRequestedRegion() ITK_OVERRIDE;
+  void GenerateInputRequestedRegion() override;
 
   /** This method is used to set the state of the filter before
    * multi-threading. */
-  void BeforeThreadedGenerateData() ITK_OVERRIDE;
+  void BeforeThreadedGenerateData() override;
 
   /** This method is used to set the state of the filter after
    * multi-threading. */
-  void AfterThreadedGenerateData() ITK_OVERRIDE;
+  void AfterThreadedGenerateData() override;
 
   /** ResampleIdentityNeumannImageFilter can be implemented as a multithreaded filter.  Therefore,
    * this implementation provides a ThreadedGenerateData() routine which
@@ -222,10 +222,10 @@ protected:
    * \sa ImageToImageFilter::ThreadedGenerateData(),
    *     ImageToImageFilter::GenerateData() */
   void ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread,
-                             ThreadIdType threadId ) ITK_OVERRIDE;
+                             ThreadIdType threadId ) override;
 
   /** Method Compute the Modified Time based on changed to the components. */
-  unsigned long GetMTime( void ) const ITK_OVERRIDE;
+  unsigned long GetMTime( void ) const override;
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   /** Begin concept checking */
@@ -235,7 +235,7 @@ protected:
 #endif
 
 
-  void PrintSelf( std::ostream& os, Indent indent ) const ITK_OVERRIDE;
+  void PrintSelf( std::ostream& os, Indent indent ) const override;
 
 private:
   ResampleIdentityNeumannImageFilter( const Self& ); //purposely not implemented

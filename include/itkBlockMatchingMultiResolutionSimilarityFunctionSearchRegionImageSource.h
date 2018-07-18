@@ -264,7 +264,7 @@ public:
 protected:
   MultiResolutionSimilarityFunctionSearchRegionImageSource();
 
-  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
+  virtual void BeforeThreadedGenerateData() override;
 
   virtual void ThreadedGenerateData( const OutputRegionType& outputRegion, ThreadIdType threadID );
 

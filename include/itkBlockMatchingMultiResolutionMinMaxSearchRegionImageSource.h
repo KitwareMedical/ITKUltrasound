@@ -121,7 +121,7 @@ protected:
     {
     }
 
-  void DynamicThreadedGenerateData( const OutputRegionType& outputRegion ) ITK_OVERRIDE;
+  void DynamicThreadedGenerateData( const OutputRegionType& outputRegion ) override;
 
   FactorType m_MinFactor;
   FactorType m_MaxFactor;

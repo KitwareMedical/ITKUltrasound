@@ -67,10 +67,10 @@ protected:
   TimeGainCompensationImageFilter();
   virtual ~TimeGainCompensationImageFilter() {}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const ITK_OVERRIDE;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
-  void BeforeThreadedGenerateData() ITK_OVERRIDE;
-  void DynamicThreadedGenerateData( const OutputImageRegionType& outputRegionForThread ) ITK_OVERRIDE;
+  void BeforeThreadedGenerateData() override;
+  void DynamicThreadedGenerateData( const OutputImageRegionType& outputRegionForThread ) override;
 
 private:
   GainType m_Gain;
