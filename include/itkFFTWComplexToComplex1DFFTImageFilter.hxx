@@ -74,7 +74,7 @@ FFTWComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
     }
   if( ! this->m_PlanComputed )
     {
-    const int threads = this->GetNumberOfThreads();
+    const int threads = this->GetNumberOfWorkUnits();
     m_PlanArray.resize( threads );
     m_InputBufferArray.resize( threads );
     m_OutputBufferArray.resize( threads );
