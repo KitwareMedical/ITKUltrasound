@@ -54,21 +54,21 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  */
-template <class TMetricImage, class TDisplacementImage, class TStrainValueType>
+template <typename TMetricImage, typename TDisplacementImage, typename TStrainValueType>
 class ITK_TEMPLATE_EXPORT StrainWindowDisplacementCalculator :
-  public MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage>
+  public MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(StrainWindowDisplacementCalculator);
+
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, TDisplacementImage::ImageDimension);
 
   /** Standard class typedefs. */
-  typedef StrainWindowDisplacementCalculator Self;
-  typedef MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>
-  Superclass;
-
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  typedef StrainWindowDisplacementCalculator                                    Self;
+  typedef MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage> Superclass;
+  typedef SmartPointer<Self>                                                    Pointer;
+  typedef SmartPointer<const Self>                                              ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -104,7 +104,7 @@ public:
     const IndexType& index,
     MetricImageType * image );
 
-  virtual void Compute();
+  void Compute() override;
 
   /** Set/Get the internal displacement calculator that is used to calculate the
    * displacements after regularization.  Defaults to a
@@ -178,9 +178,6 @@ protected:
   typename BoxMeanImageFilterType::Pointer                       m_BoxMeanFilter;
 
 private:
-  StrainWindowDisplacementCalculator( const Self & );
-  void operator=( const Self & );
-
 };
 
 } // end namespace itk

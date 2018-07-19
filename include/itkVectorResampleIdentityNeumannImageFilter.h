@@ -60,6 +60,8 @@ class ITK_TEMPLATE_EXPORT VectorResampleIdentityNeumannImageFilter:
     public ImageToImageFilter<TInputImage, TOutputImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(VectorResampleIdentityNeumannImageFilter);
+
   /** Standard class typedefs. */
   typedef VectorResampleIdentityNeumannImageFilter      Self;
   typedef ImageToImageFilter<TInputImage,TOutputImage>  Superclass;
@@ -158,7 +160,7 @@ public:
 protected:
   VectorResampleIdentityNeumannImageFilter();
   ~VectorResampleIdentityNeumannImageFilter() {};
-  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
+  void PrintSelf(std::ostream& os, Indent indent) const override;
 
   /** VectorResampleIdentityNeumannImageFilter can be implemented as a multithreaded filter.  Therefore,
    * this implementation provides a ThreadedGenerateData() routine which
@@ -168,38 +170,34 @@ protected:
    * specified by the parameter "outputRegionForThread"
    * \sa ImageToImageFilter::ThreadedGenerateData(),
    *     ImageToImageFilter::GenerateData() */
-  void ThreadedGenerateData(const OutputImageRegionType& outputRegionForThread,
-                            ThreadIdType threadId ) ITK_OVERRIDE;
+  void DynamicThreadedGenerateData(const OutputImageRegionType& outputRegionForThread ) override;
 
   /** VectorResampleIdentityNeumannImageFilter produces an image which is a different size
    * than its input.  As such, it needs to provide an implementation
    * for GenerateOutputInformation() in order to inform the pipeline
    * execution model.  The original documentation of this method is
    * below. \sa ProcessObject::GenerateOutputInformaton() */
-  virtual void GenerateOutputInformation() ITK_OVERRIDE;
+  void GenerateOutputInformation() override;
 
   /** VectorResampleIdentityNeumannImageFilter needs a different input requested region than
    * the output requested region.  As such, VectorResampleIdentityNeumannImageFilter needs
    * to provide an implementation for GenerateInputRequestedRegion()
    * in order to inform the pipeline execution model.
    * \sa ProcessObject::GenerateInputRequestedRegion() */
-  virtual void GenerateInputRequestedRegion() ITK_OVERRIDE;
+  void GenerateInputRequestedRegion() override;
 
   /** This method is used to set the state of the filter before
    * multi-threading. */
-  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
+  void BeforeThreadedGenerateData() override;
 
   /** This method is used to set the state of the filter after
    * multi-threading. */
-  virtual void AfterThreadedGenerateData() ITK_OVERRIDE;
+  void AfterThreadedGenerateData() override;
 
   /** Method Compute the Modified Time based on changed to the components. */
-  unsigned long GetMTime() const ITK_OVERRIDE;
+  unsigned long GetMTime() const override;
 
 private:
-  VectorResampleIdentityNeumannImageFilter(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
-
   SizeType                m_Size;       // Size of the output image
   InterpolatorPointerType m_Interpolator;
   // Image function for interpolation

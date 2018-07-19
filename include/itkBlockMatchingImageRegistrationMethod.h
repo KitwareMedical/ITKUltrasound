@@ -180,16 +180,16 @@ protected:
   ImageRegistrationMethod();
   virtual ~ImageRegistrationMethod() {}
 
-  virtual void GenerateOutputInformation() ITK_OVERRIDE;
+  virtual void GenerateOutputInformation() override;
 
-  virtual void GenerateInputRequestedRegion() ITK_OVERRIDE;
+  virtual void GenerateInputRequestedRegion() override;
 
-  virtual void EnlargeOutputRequestedRegion( DataObject * data ) ITK_OVERRIDE;
+  virtual void EnlargeOutputRequestedRegion( DataObject * data ) override;
 
   /** Initialize by setting the interconnects between the components. */
   virtual void Initialize();
 
-  virtual void GenerateData() ITK_OVERRIDE;
+  virtual void GenerateData() override;
 
   typename FixedImageType::Pointer  m_FixedImage;
   typename MovingImageType::Pointer m_MovingImage;

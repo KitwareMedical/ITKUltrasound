@@ -37,11 +37,13 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  */
-template < class TFixedImage, class TMovingImage, class TDisplacementImage >
+template < typename TFixedImage, typename TMovingImage, typename TDisplacementImage >
 class ITK_TEMPLATE_EXPORT MultiResolutionMinMaxSearchRegionImageSource :
   public MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionMinMaxSearchRegionImageSource);
+
   /** Standard class typedefs. */
   typedef MultiResolutionMinMaxSearchRegionImageSource   Self;
   typedef MultiResolutionSearchRegionImageSource< TFixedImage,
@@ -119,16 +121,12 @@ protected:
     {
     }
 
-  virtual void ThreadedGenerateData( const OutputRegionType& outputRegion,
-                                     ThreadIdType threadID ) ITK_OVERRIDE;
+  void DynamicThreadedGenerateData( const OutputRegionType& outputRegion ) override;
 
   FactorType m_MinFactor;
   FactorType m_MaxFactor;
 
 private:
-  MultiResolutionMinMaxSearchRegionImageSource( const Self & );
-  void operator=( const Self & );
-
 };
 
 } // end namespace BlockMatching

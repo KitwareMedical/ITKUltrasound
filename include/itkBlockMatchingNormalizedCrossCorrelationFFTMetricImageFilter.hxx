@@ -139,17 +139,17 @@ NormalizedCrossCorrelationFFTMetricImageFilter< TFixedImage,
     }
   m_KernelPadFilter->SetPadUpperBound( padding );
 
-  m_MovingPadFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
-  m_KernelPadFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
-  m_FFTShiftFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
-  m_KernelFFTFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
-  m_MovingFFTFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
-  m_ComplexConjugateImageFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
-  m_MultiplyFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
-  m_IFFTFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
+  m_MovingPadFilter->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
+  m_KernelPadFilter->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
+  m_FFTShiftFilter->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
+  m_KernelFFTFilter->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
+  m_MovingFFTFilter->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
+  m_ComplexConjugateImageFilter->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
+  m_MultiplyFilter->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
+  m_IFFTFilter->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
 
   m_CropFilter->SetReferenceImage( denom );
-  m_CropFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
+  m_CropFilter->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
 
   m_CropFilter->UpdateLargestPossibleRegion();
 

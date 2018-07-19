@@ -36,6 +36,8 @@ class ITK_TEMPLATE_EXPORT VnlForward1DFFTImageFilter :
     public Forward1DFFTImageFilter< TInputImage, TOutputImage >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(VnlForward1DFFTImageFilter);
+
   /** Standard class typedefs. */
   typedef VnlForward1DFFTImageFilter                           Self;
   typedef Forward1DFFTImageFilter< TInputImage, TOutputImage > Superclass;
@@ -53,14 +55,12 @@ public:
   itkTypeMacro( VnlForward1DFFTImageFilter, Forward1DFFTImageFilter );
 
 protected:
-  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) ITK_OVERRIDE;
+  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) override;
 
   VnlForward1DFFTImageFilter() { }
   ~VnlForward1DFFTImageFilter() { }
 
 private:
-  VnlForward1DFFTImageFilter(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
 };
 
 } // end namespace itk

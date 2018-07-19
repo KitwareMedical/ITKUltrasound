@@ -36,6 +36,7 @@ FrequencyDomain1DImageFilter< TInputImage, TOutputImage >
   this->SetDirection( 0 );
   this->m_FilterFunction = FrequencyDomain1DFilterFunction::New();
   this->m_ImageRegionSplitter = ImageRegionSplitterDirection::New();
+  this->DynamicMultiThreadingOff();
 }
 
 

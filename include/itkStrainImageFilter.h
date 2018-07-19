@@ -123,9 +123,9 @@ protected:
 
   StrainImageFilter();
 
-  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
+  virtual void BeforeThreadedGenerateData() override;
 
-  virtual void ThreadedGenerateData( const OutputRegionType& outputRegion, ThreadIdType threadId ) ITK_OVERRIDE;
+  virtual void ThreadedGenerateData( const OutputRegionType& outputRegion, ThreadIdType threadId ) override;
 
   typedef itk::SplitComponentsImageFilter< InputImageType, OperatorImageType >
     InputComponentsImageFilterType;

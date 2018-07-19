@@ -218,10 +218,10 @@ public:
 protected:
   MultiResolutionThresholdBoundingBoxSearchRegionImageSource();
 
-  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
+  virtual void BeforeThreadedGenerateData() override;
 
   virtual void ThreadedGenerateData( const OutputRegionType& outputRegion,
-    ThreadIdType threadID ) ITK_OVERRIDE;
+    ThreadIdType threadID ) override;
 
   ThresholdScheduleType m_ThresholdSchedule;
   bool                  m_ThresholdScheduleSpecified;

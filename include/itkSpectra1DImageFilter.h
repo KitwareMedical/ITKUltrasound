@@ -49,6 +49,8 @@ class ITK_TEMPLATE_EXPORT Spectra1DImageFilter:
   public ImageToImageFilter< TInputImage, TOutputImage >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(Spectra1DImageFilter);
+
   itkStaticConstMacro( ImageDimension, unsigned int, TInputImage::ImageDimension );
 
   typedef TInputImage                              InputImageType;
@@ -83,15 +85,12 @@ protected:
 
   typedef typename OutputImageType::RegionType OutputImageRegionType;
 
-  virtual void GenerateOutputInformation() ITK_OVERRIDE;
-  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
-  virtual void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId ) ITK_OVERRIDE;
-  virtual void VerifyInputInformation() ITK_OVERRIDE;
+  void GenerateOutputInformation() override;
+  void BeforeThreadedGenerateData() override;
+  void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId ) override;
+  void VerifyInputInformation() override;
 
 private:
-  Spectra1DImageFilter( const Self & ); // purposely not implemented
-  void operator=( const Self & ); // purposely not implemented
-
   typedef vcl_complex< ScalarType >                  ComplexType;
   typedef vnl_vector< ComplexType >                  ComplexVectorType;
   typedef std::vector< ScalarType >                  SpectraVectorType;

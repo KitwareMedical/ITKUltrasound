@@ -161,7 +161,7 @@ public:
 
   /** Method to return the latest modified time of this object or
    * any of its cached ivars */
-  unsigned long GetMTime() const ITK_OVERRIDE;
+  unsigned long GetMTime() const override;
 
   /** BlockMatching::ImageRegistrationMethod used to register each image at
    * every level. */
@@ -183,10 +183,10 @@ protected:
 
   /** The size and spacing of the search region image at the lowest level is
    * used to generate the information for the output image. */
-  virtual void GenerateOutputInformation() ITK_OVERRIDE;
+  virtual void GenerateOutputInformation() override;
 
   /** Generates the entire displacement image. */
-  virtual void EnlargeOutputRequestedRegion( DataObject* data ) ITK_OVERRIDE
+  virtual void EnlargeOutputRequestedRegion( DataObject* data ) override
     {
     TDisplacementImage* output = this->GetOutput( 0 );
     output->SetRequestedRegionToLargestPossibleRegion();
@@ -194,7 +194,7 @@ protected:
 
   /** Method invoked by the pipeline in order to trigger the computation of
    * the registration. */
-  virtual void GenerateData() ITK_OVERRIDE;
+  virtual void GenerateData() override;
 
   /** Initialize by setting the interconnects between the components.
       This method is executed at every level of the pyramid with the

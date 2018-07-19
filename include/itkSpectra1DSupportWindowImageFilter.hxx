@@ -64,7 +64,7 @@ Spectra1DSupportWindowImageFilter< TInputImage >
 template< typename TInputImage >
 void
 Spectra1DSupportWindowImageFilter< TInputImage >
-::ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType itkNotUsed( threadId ) )
+::DynamicThreadedGenerateData( const OutputImageRegionType & outputRegionForThread )
 {
   OutputImageType * output = this->GetOutput();
   const InputImageType * input = this->GetInput();

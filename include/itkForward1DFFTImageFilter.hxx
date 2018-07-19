@@ -87,7 +87,9 @@ Forward1DFFTImageFilter< TInputImage, TOutputImage >
 ::Forward1DFFTImageFilter():
   m_Direction( 0 )
 {
+  // We cannot split over the FFT direction
   this->m_ImageRegionSplitter = ImageRegionSplitterDirection::New();
+  this->DynamicMultiThreadingOff();
 }
 
 

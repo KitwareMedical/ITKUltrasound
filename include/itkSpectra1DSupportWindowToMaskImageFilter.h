@@ -69,7 +69,7 @@ protected:
   Spectra1DSupportWindowToMaskImageFilter();
   virtual ~Spectra1DSupportWindowToMaskImageFilter() {};
 
-  virtual void GenerateData() ITK_OVERRIDE;
+  virtual void GenerateData() override;
 
 private:
   Spectra1DSupportWindowToMaskImageFilter( const Self & ); // purposely not implemented

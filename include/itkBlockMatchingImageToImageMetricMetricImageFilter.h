@@ -75,7 +75,7 @@ protected:
   ImageToImageMetricMetricImageFilter();
   virtual ~ImageToImageMetricMetricImageFilter() {}
 
-  virtual void GenerateOutputInformation() ITK_OVERRIDE;
+  virtual void GenerateOutputInformation() override;
 
   MetricImageSpacingType m_MetricImageSpacing;
   bool                   m_MetricImageSpacingDefined;

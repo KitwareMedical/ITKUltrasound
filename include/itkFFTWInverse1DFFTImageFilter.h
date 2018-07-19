@@ -76,8 +76,8 @@ protected:
     }
   }
 
-  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
-  virtual void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadID ) ITK_OVERRIDE;
+  virtual void BeforeThreadedGenerateData() override;
+  virtual void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadID ) override;
 
 private:
   FFTWInverse1DFFTImageFilter(const Self&) ITK_DELETED_FUNCTION;

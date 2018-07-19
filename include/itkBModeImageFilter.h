@@ -113,13 +113,13 @@ protected:
   BModeImageFilter();
   ~BModeImageFilter() {}
 
-  virtual void PrintSelf( std::ostream& os, Indent indent ) const ITK_OVERRIDE;
+  virtual void PrintSelf( std::ostream& os, Indent indent ) const override;
 
-  virtual void GenerateData() ITK_OVERRIDE;
+  virtual void GenerateData() override;
 
   // These behave like their analogs in Forward1DFFTImageFilter.
-  virtual void GenerateInputRequestedRegion() ITK_OVERRIDE;
-  virtual void EnlargeOutputRequestedRegion(DataObject *output) ITK_OVERRIDE;
+  virtual void GenerateInputRequestedRegion() override;
+  virtual void EnlargeOutputRequestedRegion(DataObject *output) override;
 
   /** Component filters. */
   typedef AnalyticSignalImageFilter< InputImageType, ComplexImageType >                          AnalyticType;

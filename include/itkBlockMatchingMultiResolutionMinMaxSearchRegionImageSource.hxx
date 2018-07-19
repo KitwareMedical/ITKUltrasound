@@ -28,10 +28,10 @@ namespace itk
 namespace BlockMatching
 {
 
-template < class TFixedImage, class TMovingImage, class TDisplacementImage >
+template < typename TFixedImage, typename TMovingImage, typename TDisplacementImage >
 void
 MultiResolutionMinMaxSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >
-::ThreadedGenerateData( const OutputRegionType& outputRegion, ThreadIdType threadID )
+::DynamicThreadedGenerateData( const OutputRegionType& outputRegion )
 {
   OutputImageType * outputPtr = this->GetOutput();
   if( !outputPtr )

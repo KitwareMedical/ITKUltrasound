@@ -59,9 +59,9 @@ public:
 
   typedef typename Superclass::IndexType IndexType;
 
-  void SetMetricImagePixel( const PointType & point, const IndexType& index, MetricImageType* image ) ITK_OVERRIDE;
+  void SetMetricImagePixel( const PointType & point, const IndexType& index, MetricImageType* image ) override;
 
-  void Compute() ITK_OVERRIDE {
+  void Compute() override {
     // We do this here instead of SetMetricImagePixel so it only has to be done
     // once.
     this->m_DisplacementImage->Modified();

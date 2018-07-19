@@ -15,6 +15,8 @@ itk_module(Ultrasound
     ITKTransform
     ITKRegistrationCommon
     ${_fft_depends}
+  COMPILE_DEPENDS
+    SplitComponents
   PRIVATE_DEPENDS
     ITKHDF5
   TEST_DEPENDS

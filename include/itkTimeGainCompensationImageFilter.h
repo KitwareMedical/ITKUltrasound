@@ -39,6 +39,8 @@ class ITK_TEMPLATE_EXPORT TimeGainCompensationImageFilter:
   public ImageToImageFilter< TInputImage, TOutputImage >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(TimeGainCompensationImageFilter);
+
   /** Standard class typedefs. */
   typedef TInputImage                                           InputImageType;
   typedef TOutputImage                                          OutputImageType;
@@ -65,15 +67,12 @@ protected:
   TimeGainCompensationImageFilter();
   virtual ~TimeGainCompensationImageFilter() {}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const ITK_OVERRIDE;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
-  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
-  virtual void ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread, ThreadIdType threadId ) ITK_OVERRIDE;
+  void BeforeThreadedGenerateData() override;
+  void DynamicThreadedGenerateData( const OutputImageRegionType& outputRegionForThread ) override;
 
 private:
-  TimeGainCompensationImageFilter( const Self& ); // purposely not implemented
-  void operator=( const Self& ); // purposely not implemented
-
   GainType m_Gain;
 };
 

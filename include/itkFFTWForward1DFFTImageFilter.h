@@ -77,8 +77,8 @@ protected:
     }
   }
 
-  void BeforeThreadedGenerateData() ITK_OVERRIDE;
-  void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) ITK_OVERRIDE;
+  void BeforeThreadedGenerateData() override;
+  void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) override;
 
 private:
   FFTWForward1DFFTImageFilter(const Self&) ITK_DELETED_FUNCTION;
