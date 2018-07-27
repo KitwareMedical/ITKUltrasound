@@ -47,6 +47,7 @@ MultiResolutionIterationObserver< TMultiResolutionMethod >
   m_StrainComponentsWriter       = StrainComponentsWriterType::New();
 }
 
+
 template< typename TMultiResolutionMethod >
 MultiResolutionIterationObserver< TMultiResolutionMethod >
 ::~MultiResolutionIterationObserver()
@@ -58,7 +59,8 @@ MultiResolutionIterationObserver< TMultiResolutionMethod >
     }
 }
 
-template< class TMultiResolutionMethod >
+
+template< typename TMultiResolutionMethod >
 void
 MultiResolutionIterationObserver< TMultiResolutionMethod >
 ::Execute( const itk::Object * object , const itk::EventObject & event )

@@ -27,8 +27,6 @@ template< typename TFixedPixel, typename TMovingPixel,
           unsigned int VImageDimension >
 DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImageDimension >
 ::DisplacementPipeline():
-  m_MMMStrainOptions( NULL ),
-  m_WriteOutputImagesToFile( false ),
   m_LevelRegistrationMethodTextProgressBar( false )
 {
   this->SetNumberOfRequiredInputs( 2 );
@@ -103,29 +101,17 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
   m_StrainFilter->SetStrainForm( StrainFilterType::EULERIANALMANSI );
   m_FinalGradientFilter = FinalGradientFilterType::New();
   m_FinalGradientFilter->SetNumberOfLevels( 1 );
-  m_StrainWriter = StrainWriterType::New();
-  m_StrainIO = StrainIOType::New();
-  m_StrainIO->SetFileTypeToBinary();
-  m_StrainWriter->SetImageIO( m_StrainIO );
-  m_StrainWriter->SetInput( m_StrainFilter->GetOutput() );
-  m_StrainComponentsFilter = StrainComponentsFilterType::New();
-  m_StrainComponentsFilter->SetInput( m_StrainFilter->GetOutput() );
-  m_StrainComponentWriter = ComponentWriterType::New();
-  m_DisplacementComponentsFilter = DisplacementComponentsFilterType::New();
-  m_DisplacementComponentWriter = ComponentWriterType::New();
+
+  m_UpsamplingRatio[0] = 1.0;
+  m_UpsamplingRatio[1] = 2.0;
+
+  m_TopBlockRadius[0] = 15;
+  m_TopBlockRadius[1] = 10;
+
+  m_BottomBlockRadius[0] = 12;
+  m_BottomBlockRadius[1] = 7;
 }
 
-template< typename TFixedPixel, class TMovingPixel,
-          typename TMetricPixel, class TCoordRep,
-          unsigned int VImageDimension >
-void
-DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImageDimension >
-::SetMMMStrainOptions( const MMMStrainOptions * options )
-{
-  m_MMMStrainOptions = options;
-
-  this->Modified();
-}
 
 template< typename TFixedPixel, class TMovingPixel,
           typename TMetricPixel, class TCoordRep,
@@ -153,11 +139,6 @@ void
 DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImageDimension >
 ::SetupPipeline()
 {
-  if( m_MMMStrainOptions == NULL )
-    {
-    itkExceptionMacro(<< "The MMMStrainOptions have not been set.");
-    }
-
   typename FixedImageType::Pointer  fixed  = const_cast< FixedImageType * >(
      static_cast< const FixedImageType * >( this->GetInput( 0 )));
   typename MovingImageType::Pointer moving = const_cast< MovingImageType * >(
@@ -183,30 +164,30 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
 
   typename FixedImageType::SizeType    size;
   typename FixedImageType::SpacingType spacing;
-  size[0] = static_cast< typename FixedImageType::SizeType::SizeValueType >( fixed->GetLargestPossibleRegion().GetSize()[0] * m_MMMStrainOptions->GetParameters()->upsample[0] );
-  size[1] = static_cast< typename FixedImageType::SizeType::SizeValueType >( fixed->GetLargestPossibleRegion().GetSize()[1] * m_MMMStrainOptions->GetParameters()->upsample[1] );
-  spacing[0] = fixed->GetSpacing()[0] / m_MMMStrainOptions->GetParameters()->upsample[0];
-  spacing[1] = fixed->GetSpacing()[1] / m_MMMStrainOptions->GetParameters()->upsample[1];
+  size[0] = static_cast< typename FixedImageType::SizeType::SizeValueType >( fixed->GetLargestPossibleRegion().GetSize()[0] * m_UpsamplingRatio[0];
+  size[1] = static_cast< typename FixedImageType::SizeType::SizeValueType >( fixed->GetLargestPossibleRegion().GetSize()[1] * m_UpsamplingRatio[1];
+  spacing[0] = fixed->GetSpacing()[0] / m_UpsamplingRatio[0];
+  spacing[1] = fixed->GetSpacing()[1] / m_UpsamplingRatio[1];
   m_FixedResampler->SetOutputSpacing( spacing );
   m_FixedResampler->SetSize( size );
   m_MovingResampler->SetInput( moving );
   m_MovingResampler->SetOutputOrigin( moving->GetOrigin() );
   m_MovingResampler->SetOutputDirection( moving->GetDirection() );
   m_MovingResampler->SetOutputStartIndex( moving->GetLargestPossibleRegion().GetIndex() );
-  size[0] = static_cast< typename MovingImageType::SizeType::SizeValueType >( moving->GetLargestPossibleRegion().GetSize()[0] * m_MMMStrainOptions->GetParameters()->upsample[0] );
-  size[1] = static_cast< typename MovingImageType::SizeType::SizeValueType >( moving->GetLargestPossibleRegion().GetSize()[1] * m_MMMStrainOptions->GetParameters()->upsample[1] );
-  spacing[0] = moving->GetSpacing()[0] / m_MMMStrainOptions->GetParameters()->upsample[0];
-  spacing[1] = moving->GetSpacing()[1] / m_MMMStrainOptions->GetParameters()->upsample[1];
+  size[0] = static_cast< typename MovingImageType::SizeType::SizeValueType >( moving->GetLargestPossibleRegion().GetSize()[0] * m_UpsamplingRatio[0];
+  size[1] = static_cast< typename MovingImageType::SizeType::SizeValueType >( moving->GetLargestPossibleRegion().GetSize()[1] * m_UpsamplingRatio[1];
+  spacing[0] = moving->GetSpacing()[0] / m_UpsamplingRatio[0];
+  spacing[1] = moving->GetSpacing()[1] / m_UpsamplingRatio[1];
   m_MovingResampler->SetOutputSpacing( spacing );
   m_MovingResampler->SetSize( size );
 
   // Block Radius Calculator
   RadiusType                         minBlockRadius;
   RadiusType                         maxBlockRadius;
-  minBlockRadius[0] = m_MMMStrainOptions->GetParameters()->block.bottomBlockRadius[0];
-  minBlockRadius[1] = m_MMMStrainOptions->GetParameters()->block.bottomBlockRadius[1];
-  maxBlockRadius[0] = m_MMMStrainOptions->GetParameters()->block.topBlockRadius[0];
-  maxBlockRadius[1] = m_MMMStrainOptions->GetParameters()->block.topBlockRadius[1];
+  minBlockRadius[0] = m_BottomBlockRadius[0];
+  minBlockRadius[1] = m_BottomBlockRadius[1];
+  maxBlockRadius[0] = m_TopBlockRadius[0];
+  maxBlockRadius[1] = m_TopBlockRadius[1];
   m_BlockRadiusCalculator->SetMinRadius( minBlockRadius );
   m_BlockRadiusCalculator->SetMaxRadius( maxBlockRadius );
 
