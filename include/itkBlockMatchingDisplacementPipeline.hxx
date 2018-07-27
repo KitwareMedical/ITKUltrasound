@@ -1,13 +1,32 @@
-#include "itkStrainPipeline.h"
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
+#include "itkBlockMatchingDisplacementPipeline.h"
 
 namespace itk
 {
+namespace BlockMatching
+{
 
-template< class TFixedPixel, class TMovingPixel,
-          class TMetricPixel, class TCoordRep,
+template< typename TFixedPixel, typename TMovingPixel,
+          typename TMetricPixel, typename TCoordRep,
           unsigned int VImageDimension >
-StrainPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImageDimension >
-::StrainPipeline():
+DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImageDimension >
+::DisplacementPipeline():
   m_MMMStrainOptions( NULL ),
   m_WriteOutputImagesToFile( false ),
   m_LevelRegistrationMethodTextProgressBar( false )
@@ -96,11 +115,11 @@ StrainPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImageDimens
   m_DisplacementComponentWriter = ComponentWriterType::New();
 }
 
-template< class TFixedPixel, class TMovingPixel,
-          class TMetricPixel, class TCoordRep,
+template< typename TFixedPixel, class TMovingPixel,
+          typename TMetricPixel, class TCoordRep,
           unsigned int VImageDimension >
 void
-StrainPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImageDimension >
+DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImageDimension >
 ::SetMMMStrainOptions( const MMMStrainOptions * options )
 {
   m_MMMStrainOptions = options;
@@ -108,11 +127,11 @@ StrainPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImageDimens
   this->Modified();
 }
 
-template< class TFixedPixel, class TMovingPixel,
-          class TMetricPixel, class TCoordRep,
+template< typename TFixedPixel, class TMovingPixel,
+          typename TMetricPixel, class TCoordRep,
           unsigned int VImageDimension >
 void
-StrainPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImageDimension >
+DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImageDimension >
 ::GenerateOutputInformation()
 {
   this->SetupPipeline();
@@ -127,11 +146,11 @@ StrainPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImageDimens
   output->CopyInformation( m_MultiResRegistrationMethod->GetOutput( 0 ) );
 }
 
-template< class TFixedPixel, class TMovingPixel,
-          class TMetricPixel, class TCoordRep,
+template< typename TFixedPixel, typename TMovingPixel,
+          typename TMetricPixel, typename TCoordRep,
           unsigned int VImageDimension >
 void
-StrainPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImageDimension >
+DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImageDimension >
 ::SetupPipeline()
 {
   if( m_MMMStrainOptions == NULL )
@@ -296,11 +315,11 @@ StrainPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImageDimens
   m_MultiResRegistrationMethod->RemoveAllObservers();
 }
 
-template< class TFixedPixel, class TMovingPixel,
-          class TMetricPixel, class TCoordRep,
+template< typename TFixedPixel, typename TMovingPixel,
+          typename TMetricPixel, typename TCoordRep,
           unsigned int VImageDimension >
 void
-StrainPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImageDimension >
+DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImageDimension >
 ::GenerateData()
 {
   this->AllocateOutputs();
@@ -390,6 +409,5 @@ StrainPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImageDimens
   this->GraftOutput( m_MultiResRegistrationMethod->GetOutput() );
 }
 
-template class StrainPipeline< signed short, signed short, double, double, 2 >;
-
+} // end namespace BlockMatching
 } // end namespace itk

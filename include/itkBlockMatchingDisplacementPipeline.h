@@ -1,5 +1,22 @@
-#ifndef __StrainPipeline_h
-#define __StrainPipeline_h
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
+#ifndef itkBlockMatchingDisplacementPipeline_h
+#define itkBlockMatchingDisplacementPipeline_h
 
 #include "itkAmoebaOptimizer.h"
 #include "itkExpNegativeImageFilter.h"
@@ -8,7 +25,6 @@
 #include "itkImageFileWriter.h"
 #include "itkImageToImageFilter.h"
 #include "itkVector.h"
-#include "itkVTKImageIO.h"
 #include "itkWindowedSincInterpolateImageFunction.h"
 #include "itkZeroFluxNeumannBoundaryCondition.h"
 
@@ -41,29 +57,30 @@
 
 namespace itk
 {
+namespace BlockMatching
+{
 
-/** \class StrainPipeline
+/** \class DisplacementPipeline
  *
  * \brief Sets up and runs deformable image registration pipeline with block-matching.
- * Optionally also saves output images.
  *
  */
-template< class TFixedPixel = signed short, class TMovingPixel= TFixedPixel,
-          class TMetricPixel = double, class TCoordRep = double,
+template< typename TFixedPixel = signed short, typename TMovingPixel = TFixedPixel,
+          typename TMetricPixel = double, typename TCoordRep = double,
           unsigned int VImageDimension = 2 >
-class ITK_EXPORT StrainPipeline : public ::itk::ImageToImageFilter<
-  ::itk::Image< TFixedPixel, VImageDimension >,
-  ::itk::Image< ::itk::Vector< TMetricPixel, VImageDimension>, VImageDimension > >
+class ITK_TEMPLATE_EXPORT DisplacementPipeline : public ImageToImageFilter<
+  Image< TFixedPixel, VImageDimension >, Image< Vector< TMetricPixel, VImageDimension>, VImageDimension > >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(DisplacementPipeline);
+
   /** Standard class typedefs. */
-  typedef StrainPipeline                 Self;
-  typedef SmartPointer< Self >           Pointer;
-  typedef SmartPointer< const Self >     ConstPointer;
+  typedef DisplacementPipeline       Self;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int,
-                      VImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, VImageDimension);
 
   typedef TFixedPixel FixedPixelType;
   typedef Image< TFixedPixel, ImageDimension > FixedImageType;
@@ -82,7 +99,7 @@ public:
   typedef ImageToImageFilter< FixedImageType, DisplacementImageType > Superclass;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( StrainPipeline, Superclass );
+  itkTypeMacro( DisplacementPipeline, Superclass );
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -228,7 +245,7 @@ public:
   itkGetConstMacro( WriteOutputImagesToFile, bool );
 
 protected:
-  StrainPipeline();
+  DisplacementPipeline();
 
   virtual void GenerateOutputInformation();
 
@@ -287,10 +304,9 @@ protected:
   typename ComponentWriterType::Pointer m_DisplacementComponentWriter;
 
 private:
-  StrainPipeline( const Self & );
-  void operator=( const Self & );
 };
 
+} // end namespace BlockMatching
 } // end itk namespace
 
 #endif
