@@ -1,5 +1,22 @@
-#ifndef __itkBlockMatchingMultiResolutionIterationCommand_h
-#define __itkBlockMatchingMultiResolutionIterationCommand_h
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
+#ifndef itkBlockMatchingMultiResolutionIterationCommand_h
+#define itkBlockMatchingMultiResolutionIterationCommand_h
 
 #include "itkCommand.h"
 
@@ -10,24 +27,30 @@ namespace itk
 namespace BlockMatching
 {
 
-/** This is a base class for classes that want to observe/adjust a
+/**
+ * \clas IterationCommand
+ *
+ * \brief This is a base class for classes that want to observe/adjust a
  * BlockMatching::MultiResolutionImageRegistrationMethod at every iteration.
+ *
+ * \ingroup Ultrasound
  * */
-template< class TMultiResolutionMethod >
-class MultiResolutionIterationCommand :
-  public itk::Command
+template< typename TMultiResolutionMethod >
+class MultiResolutionIterationCommand : public Command
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionIterationCommand);
+
   typedef MultiResolutionIterationCommand  Self;
   typedef Command                          Superclass;
   typedef SmartPointer< Self >             Pointer;
 
-  virtual void Execute(itk::Object *caller, const itk::EventObject & event)
+  void Execute(itk::Object *caller, const itk::EventObject & event) ITK_OVERRIDE
     {
     Execute( (const itk::Object *)caller, event);
     }
 
-  virtual void Execute(const itk::Object * object, const itk::EventObject & event);
+  void Execute(const itk::Object * object, const itk::EventObject & event) ITK_OVERRIDE;
 
   typedef TMultiResolutionMethod MultiResolutionMethodType;
   typedef typename MultiResolutionMethodType::Pointer MultiResolutionMethodPointer;
@@ -55,27 +78,25 @@ public:
 protected:
   MultiResolutionIterationCommand()
     {
-    m_MultiResolutionMethod = NULL;
+    m_MultiResolutionMethod = ITK_NULLPTR;
     };
   virtual ~MultiResolutionIterationCommand() {};
 
-  MultiResolutionMethodPointer m_MultiResolutionMethod;
+  MultiResolutionMethodPointer   m_MultiResolutionMethod;
 
-  FixedImagePyramidPointer  m_FixedImagePyramid;
-  MovingImagePyramidPointer m_MovingImagePyramid;
+  FixedImagePyramidPointer       m_FixedImagePyramid;
+  MovingImagePyramidPointer      m_MovingImagePyramid;
 
-  BlockRadiusCalculatorPointer m_BlockRadiusCalculator;
+  BlockRadiusCalculatorPointer   m_BlockRadiusCalculator;
 
   SearchRegionImageSourcePointer m_SearchRegionImageSource;
 
 private:
-  MultiResolutionIterationCommand( const Self& );
-  void operator=( const Self & );
 };
 
 } // end namespace BlockMatching
 } // end namespace itk
 
-#include "itkBlockMatchingMultiResolutionIterationCommand.txx"
+#include "itkBlockMatchingMultiResolutionIterationCommand.hxx"
 
 #endif
