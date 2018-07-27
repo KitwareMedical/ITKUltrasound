@@ -1,5 +1,22 @@
-#ifndef __itkBlockMatchingMultiResolutionIterationObserver_h
-#define __itkBlockMatchingMultiResolutionIterationObserver_h
+/*=========================================================================
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
+#ifndef itkBlockMatchingMultiResolutionIterationObserver_h
+#define itkBlockMatchingMultiResolutionIterationObserver_h
 
 #include "itkBlockMatchingMultiResolutionIterationCommand.h"
 
@@ -16,34 +33,36 @@ namespace itk
 namespace BlockMatching
 {
 
-template< class TMultiResolutionMethod >
-/** \class MultiresolutionIterationObserver
- * \brief Save status images at different resolutions. */
+/** \class MultiResolutionIterationObserver
+ *
+ * \brief Save status images at different resolutions.y
+ *
+ * \ingroup Ultrasound
+ * */
+template< typename TMultiResolutionMethod >
 class MultiResolutionIterationObserver :
   public MultiResolutionIterationCommand< TMultiResolutionMethod >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionIterationObserver);
+
   typedef MultiResolutionIterationObserver                        Self;
   typedef MultiResolutionIterationCommand<TMultiResolutionMethod> Superclass;
   typedef SmartPointer<Self>                                      Pointer;
 
   itkNewMacro( Self );
 
-  virtual void Execute(itk::Object *caller, const itk::EventObject & event)
+  void Execute(itk::Object *caller, const itk::EventObject & event) ITK_OVERRIDE
     {
     Execute( (const itk::Object *)caller, event);
     }
 
-  virtual void Execute(const itk::Object * object, const itk::EventObject & event);
+  void Execute(const itk::Object * object, const itk::EventObject & event) ITK_OVERRIDE;
 
-  typedef TMultiResolutionMethod
-    MultiResolutionMethodType;
-  typedef typename MultiResolutionMethodType::FixedImageType
-    FixedImageType;
-  typedef typename MultiResolutionMethodType::MovingImageType
-    MovingImageType;
-  typedef typename MultiResolutionMethodType::DisplacementImageType
-    DisplacementImageType;
+  typedef TMultiResolutionMethod                                    MultiResolutionMethodType;
+  typedef typename MultiResolutionMethodType::FixedImageType        FixedImageType;
+  typedef typename MultiResolutionMethodType::MovingImageType       MovingImageType;
+  typedef typename MultiResolutionMethodType::DisplacementImageType DisplacementImageType;
 
   itkSetStringMacro( OutputFilePrefix );
   itkGetConstMacro( OutputFilePrefix, std::string );
@@ -92,13 +111,11 @@ protected:
   typename StrainComponentsWriterType::Pointer m_StrainComponentsWriter;
 
 private:
-  MultiResolutionIterationObserver( const Self& );
-  void operator=( const Self & );
 };
 
 } // end namespace BlockMatching
 } // end namespace itk
 
-#include "itkBlockMatchingMultiResolutionIterationObserver.txx"
+#include "itkBlockMatchingMultiResolutionIterationObserver.hxx"
 
 #endif
