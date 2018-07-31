@@ -17,6 +17,7 @@ itk_module(Ultrasound
     ${_fft_depends}
   COMPILE_DEPENDS
     SplitComponents
+    BSplineGradient
   PRIVATE_DEPENDS
     ITKHDF5
   TEST_DEPENDS
