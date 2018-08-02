@@ -70,9 +70,9 @@ protected:
   /** Make a DataObject of the correct type to be used as the specified output. */
   typedef ProcessObject::DataObjectPointerArraySizeType DataObjectPointerArraySizeType;
   using Superclass::MakeOutput;
-  virtual DataObjectPointer MakeOutput( DataObjectPointerArraySizeType ) ITK_OVERRIDE;
+  virtual DataObjectPointer MakeOutput( DataObjectPointerArraySizeType ) override;
 
-  virtual void GenerateData() ITK_OVERRIDE;
+  virtual void GenerateData() override;
 
 private:
   SpecialCoordinatesImageToVTKStructuredGridFilter(const Self &) ITK_DELETED_FUNCTION;

@@ -29,8 +29,7 @@ template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
 MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::MetricImageFilter() :
   m_FixedImageRegionDefined( false ),
-  m_MovingImageRegionDefined( false ),
-  m_MinimumSplitSize( 6 )
+  m_MovingImageRegionDefined( false )
 {
 }
 
@@ -154,42 +153,6 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
   outputPtr->SetDirection( movingPtr->GetDirection() );
 }
 
-
-template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
-const ThreadIdType &
-MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
-::GetNumberOfThreads()
-{
-  const MetricImageType * output = this->GetOutput();
-
-  if( !output )
-    {
-    return Superclass::GetNumberOfThreads();
-    }
-
-  typename MetricImageRegionType::SizeType requestedRegionSize = output->GetRequestedRegion().GetSize();
-  // split on the outermost dimension available
-  int splitAxis = output->GetImageDimension() - 1;
-  while ( requestedRegionSize[splitAxis] == 1 )
-    {
-    --splitAxis;
-    if ( splitAxis < 0 )
-      { // cannot split
-      itkDebugMacro("  Cannot Split");
-      return Superclass::GetNumberOfThreads();
-      }
-    }
-
-  // determine the actual number of pieces that will be generated
-  typename MetricImageRegionType::SizeType::SizeValueType range = requestedRegionSize[splitAxis];
-  ThreadIdType valuesPerThread = Math::Ceil< ThreadIdType >(range / (double)Superclass::GetNumberOfThreads());
-  if( valuesPerThread < m_MinimumSplitSize )
-    {
-    this->SetNumberOfThreads( Math::Floor< ThreadIdType >( range / (double)m_MinimumSplitSize ));
-    }
-
-  return Superclass::GetNumberOfThreads();
-}
 
 template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
 void

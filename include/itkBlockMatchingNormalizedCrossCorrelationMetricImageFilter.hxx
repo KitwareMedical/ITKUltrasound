@@ -202,7 +202,7 @@ NormalizedCrossCorrelationMetricImageFilter< TFixedImage, TMovingImage, TMetricI
     // Calculate the means.
     m_BoxMeanFilter->SetRadius( this->m_MovingRadius );
 
-    m_BoxMeanFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
+    m_BoxMeanFilter->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
     m_BoxMeanFilter->SetInput( movingPtr );
     m_BoxMeanFilter->GetOutput()->SetRequestedRegion( movingRequestedRegion );
     m_BoxMeanFilter->Update();
@@ -320,7 +320,7 @@ NormalizedCrossCorrelationMetricImageFilter< TFixedImage, TMovingImage, TMetricI
   else
     {
     // Calculate the pseudo sigma in the moving image.
-    m_BoxPseudoSigmaFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
+    m_BoxPseudoSigmaFilter->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
     m_BoxPseudoSigmaFilter->SetRadius( this->m_MovingRadius );
     m_BoxPseudoSigmaFilter->SetInput( movingPtr );
     m_BoxPseudoSigmaFilter->GetOutput()->SetRequestedRegion( this->m_MovingImageRegion );

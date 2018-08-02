@@ -44,6 +44,8 @@ class ITK_TEMPLATE_EXPORT Spectra1DSupportWindowImageFilter:
                              Image< std::list< typename TInputImage::IndexType >, TInputImage::ImageDimension > >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(Spectra1DSupportWindowImageFilter);
+
   itkStaticConstMacro( ImageDimension, unsigned int, TInputImage::ImageDimension );
 
   typedef TInputImage                              InputImageType;
@@ -78,17 +80,14 @@ protected:
 
   typedef typename OutputImageType::RegionType OutputImageRegionType;
 
-  virtual void GenerateOutputInformation() ITK_OVERRIDE;
+  void GenerateOutputInformation() override;
 
-  virtual void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId ) ITK_OVERRIDE;
-  virtual void AfterThreadedGenerateData() ITK_OVERRIDE;
+  void DynamicThreadedGenerateData( const OutputImageRegionType & outputRegionForThread ) override;
+  void AfterThreadedGenerateData() override;
 
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const ITK_OVERRIDE;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
 private:
-  Spectra1DSupportWindowImageFilter( const Self & ); // purposely not implemented
-  void operator=( const Self & ); // purposely not implemented
-
   FFT1DSizeType m_FFT1DSize;
   SizeValueType m_Step;
 };

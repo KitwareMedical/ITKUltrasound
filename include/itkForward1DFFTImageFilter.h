@@ -37,6 +37,7 @@ class ITK_TEMPLATE_EXPORT Forward1DFFTImageFilter:
   public ImageToImageFilter< TInputImage, TOutputImage >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(Forward1DFFTImageFilter);
 
   /** Standard class typedefs. */
   typedef TInputImage                                           InputImageType;
@@ -69,21 +70,18 @@ protected:
   Forward1DFFTImageFilter();
   virtual ~Forward1DFFTImageFilter() {}
 
-  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
+  void PrintSelf(std::ostream& os, Indent indent) const override;
 
-  virtual void GenerateInputRequestedRegion() ITK_OVERRIDE;
-  virtual void EnlargeOutputRequestedRegion(DataObject *output) ITK_OVERRIDE;
+  void GenerateInputRequestedRegion() override;
+  void EnlargeOutputRequestedRegion(DataObject *output) override;
 
-  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
+  void BeforeThreadedGenerateData() override;
 
   /** Override to return a splitter that does not split along the direction we
    * are performing the transform. */
-  virtual const ImageRegionSplitterBase* GetImageRegionSplitter() const ITK_OVERRIDE;
+  virtual const ImageRegionSplitterBase* GetImageRegionSplitter() const override;
 
 private:
-  Forward1DFFTImageFilter( const Self& ) ITK_DELETED_FUNCTION;
-  void operator=( const Self& ) ITK_DELETED_FUNCTION;
-
   ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;
 
   /** Direction in which the filter is to be applied

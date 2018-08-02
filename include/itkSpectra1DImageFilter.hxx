@@ -37,6 +37,7 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
 ::Spectra1DImageFilter()
 {
   this->AddRequiredInputName( "SupportWindowImage" );
+  this->DynamicMultiThreadingOff();
 }
 
 
@@ -74,9 +75,9 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
   ExposeMetaData< FFT1DSizeType >( dict, "FFT1DSize", fft1DSize );
   const FFT1DSizeType spectraComponents = fft1DSize / 2 / 2 - 1;
 
-  const ThreadIdType numberOfThreads = this->GetNumberOfThreads();
-  this->m_PerThreadDataContainer.resize( numberOfThreads );
-  for( ThreadIdType threadId = 0; threadId < numberOfThreads; ++threadId )
+  const ThreadIdType numberOfWorkUnits = this->GetNumberOfWorkUnits();
+  this->m_PerThreadDataContainer.resize( numberOfWorkUnits );
+  for( ThreadIdType threadId = 0; threadId < numberOfWorkUnits; ++threadId )
     {
     PerThreadData & perThreadData = this->m_PerThreadDataContainer[threadId];
     perThreadData.ComplexVector.set_size( fft1DSize / 2 );

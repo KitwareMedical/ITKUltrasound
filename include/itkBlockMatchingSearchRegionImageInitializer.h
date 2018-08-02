@@ -38,11 +38,13 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  */
-template < class TFixedImage, class TMovingImage >
+template < typename TFixedImage, typename TMovingImage >
 class ITK_TEMPLATE_EXPORT SearchRegionImageInitializer:
   public ImageSource< Image< typename TMovingImage::RegionType, TMovingImage::ImageDimension > >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(SearchRegionImageInitializer);
+
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, TMovingImage::ImageDimension);
 
@@ -128,11 +130,11 @@ public:
 protected:
   SearchRegionImageInitializer();
 
-  virtual void GenerateOutputInformation() ITK_OVERRIDE;
+  void GenerateOutputInformation() override;
 
-  virtual void BeforeThreadedGenerateData() ITK_OVERRIDE;
+  void BeforeThreadedGenerateData() override;
 
-  virtual void ThreadedGenerateData( const OutputRegionType& outputRegion, ThreadIdType threadId ) ITK_OVERRIDE;
+  void DynamicThreadedGenerateData( const OutputRegionType& outputRegion ) override;
 
   typename FixedImageType::Pointer  m_FixedImage;
   typename MovingImageType::Pointer m_MovingImage;
@@ -143,8 +145,6 @@ protected:
   double m_Overlap;
 
 private:
-  SearchRegionImageInitializer( const Self& );
-  void operator=( const Self& );
 };
 
 } // end namespace BlockMatching

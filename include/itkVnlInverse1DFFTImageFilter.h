@@ -53,7 +53,7 @@ public:
   itkTypeMacro( VnlInverse1DFFTImageFilter, Inverse1DFFTImageFilter );
 
 protected:
-  void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) ITK_OVERRIDE;
+  void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) override;
 
   VnlInverse1DFFTImageFilter() { }
   virtual ~VnlInverse1DFFTImageFilter() { }

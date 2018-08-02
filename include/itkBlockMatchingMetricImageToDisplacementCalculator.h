@@ -20,7 +20,8 @@
 
 #include "itkImage.h"
 #include "itkImageDuplicator.h"
-#include "itkMultiThreader.h"
+#include "itkMultiThreaderBase.h"
+#include "itkProcessObject.h"
 
 namespace itk
 {
@@ -58,6 +59,8 @@ class ITK_TEMPLATE_EXPORT MetricImageToDisplacementCalculator :
   public Object
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(MetricImageToDisplacementCalculator);
+
   /** Standard class typedefs. */
   typedef MetricImageToDisplacementCalculator Self;
   typedef Object                              Superclass;
@@ -138,62 +141,9 @@ public:
    * EnlargeOutputRequestedRegion().  */
   virtual void ModifyEnlargeOutputRequestedRegion( DataObject* data ) {}
 
-  /** Get/Set the number of threads to create when executing. */
-  itkSetClampMacro( NumberOfThreads, ThreadIdType, 1, ITK_MAX_THREADS );
-  itkGetConstReferenceMacro( NumberOfThreads, ThreadIdType );
-
-  /** Return the multithreader used by this class. */
-  MultiThreader * GetMultiThreader()
-  {
-    return m_Threader;
-  }
 protected:
   typedef ImageDuplicator<MetricImageType> MetricImageDuplicatorType;
   MetricImageToDisplacementCalculator();
-
-  /** An inherited class provides the operation in a thread. ThreaderCallback()
-   * calls this functor on the thread region.  Watch out when inheriting this --
-   * the first argument needs type Superclass and you want to dynamic_cast it
-   * down to the inherited class to access private or protected members.
-   *
-   * \ingroup Ultrasound
-   * */
-  class ThreadFunctor
-  {
-  public:
-    virtual ITK_THREAD_RETURN_TYPE operator() ( Self *self,
-      RegionType& region, ThreadIdType threadId ) = 0;
-    virtual ~ThreadFunctor() {};
-  };
-
-  /** This is the base thread structure. Populate this with your ThreadFunctor
-   * of choice.  */
-  struct ThreadStruct
-    {
-    ThreadFunctor * functor;
-    Self * self;
-    };
-
-  /** The thread functor of choice is specified here. The functor is applied to
-   * the RequestedRegion of the displacement image.  */
-  void ApplyThreadFunctor( ThreadFunctor& functor );
-
-  /** Static function used as a "callback" by the MultiThreader.  The threading
-   * library will call this routine for each thread, which will delegate the
-   * control to the ThreadFunctor. */
-  static ITK_THREAD_RETURN_TYPE ThreaderCallback( void *arg );
-
-  /** This is taken from ImageSource and modified.
-   *
-   * Split the output's RequestedRegion into "num" pieces, returning region "i"
-   * as "splitRegion". This method is called "num" times. The regions must not
-   * overlap. The method returns the number of pieces that the routine is
-   * capable of splitting the output RequestedRegion, i.e. return value is less
-   * than or equal to "num". */
-  virtual unsigned int SplitRequestedRegion( unsigned int i, unsigned int num, RegionType & splitRegion);
-
-  MultiThreader::Pointer m_Threader;
-  ThreadIdType           m_NumberOfThreads;
 
   CenterPointsImagePointerType m_CenterPointsImage;
   MetricImageImagePointerType  m_MetricImageImage;
@@ -204,8 +154,9 @@ protected:
 
   typename MetricImageDuplicatorType::Pointer m_MetricImageDuplicator;
 
+  MultiThreaderBase::Pointer m_MultiThreader;
+
 private:
-  ITK_DISALLOW_COPY_AND_ASSIGN(MetricImageToDisplacementCalculator);
 
 };
 

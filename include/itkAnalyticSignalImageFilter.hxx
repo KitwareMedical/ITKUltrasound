@@ -44,8 +44,8 @@ AnalyticSignalImageFilter< TInputImage, TOutputImage >
   m_FFTComplexToComplexFilter->SetTransformDirection( FFTComplexToComplexType::INVERSE );
 
   this->SetDirection( 0 );
-
   this->m_ImageRegionSplitter = ImageRegionSplitterDirection::New();
+  this->DynamicMultiThreadingOff();
 }
 
 
@@ -58,9 +58,9 @@ AnalyticSignalImageFilter< TInputImage, TOutputImage >
   Superclass::GenerateInputRequestedRegion();
 
   // get pointers to the inputs
-  typename InputImageType::Pointer inputPtr  =
+  InputImageType * inputPtr  =
     const_cast<InputImageType *> (this->GetInput());
-  typename OutputImageType::Pointer outputPtr = this->GetOutput();
+  OutputImageType * outputPtr = this->GetOutput();
 
   if ( !inputPtr || !outputPtr )
     {
@@ -173,14 +173,14 @@ AnalyticSignalImageFilter< TInputImage, TOutputImage >
     m_FrequencyFilter->SetInput( m_FFTRealToComplexFilter->GetOutput() );
     m_FrequencyFilter->GetOutput()->SetRequestedRegion( this->GetOutput()->GetRequestedRegion() );
     m_FrequencyFilter->GetOutput()->SetLargestPossibleRegion( this->GetOutput()->GetLargestPossibleRegion() );
-    m_FrequencyFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
+    m_FrequencyFilter->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
     m_FrequencyFilter->Update();
     }
   else
     {
     m_FFTRealToComplexFilter->GetOutput()->SetRequestedRegion( this->GetOutput()->GetRequestedRegion() );
     m_FFTRealToComplexFilter->GetOutput()->SetLargestPossibleRegion( this->GetOutput()->GetLargestPossibleRegion() );
-    m_FFTRealToComplexFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
+    m_FFTRealToComplexFilter->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
     m_FFTRealToComplexFilter->Update();
     }
 }
@@ -268,8 +268,8 @@ AnalyticSignalImageFilter< TInputImage, TOutputImage >
   m_FFTComplexToComplexFilter->SetInput( this->GetOutput() );
   m_FFTComplexToComplexFilter->GetOutput()->SetRequestedRegion( this->GetOutput()->GetRequestedRegion() );
   m_FFTComplexToComplexFilter->GetOutput()->SetLargestPossibleRegion( this->GetOutput()->GetLargestPossibleRegion() );
-  m_FFTComplexToComplexFilter->SetNumberOfThreads( this->GetNumberOfThreads() );
-  m_FFTComplexToComplexFilter->Update ();
+  m_FFTComplexToComplexFilter->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
+  m_FFTComplexToComplexFilter->Update();
   this->GraftOutput( m_FFTComplexToComplexFilter->GetOutput() );
 }
 

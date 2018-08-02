@@ -27,7 +27,7 @@ namespace itk
 namespace BlockMatching
 {
 
-template < class TFixedImage, class TMovingImage >
+template < typename TFixedImage, typename TMovingImage >
 SearchRegionImageInitializer< TFixedImage, TMovingImage >
 ::SearchRegionImageInitializer():
   m_Overlap( 1.0 )
@@ -40,7 +40,7 @@ SearchRegionImageInitializer< TFixedImage, TMovingImage >
 }
 
 
-template < class TFixedImage, class TMovingImage >
+template < typename TFixedImage, typename TMovingImage >
 void
 SearchRegionImageInitializer< TFixedImage, TMovingImage >
 ::SetFixedImage( FixedImageType * fixedImage )
@@ -53,7 +53,7 @@ SearchRegionImageInitializer< TFixedImage, TMovingImage >
 }
 
 
-template < class TFixedImage, class TMovingImage >
+template < typename TFixedImage, typename TMovingImage >
 void
 SearchRegionImageInitializer< TFixedImage, TMovingImage >
 ::SetMovingImage( MovingImageType * movingImage )
@@ -66,7 +66,7 @@ SearchRegionImageInitializer< TFixedImage, TMovingImage >
 }
 
 
-template < class TFixedImage, class TMovingImage >
+template < typename TFixedImage, typename TMovingImage >
 void
 SearchRegionImageInitializer< TFixedImage, TMovingImage >
 ::BeforeThreadedGenerateData()
@@ -86,7 +86,7 @@ SearchRegionImageInitializer< TFixedImage, TMovingImage >
 }
 
 
-template < class TFixedImage, class TMovingImage >
+template < typename TFixedImage, typename TMovingImage >
 void
 SearchRegionImageInitializer< TFixedImage, TMovingImage >
 ::GenerateOutputInformation()
@@ -148,10 +148,10 @@ SearchRegionImageInitializer< TFixedImage, TMovingImage >
 }
 
 
-template < class TFixedImage, class TMovingImage >
+template < typename TFixedImage, typename TMovingImage >
 void
 SearchRegionImageInitializer< TFixedImage, TMovingImage >
-::ThreadedGenerateData( const OutputRegionType& outputRegion, ThreadIdType threadId )
+::DynamicThreadedGenerateData( const OutputRegionType& outputRegion )
 {
   OutputImageType * outputPtr = this->GetOutput();
   if( !outputPtr )

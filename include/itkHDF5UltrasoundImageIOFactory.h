@@ -43,9 +43,9 @@ public:
   typedef SmartPointer< const Self >   ConstPointer;
 
   /** Class methods used to interface with the registered factories. */
-  virtual const char * GetITKSourceVersion() const ITK_OVERRIDE;
+  virtual const char * GetITKSourceVersion() const override;
 
-  virtual const char * GetDescription() const ITK_OVERRIDE;
+  virtual const char * GetDescription() const override;
 
   /** Method for class instantiation. */
   itkFactorylessNewMacro(Self);
@@ -64,7 +64,7 @@ public:
 protected:
   HDF5UltrasoundImageIOFactory();
   ~HDF5UltrasoundImageIOFactory();
-  virtual void PrintSelf(std::ostream & os, Indent indent) const ITK_OVERRIDE;
+  virtual void PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
   HDF5UltrasoundImageIOFactory(const Self &) ITK_DELETED_FUNCTION;

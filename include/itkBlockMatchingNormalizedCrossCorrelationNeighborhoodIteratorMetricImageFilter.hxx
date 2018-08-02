@@ -33,8 +33,7 @@ namespace itk
 namespace BlockMatching
 {
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage >
+template <typename TFixedImage, typename TMovingImage, typename TMetricImage >
 void
 NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::BeforeThreadedGenerateData()
@@ -43,14 +42,13 @@ NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< TFixedImage, TM
 }
 
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage >
+template <typename TFixedImage, typename TMovingImage, typename TMetricImage >
 void
 NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
-::ThreadedGenerateData( const MetricImageRegionType& outputRegion, ThreadIdType threadId )
+::DynamicThreadedGenerateData( const MetricImageRegionType& outputRegion )
 {
-  FixedImageConstPointerType  fixedPtr   = this->GetInput( 0 );
-  MovingImageConstPointerType movingPtr = this->GetInput( 1 );
+  const FixedImageType *  fixedPtr   = this->GetInput( 0 );
+  const MovingImageType * movingPtr = this->GetInput( 1 );
 
   if( !fixedPtr || !movingPtr )
     {
@@ -58,10 +56,10 @@ NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< TFixedImage, TM
     }
 
   // Our output and helper images that have been pre-computed.
-  MetricImagePointerType      metricPtr       = this->GetOutput( 0 );
-  MetricImageConstPointerType denom           = this->GetOutput( 1 );
-  MetricImagePointerType      fixedMinusMean  = this->GetOutput( 2 );
-  MetricImageConstPointerType movingMinusMean = this->GetOutput( 3 );
+  MetricImageType *       metricPtr       = this->GetOutput( 0 );
+  const MetricImageType * denom           = this->GetOutput( 1 );
+  MetricImageType *       fixedMinusMean  = this->GetOutput( 2 );
+  const MetricImageType * movingMinusMean = this->GetOutput( 3 );
 
   // This is in case a truncated radius does not cover everything or the denom
   // is zero.

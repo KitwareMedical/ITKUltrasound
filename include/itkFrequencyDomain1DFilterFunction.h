@@ -100,7 +100,7 @@ public:
     return 1.0;
     }
 
-  virtual void Modified( ) const ITK_OVERRIDE
+  virtual void Modified( ) const override
     {
     //Force a chache update
     const_cast< FrequencyDomain1DFilterFunction *>(this)->UpdateCache();
@@ -109,7 +109,7 @@ public:
 
 protected:
 
-  virtual void PrintSelf( std::ostream& os, Indent indent ) const ITK_OVERRIDE
+  virtual void PrintSelf( std::ostream& os, Indent indent ) const override
     {
     Superclass::PrintSelf( os, indent );
 

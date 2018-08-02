@@ -108,9 +108,9 @@ protected:
 
   /** We need the entire input because we don't know where we will be resampling
    * from. */
-  virtual void GenerateInputRequestedRegion() ITK_OVERRIDE;
+  virtual void GenerateInputRequestedRegion() override;
 
-  virtual void GenerateData() ITK_OVERRIDE;
+  virtual void GenerateData() override;
 
   typename Superclass::Pointer m_MetricImageFilter;
   StrainImagePointerType       m_StrainImage;

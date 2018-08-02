@@ -63,6 +63,8 @@ class ITK_TEMPLATE_EXPORT BayesianRegularizationDisplacementCalculator:
   public MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(BayesianRegularizationDisplacementCalculator);
+
   /** Standard class typedefs. */
   typedef BayesianRegularizationDisplacementCalculator                            Self;
   typedef MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage > Superclass;
@@ -109,7 +111,7 @@ public:
   typedef typename Superclass::PointType             PointType;
   typedef typename PointType::VectorType             VectorType;
 
-  void Compute() ITK_OVERRIDE;
+  void Compute() override;
 
   /** Maximum number of iterations before regularization stops. */
   itkSetMacro( MaximumIterations, unsigned int );
@@ -152,12 +154,12 @@ public:
   /** The current iteration. */
   itkGetConstMacro( CurrentIteration, unsigned int );
 
-  void ModifyGenerateInputRequestedRegion( RegionType & region ) ITK_OVERRIDE
+  void ModifyGenerateInputRequestedRegion( RegionType & region ) override
     {
     region = this->m_DisplacementImage->GetLargestPossibleRegion();
     }
 
-  void ModifyEnlargeOutputRequestedRegion( DataObject* data ) ITK_OVERRIDE
+  void ModifyEnlargeOutputRequestedRegion( DataObject* data ) override
     {
     data->SetRequestedRegionToLargestPossibleRegion();
     }
@@ -187,6 +189,7 @@ protected:
     const unsigned int direction,
     const VectorType& shift
   );
+  void ThreadedImpartLikelihood( const RegionType & region );
 
   typename Superclass::Pointer m_DisplacementCalculator;
 
@@ -220,65 +223,24 @@ protected:
   typedef ZeroFluxNeumannPadImageFilter< MetricImageType,
         MetricImageType > PadFilterType;
 
-  /** Function used as a "callback" by the MultiThreader.  The threading
-   * library will call this routine for each thread, which will delegate the
-   * control to ThreadedGenerateData(). */
-  static ITK_THREAD_RETURN_TYPE ImpartLikelihoodThreaderCallback( void *arg );
-
-  /** Internal structure used for passing values to the threading library. */
-  struct ImpartLikelihoodThreadStruct
-    {
-    Self * self;
-    };
-
-  typedef typename Superclass::ThreadFunctor  ThreadFunctor;
-  typedef typename Superclass::ThreadStruct   ThreadStruct;
-
   /** We shift the minimum value of the metric image so 0 corresponds to
    * the theoretical lower bound. */
-  class SubtractLowerBoundThreadFunctor : public ThreadFunctor
-    {
-  public:
-    virtual ITK_THREAD_RETURN_TYPE operator() ( Superclass *superclass,
-      RegionType& region, ThreadIdType threadId );
-    };
-  SubtractLowerBoundThreadFunctor m_SubtractLowerBoundThreadFunctor;
+  void ThreadedSubtractLowerBound( const RegionType& region );
 
   /** Scale the metric images so all values sum to unity. */
-  class ScaleToUnityThreadFunctor : public ThreadFunctor
-    {
-  public:
-    virtual ITK_THREAD_RETURN_TYPE operator() ( Superclass *superclass,
-      RegionType& region, ThreadIdType threadId );
-    };
-  ScaleToUnityThreadFunctor m_ScaleToUnityThreadFunctor;
+  void ThreadedScaleToUnity( const RegionType& region );
 
   /** Copy the contents of the prior metric images to the posterior metric
    * images. */
-  class CopyPriorToPosteriorThreadFunctor : public ThreadFunctor
-    {
-  public:
-    virtual ITK_THREAD_RETURN_TYPE operator() ( Superclass *superclass,
-      RegionType& region, ThreadIdType threadId );
-    };
-  CopyPriorToPosteriorThreadFunctor m_CopyPriorToPosteriorThreadFunctor;
-
+  void ThreadedCopyPriorToPosterior( const RegionType& region );
 
   /** Calculate the mean change in probability. */
-  class MeanChangeThreadFunctor : public ThreadFunctor
-    {
-  public:
-    virtual ITK_THREAD_RETURN_TYPE operator() ( Superclass *superclass,
-      RegionType& region, ThreadIdType threadId );
-    };
-  MeanChangeThreadFunctor m_MeanChangeThreadFunctor;
+  void ThreadedMeanChange( const RegionType& region );
+
+private:
   /** Some helper quanitites for the mean change calculator. */
   double             m_ChangeSum;
   unsigned long long m_ChangeCount;
-
-private:
-  BayesianRegularizationDisplacementCalculator( const Self & );
-  void operator=( const Self & );
 };
 
 } // end namespace itk

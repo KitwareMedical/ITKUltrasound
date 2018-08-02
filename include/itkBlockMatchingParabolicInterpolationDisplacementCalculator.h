@@ -35,18 +35,18 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  */
-template < class TMetricImage, class TDisplacementImage, class TCoordRep=double >
+template < typename TMetricImage, typename TDisplacementImage, typename TCoordRep=double >
 class ITK_TEMPLATE_EXPORT ParabolicInterpolationDisplacementCalculator:
   public MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 {
 public:
-  /** Standard class typedefs. */
-  typedef ParabolicInterpolationDisplacementCalculator     Self; typedef
-    MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
-    Superclass;
+  ITK_DISALLOW_COPY_AND_ASSIGN(ParabolicInterpolationDisplacementCalculator);
 
-  typedef SmartPointer< Self >           Pointer;
-  typedef SmartPointer< const Self >     ConstPointer;
+  /** Standard class typedefs. */
+  typedef ParabolicInterpolationDisplacementCalculator                            Self;
+  typedef MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage > Superclass;
+  typedef SmartPointer< Self >                                                    Pointer;
+  typedef SmartPointer< const Self >                                              ConstPointer;
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
@@ -81,21 +81,10 @@ public:
 protected:
   ParabolicInterpolationDisplacementCalculator();
 
-  typedef typename Superclass::ThreadFunctor  ThreadFunctor;
-  typedef typename Superclass::ThreadStruct   ThreadStruct;
-
   /** Use a parabolic fit to find the subsample peak. */
-  class ParabolicInterpolationThreadFunctor : public ThreadFunctor
-    {
-  public:
-    virtual ITK_THREAD_RETURN_TYPE operator()( Superclass *superclass,
-                                               RegionType & region, ThreadIdType threadId );
-    };
-  ParabolicInterpolationThreadFunctor m_ParabolicInterpolationThreadFunctor;
+  void ThreadedParabolicInterpolation( const RegionType& region );
 
 private:
-  ParabolicInterpolationDisplacementCalculator( const Self & );
-  void operator=( const Self & );
 };
 
 } // end namespace itk

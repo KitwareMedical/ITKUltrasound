@@ -112,9 +112,9 @@ protected:
     }
   ~RegionFromReferenceImageFilter() {}
 
-  virtual void VerifyInputInformation() ITK_OVERRIDE;
+  virtual void VerifyInputInformation() override;
 
-  virtual void GenerateOutputInformation() ITK_OVERRIDE;
+  virtual void GenerateOutputInformation() override;
 
 private:
   RegionFromReferenceImageFilter(const Self&); //purposely not implemented
