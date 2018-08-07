@@ -35,8 +35,6 @@
 #include "itkBlockMatchingMultiResolutionMinMaxBlockRadiusCalculator.h"
 #include "itkBlockMatchingMultiResolutionMinMaxSearchRegionImageSource.h"
 #include "itkMultiResolutionImageRegistrationMethod.h"
-#include "itkBlockMatchingMultiResolutionIterationObserver.h"
-#include "itkBlockMatchingMultiResolutionSearchRegionWriterCommand.h"
 #include "itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter.h"
 #include "itkBlockMatchingOptimizingInterpolationDisplacementCalculator.h"
 #include "itkBlockMatchingParabolicInterpolationDisplacementCalculator.h"
@@ -176,23 +174,23 @@ public:
   typedef BlockMatching::MultiResolutionImageRegistrationMethod< FixedImageType, MovingImageType, MetricImageType,
                                                                      DisplacementImageType,
                                                                      CoordRepType> RegistrationMethodType;
-  typedef BlockMatching::MultiResolutionIterationObserver<RegistrationMethodType>
-  MultiResolutionObserverType;
 
   /** Set the displacement calculator and regularizer iterations at every level. */
   typedef BlockMatching::MultiResolutionIterationDisplacementCalculatorCommand<RegistrationMethodType>
-  DisplacementCalculatorCommandType;
+    DisplacementCalculatorCommandType;
 
   /** Calculate strains. */
   typedef StrainImageFilter<DisplacementImageType, MetricPixelType, MetricPixelType>
                                             StrainFilterType;
   typedef typename StrainFilterType::OutputImageType TensorImageType;
-  typedef BSplineApproximationGradientImageFilter< DisplacementImageType, MetricPixelType >
-    FinalGradientFilterType;
 
   typedef FixedArray< double, ImageDimension > UpsamplingRatioType;
 
   typedef FixedArray< SizeValueType, ImageDimension > BlockRadiusType;
+
+  typedef typename SearchRegionImageSourceType::FactorType SearchRegionFactorType;
+
+  typedef typename MetricImageType::SpacingType RegularizationStrainSigmaType;
 
   /** Set the fixed image. */
   void SetFixedImage( FixedImageType * fixed )
@@ -214,6 +212,11 @@ public:
     return static_cast< const MovingImageType * >( this->ProcessObject::GetInput( 1 ) );
     }
 
+  /** Any point with a strain component above the given value in the higher levels
+   * will have its displacement interpolated by surrounding areas. */
+  itkSetMacro( MaximumAbsStrainAllowed, double );
+  itkGetConstMacro( MaximumAbsStrainAllowed, double );
+
   /** Display a text progress bar for the level registration method's creation
    * of the metric images. */
   itkSetMacro( LevelRegistrationMethodTextProgressBar, bool );
@@ -223,6 +226,7 @@ public:
   itkSetMacro( UpsamplingRatio, UpsamplingRatioType );
   itkGetConstReferenceMacro( UpsamplingRatio, UpsamplingRatioType );
 
+
   /** Set the block radius at the top level */
   itkSetMacro( TopBlockRadius, BlockRadiusType );
   itkGetConstReferenceMacro( TopBlockRadius, BlockRadiusType );
@@ -230,6 +234,41 @@ public:
   /** Set the block radius at the bottom level */
   itkSetMacro( BottomBlockRadius, BlockRadiusType );
   itkGetConstReferenceMacro( BottomBlockRadius, BlockRadiusType );
+
+  /** Block overlap. 1.0 is no overlap. 0.5 is 50% overlap. */
+  itkSetMacro( BlockOverlap, double );
+  itkGetConstMacro( BlockOverlap, double );
+
+  /** In the multiresolution method, scale the matching block by the strain
+   *   estimated at higher levels. */
+  itkSetMacro( ScaleBlockByStrain, bool );
+  itkGetConstMacro( ScaleBlockByStrain, bool );
+
+
+  /** Search region radius at the top level is the following factor times the block radius.
+   *  The factors at intermediate levels between the top level and bottom level
+   *  are linearly interpolated.  */
+  itkSetMacro( SearchRegionTopFactor, SearchRegionFactorType );
+  itkGetConstReferenceMacro( SearchRegionTopFactor, SearchRegionFactorType );
+
+  /** Search region radius at the bottom level is the following factor times the block radius. */
+  itkSetMacro( SearchRegionBottomFactor, SearchRegionFactorType );
+  itkGetConstReferenceMacro( SearchRegionBottomFactor, SearchRegionFactorType );
+
+
+  /** RF beamline, i.e. axial, direction. */
+  itkSetMacro( Direction, unsigned int );
+  itkGetConstMacro( Direction, unsigned int );
+
+
+  /** Strain regularization parameter. */
+  itkSetMacro( RegularizationStrainSigma, RegularizationStrainSigmaType );
+  itkGetConstReferenceMacro( RegularizationStrainSigma, RegularizationStrainSigmaType );
+
+  /** Maximum number of iterations during regularization at the bottom level. */
+  itkSetMacro( RegularizationMaximumNumberOfIterations, unsigned int );
+  itkGetConstMacro( RegularizationMaximumNumberOfIterations, unsigned int );
+
 
 protected:
   DisplacementPipeline();
@@ -241,6 +280,8 @@ protected:
   /** Execute the pipeline. */
   void GenerateData() ITK_OVERRIDE;
 
+
+private:
   typename FixedResamplerType::Pointer              m_FixedResampler;
   typename MovingResamplerType::Pointer             m_MovingResampler;
   typename FixedResamplerInterpolatorType::Pointer  m_FixedResamplerInterpolator;
@@ -273,18 +314,24 @@ protected:
   typename DisplacmentRegularizerType::Pointer m_Regularizer;
 
   typename RegistrationMethodType::Pointer            m_MultiResRegistrationMethod;
-  typename MultiResolutionObserverType::Pointer       m_MultiResObserver;
   typename DisplacementCalculatorCommandType::Pointer m_DisplacementCalculatorCommand;
-
-  typename StrainFilterType::Pointer                 m_StrainFilter;
-  typename FinalGradientFilterType::Pointer          m_FinalGradientFilter;
 
   UpsamplingRatioType m_UpsamplingRatio;
 
   BlockRadiusType m_TopBlockRadius;
   BlockRadiusType m_BottomBlockRadius;
 
-private:
+  SearchRegionFactorType m_SearchRegionTopFactor;
+  SearchRegionFactorType m_SearchRegionBottomFactor;
+
+  unsigned int m_Direction;
+  double       m_BlockOverlap;
+  double       m_MaximumAbsStrainAllowed;
+  bool         m_ScaleBlockByStrain;
+
+  RegularizationStrainSigmaType m_RegularizationStrainSigma;
+  unsigned int                  m_RegularizationMaximumNumberOfIterations;
+
 };
 
 } // end namespace BlockMatching

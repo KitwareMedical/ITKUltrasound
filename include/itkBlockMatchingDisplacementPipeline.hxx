@@ -27,7 +27,12 @@ template< typename TFixedPixel, typename TMovingPixel,
           unsigned int VImageDimension >
 DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImageDimension >
 ::DisplacementPipeline():
-  m_LevelRegistrationMethodTextProgressBar( false )
+  m_LevelRegistrationMethodTextProgressBar( false ),
+  m_Direction( 0 ),
+  m_MaximumAbsStrainAllowed( 0.075 ),
+  m_BlockOverlap( 0.75 ),
+  m_ScaleBlockByStrain( true ),
+  m_RegularizationMaximumNumberOfIterations( 2 )
 {
   this->SetNumberOfRequiredInputs( 2 );
 
@@ -88,21 +93,12 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
   m_MultiResRegistrationMethod->SetBlockRadiusCalculator( m_BlockRadiusCalculator );
   m_MultiResRegistrationMethod->SetSearchRegionImageSource( m_SearchRegionImageSource );
   m_MultiResRegistrationMethod->SetImageRegistrationMethod( m_LevelRegistrationMethod );
-  m_MultiResObserver = MultiResolutionObserverType::New();
-  m_MultiResObserver->SetMultiResolutionMethod( m_MultiResRegistrationMethod );
   m_DisplacementCalculatorCommand = DisplacementCalculatorCommandType::New();
   m_DisplacementCalculatorCommand->SetLevel0ToNMinus1DisplacementCalculator( m_StrainWindower );
   m_DisplacementCalculatorCommand->SetLevelNDisplacementCalculator( m_FinalInterpolator );
   m_DisplacementCalculatorCommand->SetRegularizer( m_Regularizer );
 
-  m_SearchRegionWriterCommand = SearchRegionWriterCommandType::New();
-  m_DisplacementWriter = DisplacementWriterType::New();
-  m_StrainFilter = StrainFilterType::New();
-  m_StrainFilter->SetStrainForm( StrainFilterType::EULERIANALMANSI );
-  m_FinalGradientFilter = FinalGradientFilterType::New();
-  m_FinalGradientFilter->SetNumberOfLevels( 1 );
-
-  m_UpsamplingRatio[0] = 1.0;
+  m_UpsamplingRatio[0] = 2.0;
   m_UpsamplingRatio[1] = 2.0;
 
   m_TopBlockRadius[0] = 15;
@@ -110,6 +106,16 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
 
   m_BottomBlockRadius[0] = 12;
   m_BottomBlockRadius[1] = 7;
+
+  m_SearchRegionTopFactor[0] = 2.2;
+  m_SearchRegionTopFactor[1] = 1.4;
+
+  m_SearchRegionBottomFactor[0] = 1.1;
+  m_SearchRegionBottomFactor[1] = 1.1;
+
+  m_RegularizationStrainSigma[0] = 0.075;
+  m_RegularizationStrainSigma[1] = 0.15;
+
 }
 
 
@@ -132,6 +138,7 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
   output->CopyInformation( m_MultiResRegistrationMethod->GetOutput( 0 ) );
 }
 
+
 template< typename TFixedPixel, typename TMovingPixel,
           typename TMetricPixel, typename TCoordRep,
           unsigned int VImageDimension >
@@ -144,11 +151,11 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
   typename MovingImageType::Pointer moving = const_cast< MovingImageType * >(
       static_cast< const MovingImageType * >( this->GetInput( 1 )));
 
-  if( fixed.GetPointer() == NULL )
+  if( fixed.GetPointer() == nullptr )
     {
     itkExceptionMacro(<< "Fixed image image pointer is NULL." );
     }
-  if( moving.GetPointer() == NULL )
+  if( moving.GetPointer() == nullptr )
     {
     itkExceptionMacro(<< "Moving image image pointer is NULL." );
     }
@@ -164,8 +171,8 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
 
   typename FixedImageType::SizeType    size;
   typename FixedImageType::SpacingType spacing;
-  size[0] = static_cast< typename FixedImageType::SizeType::SizeValueType >( fixed->GetLargestPossibleRegion().GetSize()[0] * m_UpsamplingRatio[0];
-  size[1] = static_cast< typename FixedImageType::SizeType::SizeValueType >( fixed->GetLargestPossibleRegion().GetSize()[1] * m_UpsamplingRatio[1];
+  size[0] = static_cast< typename FixedImageType::SizeType::SizeValueType >( fixed->GetLargestPossibleRegion().GetSize()[0] * m_UpsamplingRatio[0] );
+  size[1] = static_cast< typename FixedImageType::SizeType::SizeValueType >( fixed->GetLargestPossibleRegion().GetSize()[1] * m_UpsamplingRatio[1] );
   spacing[0] = fixed->GetSpacing()[0] / m_UpsamplingRatio[0];
   spacing[1] = fixed->GetSpacing()[1] / m_UpsamplingRatio[1];
   m_FixedResampler->SetOutputSpacing( spacing );
@@ -174,8 +181,8 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
   m_MovingResampler->SetOutputOrigin( moving->GetOrigin() );
   m_MovingResampler->SetOutputDirection( moving->GetDirection() );
   m_MovingResampler->SetOutputStartIndex( moving->GetLargestPossibleRegion().GetIndex() );
-  size[0] = static_cast< typename MovingImageType::SizeType::SizeValueType >( moving->GetLargestPossibleRegion().GetSize()[0] * m_UpsamplingRatio[0];
-  size[1] = static_cast< typename MovingImageType::SizeType::SizeValueType >( moving->GetLargestPossibleRegion().GetSize()[1] * m_UpsamplingRatio[1];
+  size[0] = static_cast< typename MovingImageType::SizeType::SizeValueType >( moving->GetLargestPossibleRegion().GetSize()[0] * m_UpsamplingRatio[0] );
+  size[1] = static_cast< typename MovingImageType::SizeType::SizeValueType >( moving->GetLargestPossibleRegion().GetSize()[1] * m_UpsamplingRatio[1] );
   spacing[0] = moving->GetSpacing()[0] / m_UpsamplingRatio[0];
   spacing[1] = moving->GetSpacing()[1] / m_UpsamplingRatio[1];
   m_MovingResampler->SetOutputSpacing( spacing );
@@ -192,17 +199,11 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
   m_BlockRadiusCalculator->SetMaxRadius( maxBlockRadius );
 
   // Search Region Image Source
-  typename SearchRegionImageSourceType::FactorType topFactor;
-  typename SearchRegionImageSourceType::FactorType bottomFactor;
-  topFactor[0] = m_MMMStrainOptions->GetParameters()->searchRegion.topFactor[0];
-  topFactor[1] = m_MMMStrainOptions->GetParameters()->searchRegion.topFactor[1];
-  m_SearchRegionImageSource->SetMaxFactor( topFactor );
-  bottomFactor[0] = m_MMMStrainOptions->GetParameters()->searchRegion.bottomFactor[0];
-  bottomFactor[1] = m_MMMStrainOptions->GetParameters()->searchRegion.bottomFactor[1];
-  m_SearchRegionImageSource->SetMinFactor( bottomFactor );
+  m_SearchRegionImageSource->SetMaxFactor( m_SearchRegionTopFactor );
+  m_SearchRegionImageSource->SetMinFactor( m_SearchRegionBottomFactor );
 
   typename SearchRegionImageSourceType::PyramidScheduleType pyramidSchedule( 3, ImageDimension );
-  if( m_MMMStrainOptions->GetParameters()->axialDirection == 1 )
+  if( m_Direction == 1 )
     {
     pyramidSchedule( 0, 0 ) = 2;
     pyramidSchedule( 0, 1 ) = 3;
@@ -221,7 +222,7 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
     pyramidSchedule( 2, 1 ) = 1;
     }
   m_SearchRegionImageSource->SetPyramidSchedule( pyramidSchedule );
-  m_SearchRegionImageSource->SetOverlapSchedule( m_MMMStrainOptions->GetParameters()->block.blockOverlap );
+  m_SearchRegionImageSource->SetOverlapSchedule( m_BlockOverlap );
 
   // The registration method.
   m_LevelRegistrationMethod->RemoveAllObservers();
@@ -233,13 +234,13 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
   // Filter out peak hopping.
   typedef typename StrainWindowDisplacementCalculatorType::StrainTensorType StrainTensorType;
   StrainTensorType maxStrain;
-  maxStrain.Fill( m_MMMStrainOptions->GetParameters()->maximumAbsStrainAllowed );
+  maxStrain.Fill( m_MaximumAbsStrainAllowed );
   m_StrainWindower->SetMaximumAbsStrain( maxStrain );
 
   // Scale the fixed block by the strain at higher levels.
   // Initialize to NULL because there is initially no previous strain at the top level of the pyramid.
-  m_BlockTransformMetricImageFilter->SetStrainImage( NULL );
-  if( m_MMMStrainOptions->GetParameters()->block.scaleByStrain )
+  m_BlockTransformMetricImageFilter->SetStrainImage( nullptr );
+  if( m_ScaleBlockByStrain )
     {
     m_LevelRegistrationMethod->SetMetricImageFilter( m_BlockTransformMetricImageFilter );
     }
@@ -249,11 +250,8 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
     }
 
   // Perform regularization.
-  typename MetricImageType::SpacingType strainSigma;
-  strainSigma[0] = m_MMMStrainOptions->GetParameters()->regularization.strainSigma[0];
-  strainSigma[1] = m_MMMStrainOptions->GetParameters()->regularization.strainSigma[1];
-  m_Regularizer->SetStrainSigma( strainSigma );
-  m_Regularizer->SetMaximumIterations( m_MMMStrainOptions->GetParameters()->regularization.maximumIterations );
+  m_Regularizer->SetStrainSigma( m_RegularizationStrainSigma );
+  m_Regularizer->SetMaximumIterations( m_RegularizationMaximumNumberOfIterations );
 // @todo re-enable the ability to use this point examination code.
   // typedef itk::DisplacementRegularizationIterationCommand<
   // DisplacmentRegularizerType >
@@ -281,7 +279,7 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
   // regularizer->SetMeanChangeThreshold( 1.0e-25 );
   // regularizer->SetDisplacementCalculator( interpolator );
 
-  if( m_MMMStrainOptions->GetParameters()->upsample[0] == 1.0 && m_MMMStrainOptions->GetParameters()->upsample[1] == 1.0 )
+  if( m_UpsamplingRatio[0] == 1.0 && m_UpsamplingRatio[1] == 1.0 )
     {
     m_MultiResRegistrationMethod->SetFixedImage( fixed );
     m_MultiResRegistrationMethod->SetMovingImage( moving );
@@ -292,9 +290,9 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
     m_MultiResRegistrationMethod->SetMovingImage( m_MovingResampler->GetOutput() );
     }
   m_MultiResRegistrationMethod->SetSchedules( pyramidSchedule, pyramidSchedule );
-  m_MultiResObserver->SetOutputFilePrefix( m_MMMStrainOptions->GetFiles()->outputPrefix );
   m_MultiResRegistrationMethod->RemoveAllObservers();
 }
+
 
 template< typename TFixedPixel, typename TMovingPixel,
           typename TMetricPixel, typename TCoordRep,
@@ -304,11 +302,6 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
 ::GenerateData()
 {
   this->AllocateOutputs();
-
-  if( m_WriteOutputImagesToFile )
-    {
-    m_MultiResRegistrationMethod->AddObserver( itk::IterationEvent(), m_MultiResObserver );
-    }
 
   // Set the displacement calculator and regularizer iterations at every level.
   m_MultiResRegistrationMethod->GetImageRegistrationMethod()->SetMetricImageToDisplacementCalculator( m_Regularizer );
@@ -320,73 +313,11 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
     //{
     m_DisplacementCalculatorCommand->SetLevel0ToNMinus1RegularizerIterations( 3 );
     //}
-  m_DisplacementCalculatorCommand->SetLevelNRegularizerIterations( m_MMMStrainOptions->GetParameters()->regularization.maximumIterations );
+  m_DisplacementCalculatorCommand->SetLevelNRegularizerIterations( m_RegularizationMaximumNumberOfIterations );
   m_DisplacementCalculatorCommand->SetMultiResolutionMethod( m_MultiResRegistrationMethod );
   m_MultiResRegistrationMethod->AddObserver( itk::IterationEvent(), m_DisplacementCalculatorCommand );
   m_MultiResRegistrationMethod->GraftOutput( this->GetOutput() );
-
-  // Write out the search region images at every level.
-  if( m_WriteOutputImagesToFile )
-    {
-    m_SearchRegionWriterCommand->SetOutputFilePrefix( m_MMMStrainOptions->GetFiles()->outputPrefix );
-    m_SearchRegionWriterCommand->SetMultiResolutionMethod( m_MultiResRegistrationMethod );
-    if( m_MMMStrainOptions->GetVerbosity()->writeSearchRegionImages )
-      {
-      m_MultiResRegistrationMethod->AddObserver( itk::IterationEvent(), m_SearchRegionWriterCommand );
-      }
-
-    // Write displacement vector.
-    m_DisplacementWriter->SetFileName( m_MMMStrainOptions->GetFiles()->outputPrefix + "_DisplacementVectors.mha" );
-    m_DisplacementWriter->SetInput( m_MultiResRegistrationMethod->GetOutput() );
-    m_DisplacementWriter->Update();
-
-    // Calculate strains.
-    m_StrainFilter->SetInput( m_MultiResRegistrationMethod->GetOutput() );
-    m_FinalGradientFilter->SetControlPointSpacingRatio( m_MMMStrainOptions->GetParameters()->controlPointRatio );
-    if( m_MMMStrainOptions->GetParameters()->controlPointRatio == 1.0 )
-      {
-      //m_StrainFilter->SetGradientFilter( m_HigherOrderAccurateGradientFilter );
-      m_StrainFilter->SetGradientFilter( m_LinearLeastSquaresGradientFilter );
-      }
-    else
-      {
-      m_StrainFilter->SetVectorGradientFilter( m_FinalGradientFilter );
-      }
-
-    // Write out strains.
-    m_StrainWriter->SetFileName( m_MMMStrainOptions->GetFiles()->outputPrefix + "_StrainTensors.vtk" );
-    m_StrainWriter->Update();
-
-    // Write out strain components.
-    std::ostringstream ostr;
-    for( unsigned int i = 0; i < 3; i++ )
-      {
-      m_StrainComponentWriter->SetInput( m_StrainComponentsFilter->GetOutput( i ) );
-      ostr.str( "" );
-      ostr << "_StrainComponent" << i << ".mha";
-      m_StrainComponentWriter->SetFileName( m_MMMStrainOptions->GetFiles()->outputPrefix + ostr.str() );
-      m_StrainComponentWriter->Update();
-      }
-
-    if( m_MMMStrainOptions->GetVerbosity()->writeDisplacementVectorComponents )
-      {
-      // Write displacement vector components.
-      m_DisplacementComponentsFilter->SetInput( m_MultiResRegistrationMethod->GetOutput() );
-      m_DisplacementComponentsFilter->Update();
-      for( unsigned int i = 0; i < ImageDimension; i++ )
-        {
-        m_DisplacementComponentWriter->SetInput( m_DisplacementComponentsFilter->GetOutput( i ) );
-        ostr.str( "" );
-        ostr << "_DisplacementComponent" << i << ".mha";
-        m_DisplacementComponentWriter->SetFileName( m_MMMStrainOptions->GetFiles()->outputPrefix + ostr.str() );
-        m_DisplacementComponentWriter->Update();
-        }
-      }
-    } // end if write output images
-  else
-    {
-    m_MultiResRegistrationMethod->Update();
-    }
+  m_MultiResRegistrationMethod->Update();
   this->GraftOutput( m_MultiResRegistrationMethod->GetOutput() );
 }
 
