@@ -18,6 +18,8 @@
 #ifndef itkBlockMatchingMultiResolutionSearchRegionWriterCommand_hxx
 #define itkBlockMatchingMultiResolutionSearchRegionWriterCommand_hxx
 
+#include "itkBlockMatchingMultiResolutionSearchRegionWriterCommand.h"
+
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -91,8 +93,7 @@ MultiResolutionSearchRegionWriterCommand< TMultiResolutionMethod >
     }
 }
 
-
-}
-}
+} // end namespace BlockMatching
+} // end namespace itk
 
 #endif
