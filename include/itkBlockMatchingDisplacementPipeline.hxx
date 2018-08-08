@@ -156,11 +156,11 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
 
   if( fixed.GetPointer() == nullptr )
     {
-    itkExceptionMacro(<< "Fixed image image pointer is NULL." );
+    itkExceptionMacro(<< "Fixed image image pointer is nullptr." );
     }
   if( moving.GetPointer() == nullptr )
     {
-    itkExceptionMacro(<< "Moving image image pointer is NULL." );
+    itkExceptionMacro(<< "Moving image image pointer is nullptr." );
     }
 
   fixed->UpdateOutputInformation();
@@ -241,7 +241,7 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
   m_StrainWindower->SetMaximumAbsStrain( maxStrain );
 
   // Scale the fixed block by the strain at higher levels.
-  // Initialize to NULL because there is initially no previous strain at the top level of the pyramid.
+  // Initialize to nullptr because there is initially no previous strain at the top level of the pyramid.
   m_BlockTransformMetricImageFilter->SetStrainImage( nullptr );
   if( m_ScaleBlockByStrain )
     {

@@ -47,7 +47,7 @@ StrainImageFilter< TInputImage, TOperatorValueType, TOutputValueType >
     GradientImageFilterType;
   this->m_GradientFilter   = GradientImageFilterType::New().GetPointer();
 
-  this->m_VectorGradientFilter = NULL;
+  this->m_VectorGradientFilter = nullptr;
 }
 
 
@@ -58,7 +58,7 @@ StrainImageFilter< TInputImage, TOperatorValueType, TOutputValueType >
 {
   typename InputImageType::ConstPointer input = this->GetInput();
 
-  if( this->m_VectorGradientFilter.GetPointer() != NULL )
+  if( this->m_VectorGradientFilter.GetPointer() != nullptr )
     {
     this->m_VectorGradientFilter->SetInput( input );
     for( unsigned int i = 1; i < ImageDimension + 1; ++i )

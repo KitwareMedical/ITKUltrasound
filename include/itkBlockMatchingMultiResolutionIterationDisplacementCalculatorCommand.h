@@ -84,9 +84,9 @@ public:
 
 protected:
   MultiResolutionIterationDisplacementCalculatorCommand():
-    m_Level0ToNMinus1DisplacementCalculator( NULL ),
-    m_LevelNDisplacementCalculator( NULL ),
-    m_Regularizer( NULL ),
+    m_Level0ToNMinus1DisplacementCalculator( nullptr ),
+    m_LevelNDisplacementCalculator( nullptr ),
+    m_Regularizer( nullptr ),
     m_Level0ToNMinus1RegularizerIterations( 2 ),
     m_LevelNRegularizerIterations( 1 )
   {}

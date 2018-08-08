@@ -34,17 +34,17 @@ MultiResolutionIterationDisplacementCalculatorCommand< TMultiResolutionMethod >
 
   const unsigned long level = this->m_MultiResolutionMethod->GetCurrentLevel();
 
-  if( m_Level0ToNMinus1DisplacementCalculator.GetPointer() == NULL )
+  if( m_Level0ToNMinus1DisplacementCalculator.GetPointer() == nullptr )
     {
     itkExceptionMacro( << "Level0ToNMinus1ToNMinus1DisplacementCalculator is not present." );
     }
 
-  if( m_LevelNDisplacementCalculator.GetPointer() == NULL )
+  if( m_LevelNDisplacementCalculator.GetPointer() == nullptr )
     {
     itkExceptionMacro( << "LevelNDisplacementCalculator is not present." );
     }
 
-  if( m_Regularizer.GetPointer() == NULL )
+  if( m_Regularizer.GetPointer() == nullptr )
     {
     if( level == this->m_MultiResolutionMethod->GetNumberOfLevels() - 1 )
       {
