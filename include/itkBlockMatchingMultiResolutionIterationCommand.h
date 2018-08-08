@@ -28,7 +28,7 @@ namespace BlockMatching
 {
 
 /**
- * \clas IterationCommand
+ * \class MultiResolutionIterationCommand
  *
  * \brief This is a base class for classes that want to observe/adjust a
  * BlockMatching::MultiResolutionImageRegistrationMethod at every iteration.
@@ -52,7 +52,7 @@ public:
 
   void Execute(const itk::Object * object, const itk::EventObject & event) ITK_OVERRIDE;
 
-  typedef TMultiResolutionMethod MultiResolutionMethodType;
+  typedef TMultiResolutionMethod                      MultiResolutionMethodType;
   typedef typename MultiResolutionMethodType::Pointer MultiResolutionMethodPointer;
 
   void SetMultiResolutionMethod( MultiResolutionMethodPointer& method )
@@ -60,26 +60,22 @@ public:
     m_MultiResolutionMethod = method;
     }
 
-  typedef typename MultiResolutionMethodType::FixedImagePyramidType
-    FixedImagePyramidType;
-  typedef typename FixedImagePyramidType::Pointer FixedImagePyramidPointer;
-  typedef typename MultiResolutionMethodType::MovingImagePyramidType
-    MovingImagePyramidType;
-  typedef typename MovingImagePyramidType::Pointer MovingImagePyramidPointer;
+  typedef typename MultiResolutionMethodType::FixedImagePyramidType  FixedImagePyramidType;
+  typedef typename FixedImagePyramidType::Pointer                    FixedImagePyramidPointer;
+  typedef typename MultiResolutionMethodType::MovingImagePyramidType MovingImagePyramidType;
+  typedef typename MovingImagePyramidType::Pointer                   MovingImagePyramidPointer;
 
-  typedef typename MultiResolutionMethodType::BlockRadiusCalculatorType
-    BlockRadiusCalculatorType;
-  typedef typename BlockRadiusCalculatorType::Pointer BlockRadiusCalculatorPointer;
+  typedef typename MultiResolutionMethodType::BlockRadiusCalculatorType BlockRadiusCalculatorType;
+  typedef typename BlockRadiusCalculatorType::Pointer                   BlockRadiusCalculatorPointer;
 
-  typedef typename MultiResolutionMethodType::SearchRegionImageSourceType
-    SearchRegionImageSourceType;
-  typedef typename SearchRegionImageSourceType::Pointer SearchRegionImageSourcePointer;
+  typedef typename MultiResolutionMethodType::SearchRegionImageSourceType SearchRegionImageSourceType;
+  typedef typename SearchRegionImageSourceType::Pointer                   SearchRegionImageSourcePointer;
 
 protected:
   MultiResolutionIterationCommand()
     {
     m_MultiResolutionMethod = ITK_NULLPTR;
-    };
+    }
   virtual ~MultiResolutionIterationCommand() {};
 
   MultiResolutionMethodPointer   m_MultiResolutionMethod;

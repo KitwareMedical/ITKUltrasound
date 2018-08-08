@@ -69,29 +69,28 @@ class ITK_TEMPLATE_EXPORT DisplacementPipeline : public ImageToImageFilter<
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(DisplacementPipeline);
 
-  /** Standard class typedefs. */
-  typedef DisplacementPipeline       Self;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
-
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, VImageDimension);
 
-  typedef TFixedPixel FixedPixelType;
-  typedef Image< TFixedPixel, ImageDimension > FixedImageType;
-  typedef typename FixedImageType::SizeType RadiusType;
+  typedef TFixedPixel                              FixedPixelType;
+  typedef Image< TFixedPixel, ImageDimension >     FixedImageType;
+  typedef typename FixedImageType::SizeType        RadiusType;
 
-  typedef TMovingPixel MovingPixelType;
+  typedef TMovingPixel                             MovingPixelType;
   typedef Image< MovingPixelType, ImageDimension > MovingImageType;
 
-  typedef TMetricPixel MetricPixelType;
+  typedef TMetricPixel                             MetricPixelType;
   typedef Image< MetricPixelType, ImageDimension > MetricImageType;
 
   typedef Vector<MetricPixelType, ImageDimension > VectorType;
   typedef Image<VectorType, ImageDimension >       DisplacementImageType;
   typedef DisplacementImageType                    OutputImageType;
 
+  /** Standard class typedefs. */
+  typedef DisplacementPipeline                                        Self;
   typedef ImageToImageFilter< FixedImageType, DisplacementImageType > Superclass;
+  typedef SmartPointer< Self >                                        Pointer;
+  typedef SmartPointer< const Self >                                  ConstPointer;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( DisplacementPipeline, ImageToImageFilter );
@@ -180,9 +179,8 @@ public:
     DisplacementCalculatorCommandType;
 
   /** Calculate strains. */
-  typedef StrainImageFilter<DisplacementImageType, MetricPixelType, MetricPixelType>
-                                            StrainFilterType;
-  typedef typename StrainFilterType::OutputImageType TensorImageType;
+  typedef StrainImageFilter<DisplacementImageType, MetricPixelType, MetricPixelType> StrainFilterType;
+  typedef typename StrainFilterType::OutputImageType                                 TensorImageType;
 
   typedef FixedArray< double, ImageDimension > UpsamplingRatioType;
 

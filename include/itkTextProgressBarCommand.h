@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef itkTextProgressCommand_h
-#define itkTextProgressCommand_h
+#ifndef itkTextProgressBarCommand_h
+#define itkTextProgressBarCommand_h
 
 #include "itkCommand.h"
 

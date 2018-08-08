@@ -15,6 +15,9 @@
  *  limitations under the License.
  *
  *=========================================================================*/
+#ifndef itkBlockMatchingDisplacementPipeline_hxx
+#define itkBlockMatchingDisplacementPipeline_hxx
+
 #include "itkBlockMatchingDisplacementPipeline.h"
 
 namespace itk
@@ -323,3 +326,5 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
 
 } // end namespace BlockMatching
 } // end namespace itk
+
+#endif
