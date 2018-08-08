@@ -34,8 +34,8 @@ MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
   m_CacheMetricImage( false ),
   m_RegionsDefined( false )
 {
-  m_MetricImageImage  = ITK_NULLPTR;
-  m_DisplacementImage = ITK_NULLPTR;
+  m_MetricImageImage  = nullptr;
+  m_DisplacementImage = nullptr;
   m_MetricImageDuplicator = MetricImageDuplicatorType::New();
   m_MultiThreader = MultiThreaderBase::New();
 }

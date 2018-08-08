@@ -188,7 +188,7 @@ public:
     IndexValueType nextIndex = lowerIndex;
     PointType lowerPoint;
     const TransformType * transform = this->GetSliceInverseTransform( lowerIndex );
-    if( transform == ITK_NULLPTR )
+    if( transform == nullptr )
       {
       itkExceptionMacro("Inverse slice transform not available for index: " << lowerIndex);
       }
@@ -196,7 +196,7 @@ public:
     int lowerSign = Math::sgn( lowerPoint[sliceDimensionIndex] );
     PointType upperPoint;
     transform = this->GetSliceInverseTransform( upperIndex );
-    if( transform == ITK_NULLPTR )
+    if( transform == nullptr )
       {
       itkExceptionMacro("Inverse slice transform not available for index: " << upperIndex);
       }
@@ -294,7 +294,7 @@ public:
     IndexValueType nextIndex = lowerIndex;
     PointType lowerPoint;
     const TransformType * transform = this->GetSliceInverseTransform( lowerIndex );
-    if( transform == ITK_NULLPTR )
+    if( transform == nullptr )
       {
       itkExceptionMacro("Inverse slice transform not available for index: " << lowerIndex);
       }
@@ -302,7 +302,7 @@ public:
     int lowerSign = Math::sgn( lowerPoint[sliceDimensionIndex] );
     PointType upperPoint;
     transform = this->GetSliceInverseTransform( upperIndex );
-    if( transform == ITK_NULLPTR )
+    if( transform == nullptr )
       {
       itkExceptionMacro("Inverse slice transform not available for index: " << upperIndex);
       }
@@ -410,7 +410,7 @@ public:
     const IndexValueType floor = Math::Floor< IndexValueType, TIndexRep >( index[ImageDimension - 1] );
     const IndexValueType ceil = Math::Ceil< IndexValueType, TIndexRep >( index[ImageDimension - 1] );
     const TransformType * transform = this->GetSliceTransform( floor );
-    if( transform != ITK_NULLPTR )
+    if( transform != nullptr )
       {
       lowerPoint = transform->TransformPoint( point );
       }
@@ -436,7 +436,7 @@ public:
 
     transform = this->GetSliceTransform( ceil );
     PointType upperPoint;
-    if( transform != ITK_NULLPTR )
+    if( transform != nullptr )
       {
       upperPoint = transform->TransformPoint( point );
       }
@@ -490,7 +490,7 @@ public:
       point[ii] += slicePoint[ii];
       }
     const TransformType * transform = this->GetSliceTransform( index[ImageDimension - 1] );
-    if( transform != ITK_NULLPTR )
+    if( transform != nullptr )
       {
       point = transform->TransformPoint( point );
       return;

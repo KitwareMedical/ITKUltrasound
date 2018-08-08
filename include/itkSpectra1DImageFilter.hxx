@@ -287,7 +287,7 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
     }
 
   const OutputImageType * referenceSpectra = this->GetReferenceSpectraImage();
-  if( referenceSpectra != ITK_NULLPTR )
+  if( referenceSpectra != nullptr )
     {
     typedef ImageScanlineConstIterator< OutputImageType > ReferenceSpectraIteratorType;
     ReferenceSpectraIteratorType referenceSpectraIt( referenceSpectra, outputRegionForThread );

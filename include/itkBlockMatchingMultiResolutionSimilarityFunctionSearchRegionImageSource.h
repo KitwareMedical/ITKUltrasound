@@ -151,7 +151,7 @@ public:
   {
     Pointer smartPtr = ObjectFactory<Self>::Create();
 
-    if( smartPtr.GetPointer() == ITK_NULLPTR )
+    if( smartPtr.GetPointer() == nullptr )
       {
       smartPtr = new Self;
       }

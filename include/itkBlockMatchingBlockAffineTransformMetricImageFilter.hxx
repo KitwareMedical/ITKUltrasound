@@ -34,9 +34,9 @@ BlockAffineTransformMetricImageFilter< TFixedImage, TMovingImage,
                                        TMetricImage, TStrainValueType >
 ::BlockAffineTransformMetricImageFilter()
 {
-  m_MetricImageFilter = ITK_NULLPTR;
+  m_MetricImageFilter = nullptr;
 
-  m_StrainImage = ITK_NULLPTR;
+  m_StrainImage = nullptr;
 
   m_Transform    = TransformType::New();
   m_Interpolator = InterpolatorType::New();
@@ -71,7 +71,7 @@ BlockAffineTransformMetricImageFilter< TFixedImage, TMovingImage,
                                        TMetricImage, TStrainValueType >
 ::GenerateData()
 {
-  if( m_MetricImageFilter.GetPointer() == ITK_NULLPTR )
+  if( m_MetricImageFilter.GetPointer() == nullptr )
     {
     itkExceptionMacro(<< "The internal MetricImageFilter has not been set.");
     }
@@ -86,7 +86,7 @@ BlockAffineTransformMetricImageFilter< TFixedImage, TMovingImage,
     {
     return;
     }
-  if( m_StrainImage.GetPointer() != ITK_NULLPTR )
+  if( m_StrainImage.GetPointer() != nullptr )
     {
     m_TransformedFixedImage->CopyInformation( fixedPtr );
     m_TransformedFixedImage->SetRequestedRegion( this->m_FixedImageRegion );

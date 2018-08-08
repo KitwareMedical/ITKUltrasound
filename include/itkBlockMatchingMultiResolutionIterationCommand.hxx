@@ -35,7 +35,7 @@ MultiResolutionIterationCommand< TMultiResolutionMethod >
     return;
     }
 
-  if( m_MultiResolutionMethod.GetPointer() == ITK_NULLPTR )
+  if( m_MultiResolutionMethod.GetPointer() == nullptr )
     {
     itkExceptionMacro( << "The associated MultiResolutionMethod must be set." );
     }

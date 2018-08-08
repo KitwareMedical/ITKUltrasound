@@ -37,9 +37,9 @@ ImageRegistrationMethod< TFixedImage, TMovingImage,
 ::ImageRegistrationMethod():
   m_UseStreaming( false )
 {
-  m_FixedImage = ITK_NULLPTR;
-  m_MovingImage = ITK_NULLPTR;
-  m_MetricImageFilter = ITK_NULLPTR;
+  m_FixedImage = nullptr;
+  m_MovingImage = nullptr;
+  m_MetricImageFilter = nullptr;
   m_MetricImageToDisplacementCalculator =
     MaximumPixelDisplacementCalculator< TMetricImage,
       TDisplacementImage >::New();

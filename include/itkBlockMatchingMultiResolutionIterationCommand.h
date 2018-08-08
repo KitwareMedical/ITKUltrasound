@@ -74,7 +74,7 @@ public:
 protected:
   MultiResolutionIterationCommand()
     {
-    m_MultiResolutionMethod = ITK_NULLPTR;
+    m_MultiResolutionMethod = nullptr;
     }
   virtual ~MultiResolutionIterationCommand() {};
 

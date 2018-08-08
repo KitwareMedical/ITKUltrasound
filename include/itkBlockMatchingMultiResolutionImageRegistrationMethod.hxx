@@ -33,16 +33,16 @@ template <class TFixedImage, class TMovingImage,
 MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
                                        TMetricImage, TDisplacementImage, TCoordRep>
 ::MultiResolutionImageRegistrationMethod() :
-  m_FixedImage( ITK_NULLPTR ),
-  m_MovingImage( ITK_NULLPTR ),
+  m_FixedImage( nullptr ),
+  m_MovingImage( nullptr ),
   m_NumberOfLevels( 1 ),
   m_CurrentLevel( 0 ),
   m_Stop( false ),
   m_ScheduleSpecified( false ),
   m_NumberOfLevelsSpecified( false ),
-  m_ImageRegistrationMethod( ITK_NULLPTR ),
-  m_BlockRadiusCalculator( ITK_NULLPTR ),
-  m_SearchRegionImageSource( ITK_NULLPTR )
+  m_ImageRegistrationMethod( nullptr ),
+  m_BlockRadiusCalculator( nullptr ),
+  m_SearchRegionImageSource( nullptr )
 {
   m_FixedImagePyramid  = RecursiveMultiResolutionPyramidImageFilter<
       FixedImageType, FixedImageType>::New();

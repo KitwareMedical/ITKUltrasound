@@ -40,7 +40,7 @@ MultiResolutionSimilarityFunctionSearchRegionImageSource<
   m_TopLevelRadiusSpecified( false )
 {
   this->m_CacheMetricImage = true;
-  this->m_SearchRegionRadiusImage = ITK_NULLPTR;
+  this->m_SearchRegionRadiusImage = nullptr;
 
   m_SearchRegionRadiusResampler = SearchRegionRadiusResamplerType::New();
 
@@ -66,7 +66,7 @@ MultiResolutionSimilarityFunctionSearchRegionImageSource<
 {
   DisplacementCalculatorSuperclass::SetDisplacementImage( image );
 
-  if( this->m_SearchRegionRadiusImage.GetPointer() == ITK_NULLPTR )
+  if( this->m_SearchRegionRadiusImage.GetPointer() == nullptr )
     {
     this->m_SearchRegionRadiusImage = SearchRegionRadiusImageType::New();
     }

@@ -32,8 +32,8 @@ SearchRegionImageInitializer< TFixedImage, TMovingImage >
 ::SearchRegionImageInitializer():
   m_Overlap( 1.0 )
 {
-  m_FixedImage  = ITK_NULLPTR;
-  m_MovingImage = ITK_NULLPTR;
+  m_FixedImage  = nullptr;
+  m_MovingImage = nullptr;
 
   m_FixedBlockRadius.Fill( 0 );
   m_SearchRegionRadius.Fill( 0 );
@@ -71,7 +71,7 @@ void
 SearchRegionImageInitializer< TFixedImage, TMovingImage >
 ::BeforeThreadedGenerateData()
 {
-  if( m_MovingImage.GetPointer() == ITK_NULLPTR )
+  if( m_MovingImage.GetPointer() == nullptr )
     {
     itkExceptionMacro( << "Moving Image is not present." );
     }
@@ -97,7 +97,7 @@ SearchRegionImageInitializer< TFixedImage, TMovingImage >
     return;
     }
 
-  if( m_FixedImage.GetPointer() == ITK_NULLPTR )
+  if( m_FixedImage.GetPointer() == nullptr )
     {
     itkExceptionMacro( << "Fixed Image is not present." );
     }

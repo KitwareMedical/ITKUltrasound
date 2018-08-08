@@ -83,7 +83,7 @@ public:
   /** Default constructor. */
   ConstantImagePointerBoundaryCondition()
     {
-    PixelType imagePtr = ITK_NULLPTR;
+    PixelType imagePtr = nullptr;
     m_Constant = imagePtr;
     }
 

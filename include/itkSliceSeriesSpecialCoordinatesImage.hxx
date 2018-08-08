@@ -67,7 +67,7 @@ SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension 
     const SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension > * const sliceSeries =
       dynamic_cast< const SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension > * >( data );
 
-    if ( sliceSeries != ITK_NULLPTR )
+    if ( sliceSeries != nullptr )
       {
       // Copy the meta data for this data type
       typename SliceImageType::Pointer sliceImage = SliceImageType::New();
@@ -78,7 +78,7 @@ SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension 
       for( SizeValueType transformIndex = 0; transformIndex < numberOfTransforms; ++transformIndex )
         {
         const TransformType * transform = sliceSeries->GetSliceTransform( transformIndex );
-        if( transform != ITK_NULLPTR )
+        if( transform != nullptr )
           {
           typename TransformType::Pointer transformClone = transform->Clone();
           this->SetSliceTransform( transformIndex, transformClone );
@@ -134,7 +134,7 @@ SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension 
     {
     return this->m_SliceTransforms->GetElement( transformsIndex ).GetPointer();
     }
-  return ITK_NULLPTR;
+  return nullptr;
 }
 
 
@@ -150,7 +150,7 @@ SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension 
     {
     return this->m_SliceInverseTransforms->GetElement( transformsIndex ).GetPointer();
     }
-  return ITK_NULLPTR;
+  return nullptr;
 }
 
 

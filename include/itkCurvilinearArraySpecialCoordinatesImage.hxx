@@ -91,85 +91,85 @@ CurvilinearArraySpecialCoordinatesImage< TPixel, VDimension >
       dynamic_cast< const CurvilinearArraySpecialCoordinatesImage< std::complex< float >, VDimension > * >( data );
     const CurvilinearArraySpecialCoordinatesImage< std::complex< double >, VDimension > * const curvilinearArrayComplexDouble =
       dynamic_cast< const CurvilinearArraySpecialCoordinatesImage< std::complex< double >, VDimension > * >( data );
-    if ( curvilinearArray != ITK_NULLPTR )
+    if ( curvilinearArray != nullptr )
       {
       this->SetLateralAngularSeparation( curvilinearArray->GetLateralAngularSeparation() );
       this->SetRadiusSampleSize( curvilinearArray->GetRadiusSampleSize() );
       this->SetFirstSampleDistance( curvilinearArray->GetFirstSampleDistance() );
       }
-    else if ( curvilinearArray != ITK_NULLPTR )
+    else if ( curvilinearArray != nullptr )
       {
       this->SetLateralAngularSeparation( curvilinearArray->GetLateralAngularSeparation() );
       this->SetRadiusSampleSize( curvilinearArray->GetRadiusSampleSize() );
       this->SetFirstSampleDistance( curvilinearArray->GetFirstSampleDistance() );
       }
-    else if ( curvilinearArrayUnsignedChar != ITK_NULLPTR )
+    else if ( curvilinearArrayUnsignedChar != nullptr )
       {
       this->SetLateralAngularSeparation( curvilinearArrayUnsignedChar->GetLateralAngularSeparation() );
       this->SetRadiusSampleSize( curvilinearArrayUnsignedChar->GetRadiusSampleSize() );
       this->SetFirstSampleDistance( curvilinearArrayUnsignedChar->GetFirstSampleDistance() );
       }
-    else if ( curvilinearArraySignedChar != ITK_NULLPTR )
+    else if ( curvilinearArraySignedChar != nullptr )
       {
       this->SetLateralAngularSeparation( curvilinearArraySignedChar->GetLateralAngularSeparation() );
       this->SetRadiusSampleSize( curvilinearArraySignedChar->GetRadiusSampleSize() );
       this->SetFirstSampleDistance( curvilinearArraySignedChar->GetFirstSampleDistance() );
       }
-    else if ( curvilinearArrayUnsignedShort != ITK_NULLPTR )
+    else if ( curvilinearArrayUnsignedShort != nullptr )
       {
       this->SetLateralAngularSeparation( curvilinearArrayUnsignedShort->GetLateralAngularSeparation() );
       this->SetRadiusSampleSize( curvilinearArrayUnsignedShort->GetRadiusSampleSize() );
       this->SetFirstSampleDistance( curvilinearArrayUnsignedShort->GetFirstSampleDistance() );
       }
-    else if ( curvilinearArrayShort != ITK_NULLPTR )
+    else if ( curvilinearArrayShort != nullptr )
       {
       this->SetLateralAngularSeparation( curvilinearArrayShort->GetLateralAngularSeparation() );
       this->SetRadiusSampleSize( curvilinearArrayShort->GetRadiusSampleSize() );
       this->SetFirstSampleDistance( curvilinearArrayShort->GetFirstSampleDistance() );
       }
-    else if ( curvilinearArrayUnsignedInt != ITK_NULLPTR )
+    else if ( curvilinearArrayUnsignedInt != nullptr )
       {
       this->SetLateralAngularSeparation( curvilinearArrayUnsignedInt->GetLateralAngularSeparation() );
       this->SetRadiusSampleSize( curvilinearArrayUnsignedInt->GetRadiusSampleSize() );
       this->SetFirstSampleDistance( curvilinearArrayUnsignedInt->GetFirstSampleDistance() );
       }
-    else if ( curvilinearArrayInt != ITK_NULLPTR )
+    else if ( curvilinearArrayInt != nullptr )
       {
       this->SetLateralAngularSeparation( curvilinearArrayInt->GetLateralAngularSeparation() );
       this->SetRadiusSampleSize( curvilinearArrayInt->GetRadiusSampleSize() );
       this->SetFirstSampleDistance( curvilinearArrayInt->GetFirstSampleDistance() );
       }
-    else if ( curvilinearArrayUnsignedLongLong != ITK_NULLPTR )
+    else if ( curvilinearArrayUnsignedLongLong != nullptr )
       {
       this->SetLateralAngularSeparation( curvilinearArrayUnsignedLongLong->GetLateralAngularSeparation() );
       this->SetRadiusSampleSize( curvilinearArrayUnsignedLongLong->GetRadiusSampleSize() );
       this->SetFirstSampleDistance( curvilinearArrayUnsignedLongLong->GetFirstSampleDistance() );
       }
-    else if ( curvilinearArrayLongLong != ITK_NULLPTR )
+    else if ( curvilinearArrayLongLong != nullptr )
       {
       this->SetLateralAngularSeparation( curvilinearArrayLongLong->GetLateralAngularSeparation() );
       this->SetRadiusSampleSize( curvilinearArrayLongLong->GetRadiusSampleSize() );
       this->SetFirstSampleDistance( curvilinearArrayLongLong->GetFirstSampleDistance() );
       }
-    else if ( curvilinearArrayFloat != ITK_NULLPTR )
+    else if ( curvilinearArrayFloat != nullptr )
       {
       this->SetLateralAngularSeparation( curvilinearArrayFloat->GetLateralAngularSeparation() );
       this->SetRadiusSampleSize( curvilinearArrayFloat->GetRadiusSampleSize() );
       this->SetFirstSampleDistance( curvilinearArrayFloat->GetFirstSampleDistance() );
       }
-    else if ( curvilinearArrayDouble != ITK_NULLPTR )
+    else if ( curvilinearArrayDouble != nullptr )
       {
       this->SetLateralAngularSeparation( curvilinearArrayDouble->GetLateralAngularSeparation() );
       this->SetRadiusSampleSize( curvilinearArrayDouble->GetRadiusSampleSize() );
       this->SetFirstSampleDistance( curvilinearArrayDouble->GetFirstSampleDistance() );
       }
-    else if ( curvilinearArrayComplexFloat != ITK_NULLPTR )
+    else if ( curvilinearArrayComplexFloat != nullptr )
       {
       this->SetLateralAngularSeparation( curvilinearArrayComplexFloat->GetLateralAngularSeparation() );
       this->SetRadiusSampleSize( curvilinearArrayComplexFloat->GetRadiusSampleSize() );
       this->SetFirstSampleDistance( curvilinearArrayComplexFloat->GetFirstSampleDistance() );
       }
-    else if ( curvilinearArrayComplexDouble != ITK_NULLPTR )
+    else if ( curvilinearArrayComplexDouble != nullptr )
       {
       this->SetLateralAngularSeparation( curvilinearArrayComplexDouble->GetLateralAngularSeparation() );
       this->SetRadiusSampleSize( curvilinearArrayComplexDouble->GetRadiusSampleSize() );
