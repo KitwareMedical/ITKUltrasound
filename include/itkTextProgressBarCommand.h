@@ -44,9 +44,9 @@ public:
 protected:
   TextProgressBarCommand();
 
-  void Execute(itk::Object *caller, const itk::EventObject & event) ITK_OVERRIDE;
+  void Execute(itk::Object *caller, const itk::EventObject & event) override;
 
-  void Execute(const itk::Object * object, const itk::EventObject & event) ITK_OVERRIDE;
+  void Execute(const itk::Object * object, const itk::EventObject & event) override;
 
   std::string m_Progress;
 };

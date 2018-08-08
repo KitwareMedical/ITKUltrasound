@@ -271,12 +271,12 @@ public:
 protected:
   DisplacementPipeline();
 
-  void GenerateOutputInformation() ITK_OVERRIDE;
+  void GenerateOutputInformation() override;
 
   virtual void SetupPipeline();
 
   /** Execute the pipeline. */
-  void GenerateData() ITK_OVERRIDE;
+  void GenerateData() override;
 
 
 private:
