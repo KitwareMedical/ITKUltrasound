@@ -22,6 +22,12 @@ jobs:
             cd ITKBSplineGradient-build
             cmake -GNinja -DITK_DIR=/ITK-build ../ITKBSplineGradient
             ninja
+            cd /
+            git clone https://github.com/InsightSoftwareConsortium/ITKHigherOrderAccurateGradient
+            mkdir ITKHigherOrderAccurateGradient-build
+            cd ITKHigherOrderAccurateGradient-build
+            cmake -GNinja -DITK_DIR=/ITK-build ../ITKHigherOrderAccurateGradient
+            ninja
       - run:
           name: Fetch CTest driver script
           command: |
