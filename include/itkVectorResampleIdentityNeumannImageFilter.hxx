@@ -108,7 +108,7 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
 ::AfterThreadedGenerateData()
 {
   // Disconnect input image from the interpolator
-  m_Interpolator->SetInputImage( ITK_NULLPTR );
+  m_Interpolator->SetInputImage( nullptr );
 
 }
 

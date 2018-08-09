@@ -104,7 +104,7 @@ public:
   /** Set the filter used to calculate the gradients internally.  This filter
    * should take a Vector image as input and produce a CovariantVector gradient
    * image on each output corresponding to every Vector component.  If this
-   * filter is non-NULL, it is used instead of the GradientFilter. */
+   * filter is non-nullptr, it is used instead of the GradientFilter. */
   itkSetObjectMacro( VectorGradientFilter, VectorGradientFilterType );
   itkGetObjectMacro( VectorGradientFilter, VectorGradientFilterType );
 

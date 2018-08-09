@@ -125,7 +125,7 @@ public:
   static Pointer New(void)
   {
     Pointer smartPtr = ObjectFactory<Self>::Create();
-    if(smartPtr.GetPointer() == NULL)
+    if(smartPtr.GetPointer() == nullptr)
       {
       smartPtr = new Self;
       }

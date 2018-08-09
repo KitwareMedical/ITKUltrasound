@@ -26,8 +26,8 @@ namespace itk
 {
 
 HDF5UltrasoundImageIO
-::HDF5UltrasoundImageIO() : m_H5File(ITK_NULLPTR),
-                            m_VoxelDataSet(ITK_NULLPTR)
+::HDF5UltrasoundImageIO() : m_H5File(nullptr),
+                            m_VoxelDataSet(nullptr)
 {
 }
 
@@ -35,7 +35,7 @@ HDF5UltrasoundImageIO
 HDF5UltrasoundImageIO
 ::~HDF5UltrasoundImageIO()
 {
-  if(this->m_VoxelDataSet != ITK_NULLPTR)
+  if(this->m_VoxelDataSet != nullptr)
     {
     m_VoxelDataSet->close();
     delete m_VoxelDataSet;
@@ -264,7 +264,7 @@ HDF5UltrasoundImageIO
   H5::DataSpace space = dataSet.getSpace();
 
   std::vector<hsize_t> dim(space.getSimpleExtentNdims());
-  space.getSimpleExtentDims( &dim[0], ITK_NULLPTR );
+  space.getSimpleExtentDims( &dim[0], nullptr );
   result.resize( dim[0] );
 
   H5::PredType vecType = GetType<TScalar>();
@@ -350,7 +350,7 @@ void
 HDF5UltrasoundImageIO
 ::CloseH5File()
 {
-  if(this->m_H5File != ITK_NULLPTR)
+  if(this->m_H5File != nullptr)
     {
     this->m_H5File->close();
     delete this->m_H5File;

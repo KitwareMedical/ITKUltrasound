@@ -38,7 +38,7 @@ TFixedImage, TMovingImage, TMetricImage, TDisplacementImage >
   m_ThresholdScheduleSpecified( false ),
   m_TopLevelRadiusSpecified( false )
 {
-  this->m_SearchRegionRadiusImage = NULL;
+  this->m_SearchRegionRadiusImage = nullptr;
 
   m_DisplacementResampler = DisplacementResamplerType::New();
   m_SearchRegionRadiusResampler = SearchRegionRadiusResamplerType::New();
@@ -56,7 +56,7 @@ TFixedImage, TMovingImage, TMetricImage, TDisplacementImage >
 {
   DisplacementCalculatorSuperclass::SetDisplacementImage( image );
 
-  if( m_SearchRegionRadiusImage.GetPointer() == NULL )
+  if( m_SearchRegionRadiusImage.GetPointer() == nullptr )
     m_SearchRegionRadiusImage = SearchRegionRadiusImageType::New();
   m_SearchRegionRadiusImage->CopyInformation( image );
   m_SearchRegionRadiusImage->SetRegions( image->GetLargestPossibleRegion() );

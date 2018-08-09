@@ -16,6 +16,18 @@ jobs:
             cd ITKSplitComponents-build
             cmake -GNinja -DITK_DIR=/ITK-build ../ITKSplitComponents
             ninja
+            cd /
+            git clone https://github.com/InsightSoftwareConsortium/ITKBSplineGradient
+            mkdir ITKBSplineGradient-build
+            cd ITKBSplineGradient-build
+            cmake -GNinja -DITK_DIR=/ITK-build ../ITKBSplineGradient
+            ninja
+            cd /
+            git clone https://github.com/InsightSoftwareConsortium/ITKHigherOrderAccurateGradient
+            mkdir ITKHigherOrderAccurateGradient-build
+            cd ITKHigherOrderAccurateGradient-build
+            cmake -GNinja -DITK_DIR=/ITK-build ../ITKHigherOrderAccurateGradient
+            ninja
       - run:
           name: Fetch CTest driver script
           command: |
@@ -61,7 +73,7 @@ jobs:
             cd ~
             git clone https://github.com/InsightSoftwareConsortium/ITKSplitComponents
             cd ITKSplitComponents
-            mv ~/ITKUltrasound/dockcross-manylinux-download-cache-and-build-module-wheels.sh .
+            cp ~/ITKUltrasound/dockcross-manylinux-download-cache-and-build-module-wheels.sh .
             ./dockcross-manylinux-download-cache-and-build-module-wheels.sh
       - run:
           name: Build Python packages

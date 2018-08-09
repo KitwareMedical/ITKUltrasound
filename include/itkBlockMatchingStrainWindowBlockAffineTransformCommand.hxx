@@ -34,7 +34,7 @@ StrainWindowBlockAffineTransformCommand<TStrainWindowDisplacemenCalculator,
 ::StrainWindowBlockAffineTransformCommand():
   m_UseStrainWindowStrain( true )
 {
-  m_BlockAffineTransformMetricImageFilter = NULL;
+  m_BlockAffineTransformMetricImageFilter = nullptr;
 
   m_StrainImageFilter = StrainImageFilterType::New();
   m_LeastSquaresFilter = LeastSquaresFilterType::New();
@@ -58,7 +58,7 @@ StrainWindowBlockAffineTransformCommand<TStrainWindowDisplacemenCalculator,
     return;
     }
 
-  if( m_BlockAffineTransformMetricImageFilter.GetPointer() == NULL )
+  if( m_BlockAffineTransformMetricImageFilter.GetPointer() == nullptr )
     {
     itkExceptionMacro(<< "The BlockAffineTransformMetricImageFilter has not been set." );
     }

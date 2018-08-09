@@ -53,7 +53,7 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
     MaximumPixelDisplacementCalculator< TMetricImage,
                                         TDisplacementImage >::New();
 
-  m_PriorPr = NULL;
+  m_PriorPr = nullptr;
 
   for( unsigned int dim = 0; dim < ImageDimension; dim++ )
     m_GaussianKernels.push_back( MetricImageType::New() );
