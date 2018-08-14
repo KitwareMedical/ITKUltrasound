@@ -146,7 +146,7 @@ public:
   typedef AmoebaOptimizer SubsampleOptimizerType;
 
   /** Filter out peak hopping. */
-  typedef BlockMatching::StrainWindowDisplacementCalculator<MetricImageType, DisplacementImageType, double>
+  typedef BlockMatching::StrainWindowDisplacementCalculator<MetricImageType, DisplacementImageType, MetricPixelType >
     StrainWindowDisplacementCalculatorType;
   typedef StrainImageFilter<DisplacementImageType, MetricPixelType, MetricPixelType>
   StrainWindowStrainFilterType;
