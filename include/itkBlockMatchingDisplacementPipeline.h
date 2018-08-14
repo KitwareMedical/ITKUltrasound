@@ -335,4 +335,8 @@ private:
 } // end namespace BlockMatching
 } // end itk namespace
 
+#ifndef ITK_MANUAL_INSTANTIATION
+#include "itkBlockMatchingDisplacementPipeline.hxx"
+#endif
+
 #endif
