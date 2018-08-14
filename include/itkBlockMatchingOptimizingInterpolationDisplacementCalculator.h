@@ -80,7 +80,7 @@ public:
   /** Type of the optimizer. */
   typedef SingleValuedNonLinearOptimizer OptimizerType;
 
-  virtual void SetMetricImagePixel( const PointType & point, const IndexType& index, MetricImageType* image );
+  void SetMetricImagePixel( const PointType & point, const IndexType& index, MetricImageType* image ) override;
 
   void Compute() override {
     // We do this here instead of SetMetricImagePixel so it only has to be done
@@ -139,17 +139,17 @@ public:
 
     /** This method returns the value of the cost function corresponding
       * to the specified parameters.    */
-    virtual MeasureType GetValue( const ParametersType & parameters ) const;
+    MeasureType GetValue( const ParametersType & parameters ) const override;
 
     /** This method returns the derivative of the cost function corresponding
       * to the specified parameters.   */
-    virtual void GetDerivative( const ParametersType & parameters,
-                                DerivativeType & derivative ) const;
+    void GetDerivative( const ParametersType & parameters,
+                                DerivativeType & derivative ) const override;
 
     /** Return the number of parameters required to compute
      *  this cost function.
      *  This method MUST be overloaded by derived classes. */
-    virtual unsigned int GetNumberOfParameters() const
+    unsigned int GetNumberOfParameters() const override
       { return ImageDimension; }
 
     /** Set the previous parameters before the start of optimization.  Used for

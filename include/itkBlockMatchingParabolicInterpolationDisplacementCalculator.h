@@ -76,7 +76,7 @@ public:
   typedef typename Superclass::PointType PointType;
   typedef typename Superclass::IndexType IndexType;
 
-  virtual void Compute();
+  void Compute() override;
 
 protected:
   ParabolicInterpolationDisplacementCalculator();

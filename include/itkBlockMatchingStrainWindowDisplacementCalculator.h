@@ -94,15 +94,15 @@ public:
   typedef typename Superclass::IndexType       IndexType;
   typedef typename Superclass::MetricImageType MetricImageType;
 
-  virtual void SetDisplacementImage( DisplacementImageType* image )
+  void SetDisplacementImage( DisplacementImageType* image ) override
     {
     Superclass::SetDisplacementImage( image );
     m_DisplacementCalculator->SetDisplacementImage( image );
     }
 
-  virtual void SetMetricImagePixel( const PointType & point,
+  void SetMetricImagePixel( const PointType & point,
     const IndexType& index,
-    MetricImageType * image );
+    MetricImageType * image ) override;
 
   void Compute() override;
 
