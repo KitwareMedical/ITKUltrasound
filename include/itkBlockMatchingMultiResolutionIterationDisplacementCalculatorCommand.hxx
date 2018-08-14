@@ -48,7 +48,7 @@ MultiResolutionIterationDisplacementCalculatorCommand< TMultiResolutionMethod >
     {
     if( level == this->m_MultiResolutionMethod->GetNumberOfLevels() - 1 )
       {
-      this->m_MultiResolutionMethod->GetImageRegistrationMethod()->SetMetricImageToDisplacementCalculator(
+      this->m_MultiResolutionMethod->GetModifiableImageRegistrationMethod()->SetMetricImageToDisplacementCalculator(
         this->m_LevelNDisplacementCalculator );
       }
     else

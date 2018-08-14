@@ -61,15 +61,15 @@ public:
     }
 
   typedef typename MultiResolutionMethodType::FixedImagePyramidType  FixedImagePyramidType;
-  typedef typename FixedImagePyramidType::Pointer                    FixedImagePyramidPointer;
+  typedef typename FixedImagePyramidType::ConstPointer                    FixedImagePyramidPointer;
   typedef typename MultiResolutionMethodType::MovingImagePyramidType MovingImagePyramidType;
-  typedef typename MovingImagePyramidType::Pointer                   MovingImagePyramidPointer;
+  typedef typename MovingImagePyramidType::ConstPointer                   MovingImagePyramidPointer;
 
   typedef typename MultiResolutionMethodType::BlockRadiusCalculatorType BlockRadiusCalculatorType;
-  typedef typename BlockRadiusCalculatorType::Pointer                   BlockRadiusCalculatorPointer;
+  typedef typename BlockRadiusCalculatorType::ConstPointer                   BlockRadiusCalculatorPointer;
 
   typedef typename MultiResolutionMethodType::SearchRegionImageSourceType SearchRegionImageSourceType;
-  typedef typename SearchRegionImageSourceType::Pointer                   SearchRegionImageSourcePointer;
+  typedef typename SearchRegionImageSourceType::ConstPointer                   SearchRegionImageSourcePointer;
 
 protected:
   MultiResolutionIterationCommand()
