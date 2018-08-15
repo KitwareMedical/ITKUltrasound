@@ -146,7 +146,7 @@ public:
   typedef AmoebaOptimizer SubsampleOptimizerType;
 
   /** Filter out peak hopping. */
-  typedef BlockMatching::StrainWindowDisplacementCalculator<MetricImageType, DisplacementImageType, double>
+  typedef BlockMatching::StrainWindowDisplacementCalculator<MetricImageType, DisplacementImageType, MetricPixelType >
     StrainWindowDisplacementCalculatorType;
   typedef StrainImageFilter<DisplacementImageType, MetricPixelType, MetricPixelType>
   StrainWindowStrainFilterType;
@@ -334,5 +334,9 @@ private:
 
 } // end namespace BlockMatching
 } // end itk namespace
+
+#ifndef ITK_MANUAL_INSTANTIATION
+#include "itkBlockMatchingDisplacementPipeline.hxx"
+#endif
 
 #endif

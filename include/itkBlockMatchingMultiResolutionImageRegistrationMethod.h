@@ -166,7 +166,7 @@ public:
   /** BlockMatching::ImageRegistrationMethod used to register each image at
    * every level. */
   itkSetObjectMacro( ImageRegistrationMethod, ImageRegistrationMethodType );
-  itkGetConstObjectMacro( ImageRegistrationMethod, ImageRegistrationMethodType );
+  itkGetModifiableObjectMacro( ImageRegistrationMethod, ImageRegistrationMethodType );
 
   /** Set the object used to generate the block radii in the fixed image at
    * every level. */

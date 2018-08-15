@@ -74,7 +74,7 @@ public:
   }
   itkGetConstReferenceMacro( Radius, RadiusType );
 
-  virtual const RadiusType& Compute( unsigned long level )
+  const RadiusType& Compute( unsigned long level ) override
     {
     double slope;
     double distance = static_cast< double >( this->m_PyramidSchedule.rows() - 1 );

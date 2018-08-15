@@ -20,6 +20,8 @@
 
 #include "itkCommand.h"
 
+#include "UltrasoundExport.h"
+
 #include <string>
 
 namespace itk
@@ -31,7 +33,7 @@ namespace itk
  *
  * \ingroup Ultrasound
  * */
-class TextProgressBarCommand:
+class Ultrasound_EXPORT TextProgressBarCommand:
   public Command
 {
 public:

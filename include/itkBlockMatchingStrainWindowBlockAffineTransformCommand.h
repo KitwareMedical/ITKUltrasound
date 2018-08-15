@@ -56,12 +56,7 @@ public:
   typedef TStrainWindowDisplacemenCalculator StrainWindowDisplacementCalculatorType;
 
   typedef TBlockAffineTransformMetricImageFilter BlockAffineTransformMetricImageFilterType;
-  typedef typename BlockAffineTransformMetricImageFilterType::Pointer BlockAffineTransformMetricImageFilterPointer;
-
-  typedef TStrainImageFilter StrainImageFilterType;
-
-  typedef LinearLeastSquaresGradientImageFilter< typename StrainWindowDisplacementCalculatorType::MetricImageType >
-    LeastSquaresFilterType;
+  typedef TStrainImageFilter                     StrainImageFilterType;
 
   void Execute(itk::Object *caller, const itk::EventObject & event) override
     {
@@ -80,6 +75,13 @@ public:
 
 protected:
   StrainWindowBlockAffineTransformCommand();
+
+  typedef LinearLeastSquaresGradientImageFilter< typename StrainWindowDisplacementCalculatorType::MetricImageType,
+          typename StrainWindowDisplacementCalculatorType::MetricPixelType,
+          typename StrainWindowDisplacementCalculatorType::MetricPixelType >
+    LeastSquaresFilterType;
+
+  typedef typename BlockAffineTransformMetricImageFilterType::Pointer BlockAffineTransformMetricImageFilterPointer;
 
   BlockAffineTransformMetricImageFilterPointer m_BlockAffineTransformMetricImageFilter;
 

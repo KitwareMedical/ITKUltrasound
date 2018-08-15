@@ -93,16 +93,17 @@ public:
   typedef typename Superclass::PointType       PointType;
   typedef typename Superclass::IndexType       IndexType;
   typedef typename Superclass::MetricImageType MetricImageType;
+  typedef typename MetricImageType::PixelType  MetricPixelType;
 
-  virtual void SetDisplacementImage( DisplacementImageType* image )
+  void SetDisplacementImage( DisplacementImageType* image ) override
     {
     Superclass::SetDisplacementImage( image );
     m_DisplacementCalculator->SetDisplacementImage( image );
     }
 
-  virtual void SetMetricImagePixel( const PointType & point,
+  void SetMetricImagePixel( const PointType & point,
     const IndexType& index,
-    MetricImageType * image );
+    MetricImageType * image ) override;
 
   void Compute() override;
 
@@ -164,7 +165,6 @@ protected:
   typedef Image<bool, ImageDimension> MaskType;
   typename MaskType::Pointer m_Mask;
 
-  typedef typename MetricImageType::PixelType                        MetricPixelType;
   typedef NthElementImageAdaptor< StrainImageType, MetricPixelType > NthElementAdaptorType;
   typename NthElementAdaptorType::Pointer                            m_NthElementAdaptor;
 
