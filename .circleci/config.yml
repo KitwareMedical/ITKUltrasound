@@ -28,6 +28,12 @@ jobs:
             cd ITKHigherOrderAccurateGradient-build
             cmake -GNinja -DITK_DIR=/ITK-build ../ITKHigherOrderAccurateGradient
             ninja
+            cd /
+            git clone https://github.com/KitwareMedical/ITKStrain
+            mkdir ITKStrain-build
+            cd ITKStrain-build
+            cmake -GNinja -DITK_DIR=/ITK-build ../ITKStrain
+            ninja
       - run:
           name: Fetch CTest driver script
           command: |
