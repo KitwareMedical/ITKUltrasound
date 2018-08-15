@@ -19,6 +19,7 @@ itk_module(Ultrasound
     SplitComponents
     BSplineGradient
     HigherOrderAccurateGradient
+    Strain
   PRIVATE_DEPENDS
     ITKHDF5
   TEST_DEPENDS
