@@ -152,8 +152,7 @@ LinearLeastSquaresGradientImageFilter< TInputImage, TOperatorValueType, TOutputV
 template< typename TInputImage, typename TOperatorValueType, typename TOutputValueType >
 void
 LinearLeastSquaresGradientImageFilter< TInputImage, TOperatorValueType, TOutputValueType >
-::ThreadedGenerateData(const OutputImageRegionType & outputRegionForThread,
-                       ThreadIdType threadId)
+::DynamicThreadedGenerateData(const OutputImageRegionType & outputRegionForThread)
 {
   unsigned int    i;
   OutputPixelType gradient;
@@ -174,9 +173,6 @@ LinearLeastSquaresGradientImageFilter< TInputImage, TOperatorValueType, TOutputV
 
   typename NeighborhoodAlgorithm::ImageBoundaryFacesCalculator< InputImageType >::FaceListType::iterator fit;
   fit = faceList.begin();
-
-  // support progress methods/callbacks
-  ProgressReporter progress( this, threadId, outputRegionForThread.GetNumberOfPixels() );
 
   // Initialize the x_slice array
   nit = ConstNeighborhoodIterator< InputImageType >(m_Radius, inputImage, *fit);
@@ -218,7 +214,6 @@ LinearLeastSquaresGradientImageFilter< TInputImage, TOperatorValueType, TOutputV
         }
       ++nit;
       ++it;
-      progress.CompletedPixel();
       }
     }
 }
