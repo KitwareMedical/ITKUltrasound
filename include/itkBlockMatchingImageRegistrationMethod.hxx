@@ -25,6 +25,7 @@
 #include "itkBlockMatchingMaximumPixelDisplacementCalculator.h"
 #include "itkBlockMatchingImageRegistrationMethod.h"
 
+
 namespace itk
 {
 namespace BlockMatching
@@ -87,15 +88,15 @@ ImageRegistrationMethod< TFixedImage, TMovingImage,
 {
   Superclass::GenerateOutputInformation();
 
-  typename ImageType::Pointer outputPtr = this->GetOutput();
-  if( !outputPtr )
+  typename ImageType::Pointer output = this->GetOutput();
+  if( !output )
     return;
 
   // We do this here instead of GenerateData() so the
   // MetricImageToDisplacementCalculator has a chance to modify the input
   // requested region based on the displacment requested region.
   this->m_MetricImageToDisplacementCalculator->SetDisplacementImage(
-    outputPtr.GetPointer() );
+    output.GetPointer() );
 }
 
 
@@ -108,17 +109,17 @@ ImageRegistrationMethod< TFixedImage, TMovingImage,
 {
   Superclass::GenerateInputRequestedRegion();
 
-  typename SearchRegionImageType::Pointer inputPtr =
+  typename SearchRegionImageType::Pointer input =
     const_cast< SearchRegionImageType * >( this->GetInput() );
-  if( !inputPtr )
+  if( !input )
     {
     itkExceptionMacro( << "Input SearchRegionImage is not present." );
     }
 
-  MovingRegionType region = inputPtr->GetRequestedRegion();
+  MovingRegionType region = input->GetRequestedRegion();
   this->m_MetricImageToDisplacementCalculator
     ->ModifyGenerateInputRequestedRegion( region );
-  inputPtr->SetRequestedRegion( region );
+  input->SetRequestedRegion( region );
 }
 
 
@@ -140,21 +141,21 @@ ImageRegistrationMethod< TFixedImage, TMovingImage,
   TMetricImage, TDisplacementImage, TCoordRep >
 ::GenerateData()
 {
-  typename SearchRegionImageType::ConstPointer inputPtr = this->GetInput();
+  const SearchRegionImageType * input = this->GetInput();
 
   this->Initialize();
 
-  ImageType * outputPtr = this->GetOutput();
-  if( !outputPtr )
+  ImageType * output = this->GetOutput();
+  if( !output )
     {
     return;
     }
 
-  RegionType requestedRegion = outputPtr->GetRequestedRegion();
+  RegionType requestedRegion = output->GetRequestedRegion();
   typedef ImageRegionIteratorWithIndex< ImageType > IteratorType;
-  IteratorType it( outputPtr, requestedRegion );
+  IteratorType it( output, requestedRegion );
   typedef ImageRegionConstIterator< SearchRegionImageType > SearchRegionImageIteratorType;
-  SearchRegionImageIteratorType searchIt( inputPtr, requestedRegion );
+  SearchRegionImageIteratorType searchIt( input, requestedRegion );
 
   // The fixed image region is the kernel block size, and its size is constant.
   FixedRegionType fixedRegion;
@@ -186,7 +187,7 @@ ImageRegistrationMethod< TFixedImage, TMovingImage,
 
   for( it.GoToBegin(), searchIt.GoToBegin(); !it.IsAtEnd(); ++it, ++searchIt )
     {
-    outputPtr->TransformIndexToPhysicalPoint( it.GetIndex(), coord );
+    output->TransformIndexToPhysicalPoint( it.GetIndex(), coord );
     m_FixedImage->TransformPhysicalPointToIndex( coord, fixedIndex );
     for( unsigned int i = 0; i < ImageDimension; ++i )
       {
@@ -240,12 +241,12 @@ ImageRegistrationMethod< TFixedImage, TMovingImage,
   m_MetricImageFilter->SetMovingImage( m_MovingImage );
 
   this->AllocateOutputs();
-  typename ImageType::Pointer outputPtr = this->GetOutput();
-  if( !outputPtr )
+  typename ImageType::Pointer output = this->GetOutput();
+  if( !output )
     return;
 
-  typename SearchRegionImageType::ConstPointer inputPtr = this->GetInput();
-  if( !inputPtr )
+  typename SearchRegionImageType::ConstPointer input = this->GetInput();
+  if( !input )
     {
     itkExceptionMacro( << "Input SearchRegionImage is not present." );
     }
