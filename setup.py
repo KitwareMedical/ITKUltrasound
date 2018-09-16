@@ -41,6 +41,6 @@ setup(
     keywords='ITK InsightToolkit ultrasound imaging',
     url=r'http://www.insight-journal.org/browse/publication/722',
     install_requires=[
-        r'itk'
+        r'itk>=5.0b01'
     ]
     )
