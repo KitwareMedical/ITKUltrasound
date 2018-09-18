@@ -57,16 +57,16 @@ void
 MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::SetFixedImageRegion( const FixedImageRegionType & region )
 {
-  FixedImageType * fixedPtr = const_cast< TFixedImage* >( this->GetInput(0) );
-  if( !fixedPtr )
+  FixedImageType * fixedImage = const_cast< TFixedImage* >( this->GetInput(0) );
+  if( !fixedImage )
     {
     itkExceptionMacro( << "The FixedImage must be set before specifying the fixed image region." );
     }
-  fixedPtr->UpdateOutputInformation();
+  fixedImage->UpdateOutputInformation();
   m_FixedImageRegion = region;
-  if( !m_FixedImageRegion.Crop( fixedPtr->GetLargestPossibleRegion() ) )
+  if( !m_FixedImageRegion.Crop( fixedImage->GetLargestPossibleRegion() ) )
     {
-    itkExceptionMacro( << "Requested block is outside of the fixed image." );
+    itkExceptionMacro( << "Requested block is outside of the fixed image." << " block: " << region << " fixed image: " << fixedImage->GetLargestPossibleRegion() );
     }
   typename FixedImageRegionType::SizeType fixedSize     = m_FixedImageRegion.GetSize();
   for( unsigned int i = 0; i < ImageDimension; ++i )
@@ -80,15 +80,15 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
   m_FixedImageRegion.SetSize( fixedSize );
   m_FixedImageRegionDefined = true;
 
-  MovingImageType * movingPtr = const_cast< TMovingImage* >( this->GetInput(1) );
-  if( !movingPtr )
+  MovingImageType * moving = const_cast< TMovingImage* >( this->GetInput(1) );
+  if( !moving )
     {
     itkExceptionMacro( << "The MovingImage must be set before specifying the fixed image region." );
     }
-  movingPtr->UpdateOutputInformation();
+  moving->UpdateOutputInformation();
   m_MovingRadius = m_FixedRadius;
-  typename FixedImageType::SpacingType  fixedSpacing  = fixedPtr->GetSpacing();
-  typename MovingImageType::SpacingType movingSpacing = movingPtr->GetSpacing();
+  typename FixedImageType::SpacingType  fixedSpacing  = fixedImage->GetSpacing();
+  typename MovingImageType::SpacingType movingSpacing = moving->GetSpacing();
   if( !( fixedSpacing == movingSpacing ) )
     {
     for( unsigned int i = 0; i < ImageDimension; ++i )
@@ -117,17 +117,9 @@ void
 MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 ::GenerateOutputInformation()
 {
-  const MovingImageType * movingPtr = this->GetInput( 1 );
-  if( !movingPtr )
-    {
-    return;
-    }
+  const MovingImageType * moving = this->GetInput( 1 );
 
-  MetricImageType * outputPtr = this->GetOutput();
-  if( !outputPtr )
-    {
-    return;
-    }
+  MetricImageType * output = this->GetOutput();
 
   if( !m_MovingImageRegionDefined )
     {
@@ -140,17 +132,17 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
   metricRegion.SetIndex( metricIndex );
   // the Default is to to use the moving image size and spacing.
   metricRegion.SetSize( m_MovingImageRegion.GetSize() );
-  outputPtr->SetLargestPossibleRegion( metricRegion );
-  outputPtr->SetSpacing( movingPtr->GetSpacing() );
+  output->SetLargestPossibleRegion( metricRegion );
+  output->SetSpacing( moving->GetSpacing() );
 
   typename MetricImageType::IndexType metricStart( m_MovingImageRegion.GetIndex() );
 
   typename MetricImageType::PointType origin;
-  movingPtr->TransformIndexToPhysicalPoint( metricStart, origin );
-  outputPtr->SetOrigin( origin );
+  moving->TransformIndexToPhysicalPoint( metricStart, origin );
+  output->SetOrigin( origin );
 
   // The metric image direction is the same as the fixed image direction.
-  outputPtr->SetDirection( movingPtr->GetDirection() );
+  output->SetDirection( moving->GetDirection() );
 }
 
 
@@ -162,14 +154,14 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
   Superclass::GenerateInputRequestedRegion();
 
   // const cast so we can set the requested region.
-  FixedImageType * fixedPtr = const_cast< TFixedImage* >( this->GetInput(0) );
-  if( !fixedPtr )
+  FixedImageType * fixedImage = const_cast< TFixedImage* >( this->GetInput(0) );
+  if( !fixedImage )
     {
     return;
     }
 
-  MovingImageType * movingPtr = const_cast< TMovingImage* >( this->GetInput(1) );
-  if( !movingPtr )
+  MovingImageType * moving = const_cast< TMovingImage* >( this->GetInput(1) );
+  if( !moving )
     {
     return;
     }
@@ -184,19 +176,19 @@ MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
     itkExceptionMacro( << "MovingImageRegion has not been set" );
     }
 
-  fixedPtr->SetRequestedRegion( m_FixedImageRegion );
+  fixedImage->SetRequestedRegion( m_FixedImageRegion );
   MovingImageRegionType movingImageRequestedRegion = m_MovingImageRegion;
   movingImageRequestedRegion.PadByRadius( m_MovingRadius );
   // make sure the requested region is within the largest possible.
-  if ( movingImageRequestedRegion.Crop( movingPtr->GetLargestPossibleRegion() ) )
+  if ( movingImageRequestedRegion.Crop( moving->GetLargestPossibleRegion() ) )
     {
-    movingPtr->SetRequestedRegion( movingImageRequestedRegion );
+    moving->SetRequestedRegion( movingImageRequestedRegion );
     return;
     }
   else
     {
     // store what we tried( prior to try to crop )
-    movingPtr->SetRequestedRegion( movingImageRequestedRegion );
+    moving->SetRequestedRegion( movingImageRequestedRegion );
 
     itkExceptionMacro(<< "Moving image requested region is at least partially outside the LargestPossibleRegion.");
     }

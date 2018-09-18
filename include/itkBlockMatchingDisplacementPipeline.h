@@ -38,7 +38,6 @@
 #include "itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter.h"
 #include "itkBlockMatchingOptimizingInterpolationDisplacementCalculator.h"
 #include "itkBlockMatchingParabolicInterpolationDisplacementCalculator.h"
-#include "itkBlockMatchingSearchRegionImageInitializer.h"
 #include "itkBlockMatchingStrainWindowDisplacementCalculator.h"
 #include "itkBlockMatchingStrainWindowBlockAffineTransformCommand.h"
 #include "itkTextProgressBarCommand.h"
@@ -267,6 +266,8 @@ public:
   itkSetMacro( RegularizationMaximumNumberOfIterations, unsigned int );
   itkGetConstMacro( RegularizationMaximumNumberOfIterations, unsigned int );
 
+  /** Get the multi-resolution image registration method. */
+  itkGetModifiableObjectMacro( MultiResolutionRegistrationMethod, RegistrationMethodType );
 
 protected:
   DisplacementPipeline();
@@ -311,7 +312,7 @@ private:
 
   typename DisplacmentRegularizerType::Pointer m_Regularizer;
 
-  typename RegistrationMethodType::Pointer            m_MultiResRegistrationMethod;
+  typename RegistrationMethodType::Pointer            m_MultiResolutionRegistrationMethod;
   typename DisplacementCalculatorCommandType::Pointer m_DisplacementCalculatorCommand;
 
   UpsamplingRatioType m_UpsamplingRatio;

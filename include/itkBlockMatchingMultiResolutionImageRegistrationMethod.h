@@ -47,12 +47,14 @@ namespace BlockMatching
  * \ingroup RegistrationFilters
  * \ingroup Ultrasound
  * */
-template < class TFixedImage, class TMovingImage,
-  class TMetricImage, class TDisplacementImage, class TCoordRep >
+template < typename TFixedImage, typename TMovingImage,
+  typename TMetricImage, typename TDisplacementImage, typename TCoordRep >
 class ITK_TEMPLATE_EXPORT MultiResolutionImageRegistrationMethod :
   public ImageSource< TDisplacementImage >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionImageRegistrationMethod);
+
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, TDisplacementImage::ImageDimension);
 
@@ -183,10 +185,10 @@ protected:
 
   /** The size and spacing of the search region image at the lowest level is
    * used to generate the information for the output image. */
-  virtual void GenerateOutputInformation() override;
+  void GenerateOutputInformation() override;
 
   /** Generates the entire displacement image. */
-  virtual void EnlargeOutputRequestedRegion( DataObject* data ) override
+  void EnlargeOutputRequestedRegion( DataObject* data ) override
     {
     TDisplacementImage* output = this->GetOutput( 0 );
     output->SetRequestedRegionToLargestPossibleRegion();
@@ -194,7 +196,7 @@ protected:
 
   /** Method invoked by the pipeline in order to trigger the computation of
    * the registration. */
-  virtual void GenerateData() override;
+  void GenerateData() override;
 
   /** Initialize by setting the interconnects between the components.
       This method is executed at every level of the pyramid with the
@@ -236,8 +238,6 @@ protected:
   SearchRegionImageSourcePointer   m_SearchRegionImageSource;
 
 private:
-  MultiResolutionImageRegistrationMethod( const Self& ); // purposely not implemented
-  void operator=( const Self& ); //purposely not implemented
 };
 
 } // end namespace BlockMatching

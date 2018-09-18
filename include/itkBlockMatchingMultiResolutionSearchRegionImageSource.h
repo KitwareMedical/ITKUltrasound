@@ -30,8 +30,8 @@ namespace BlockMatching
 {
 
 // Forward declaration.
-template < class TFixedImageF, class TMovingImageF,
-           class TMetricImage, class TDisplacementImageF, class TCoordRep >
+template < typename TFixedImageF, typename TMovingImageF,
+           typename TMetricImage, typename TDisplacementImageF, typename TCoordRep >
 class MultiResolutionImageRegistrationMethod;
 
 
@@ -47,11 +47,13 @@ class MultiResolutionImageRegistrationMethod;
  *
  * \ingroup Ultrasound
  */
-template < class TFixedImage, class TMovingImage, class TDisplacementImage >
+template < typename TFixedImage, typename TMovingImage, typename TDisplacementImage >
 class ITK_TEMPLATE_EXPORT MultiResolutionSearchRegionImageSource :
   public ImageSource< Image< typename TMovingImage::RegionType, TMovingImage::ImageDimension > >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionSearchRegionImageSource);
+
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, TMovingImage::ImageDimension);
 
@@ -158,8 +160,8 @@ public:
   virtual void SetOverlapSchedule( const double& schedule );
 
   /** So that it can call SetCurrentLevel(). */
-  template < class TFixedImageF, class TMovingImageF,
-             class TMetricImage, class TDisplacementImageF, class TCoordRep >
+  template < typename TFixedImageF, typename TMovingImageF,
+             typename TMetricImage, typename TDisplacementImageF, typename TCoordRep >
   friend class MultiResolutionImageRegistrationMethod;
 
   itkGetConstObjectMacro( PreviousDisplacements, DisplacementImageType );
@@ -178,9 +180,9 @@ protected:
 
   MultiResolutionSearchRegionImageSource();
 
-  virtual void BeforeThreadedGenerateData() override;
+  void BeforeThreadedGenerateData() override;
 
-  virtual void GenerateOutputInformation() override;
+  void GenerateOutputInformation() override;
 
   typename FixedImageType::Pointer  m_FixedImage;
   typename MovingImageType::Pointer m_MovingImage;
@@ -198,8 +200,6 @@ protected:
   DisplacementResamplerPointer m_DisplacementResampler;
 
 private:
-  MultiResolutionSearchRegionImageSource( const Self & );
-  void operator=( const Self & );
 };
 
 } // end namespace itk

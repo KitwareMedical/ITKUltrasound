@@ -89,12 +89,10 @@ ImageRegistrationMethod< TFixedImage, TMovingImage,
   Superclass::GenerateOutputInformation();
 
   typename ImageType::Pointer output = this->GetOutput();
-  if( !output )
-    return;
 
   // We do this here instead of GenerateData() so the
   // MetricImageToDisplacementCalculator has a chance to modify the input
-  // requested region based on the displacment requested region.
+  // requested region based on the displacement requested region.
   this->m_MetricImageToDisplacementCalculator->SetDisplacementImage(
     output.GetPointer() );
 }
@@ -134,6 +132,7 @@ ImageRegistrationMethod< TFixedImage, TMovingImage,
     ->ModifyEnlargeOutputRequestedRegion( data );
 }
 
+
 template < typename TFixedImage, typename TMovingImage,
   typename TMetricImage, typename TDisplacementImage, typename TCoordRep >
 void
@@ -146,10 +145,6 @@ ImageRegistrationMethod< TFixedImage, TMovingImage,
   this->Initialize();
 
   ImageType * output = this->GetOutput();
-  if( !output )
-    {
-    return;
-    }
 
   RegionType requestedRegion = output->GetRequestedRegion();
   typedef ImageRegionIteratorWithIndex< ImageType > IteratorType;

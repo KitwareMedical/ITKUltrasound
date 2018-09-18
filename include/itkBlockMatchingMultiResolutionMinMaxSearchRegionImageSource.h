@@ -31,7 +31,7 @@ namespace BlockMatching
  *
  * The search region size is a factor of the matching block size ( should be 1.0
  * or higher ).  This factor is set at the bottom level at top level and
- * linearly interpolated at in between levels.
+ * linearly interpolated between levels.
  *
  * \todo rename this from 'MinMax' to 'TopBottomFactor'.
  *

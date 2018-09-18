@@ -92,10 +92,10 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
   m_Regularizer->SetMetricLowerBound( -1.0 );
   m_Regularizer->SetDisplacementCalculator( m_StrainWindower );
 
-  m_MultiResRegistrationMethod = RegistrationMethodType::New();
-  m_MultiResRegistrationMethod->SetBlockRadiusCalculator( m_BlockRadiusCalculator );
-  m_MultiResRegistrationMethod->SetSearchRegionImageSource( m_SearchRegionImageSource );
-  m_MultiResRegistrationMethod->SetImageRegistrationMethod( m_LevelRegistrationMethod );
+  m_MultiResolutionRegistrationMethod = RegistrationMethodType::New();
+  m_MultiResolutionRegistrationMethod->SetBlockRadiusCalculator( m_BlockRadiusCalculator );
+  m_MultiResolutionRegistrationMethod->SetSearchRegionImageSource( m_SearchRegionImageSource );
+  m_MultiResolutionRegistrationMethod->SetImageRegistrationMethod( m_LevelRegistrationMethod );
   m_DisplacementCalculatorCommand = DisplacementCalculatorCommandType::New();
   m_DisplacementCalculatorCommand->SetLevel0ToNMinus1DisplacementCalculator( m_StrainWindower );
   m_DisplacementCalculatorCommand->SetLevelNDisplacementCalculator( m_FinalInterpolator );
@@ -131,14 +131,14 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
 {
   this->SetupPipeline();
 
-  m_MultiResRegistrationMethod->UpdateOutputInformation();
+  m_MultiResolutionRegistrationMethod->UpdateOutputInformation();
 
   DisplacementImageType* output = this->GetOutput( 0 );
   if( !output )
     {
     return;
     }
-  output->CopyInformation( m_MultiResRegistrationMethod->GetOutput( 0 ) );
+  output->CopyInformation( m_MultiResolutionRegistrationMethod->GetOutput( 0 ) );
 }
 
 
@@ -284,16 +284,15 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
 
   if( m_UpsamplingRatio[0] == 1.0 && m_UpsamplingRatio[1] == 1.0 )
     {
-    m_MultiResRegistrationMethod->SetFixedImage( fixed );
-    m_MultiResRegistrationMethod->SetMovingImage( moving );
+    m_MultiResolutionRegistrationMethod->SetFixedImage( fixed );
+    m_MultiResolutionRegistrationMethod->SetMovingImage( moving );
     }
   else
     {
-    m_MultiResRegistrationMethod->SetFixedImage( m_FixedResampler->GetOutput() );
-    m_MultiResRegistrationMethod->SetMovingImage( m_MovingResampler->GetOutput() );
+    m_MultiResolutionRegistrationMethod->SetFixedImage( m_FixedResampler->GetOutput() );
+    m_MultiResolutionRegistrationMethod->SetMovingImage( m_MovingResampler->GetOutput() );
     }
-  m_MultiResRegistrationMethod->SetSchedules( pyramidSchedule, pyramidSchedule );
-  m_MultiResRegistrationMethod->RemoveAllObservers();
+  m_MultiResolutionRegistrationMethod->SetSchedules( pyramidSchedule, pyramidSchedule );
 }
 
 
@@ -307,7 +306,7 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
   this->AllocateOutputs();
 
   // Set the displacement calculator and regularizer iterations at every level.
-  m_MultiResRegistrationMethod->GetImageRegistrationMethod()->SetMetricImageToDisplacementCalculator( m_Regularizer );
+  m_MultiResolutionRegistrationMethod->GetImageRegistrationMethod()->SetMetricImageToDisplacementCalculator( m_Regularizer );
   //if ( args.maximumIterations == 0 )
     //{
     //displacementCalculatorCommand->SetLevel0ToNMinus1RegularizerIterations( 0 );
@@ -317,11 +316,11 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
     m_DisplacementCalculatorCommand->SetLevel0ToNMinus1RegularizerIterations( 3 );
     //}
   m_DisplacementCalculatorCommand->SetLevelNRegularizerIterations( m_RegularizationMaximumNumberOfIterations );
-  m_DisplacementCalculatorCommand->SetMultiResolutionMethod( m_MultiResRegistrationMethod );
-  m_MultiResRegistrationMethod->AddObserver( itk::IterationEvent(), m_DisplacementCalculatorCommand );
-  m_MultiResRegistrationMethod->GraftOutput( this->GetOutput() );
-  m_MultiResRegistrationMethod->Update();
-  this->GraftOutput( m_MultiResRegistrationMethod->GetOutput() );
+  m_DisplacementCalculatorCommand->SetMultiResolutionMethod( m_MultiResolutionRegistrationMethod );
+  m_MultiResolutionRegistrationMethod->AddObserver( itk::IterationEvent(), m_DisplacementCalculatorCommand );
+  m_MultiResolutionRegistrationMethod->GraftOutput( this->GetOutput() );
+  m_MultiResolutionRegistrationMethod->Update();
+  this->GraftOutput( m_MultiResolutionRegistrationMethod->GetOutput() );
 }
 
 } // end namespace BlockMatching

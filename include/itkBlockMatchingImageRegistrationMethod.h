@@ -55,6 +55,8 @@ class ITK_TEMPLATE_EXPORT ImageRegistrationMethod :
     TDisplacementImage::ImageDimension >, TDisplacementImage >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(ImageRegistrationMethod);
+
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int,
                       TDisplacementImage::ImageDimension);
@@ -180,16 +182,16 @@ protected:
   ImageRegistrationMethod();
   virtual ~ImageRegistrationMethod() {}
 
-  virtual void GenerateOutputInformation() override;
+  void GenerateOutputInformation() override;
 
-  virtual void GenerateInputRequestedRegion() override;
+  void GenerateInputRequestedRegion() override;
 
-  virtual void EnlargeOutputRequestedRegion( DataObject * data ) override;
+  void EnlargeOutputRequestedRegion( DataObject * data ) override;
 
   /** Initialize by setting the interconnects between the components. */
   virtual void Initialize();
 
-  virtual void GenerateData() override;
+  void GenerateData() override;
 
   typename FixedImageType::Pointer  m_FixedImage;
   typename MovingImageType::Pointer m_MovingImage;
@@ -201,8 +203,6 @@ protected:
   RadiusType    m_Radius;
 
 private:
-  ImageRegistrationMethod( const Self& ); // purposely not implemented
-  void operator=( const Self& ); // purposely not implemented
 };
 
 } // end namespace BlockMatching

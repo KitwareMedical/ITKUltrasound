@@ -33,11 +33,7 @@ void
 MultiResolutionMinMaxSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >
 ::DynamicThreadedGenerateData( const OutputRegionType& outputRegion )
 {
-  OutputImageType * outputPtr = this->GetOutput();
-  if( !outputPtr )
-    {
-    return;
-    }
+  OutputImageType * output = this->GetOutput();
 
   typedef typename MovingImageType::IndexType IndexType;
 
@@ -66,11 +62,11 @@ MultiResolutionMinMaxSearchRegionImageSource< TFixedImage, TMovingImage, TDispla
 
   if( this->m_CurrentLevel == 0 )
     {
-    ImageRegionIteratorWithIndex< OutputImageType > it( outputPtr, outputRegion );
+    ImageRegionIteratorWithIndex< OutputImageType > it( output, outputRegion );
     for( it.GoToBegin(); !it.IsAtEnd(); ++it )
       {
       index = it.GetIndex();
-      outputPtr->TransformIndexToPhysicalPoint( index, point );
+      output->TransformIndexToPhysicalPoint( index, point );
       this->m_MovingImage->TransformPhysicalPointToIndex( point, index );
       region.SetIndex( index );
       region.SetSize( unitySize );
@@ -84,7 +80,7 @@ MultiResolutionMinMaxSearchRegionImageSource< TFixedImage, TMovingImage, TDispla
     }
   else
     {
-    ImageRegionIteratorWithIndex< OutputImageType > it( outputPtr, outputRegion );
+    ImageRegionIteratorWithIndex< OutputImageType > it( output, outputRegion );
     ImageRegionConstIterator< DisplacementImageType > dispIt( this->m_DisplacementResampler->GetOutput(),
                                                               outputRegion );
 
@@ -94,7 +90,7 @@ MultiResolutionMinMaxSearchRegionImageSource< TFixedImage, TMovingImage, TDispla
          ++dispIt )
       {
       index = it.GetIndex();
-      outputPtr->TransformIndexToPhysicalPoint( index, point );
+      output->TransformIndexToPhysicalPoint( index, point );
       // resample displacement image
       this->m_MovingImage->TransformPhysicalPointToIndex( point + dispIt.Get(),
                                                           index );
