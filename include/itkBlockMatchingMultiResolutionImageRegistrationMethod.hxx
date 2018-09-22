@@ -28,8 +28,8 @@ namespace itk
 namespace BlockMatching
 {
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage, class TDisplacementImage, class TCoordRep>
+template <typename TFixedImage, typename TMovingImage,
+          typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
 MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
                                        TMetricImage, TDisplacementImage, TCoordRep>
 ::MultiResolutionImageRegistrationMethod() :
@@ -51,8 +51,8 @@ MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
 }
 
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage, class TDisplacementImage, class TCoordRep>
+template <typename TFixedImage, typename TMovingImage,
+          typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
 unsigned long
 MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
                                        TMetricImage, TDisplacementImage, TCoordRep>
@@ -77,8 +77,8 @@ MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
 }
 
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage, class TDisplacementImage, class TCoordRep>
+template <typename TFixedImage, typename TMovingImage,
+          typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
 void
 MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
                                        TMetricImage, TDisplacementImage, TCoordRep>
@@ -88,8 +88,8 @@ MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
 }
 
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage, class TDisplacementImage, class TCoordRep>
+template <typename TFixedImage, typename TMovingImage,
+          typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
 void
 MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
                                        TMetricImage, TDisplacementImage, TCoordRep>
@@ -110,8 +110,8 @@ MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
  * Set the schedules for the fixed and moving image pyramid.  Taken form
  * itkMultiResolutionImageRegistrationMethod.
  */
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage, class TDisplacementImage, class TCoordRep>
+template <typename TFixedImage, typename TMovingImage,
+          typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
 void
 MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
                                        TMetricImage, TDisplacementImage, TCoordRep>
@@ -142,8 +142,8 @@ MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
 }
 
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage, class TDisplacementImage, class TCoordRep>
+template <typename TFixedImage, typename TMovingImage,
+          typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
 void
 MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
                                        TMetricImage, TDisplacementImage, TCoordRep>
@@ -161,8 +161,8 @@ MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
 }
 
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage, class TDisplacementImage, class TCoordRep>
+template <typename TFixedImage, typename TMovingImage,
+          typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
 void
 MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
                                        TMetricImage, TDisplacementImage, TCoordRep>
@@ -198,8 +198,8 @@ MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
 }
 
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage, class TDisplacementImage, class TCoordRep>
+template <typename TFixedImage, typename TMovingImage,
+          typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
 void
 MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
                                        TMetricImage, TDisplacementImage, TCoordRep>
@@ -240,8 +240,8 @@ MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
 }
 
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage, class TDisplacementImage, class TCoordRep>
+template <typename TFixedImage, typename TMovingImage,
+          typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
 void
 MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
                                        TMetricImage, TDisplacementImage, TCoordRep>
@@ -258,8 +258,8 @@ MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
 }
 
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage, class TDisplacementImage, class TCoordRep>
+template <typename TFixedImage, typename TMovingImage,
+          typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
 void
 MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
                                        TMetricImage, TDisplacementImage, TCoordRep>
@@ -276,8 +276,8 @@ MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
 }
 
 
-template <class TFixedImage, class TMovingImage,
-          class TMetricImage, class TDisplacementImage, class TCoordRep>
+template <typename TFixedImage, typename TMovingImage,
+          typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
 void
 MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
                                        TMetricImage, TDisplacementImage, TCoordRep>
@@ -300,6 +300,7 @@ MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
     m_SearchRegionImageSource->SetMovingImage( m_MovingImagePyramid->GetOutput( m_CurrentLevel ) );
     m_SearchRegionImageSource->SetCurrentLevel( m_CurrentLevel );
     m_SearchRegionImageSource->SetFixedBlockRadius( m_BlockRadiusCalculator->Compute( m_CurrentLevel ) );
+    m_SearchRegionImageSource->UpdateLargestPossibleRegion();
     m_ImageRegistrationMethod->SetRadius( m_BlockRadiusCalculator->Compute( m_CurrentLevel ) );
     m_ImageRegistrationMethod->SetFixedImage(  m_FixedImagePyramid->GetOutput( m_CurrentLevel ) );
     m_ImageRegistrationMethod->SetMovingImage( m_MovingImagePyramid->GetOutput( m_CurrentLevel ) );

@@ -53,9 +53,8 @@ public:
   void Execute(const itk::Object * object, const itk::EventObject & event) override;
 
   typedef TMultiResolutionMethod                      MultiResolutionMethodType;
-  typedef typename MultiResolutionMethodType::Pointer MultiResolutionMethodPointer;
 
-  void SetMultiResolutionMethod( MultiResolutionMethodPointer& method )
+  void SetMultiResolutionMethod( MultiResolutionMethodType * method )
     {
     m_MultiResolutionMethod = method;
     }
@@ -78,7 +77,7 @@ protected:
     }
   virtual ~MultiResolutionIterationCommand() {};
 
-  MultiResolutionMethodPointer   m_MultiResolutionMethod;
+  typename MultiResolutionMethodType::Pointer m_MultiResolutionMethod;
 
   FixedImagePyramidPointer       m_FixedImagePyramid;
   MovingImagePyramidPointer      m_MovingImagePyramid;

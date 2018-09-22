@@ -58,14 +58,10 @@ MultiResolutionSearchRegionWriterCommand< TMultiResolutionMethod >
 
   const unsigned long level = this->m_MultiResolutionMethod->GetCurrentLevel();
 
-  this->m_SearchRegionImageSource->UpdateLargestPossibleRegion();
   typename SearchRegionImageType::ConstPointer searchRegionImage = this->m_SearchRegionImageSource->GetOutput();
   m_SearchRegionImageComponent->CopyInformation( searchRegionImage );
   m_SearchRegionImageComponent->SetRegions( searchRegionImage->GetBufferedRegion() );
   m_SearchRegionImageComponent->Allocate();
-
-  std::cout << "Writing SearchRegionImage images..." << std::endl;
-
 
   if( m_OutputFilePrefix.size() == 0 )
     {

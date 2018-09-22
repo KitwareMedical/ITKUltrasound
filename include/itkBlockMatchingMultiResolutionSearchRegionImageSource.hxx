@@ -71,18 +71,14 @@ void
 MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacement >
 ::GenerateOutputInformation()
 {
-  OutputImageType * outputPtr = this->GetOutput();
-  if( !outputPtr )
-    {
-    return;
-    }
+  OutputImageType * output = this->GetOutput();
 
   if( m_FixedImage.IsNull() )
     {
     itkExceptionMacro( << "Fixed Image is not present." );
     }
   m_FixedImage->UpdateOutputInformation();
-  outputPtr->SetDirection( m_FixedImage->GetDirection() );
+  output->SetDirection( m_FixedImage->GetDirection() );
 
   // Set origin.  The first block is in the corner of the fixed image.
   typename FixedImageType::PointType  fixedOrigin = m_FixedImage->GetOrigin();
@@ -108,14 +104,14 @@ MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacement
     origin[i] = fixedOrigin[i] +
       + ( fixedIndex[i] + m_FixedBlockRadius[i] ) * fixedSpacing[i];
     }
-  outputPtr->SetOrigin( origin );
+  output->SetOrigin( origin );
 
   typename OutputImageType::SpacingType spacing;
   for( unsigned int i = 0; i < ImageDimension; ++i )
     {
     spacing[i] = 2 * m_FixedBlockRadius[i] * fixedSpacing[i] * m_OverlapSchedule( m_CurrentLevel, i );
     }
-  outputPtr->SetSpacing( spacing );
+  output->SetSpacing( spacing );
 
   OutputRegionType                     region;
   typename OutputRegionType::IndexType index;
@@ -125,11 +121,10 @@ MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacement
   typename FixedImageType::SizeType fixedSize = m_FixedImage->GetLargestPossibleRegion().GetSize();
   for( unsigned int i = 0; i < ImageDimension; ++i )
     {
-    size[i] = static_cast< typename OutputRegionType::SizeType::SizeValueType >( vcl_floor((
-    fixedSize[i] - m_FixedBlockRadius[i] - 1 ) * fixedSpacing[i] / spacing[i] ));
+    size[i] = static_cast< SizeValueType >( std::floor(( fixedSize[i] - m_FixedBlockRadius[i] * 2 - 2 ) * fixedSpacing[i] / spacing[i] ) - 2);
     }
   region.SetSize( size );
-  outputPtr->SetLargestPossibleRegion( region );
+  output->SetLargestPossibleRegion( region );
 }
 
 
@@ -144,16 +139,12 @@ MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacement
     // component that can specify a neumann boundary condition
     // ditto with FixedSearchRegionImageSource
     m_DisplacementResampler->SetInput( this->m_PreviousDisplacements );
-    typename OutputImageType::Pointer outputPtr = this->GetOutput();
-    if( !outputPtr )
-      {
-      return;
-      }
-    m_DisplacementResampler->SetSize(             outputPtr->GetRequestedRegion().GetSize() );
-    m_DisplacementResampler->SetOutputStartIndex( outputPtr->GetRequestedRegion().GetIndex() );
-    m_DisplacementResampler->SetOutputSpacing(    outputPtr->GetSpacing() );
-    m_DisplacementResampler->SetOutputOrigin(     outputPtr->GetOrigin() );
-    m_DisplacementResampler->SetOutputDirection(  outputPtr->GetDirection() );
+    typename OutputImageType::Pointer output = this->GetOutput();
+    m_DisplacementResampler->SetSize(             output->GetRequestedRegion().GetSize() );
+    m_DisplacementResampler->SetOutputStartIndex( output->GetRequestedRegion().GetIndex() );
+    m_DisplacementResampler->SetOutputSpacing(    output->GetSpacing() );
+    m_DisplacementResampler->SetOutputOrigin(     output->GetOrigin() );
+    m_DisplacementResampler->SetOutputDirection(  output->GetDirection() );
     m_DisplacementResampler->UpdateLargestPossibleRegion();
     }
 }
