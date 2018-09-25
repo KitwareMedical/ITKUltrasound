@@ -307,14 +307,7 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
 
   // Set the displacement calculator and regularizer iterations at every level.
   m_MultiResolutionRegistrationMethod->GetImageRegistrationMethod()->SetMetricImageToDisplacementCalculator( m_Regularizer );
-  //if ( args.maximumIterations == 0 )
-    //{
-    //displacementCalculatorCommand->SetLevel0ToNMinus1RegularizerIterations( 0 );
-    //}
-  //else
-    //{
-    m_DisplacementCalculatorCommand->SetLevel0ToNMinus1RegularizerIterations( 3 );
-    //}
+  m_DisplacementCalculatorCommand->SetLevel0ToNMinus1RegularizerIterations( 0 );
   m_DisplacementCalculatorCommand->SetLevelNRegularizerIterations( m_RegularizationMaximumNumberOfIterations );
   m_DisplacementCalculatorCommand->SetMultiResolutionMethod( m_MultiResolutionRegistrationMethod );
   m_MultiResolutionRegistrationMethod->AddObserver( itk::IterationEvent(), m_DisplacementCalculatorCommand );
