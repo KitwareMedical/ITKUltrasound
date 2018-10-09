@@ -54,11 +54,7 @@ FFTWComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
 {
   Superclass::BeforeThreadedGenerateData();
 
-  typename OutputImageType::Pointer      outputPtr = this->GetOutput();
-  if ( !outputPtr )
-    {
-    return;
-    }
+  OutputImageType * outputPtr = this->GetOutput();
 
   const typename OutputImageType::SizeType& outputSize = outputPtr->GetRequestedRegion().GetSize();
   const unsigned int lineSize = outputSize[this->m_Direction];
@@ -81,32 +77,32 @@ FFTWComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
     for( int i = 0; i < threads; i++ )
       {
       try
-  {
-  m_InputBufferArray[i]  = new typename FFTW1DProxyType::ComplexType[lineSize];
-  m_OutputBufferArray[i] = new typename FFTW1DProxyType::ComplexType[lineSize];
-  }
+        {
+        m_InputBufferArray[i]  = new typename FFTW1DProxyType::ComplexType[lineSize];
+        m_OutputBufferArray[i] = new typename FFTW1DProxyType::ComplexType[lineSize];
+        }
       catch( std::bad_alloc & )
-  {
-  itkExceptionMacro("Problem allocating memory for internal computations");
-  }
+        {
+        itkExceptionMacro("Problem allocating memory for internal computations");
+        }
       if( this->m_TransformDirection == Superclass::DIRECT )
-  {
-  m_PlanArray[i] = FFTW1DProxyType::Plan_dft_1d( lineSize,
-           m_InputBufferArray[i],
-           m_OutputBufferArray[i],
-           FFTW_FORWARD,
-           FFTW_ESTIMATE,
-           threads );
-  }
+        {
+        m_PlanArray[i] = FFTW1DProxyType::Plan_dft_1d( lineSize,
+                 m_InputBufferArray[i],
+                 m_OutputBufferArray[i],
+                 FFTW_FORWARD,
+                 FFTW_ESTIMATE,
+                 1 );
+        }
       else // m_TransformDirection == INVERSE
-  {
-  m_PlanArray[i] = FFTW1DProxyType::Plan_dft_1d( lineSize,
-           m_InputBufferArray[i],
-           m_OutputBufferArray[i],
-           FFTW_BACKWARD,
-           FFTW_ESTIMATE,
-           threads );
-  }
+        {
+        m_PlanArray[i] = FFTW1DProxyType::Plan_dft_1d( lineSize,
+                 m_InputBufferArray[i],
+                 m_OutputBufferArray[i],
+                 FFTW_BACKWARD,
+                 FFTW_ESTIMATE,
+                 1 );
+        }
       }
     this->m_LastImageSize = lineSize;
     this->m_PlanComputed = true;
@@ -120,13 +116,8 @@ FFTWComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
 ::ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType threadID )
 {
   // get pointers to the input and output
-  typename InputImageType::ConstPointer  inputPtr  = this->GetInput();
-  typename OutputImageType::Pointer      outputPtr = this->GetOutput();
-
-  if ( !inputPtr || !outputPtr )
-    {
-    return;
-    }
+  const InputImageType * inputPtr  = this->GetInput();
+  OutputImageType * outputPtr = this->GetOutput();
 
   const typename OutputImageType::SizeType& outputSize = outputPtr->GetRequestedRegion().GetSize();
   const unsigned int lineSize = outputSize[this->m_Direction];
