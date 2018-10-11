@@ -54,11 +54,7 @@ FFTWForward1DFFTImageFilter< TInputImage, TOutputImage >
 {
   Superclass::BeforeThreadedGenerateData();
 
-  typename OutputImageType::Pointer      outputPtr = this->GetOutput();
-  if ( !outputPtr )
-    {
-    return;
-    }
+  OutputImageType * outputPtr = this->GetOutput();
 
   const typename OutputImageType::SizeType& outputSize = outputPtr->GetRequestedRegion().GetSize();
   const unsigned int lineSize = outputSize[this->GetDirection()];
@@ -66,7 +62,7 @@ FFTWForward1DFFTImageFilter< TInputImage, TOutputImage >
   if( this->m_PlanComputed )
     {
     // if the image sizes aren't the same,
-    // we have to comput the plan again
+    // we have to compute the plan again
     if( this->m_LastImageSize != lineSize )
       {
       this->DestroyPlans();
@@ -94,7 +90,7 @@ FFTWForward1DFFTImageFilter< TInputImage, TOutputImage >
                m_OutputBufferArray[i],
                FFTW_FORWARD,
                FFTW_ESTIMATE,
-               threads );
+               1 );
       }
     this->m_LastImageSize = lineSize;
     this->m_PlanComputed = true;
@@ -108,13 +104,8 @@ FFTWForward1DFFTImageFilter< TInputImage, TOutputImage >
 ::ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType threadID )
 {
   // get pointers to the input and output
-  typename InputImageType::ConstPointer  inputPtr  = this->GetInput();
-  typename OutputImageType::Pointer      outputPtr = this->GetOutput();
-
-  if ( !inputPtr || !outputPtr )
-    {
-    return;
-    }
+  const InputImageType * inputPtr = this->GetInput();
+  OutputImageType * outputPtr = this->GetOutput();
 
   typedef itk::ImageLinearConstIteratorWithIndex< InputImageType >  InputIteratorType;
   typedef itk::ImageLinearIteratorWithIndex< OutputImageType >      OutputIteratorType;

@@ -11,7 +11,7 @@ script:
 - pushd ..
 - git clone https://github.com/InsightSoftwareConsortium/ITKSplitComponents
 - pushd ITKSplitComponents
-- curl -L https://rawgit.com/InsightSoftwareConsortium/ITKPythonPackage/master/scripts/macpython-download-cache-and-build-module-wheels.sh -O
+- curl -L https://raw.githubusercontent.com/InsightSoftwareConsortium/ITKPythonPackage/master/scripts/macpython-download-cache-and-build-module-wheels.sh -O
 - chmod u+x macpython-download-cache-and-build-module-wheels.sh
 - ./macpython-download-cache-and-build-module-wheels.sh 3.6
 - popd

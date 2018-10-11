@@ -26,6 +26,7 @@
 #include "itkImageLinearConstIteratorWithIndex.h"
 #include "itkImageLinearIteratorWithIndex.h"
 #include "itkMetaDataObject.h"
+#include "itkMultiThreaderBase.h"
 
 #if defined( ITK_USE_FFTWF ) || defined( ITK_USE_FFTWD )
 
@@ -53,11 +54,7 @@ FFTWInverse1DFFTImageFilter< TInputImage, TOutputImage >
 {
   Superclass::BeforeThreadedGenerateData();
 
-  typename OutputImageType::Pointer      outputPtr = this->GetOutput();
-  if ( !outputPtr )
-    {
-    return;
-    }
+  OutputImageType * outputPtr = this->GetOutput();
 
   const typename OutputImageType::SizeType& outputSize = outputPtr->GetRequestedRegion().GetSize();
   const unsigned int lineSize = outputSize[this->m_Direction];
@@ -80,20 +77,20 @@ FFTWInverse1DFFTImageFilter< TInputImage, TOutputImage >
     for( int i = 0; i < threads; i++ )
       {
       try
-  {
-  m_InputBufferArray[i]  = new typename FFTW1DProxyType::ComplexType[lineSize];
-  m_OutputBufferArray[i] = new typename FFTW1DProxyType::ComplexType[lineSize];
-  }
+        {
+        m_InputBufferArray[i]  = new typename FFTW1DProxyType::ComplexType[lineSize];
+        m_OutputBufferArray[i] = new typename FFTW1DProxyType::ComplexType[lineSize];
+        }
       catch( std::bad_alloc & )
-  {
-  itkExceptionMacro("Problem allocating memory for internal computations");
-  }
+        {
+        itkExceptionMacro("Problem allocating memory for internal computations");
+        }
       m_PlanArray[i] = FFTW1DProxyType::Plan_dft_1d( lineSize,
                m_InputBufferArray[i],
                m_OutputBufferArray[i],
                FFTW_BACKWARD,
                FFTW_ESTIMATE,
-               threads );
+               1 );
       }
     this->m_LastImageSize = lineSize;
     this->m_PlanComputed = true;
@@ -109,11 +106,6 @@ FFTWInverse1DFFTImageFilter< TInputImage, TOutputImage >
   // get pointers to the input and output
   const InputImageType * inputPtr  = this->GetInput();
   OutputImageType * outputPtr = this->GetOutput();
-
-  if ( !inputPtr || !outputPtr )
-    {
-    return;
-    }
 
   const typename OutputImageType::SizeType& outputSize = outputPtr->GetRequestedRegion().GetSize();
   const unsigned int lineSize = outputSize[this->m_Direction];

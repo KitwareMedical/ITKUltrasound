@@ -9,7 +9,7 @@ install:
   - cd ..
   - git clone https://github.com/InsightSoftwareConsortium/ITKSplitComponents
   - cd ITKSplitComponents
-  - curl -L https://rawgit.com/InsightSoftwareConsortium/ITKPythonPackage/master/scripts/windows-download-cache-and-build-module-wheels.ps1 -O
+  - curl -L https://raw.githubusercontent.com/InsightSoftwareConsortium/ITKPythonPackage/master/scripts/windows-download-cache-and-build-module-wheels.ps1 -O
   - ps: .\windows-download-cache-and-build-module-wheels.ps1
   - cd ..
   - git clone https://github.com/InsightSoftwareConsortium/ITKBSplineGradient

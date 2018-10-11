@@ -18,10 +18,13 @@
 #ifndef itkFFTWCommonExtended_h
 #define itkFFTWCommonExtended_h
 
-#include "itkFFTWGlobalConfiguration.h"
-
 #if defined(ITK_USE_FFTWF) || defined(ITK_USE_FFTWD)
+#if defined( ITK_USE_CUFFTW )
+#include "cufftw.h"
+#else
+#include "itkFFTWGlobalConfiguration.h"
 #include "fftw3.h"
+#endif
 #endif
 
 #include "itkMutexLockHolder.h"
@@ -63,8 +66,12 @@ public:
                                   unsigned flags,
                                   int threads=1)
     {
+#ifndef ITK_USE_CUFFTW
     MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftwf_plan_with_nthreads(threads);
+#else
+    (void)threads;
+#endif
     PlanType plan = fftwf_plan_dft_c2r_1d(n,in,out,flags);
     return plan;
     }
@@ -75,8 +82,12 @@ public:
                                   unsigned flags,
                                   int threads=1)
     {
+#ifndef ITK_USE_CUFFTW
     MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftwf_plan_with_nthreads(threads);
+#else
+    (void)threads;
+#endif
     PlanType plan = fftwf_plan_dft_c2r_2d(nx,ny,in,out,flags);
     return plan;
     }
@@ -88,8 +99,12 @@ public:
                                   unsigned flags,
                                   int threads=1)
     {
+#ifndef ITK_USE_CUFFTW
     MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftwf_plan_with_nthreads(threads);
+#else
+    (void)threads;
+#endif
     PlanType plan = fftwf_plan_dft_c2r_3d(nx,ny,nz,in,out,flags);
     return plan;
     }
@@ -100,8 +115,12 @@ public:
                                unsigned flags,
                                int threads=1)
     {
+#ifndef ITK_USE_CUFFTW
     MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftwf_plan_with_nthreads(threads);
+#else
+    (void)threads;
+#endif
     PlanType plan = fftwf_plan_dft_c2r(rank,n,in,out,flags);
     return plan;
     }
@@ -112,8 +131,12 @@ public:
                                   unsigned flags,
                                   int threads=1)
     {
+#ifndef ITK_USE_CUFFTW
     MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftwf_plan_with_nthreads(threads);
+#else
+    (void)threads;
+#endif
     PlanType plan = fftwf_plan_dft_r2c_1d(n,in,out,flags);
     return plan;
     }
@@ -124,8 +147,12 @@ public:
                                   unsigned flags,
                                   int threads=1)
     {
+#ifndef ITK_USE_CUFFTW
     MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftwf_plan_with_nthreads(threads);
+#else
+    (void)threads;
+#endif
     PlanType plan = fftwf_plan_dft_r2c_2d(nx,ny,in,out,flags);
     return plan;
     }
@@ -137,8 +164,12 @@ public:
                                   unsigned flags,
                                   int threads=1)
     {
+#ifndef ITK_USE_CUFFTW
     MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftwf_plan_with_nthreads(threads);
+#else
+    (void)threads;
+#endif
     PlanType plan = fftwf_plan_dft_r2c_3d(nx,ny,nz,in,out,flags);
     return plan;
     }
@@ -149,8 +180,12 @@ public:
                                unsigned flags,
                                int threads=1)
     {
+#ifndef ITK_USE_CUFFTW
     MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftwf_plan_with_nthreads(threads);
+#else
+    (void)threads;
+#endif
     PlanType plan = fftwf_plan_dft_r2c(rank,n,in,out,flags);
     return plan;
     }
@@ -161,8 +196,12 @@ public:
             unsigned flags,
             int threads=1)
     {
+#ifndef ITK_USE_CUFFTW
     MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftwf_plan_with_nthreads(threads);
+#else
+    (void)threads;
+#endif
     PlanType plan = fftwf_plan_dft_1d(n,in,out,sign,flags);
     return plan;
     }
@@ -197,8 +236,12 @@ public:
                                   unsigned flags,
                                   int threads=1)
     {
+#ifndef ITK_USE_CUFFTW
     MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftw_plan_with_nthreads(threads);
+#else
+    (void)threads;
+#endif
     PlanType plan = fftw_plan_dft_c2r_1d(n,in,out,flags);
     return plan;
     }
@@ -209,8 +252,12 @@ public:
                                   unsigned flags,
                                   int threads=1)
     {
+#ifndef ITK_USE_CUFFTW
     MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftw_plan_with_nthreads(threads);
+#else
+    (void)threads;
+#endif
     PlanType plan = fftw_plan_dft_c2r_2d(nx,ny,in,out,flags);
     return plan;
     }
@@ -222,8 +269,12 @@ public:
                                   unsigned flags,
                                   int threads=1)
     {
+#ifndef ITK_USE_CUFFTW
     MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftw_plan_with_nthreads(threads);
+#else
+    (void)threads;
+#endif
     PlanType plan = fftw_plan_dft_c2r_3d(nx,ny,nz,in,out,flags);
     return plan;
     }
@@ -234,8 +285,12 @@ public:
                                unsigned flags,
                                int threads=1)
     {
+#ifndef ITK_USE_CUFFTW
     MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftw_plan_with_nthreads(threads);
+#else
+    (void)threads;
+#endif
     PlanType plan = fftw_plan_dft_c2r(rank,n,in,out,flags);
     return plan;
     }
@@ -246,11 +301,16 @@ public:
                                   unsigned flags,
                                   int threads=1)
     {
+#ifndef ITK_USE_CUFFTW
     MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftw_plan_with_nthreads(threads);
+#else
+    (void)threads;
+#endif
     PlanType plan = fftw_plan_dft_r2c_1d(n,in,out,flags);
     return plan;
     }
+
   static PlanType Plan_dft_r2c_2d(int nx,
                                   int ny,
                                   PixelType *in,
@@ -258,11 +318,16 @@ public:
                                   unsigned flags,
                                   int threads=1)
     {
+#ifndef ITK_USE_CUFFTW
     MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftw_plan_with_nthreads(threads);
+#else
+    (void)threads;
+#endif
     PlanType plan = fftw_plan_dft_r2c_2d(nx,ny,in,out,flags);
     return plan;
     }
+
   static PlanType Plan_dft_r2c_3d(int nx,
                                   int ny,
                                   int nz,
@@ -271,11 +336,16 @@ public:
                                   unsigned flags,
                                   int threads=1)
     {
+#ifndef ITK_USE_CUFFTW
     MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftw_plan_with_nthreads(threads);
+#else
+    (void)threads;
+#endif
     PlanType plan = fftw_plan_dft_r2c_3d(nx,ny,nz,in,out,flags);
     return plan;
     }
+
   static PlanType Plan_dft_r2c(int rank,
                                const int *n,
                                PixelType *in,
@@ -283,8 +353,12 @@ public:
                                unsigned flags,
                                int threads=1)
     {
+#ifndef ITK_USE_CUFFTW
     MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftw_plan_with_nthreads(threads);
+#else
+    (void)threads;
+#endif
     PlanType plan = fftw_plan_dft_r2c(rank,n,in,out,flags);
     return plan;
     }
@@ -295,8 +369,12 @@ public:
             unsigned flags,
             int threads=1)
     {
+#ifndef ITK_USE_CUFFTW
     MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftw_plan_with_nthreads(threads);
+#else
+    (void)threads;
+#endif
     PlanType plan = fftw_plan_dft_1d(n,in,out,sign,flags);
     return plan;
     }
