@@ -26,14 +26,44 @@
 #include "itkImageRegionConstIteratorWithIndex.h"
 #include "itkImageRegionIterator.h"
 #include "itkImageRegionIteratorWithIndex.h"
-#include "itkSimpleFastMutexLock.h"
+#include "itkCompensatedSummation.h"
+
+namespace
+{
+
+template <typename T>
+struct identity {
+  using type = T;
+};
+
+template <typename T>
+using IdentityType = typename identity<T>::type;
+
+template< typename TFloat >
+TFloat
+AtomicCompensatedSummation( std::atomic< TFloat > & sum, IdentityType< TFloat > addition )
+{
+  if( addition == static_cast< TFloat >( 0.0 ) )
+    {
+    return sum;
+    }
+  TFloat old = sum;
+  using CompensatedSummationType = itk::CompensatedSummation< TFloat >;
+  CompensatedSummationType desired;
+  do {
+    desired.ResetToZero();
+    desired += old;
+    desired += addition;
+  } while ( !sum.compare_exchange_weak( old, desired.GetSum() ) );
+  return desired.GetSum();
+}
+
+}
 
 namespace itk
 {
 namespace BlockMatching
 {
-
-static SimpleFastMutexLock mutex;
 
 template< typename TMetricImage, typename TDisplacementImage >
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
@@ -109,8 +139,8 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 
   if( m_MeanChangeThresholdDefined && m_CurrentIteration > 0 )
     {
-    m_ChangeSum = 0.0;
-    m_ChangeCount = 0;
+    m_ChangeSum.store( 0.0 );
+    m_ChangeCount.store( 0 );
     // This adds up m_ChangeSum and m_ChangeCount.
     this->m_MultiThreader->template ParallelizeImageRegion<ImageDimension>(
       this->m_DisplacementImage->GetRequestedRegion(),
@@ -119,7 +149,7 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
           this->ThreadedMeanChange( outputRegion );
           },
       nullptr);
-    m_MeanChange = m_ChangeSum / static_cast< double >( m_ChangeCount );
+    m_MeanChange = m_ChangeSum.load() / static_cast< double >( m_ChangeCount.load() );
     }
 }
 
@@ -546,10 +576,8 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
       ++changeCount;
       }
     }
-  mutex.Lock();
-  this->m_ChangeSum += changeSum;
-  this->m_ChangeCount += changeCount;
-  mutex.Unlock();
+  AtomicCompensatedSummation< double >( this->m_ChangeSum, changeSum );
+  this->m_ChangeCount.fetch_add( changeCount );
 }
 
 template< typename TMetricImage, typename TDisplacementImage >

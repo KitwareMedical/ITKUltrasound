@@ -239,8 +239,8 @@ protected:
 
 private:
   /** Some helper quanitites for the mean change calculator. */
-  double             m_ChangeSum;
-  unsigned long long m_ChangeCount;
+  std::atomic< double >   m_ChangeSum;
+  std::atomic< uint64_t > m_ChangeCount;
 };
 
 } // end namespace itk
