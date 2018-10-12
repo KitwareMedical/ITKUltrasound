@@ -269,7 +269,7 @@ MultiResolutionSimilarityFunctionSearchRegionImageSource<
       // levels.
       for( unsigned int i = 0; i < ImageDimension; ++i )
         {
-        radius[i] = vcl_ceil( static_cast<float>( radiusIt.Get()[i] )
+        radius[i] = std::ceil( static_cast<float>( radiusIt.Get()[i] )
                               * static_cast<float>( this->m_PyramidSchedule( this->m_CurrentLevel - 1, i ) )
                               / static_cast<float>( this->m_PyramidSchedule( this->m_CurrentLevel, i ) ) );
         if( radius[i] < minimumSearchRegionRadius[i] )

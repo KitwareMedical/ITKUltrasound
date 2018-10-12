@@ -167,7 +167,7 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
     image = *it;
     for( dimIt2 = 0; dimIt2 < ImageDimension; dimIt2++ )
       {
-      radius[dimIt2] = static_cast< typename GaussianKernelRadiusType::SizeValueType >( vcl_ceil(
+      radius[dimIt2] = static_cast< typename GaussianKernelRadiusType::SizeValueType >( std::ceil(
       displacementSpacing[dimIt] * maxStrain[dimIt2] / metricSpacing[dimIt2] ));
       size[dimIt2] = radius[dimIt2] * 2 + 1;
       index[dimIt2] = -1 * radius[dimIt2];
@@ -186,12 +186,12 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
       index = imageIt.GetIndex();
       for( dimIt2 = 0; dimIt2 < ImageDimension; dimIt2++ )
         {
-        temp = vcl_abs( index[dimIt2] ) * metricSpacing[dimIt2];
+        temp = std::abs( index[dimIt2] ) * metricSpacing[dimIt2];
         temp2 = displacementSpacing[dimIt] * m_StrainSigma[dimIt2];
         neighborValue += temp * temp / ( temp2 * temp2 );
         }
       neighborValue *= -0.5;
-      imageIt.Set( vcl_exp( neighborValue ) );
+      imageIt.Set( std::exp( neighborValue ) );
       }
     }
 }
@@ -542,7 +542,7 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
          !it.IsAtEnd();
          ++it, ++priorIt )
       {
-      changeSum += vcl_abs( it.Get() - vcl_exp( priorIt.Get() ) );
+      changeSum += std::abs( it.Get() - std::exp( priorIt.Get() ) );
       ++changeCount;
       }
     }
