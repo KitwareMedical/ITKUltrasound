@@ -51,7 +51,7 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
   m_SearchRegionImageSource = SearchRegionImageSourceType::New();
 
   m_LevelRegistrationMethod = LevelRegistrationMethodType::New();
-  m_RegistrationObserver    = TextProgressBarCommand::New();
+  m_TextProgressBar    = TextProgressBarCommand::New();
 
   m_ParabolicInterpolator = ParabolicInterpolatorType::New();
   m_MaximumPixelInterpolator = MaximumPixelDisplacementCalculatorType::New();
@@ -118,7 +118,6 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
 
   m_RegularizationStrainSigma[0] = 0.075;
   m_RegularizationStrainSigma[1] = 0.15;
-
 }
 
 
@@ -134,10 +133,6 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
   m_MultiResolutionRegistrationMethod->UpdateOutputInformation();
 
   DisplacementImageType* output = this->GetOutput( 0 );
-  if( !output )
-    {
-    return;
-    }
   output->CopyInformation( m_MultiResolutionRegistrationMethod->GetOutput( 0 ) );
 }
 
@@ -231,7 +226,7 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
   m_LevelRegistrationMethod->RemoveAllObservers();
   if( m_LevelRegistrationMethodTextProgressBar )
     {
-    m_LevelRegistrationMethod->AddObserver( itk::ProgressEvent(), m_RegistrationObserver );
+    m_LevelRegistrationMethod->AddObserver( itk::ProgressEvent(), m_TextProgressBar );
     }
 
   // Filter out peak hopping.

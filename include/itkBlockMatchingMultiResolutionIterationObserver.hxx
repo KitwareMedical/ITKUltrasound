@@ -63,7 +63,7 @@ MultiResolutionIterationObserver< TMultiResolutionMethod >
 template< typename TMultiResolutionMethod >
 void
 MultiResolutionIterationObserver< TMultiResolutionMethod >
-::Execute( const itk::Object * object , const itk::EventObject & event )
+::Execute( itk::Object * object, const itk::EventObject & event )
 {
   Superclass::Execute( object, event );
 
@@ -79,7 +79,7 @@ MultiResolutionIterationObserver< TMultiResolutionMethod >
     m_CSVFile << "Level, Block Radius" << std::endl;
     }
   m_CSVFile << level << ",  ";
-  m_CSVFile << this->m_BlockRadiusCalculator->Compute( level ) << std::endl;
+  m_CSVFile << const_cast< typename Superclass::BlockRadiusCalculatorType * >( this->m_BlockRadiusCalculator.GetPointer() )->Compute( level ) << std::endl;
 
   // Skip the base level where the multilevel pyramid filter is not used.
   if( level < this->m_MultiResolutionMethod->GetNumberOfLevels() )
@@ -87,14 +87,14 @@ MultiResolutionIterationObserver< TMultiResolutionMethod >
     std::cout << "Writing fixed image..." << std::endl;
     std::ostringstream ostr;
     ostr << m_OutputFilePrefix << "_Level_" << level << "_FixedImage.mha";
-    this->m_FixedImageWriter->SetInput( this->m_FixedImagePyramid->GetOutput( level ) );
+    this->m_FixedImageWriter->SetInput( const_cast< typename Superclass::FixedImagePyramidType * >( this->m_FixedImagePyramid.GetPointer() )->GetOutput( level ) );
     this->m_FixedImageWriter->SetFileName( ostr.str() );
     this->m_FixedImageWriter->Update();
 
     std::cout << "Writing moving image..." << std::endl;
     ostr.str( "" );
     ostr << m_OutputFilePrefix << "_Level_" << level << "_MovingImage.mha";
-    this->m_MovingImageWriter->SetInput( this->m_MovingImagePyramid->GetOutput( level ) );
+    this->m_MovingImageWriter->SetInput( const_cast< typename Superclass::MovingImagePyramidType * >( this->m_MovingImagePyramid.GetPointer() )->GetOutput( level ) );
     this->m_MovingImageWriter->SetFileName( ostr.str() );
     this->m_MovingImageWriter->Update();
 

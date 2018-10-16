@@ -291,7 +291,7 @@ private:
   typename SearchRegionImageSourceType::Pointer m_SearchRegionImageSource;
 
   typename LevelRegistrationMethodType::Pointer m_LevelRegistrationMethod;
-  TextProgressBarCommand::Pointer               m_RegistrationObserver;
+  TextProgressBarCommand::Pointer               m_TextProgressBar;
   bool                                          m_LevelRegistrationMethodTextProgressBar;
 
   typename ParabolicInterpolatorType::Pointer              m_ParabolicInterpolator;
