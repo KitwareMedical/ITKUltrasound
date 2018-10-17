@@ -23,10 +23,14 @@
 #include "itkConstantBoundaryCondition.h"
 #include "itkConstNeighborhoodIterator.h"
 #include "itkImageKernelOperator.h"
-#include "itkImageRegionConstIterator.h"
+#include "itkImageRegionConstIteratorWithIndex.h"
 #include "itkImageRegionIterator.h"
 #include "itkNeighborhoodAlgorithm.h"
 #include "itkNeighborhoodInnerProduct.h"
+#include "itkConstantBoundaryImageNeighborhoodPixelAccessPolicy.h"
+#include "itkShapedImageNeighborhoodRange.h"
+#include "itkImageNeighborhoodOffsets.h"
+#include <numeric>
 
 namespace itk
 {
@@ -88,7 +92,8 @@ NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< TFixedImage, TM
   typedef ImageRegionIterator< MetricImageType > MetricIteratorType;
   MetricImageRegionType metricRegion;
   typename MovingImageType::IndexType fitIndex;
-  typedef ImageRegionConstIterator< MetricImageType >  MetricConstIteratorType;
+  //typedef ImageRegionConstIterator< MetricImageType >  MetricConstIteratorType;
+  typedef ImageRegionConstIteratorWithIndex< MetricImageType >  MetricConstIteratorType;
   typedef ConstantBoundaryCondition< MetricImageType > BoundaryConditionType;
   BoundaryConditionType boundaryCondition;
   boundaryCondition.SetConstant( NumericTraits< MetricImagePixelType >::Zero );
@@ -116,9 +121,10 @@ NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< TFixedImage, TM
   typename FaceCalculatorType::FaceListType faceList = faceCalculator(
       movingPtr, this->m_MovingImageRegion, radius );
   typename FaceCalculatorType::FaceListType::iterator fit;
-  const MetricImagePixelType                          negativeOne = -1 * NumericTraits< MetricImagePixelType >::One;
-  const MetricImagePixelType                          positiveOne = NumericTraits< MetricImagePixelType >::One;
-  MetricImagePixelType                                normXcorr;
+  constexpr MetricImagePixelType negativeOne = -1 * NumericTraits< MetricImagePixelType >::One;
+  constexpr MetricImagePixelType positiveOne = NumericTraits< MetricImagePixelType >::One;
+  const std::vector<Offset<ImageDimension>> offsets =
+    Experimental::GenerateRectangularImageNeighborhoodOffsets(radius);
   for( fit = faceList.begin(); fit != faceList.end(); ++fit )
     {
     (*fit).Crop( outputRegion );
@@ -136,24 +142,60 @@ NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< TFixedImage, TM
     MetricIteratorType metricIt( metricPtr, metricRegion );
 
     MetricConstIteratorType denomIt( denom, *fit );
-    NeighborhoodIteratorType movingNeighborIt( radius, movingMinusMean, *fit );
-    movingNeighborIt.OverrideBoundaryCondition( &boundaryCondition );
+
 
     // for every pixel in the output
-    for( metricIt.GoToBegin(), denomIt.GoToBegin(), movingNeighborIt.GoToBegin();
+    //NeighborhoodIteratorType movingNeighborIt( radius, movingMinusMean, *fit );
+    //movingNeighborIt.OverrideBoundaryCondition( &boundaryCondition );
+    //for( metricIt.GoToBegin(), denomIt.GoToBegin(), movingNeighborIt.GoToBegin();
+         //!metricIt.IsAtEnd();
+         //++metricIt, ++denomIt, ++movingNeighborIt )
+      //{
+      //if( !(denomIt.Get() == NumericTraits< MetricImagePixelType >::Zero) )
+        //{
+        //const MetricImagePixelType normXcorr = innerProduct( movingNeighborIt, fixedKernelOperator ) / denomIt.Get();
+
+        //// Why does this happen?  Bug?  Funky floating point behavior?
+        //if( normXcorr < negativeOne )
+          //{
+          //metricIt.Set( negativeOne );
+          //}
+        //else if ( normXcorr > positiveOne )
+          //{
+          //metricIt.Set( positiveOne );
+          //}
+        //else
+          //{
+          //metricIt.Set( normXcorr );
+          //}
+        //}
+      //}
+    for( metricIt.GoToBegin(), denomIt.GoToBegin();
          !metricIt.IsAtEnd();
-         ++metricIt, ++denomIt, ++movingNeighborIt )
+         ++metricIt, ++denomIt)
       {
       if( !(denomIt.Get() == NumericTraits< MetricImagePixelType >::Zero) )
         {
-        normXcorr = innerProduct( movingNeighborIt, fixedKernelOperator ) / denomIt.Get();
+        using RangeType = Experimental::ShapedImageNeighborhoodRange<const MetricImageType,
+          Experimental::ConstantBoundaryImageNeighborhoodPixelAccessPolicy<const MetricImageType> >;
+        const RangeType movingRange{ *movingMinusMean, denomIt.GetIndex(), offsets };
+        const RangeType kernelRange{ *fixedMinusMean, denomIt.GetIndex(), offsets };
+
+        const MetricImagePixelType normXcorr = std::inner_product( movingRange.begin(), movingRange.end(), kernelRange.begin(), 0.0 ) / denomIt.Get();
+
         // Why does this happen?  Bug?  Funky floating point behavior?
         if( normXcorr < negativeOne )
+          {
           metricIt.Set( negativeOne );
+          }
         else if ( normXcorr > positiveOne )
+          {
           metricIt.Set( positiveOne );
+          }
         else
+          {
           metricIt.Set( normXcorr );
+          }
         }
       }
     }
