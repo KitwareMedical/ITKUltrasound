@@ -78,11 +78,11 @@ TextProgressBarCommand
     }
 
   std::cout << process->GetNameOfClass() << ": ";
-  std::cout << m_Progress << std::endl;
+  //std::cout << m_Progress << std::endl;
   // If you are in a console, this is nicer because you don't have repeats.  But
   // in ctest -V nothing shows up.
   //std::cout << m_Identifier << ": ";
-  //std::cout << m_Progress << '\r' << std::flush;
+  std::cout << m_Progress << '\r' << std::flush;
 
   if( position == 50 )
     {
