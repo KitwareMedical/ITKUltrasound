@@ -337,6 +337,9 @@ void
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::Compute()
 {
+  const ThreadIdType defaultThreads = std::max( 1u, itk::MultiThreaderBase::GetGlobalDefaultNumberOfThreads() );
+  this->m_MultiThreader->SetNumberOfWorkUnits( 8 * defaultThreads );
+
   // First we shift the minimum value of the metric image so 0 corresponds to
   // the theoretical lower bound.
   if( !m_MetricLowerBoundDefined )
