@@ -77,7 +77,8 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
   m_HigherOrderAccurateGradientFilter->SetOrderOfAccuracy( 2 );
   m_LinearLeastSquaresGradientFilter = LinearLeastSquaresGradientFilterType::New();
   m_LinearLeastSquaresGradientFilter->SetRadius( 2 );
-  m_StrainWindowStrainFilter->SetGradientFilter( m_HigherOrderAccurateGradientFilter );
+  //m_StrainWindowStrainFilter->SetGradientFilter( m_HigherOrderAccurateGradientFilter );
+  m_StrainWindowStrainFilter->SetGradientFilter( m_LinearLeastSquaresGradientFilter );
   m_StrainWindower->SetStrainImageFilter( m_StrainWindowStrainFilter.GetPointer() );
 
   m_MetricImageFilter = MetricImageFilterType::New();
