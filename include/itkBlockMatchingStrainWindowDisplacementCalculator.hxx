@@ -101,8 +101,9 @@ StrainWindowDisplacementCalculator<TMetricImage, TDisplacementImage, TStrainValu
   ImageRegionIterator< MaskType >   maskIt( m_Mask, region );
 
   //! @todo multithread me
-  for( unsigned int i = 0; i < m_MaximumAbsStrain.GetNumberOfComponents(); ++i )
-    {
+  constexpr unsigned int i = 0;
+  //for( unsigned int i = 0; i < m_MaximumAbsStrain.GetNumberOfComponents(); ++i )
+    //{
     m_NthElementAdaptor->SelectNthElement( i );
     // this will be correct after this is multi-threaded and a fixer-uper for
     // now
@@ -123,7 +124,7 @@ StrainWindowDisplacementCalculator<TMetricImage, TDisplacementImage, TStrainValu
           }
         }
       }
-    }
+    //}
 
   return count;
 }
