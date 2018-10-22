@@ -22,7 +22,6 @@
 
 #include "itkComplexToComplex1DFFTImageFilter.h"
 #include "itkForward1DFFTImageFilter.h"
-#include "itkImageRegionSplitterDirection.h"
 #include "itkFrequencyDomain1DImageFilter.h"
 
 namespace itk
@@ -115,27 +114,19 @@ protected:
   void PrintSelf(std::ostream& os, Indent indent) const override;
 
   // These behave like their analogs in Forward1DFFTImageFilter.
-  virtual void GenerateInputRequestedRegion() override;
-  virtual void EnlargeOutputRequestedRegion(DataObject *output) override;
+  void GenerateInputRequestedRegion() override;
+  void EnlargeOutputRequestedRegion(DataObject *output) override;
 
-  void BeforeThreadedGenerateData() override;
-  void ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread, ThreadIdType threadId ) override;
-  void AfterThreadedGenerateData() override;
+  void GenerateData() override;
 
   typedef Forward1DFFTImageFilter< InputImageType, OutputImageType > FFTRealToComplexType;
-  typedef ComplexToComplex1DFFTImageFilter< OutputImageType, OutputImageType >      FFTComplexToComplexType;
+  typename FFTRealToComplexType::Pointer                             m_FFTRealToComplexFilter;
 
-  typename FFTRealToComplexType::Pointer    m_FFTRealToComplexFilter;
-  typename FFTComplexToComplexType::Pointer m_FFTComplexToComplexFilter;
-
-
-  /** Override to return a splitter that does not split along the direction we
-   * are performing the transform. */
-  virtual const ImageRegionSplitterBase* GetImageRegionSplitter() const override;
+  typedef ComplexToComplex1DFFTImageFilter< OutputImageType, OutputImageType > FFTComplexToComplexType;
+  typename FFTComplexToComplexType::Pointer                                    m_FFTComplexToComplexFilter;
 
 private:
   typename FrequencyFilterType::Pointer m_FrequencyFilter;
-  ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;
 };
 }
 
