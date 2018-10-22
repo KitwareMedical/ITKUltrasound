@@ -19,7 +19,6 @@
 #define itkFrequencyDomain1DImageFilter_h
 
 #include "itkImageToImageFilter.h"
-#include "itkImageRegionSplitterDirection.h"
 #include "itkFrequencyDomain1DFilterFunction.h"
 
 namespace itk
@@ -79,17 +78,9 @@ protected:
   void GenerateInputRequestedRegion() override;
   void EnlargeOutputRequestedRegion(DataObject *output) override;
 
-  void BeforeThreadedGenerateData() override;
-  void ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread, ThreadIdType threadId ) override;
-  void AfterThreadedGenerateData() override;
-
-  /** Override to return a splitter that does not split along the direction we
-   * are performing the transform. */
-  virtual const ImageRegionSplitterBase* GetImageRegionSplitter() const override;
+  void GenerateData() override;
 
 private:
-  ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;
-
   FrequencyDomain1DFilterFunction::Pointer m_FilterFunction;
 
   unsigned int m_Direction;
