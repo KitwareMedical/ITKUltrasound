@@ -21,7 +21,6 @@
 #include <complex>
 
 #include "itkImageToImageFilter.h"
-#include "itkImageRegionSplitterDirection.h"
 
 namespace itk
 {
@@ -74,15 +73,7 @@ protected:
 
   void GenerateInputRequestedRegion() override;
   void EnlargeOutputRequestedRegion(DataObject *output) override;
-
-  void BeforeThreadedGenerateData() override;
-
-  /** Override to return a splitter that does not split along the direction we
-   * are performing the transform. */
-  virtual const ImageRegionSplitterBase* GetImageRegionSplitter() const override;
-
 private:
-  ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;
 
   /** Direction in which the filter is to be applied
    * this should be in the range [0,ImageDimension-1]. */

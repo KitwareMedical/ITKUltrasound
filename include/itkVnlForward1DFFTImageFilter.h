@@ -32,8 +32,7 @@ namespace itk
  * \ingroup Ultrasound
  */
 template< typename TInputImage, typename TOutputImage=Image< std::complex< typename TInputImage::PixelType >, TInputImage::ImageDimension > >
-class ITK_TEMPLATE_EXPORT VnlForward1DFFTImageFilter :
-    public Forward1DFFTImageFilter< TInputImage, TOutputImage >
+class ITK_TEMPLATE_EXPORT VnlForward1DFFTImageFilter : public Forward1DFFTImageFilter< TInputImage, TOutputImage >
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(VnlForward1DFFTImageFilter);
@@ -55,10 +54,10 @@ public:
   itkTypeMacro( VnlForward1DFFTImageFilter, Forward1DFFTImageFilter );
 
 protected:
-  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) override;
+  void GenerateData() override;
 
   VnlForward1DFFTImageFilter() { }
-  ~VnlForward1DFFTImageFilter() { }
+  virtual ~VnlForward1DFFTImageFilter() { }
 
 private:
 };

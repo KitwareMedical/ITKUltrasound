@@ -35,63 +35,69 @@ namespace itk
 template< typename TInputImage, typename TOutputImage >
 void
 VnlInverse1DFFTImageFilter< TInputImage, TOutputImage >
-::ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType itkNotUsed( threadID ) )
+::GenerateData()
 {
+  this->AllocateOutputs();
+
   // get pointers to the input and output
-  const typename Superclass::InputImageType * inputPtr  = this->GetInput();
-  typename Superclass::OutputImageType * outputPtr = this->GetOutput();
+  const typename Superclass::InputImageType * input  = this->GetInput();
+  typename Superclass::OutputImageType * output = this->GetOutput();
 
-  if ( !inputPtr || !outputPtr )
+  const typename Superclass::InputImageType::SizeType & inputSize = input->GetRequestedRegion().GetSize();
+
+  const unsigned int direction = this->GetDirection();
+  unsigned int vectorSize = inputSize[direction];
+
+  MultiThreaderBase* multiThreader = this->GetMultiThreader();
+  multiThreader->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
+  multiThreader->template ParallelizeImageRegionRestrictDirection< TOutputImage::ImageDimension >(direction,
+    output->GetRequestedRegion(),
+    [this, input, output, direction, vectorSize]( const typename OutputImageType::RegionType & lambdaRegion )
     {
-    return;
-    }
+    typedef ImageLinearConstIteratorWithIndex< InputImageType >  InputIteratorType;
+    typedef ImageLinearIteratorWithIndex< OutputImageType >      OutputIteratorType;
+    InputIteratorType inputIt( input, lambdaRegion );
+    OutputIteratorType outputIt( output, lambdaRegion );
 
-  const typename Superclass::InputImageType::SizeType & inputSize = inputPtr->GetRequestedRegion().GetSize();
+    inputIt.SetDirection( direction );
+    outputIt.SetDirection( direction );
 
-  unsigned int vec_size = inputSize[this->m_Direction];
+    typedef typename TOutputImage::PixelType OutputPixelType;
+    vnl_vector< vcl_complex< OutputPixelType > > inputBuffer( vectorSize );
+    typename vnl_vector< vcl_complex< OutputPixelType > >::iterator inputBufferIt = inputBuffer.begin();
+      // fft is done in-place
+    typename vnl_vector< vcl_complex< OutputPixelType > >::iterator outputBufferIt = inputBuffer.begin();
+    vnl_fft_1d< OutputPixelType > v1d(vectorSize);
 
-  typedef itk::ImageLinearConstIteratorWithIndex< InputImageType >  InputIteratorType;
-  typedef itk::ImageLinearIteratorWithIndex< OutputImageType >      OutputIteratorType;
-  InputIteratorType inputIt( inputPtr, outputRegion );
-  OutputIteratorType outputIt( outputPtr, outputRegion );
-
-  inputIt.SetDirection(this->m_Direction);
-  outputIt.SetDirection(this->m_Direction);
-
-  typedef typename TOutputImage::PixelType OutputPixelType;
-  vnl_vector< vcl_complex< OutputPixelType > > inputBuffer( vec_size );
-  typename vnl_vector< vcl_complex< OutputPixelType > >::iterator inputBufferIt = inputBuffer.begin();
-    // fft is done in-place
-  typename vnl_vector< vcl_complex< OutputPixelType > >::iterator outputBufferIt = inputBuffer.begin();
-  vnl_fft_1d< OutputPixelType > v1d(vec_size);
-
-  // for every fft line
-  for( inputIt.GoToBegin(), outputIt.GoToBegin(); !inputIt.IsAtEnd();
-    outputIt.NextLine(), inputIt.NextLine() )
-    {
-    // copy the input line into our buffer
-    inputIt.GoToBeginOfLine();
-    inputBufferIt = inputBuffer.begin();
-    while( !inputIt.IsAtEndOfLine() )
+    // for every fft line
+    for( inputIt.GoToBegin(), outputIt.GoToBegin(); !inputIt.IsAtEnd();
+      outputIt.NextLine(), inputIt.NextLine() )
       {
-      *inputBufferIt = inputIt.Get();
-      ++inputIt;
-      ++inputBufferIt;
-      }
+      // copy the input line into our buffer
+      inputIt.GoToBeginOfLine();
+      inputBufferIt = inputBuffer.begin();
+      while( !inputIt.IsAtEndOfLine() )
+        {
+        *inputBufferIt = inputIt.Get();
+        ++inputIt;
+        ++inputBufferIt;
+        }
 
-    // do the transform
-    v1d.fwd_transform(inputBuffer);
+      // do the transform
+      v1d.fwd_transform(inputBuffer);
 
-    // copy the output from the buffer into our line
-    outputBufferIt = inputBuffer.begin();
-    outputIt.GoToBeginOfLine();
-    while( !outputIt.IsAtEndOfLine() )
-      {
-      outputIt.Set( (*outputBufferIt).real() / vec_size );
-      ++outputIt;
-      ++outputBufferIt;
+      // copy the output from the buffer into our line
+      outputBufferIt = inputBuffer.begin();
+      outputIt.GoToBeginOfLine();
+      while( !outputIt.IsAtEndOfLine() )
+        {
+        outputIt.Set( (*outputBufferIt).real() / vectorSize );
+        ++outputIt;
+        ++outputBufferIt;
+        }
       }
-    }
+    },
+    this );
 }
 
 } // end namespace itk

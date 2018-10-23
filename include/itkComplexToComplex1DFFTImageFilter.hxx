@@ -78,26 +78,6 @@ ComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
  m_Direction(0),
   m_TransformDirection( DIRECT )
 {
-  this->m_ImageRegionSplitter = ImageRegionSplitterDirection::New();
-  this->DynamicMultiThreadingOff();
-}
-
-
-template <typename TInputImage, typename TOutputImage>
-const ImageRegionSplitterBase*
-ComplexToComplex1DFFTImageFilter < TInputImage, TOutputImage >
-::GetImageRegionSplitter(void) const
-{
-  return this->m_ImageRegionSplitter.GetPointer();
-}
-
-
-template<typename TInputImage, typename TOutputImage >
-void
-ComplexToComplex1DFFTImageFilter < TInputImage, TOutputImage >
-::BeforeThreadedGenerateData()
-{
-  this->m_ImageRegionSplitter->SetDirection( this->GetDirection() );
 }
 
 
