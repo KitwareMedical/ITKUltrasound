@@ -36,13 +36,15 @@ namespace itk
 template< typename TInputImage, typename TOutputImage >
 void
 VnlForward1DFFTImageFilter< TInputImage, TOutputImage >
-::ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType itkNotUsed( threadID ) )
+::GenerateData()
 {
-  // get pointers to the input and output
-  const typename Superclass::InputImageType * inputPtr = this->GetInput();
-  typename Superclass::OutputImageType * outputPtr = this->GetOutput();
+  this->AllocateOutputs();
 
-  const typename Superclass::InputImageType::SizeType & inputSize = inputPtr->GetRequestedRegion().GetSize();
+  // get pointers to the input and output
+  const typename Superclass::InputImageType * input = this->GetInput();
+  typename Superclass::OutputImageType * output = this->GetOutput();
+
+  const typename Superclass::InputImageType::SizeType & inputSize = input->GetRequestedRegion().GetSize();
 
   const unsigned int direction = this->GetDirection();
   unsigned int vectorSize = inputSize[direction];
@@ -52,51 +54,60 @@ VnlForward1DFFTImageFilter< TInputImage, TOutputImage >
     }
 
 
-  typedef ImageLinearConstIteratorWithIndex< InputImageType >  InputIteratorType;
-  typedef ImageLinearIteratorWithIndex< OutputImageType >      OutputIteratorType;
-  InputIteratorType inputIt( inputPtr, outputRegion );
-  OutputIteratorType outputIt( outputPtr, outputRegion );
-
-  inputIt.SetDirection( direction );
-  outputIt.SetDirection( direction );
-
-  typedef typename TInputImage::PixelType PixelType;
-  typedef vcl_complex< PixelType >        ComplexType;
-  typedef vnl_vector< ComplexType >       ComplexVectorType;
-  ComplexVectorType inputBuffer( vectorSize );
-  typename ComplexVectorType::iterator inputBufferIt = inputBuffer.begin();
-    // fft is done in-place
-  typename ComplexVectorType::iterator outputBufferIt = inputBuffer.begin();
-  vnl_fft_1d< PixelType > v1d( vectorSize );
-
-  // for every fft line
-  for( inputIt.GoToBegin(), outputIt.GoToBegin();
-       !inputIt.IsAtEnd();
-       outputIt.NextLine(), inputIt.NextLine() )
+  MultiThreaderBase* multiThreader = this->GetMultiThreader();
+  multiThreader->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
+  multiThreader->template ParallelizeImageRegionRestrictDirection< TOutputImage::ImageDimension >(direction,
+    output->GetRequestedRegion(),
+    [this, input, output, direction, vectorSize]( const typename OutputImageType::RegionType & lambdaRegion )
     {
-    // copy the input line into our buffer
-    inputIt.GoToBeginOfLine();
-    inputBufferIt = inputBuffer.begin();
-    while( !inputIt.IsAtEndOfLine() )
-      {
-      *inputBufferIt = inputIt.Value();
-      ++inputIt;
-      ++inputBufferIt;
-      }
+    typedef ImageLinearConstIteratorWithIndex< InputImageType >  InputIteratorType;
+    typedef ImageLinearIteratorWithIndex< OutputImageType >      OutputIteratorType;
+    InputIteratorType inputIt( input, lambdaRegion );
+    OutputIteratorType outputIt( output, lambdaRegion );
 
-    // do the transform
-    v1d.bwd_transform( inputBuffer );
+    inputIt.SetDirection( direction );
+    outputIt.SetDirection( direction );
 
-    // copy the output from the buffer into our line
-    outputBufferIt = inputBuffer.begin();
-    outputIt.GoToBeginOfLine();
-    while( !outputIt.IsAtEndOfLine() )
+    typedef typename TInputImage::PixelType PixelType;
+    typedef vcl_complex< PixelType >        ComplexType;
+    typedef vnl_vector< ComplexType >       ComplexVectorType;
+    ComplexVectorType inputBuffer( vectorSize );
+    typename ComplexVectorType::iterator inputBufferIt = inputBuffer.begin();
+      // fft is done in-place
+    typename ComplexVectorType::iterator outputBufferIt = inputBuffer.begin();
+    vnl_fft_1d< PixelType > v1d( vectorSize );
+
+    // for every fft line
+    for( inputIt.GoToBegin(), outputIt.GoToBegin();
+         !inputIt.IsAtEnd();
+         outputIt.NextLine(), inputIt.NextLine() )
       {
-      outputIt.Set( *outputBufferIt );
-      ++outputIt;
-      ++outputBufferIt;
+      // copy the input line into our buffer
+      inputIt.GoToBeginOfLine();
+      inputBufferIt = inputBuffer.begin();
+      while( !inputIt.IsAtEndOfLine() )
+        {
+        *inputBufferIt = inputIt.Value();
+        ++inputIt;
+        ++inputBufferIt;
+        }
+
+      // do the transform
+      v1d.bwd_transform( inputBuffer );
+
+      // copy the output from the buffer into our line
+      outputBufferIt = inputBuffer.begin();
+      outputIt.GoToBeginOfLine();
+      while( !outputIt.IsAtEndOfLine() )
+        {
+        outputIt.Set( *outputBufferIt );
+        ++outputIt;
+        ++outputBufferIt;
+        }
       }
-    }
+    },
+    this );
+
 }
 
 } // end namespace itk

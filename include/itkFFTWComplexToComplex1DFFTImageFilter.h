@@ -20,6 +20,7 @@
 
 #include "itkComplexToComplex1DFFTImageFilter.h"
 #include "itkFFTWCommonExtended.h"
+#include "itkImageRegionSplitterDirection.h"
 
 #include <vector>
 
@@ -66,23 +67,21 @@ public:
 
 
 protected:
-  FFTWComplexToComplex1DFFTImageFilter(): m_PlanComputed( false ),
-    m_LastImageSize( 0 )
-  {}
-  virtual ~FFTWComplexToComplex1DFFTImageFilter()
-  {
-  if ( m_PlanComputed )
-    {
-    this->DestroyPlans();
-    }
-  }
+  FFTWComplexToComplex1DFFTImageFilter();
+  virtual ~FFTWComplexToComplex1DFFTImageFilter();
 
-  virtual void BeforeThreadedGenerateData() override;
-  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) override;
+  void BeforeThreadedGenerateData() override;
+  void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) override;
+
+  /** Override to return a splitter that does not split along the direction we
+   *  are performing the transform. */
+  const ImageRegionSplitterBase* GetImageRegionSplitter() const override;
 
 private:
   FFTWComplexToComplex1DFFTImageFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
+
+  ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;
 
   /** Destroy FFTW Plans and associated buffers. */
   void DestroyPlans();

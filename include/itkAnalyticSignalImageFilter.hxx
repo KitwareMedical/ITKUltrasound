@@ -44,8 +44,6 @@ AnalyticSignalImageFilter< TInputImage, TOutputImage >
   m_FFTComplexToComplexFilter->SetTransformDirection( FFTComplexToComplexType::INVERSE );
 
   this->SetDirection( 0 );
-  this->m_ImageRegionSplitter = ImageRegionSplitterDirection::New();
-  this->DynamicMultiThreadingOff();
 }
 
 
@@ -58,11 +56,11 @@ AnalyticSignalImageFilter< TInputImage, TOutputImage >
   Superclass::GenerateInputRequestedRegion();
 
   // get pointers to the inputs
-  InputImageType * inputPtr  =
+  InputImageType * input  =
     const_cast<InputImageType *> (this->GetInput());
-  OutputImageType * outputPtr = this->GetOutput();
+  OutputImageType * output = this->GetOutput();
 
-  if ( !inputPtr || !outputPtr )
+  if ( !input || !output )
     {
     return;
     }
@@ -70,10 +68,10 @@ AnalyticSignalImageFilter< TInputImage, TOutputImage >
   // we need to compute the input requested region (size and start index)
   typedef const typename OutputImageType::SizeType& OutputSizeType;
   OutputSizeType outputRequestedRegionSize =
-    outputPtr->GetRequestedRegion().GetSize();
+    output->GetRequestedRegion().GetSize();
   typedef const typename OutputImageType::IndexType& OutputIndexType;
   OutputIndexType outputRequestedRegionStartIndex =
-    outputPtr->GetRequestedRegion().GetIndex();
+    output->GetRequestedRegion().GetIndex();
 
   //// the regions other than the fft direction are fine
   typename InputImageType::SizeType  inputRequestedRegionSize = outputRequestedRegionSize;
@@ -82,39 +80,39 @@ AnalyticSignalImageFilter< TInputImage, TOutputImage >
   // we but need all of the input in the fft direction
   const unsigned int direction = this->GetDirection();
   const typename InputImageType::SizeType& inputLargeSize =
-    inputPtr->GetLargestPossibleRegion().GetSize();
+    input->GetLargestPossibleRegion().GetSize();
   inputRequestedRegionSize[direction] = inputLargeSize[direction];
   const typename InputImageType::IndexType& inputLargeIndex =
-    inputPtr->GetLargestPossibleRegion().GetIndex();
+    input->GetLargestPossibleRegion().GetIndex();
   inputRequestedRegionStartIndex[direction] = inputLargeIndex[direction];
 
   typename InputImageType::RegionType inputRequestedRegion;
   inputRequestedRegion.SetSize( inputRequestedRegionSize );
   inputRequestedRegion.SetIndex( inputRequestedRegionStartIndex );
 
-  inputPtr->SetRequestedRegion( inputRequestedRegion );
+  input->SetRequestedRegion( inputRequestedRegion );
 }
 
 
 template< typename TInputImage, typename TOutputImage >
 void
 AnalyticSignalImageFilter< TInputImage, TOutputImage >
-::EnlargeOutputRequestedRegion(DataObject *output)
+::EnlargeOutputRequestedRegion(DataObject *out)
 {
-  OutputImageType* outputPtr = dynamic_cast< OutputImageType* >( output );
+  OutputImageType* output = dynamic_cast< OutputImageType* >( out );
 
   // we need to enlarge the region in the fft direction to the
   // largest possible in that direction
   typedef const typename OutputImageType::SizeType& ConstOutputSizeType;
   ConstOutputSizeType requestedSize =
-    outputPtr->GetRequestedRegion().GetSize();
+    output->GetRequestedRegion().GetSize();
   ConstOutputSizeType outputLargeSize =
-    outputPtr->GetLargestPossibleRegion().GetSize();
+    output->GetLargestPossibleRegion().GetSize();
   typedef const typename OutputImageType::IndexType& ConstOutputIndexType;
   ConstOutputIndexType requestedIndex =
-    outputPtr->GetRequestedRegion().GetIndex();
+    output->GetRequestedRegion().GetIndex();
   ConstOutputIndexType outputLargeIndex =
-    outputPtr->GetLargestPossibleRegion().GetIndex();
+    output->GetLargestPossibleRegion().GetIndex();
 
   typename OutputImageType::SizeType enlargedSize   = requestedSize;
   typename OutputImageType::IndexType enlargedIndex = requestedIndex;
@@ -125,7 +123,7 @@ AnalyticSignalImageFilter< TInputImage, TOutputImage >
   typename OutputImageType::RegionType enlargedRegion;
   enlargedRegion.SetSize( enlargedSize );
   enlargedRegion.SetIndex( enlargedIndex );
-  outputPtr->SetRequestedRegion( enlargedRegion );
+  output->SetRequestedRegion( enlargedRegion );
 }
 
 
@@ -152,122 +150,110 @@ AnalyticSignalImageFilter< TInputImage, TOutputImage >
 
 
 template< typename TInputImage, typename TOutputImage >
-const ImageRegionSplitterBase *
-AnalyticSignalImageFilter< TInputImage, TOutputImage >
-::GetImageRegionSplitter() const
-{
-  return this->m_ImageRegionSplitter.GetPointer();
-}
-
-
-template< typename TInputImage, typename TOutputImage >
 void
 AnalyticSignalImageFilter< TInputImage, TOutputImage >
-::BeforeThreadedGenerateData()
+::GenerateData()
 {
-  this->m_ImageRegionSplitter->SetDirection( this->GetDirection() );
+  this->AllocateOutputs();
+
+  OutputImageType * output = this->GetOutput();
 
   m_FFTRealToComplexFilter->SetInput( this->GetInput() );
   if( m_FrequencyFilter.IsNotNull() )
     {
     m_FrequencyFilter->SetInput( m_FFTRealToComplexFilter->GetOutput() );
-    m_FrequencyFilter->GetOutput()->SetRequestedRegion( this->GetOutput()->GetRequestedRegion() );
-    m_FrequencyFilter->GetOutput()->SetLargestPossibleRegion( this->GetOutput()->GetLargestPossibleRegion() );
+    m_FrequencyFilter->GetOutput()->SetRequestedRegion( output->GetRequestedRegion() );
+    m_FrequencyFilter->GetOutput()->SetLargestPossibleRegion( output->GetLargestPossibleRegion() );
     m_FrequencyFilter->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
     m_FrequencyFilter->Update();
     }
   else
     {
-    m_FFTRealToComplexFilter->GetOutput()->SetRequestedRegion( this->GetOutput()->GetRequestedRegion() );
-    m_FFTRealToComplexFilter->GetOutput()->SetLargestPossibleRegion( this->GetOutput()->GetLargestPossibleRegion() );
+    m_FFTRealToComplexFilter->GetOutput()->SetRequestedRegion( output->GetRequestedRegion() );
+    m_FFTRealToComplexFilter->GetOutput()->SetLargestPossibleRegion( output->GetLargestPossibleRegion() );
     m_FFTRealToComplexFilter->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
     m_FFTRealToComplexFilter->Update();
     }
-}
 
-
-template< typename TInputImage, typename TOutputImage >
-void
-AnalyticSignalImageFilter< TInputImage, TOutputImage >
-::ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread, ThreadIdType itkNotUsed( threadId ) )
-{
   // get pointers to the input and output
-  const typename FFTRealToComplexType::OutputImageType * inputPtr;
+  const typename FFTRealToComplexType::OutputImageType * input;
   if( m_FrequencyFilter.IsNotNull() )
     {
-    inputPtr = m_FrequencyFilter->GetOutput();
+    input = m_FrequencyFilter->GetOutput();
     }
   else
    {
-   inputPtr = m_FFTRealToComplexFilter->GetOutput();
+   input = m_FFTRealToComplexFilter->GetOutput();
    }
-  OutputImageType * outputPtr = this->GetOutput();
 
-  const typename FFTRealToComplexType::OutputImageType::SizeType & inputSize = inputPtr->GetRequestedRegion().GetSize();
-  const unsigned int direction = this->GetDirection ();
+  const typename FFTRealToComplexType::OutputImageType::SizeType & inputSize = input->GetRequestedRegion().GetSize();
+  const unsigned int direction = this->GetDirection();
   const unsigned int size = inputSize[direction];
-  unsigned int dub_size;
+  unsigned int dubSize;
   bool even;
   if( size % 2 == 0 )
     {
     even = true;
-    dub_size = size / 2 - 1;
+    dubSize = size / 2 - 1;
     }
   else
     {
     even = false;
-    dub_size = (size + 1) / 2 - 1;
+    dubSize = (size + 1) / 2 - 1;
     }
 
-  typedef ImageLinearConstIteratorWithIndex< typename FFTRealToComplexType::OutputImageType > InputIteratorType;
-  typedef ImageLinearIteratorWithIndex< OutputImageType >                                     OutputIteratorType;
-  InputIteratorType inputIt( inputPtr, outputRegionForThread );
-  OutputIteratorType outputIt( outputPtr, outputRegionForThread );
-  inputIt.SetDirection( direction );
-  outputIt.SetDirection( direction );
-
-  unsigned int i;
-  // for every fft line
-  for( inputIt.GoToBegin(), outputIt.GoToBegin(); !inputIt.IsAtEnd();
-    outputIt.NextLine(), inputIt.NextLine() )
+  MultiThreaderBase* multiThreader = this->GetMultiThreader();
+  multiThreader->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
+  multiThreader->template ParallelizeImageRegionRestrictDirection< ImageDimension >(direction,
+    output->GetRequestedRegion(),
+    [this, dubSize, even, input]( const typename OutputImageType::RegionType & lambdaRegion )
     {
-    inputIt.GoToBeginOfLine();
-    outputIt.GoToBeginOfLine();
+    OutputImageType * output = this->GetOutput();
+    const unsigned int direction = this->GetDirection();
 
-    // DC
-    outputIt.Set( inputIt.Get() );
-    ++inputIt;
-    ++outputIt;
-    for( i = 0; i < dub_size; i++ )
+    typedef ImageLinearConstIteratorWithIndex< typename FFTRealToComplexType::OutputImageType > InputIteratorType;
+    typedef ImageLinearIteratorWithIndex< OutputImageType >                                     OutputIteratorType;
+    InputIteratorType inputIt( input, lambdaRegion );
+    OutputIteratorType outputIt( output, lambdaRegion );
+    inputIt.SetDirection( direction );
+    outputIt.SetDirection( direction );
+
+    // for every fft line
+    for( inputIt.GoToBegin(), outputIt.GoToBegin(); !inputIt.IsAtEnd();
+      outputIt.NextLine(), inputIt.NextLine() )
       {
-      outputIt.Set( inputIt.Get() * static_cast< typename TInputImage::PixelType >( 2 ) );
-      ++outputIt;
-      ++inputIt;
-      }
-    if( even )
-      {
+      inputIt.GoToBeginOfLine();
+      outputIt.GoToBeginOfLine();
+
+      // DC
       outputIt.Set( inputIt.Get() );
       ++inputIt;
       ++outputIt;
+      for( unsigned int i = 0; i < dubSize; i++ )
+        {
+        outputIt.Set( inputIt.Get() * static_cast< typename TInputImage::PixelType >( 2 ) );
+        ++outputIt;
+        ++inputIt;
+        }
+      if( even )
+        {
+        outputIt.Set( inputIt.Get() );
+        ++inputIt;
+        ++outputIt;
+        }
+      while( !outputIt.IsAtEndOfLine() )
+        {
+        outputIt.Set( static_cast< typename TInputImage::PixelType >( 0 ) );
+        ++outputIt;
+        }
       }
-    while( !outputIt.IsAtEndOfLine() )
-      {
-      outputIt.Set( static_cast< typename TInputImage::PixelType >( 0 ) );
-      ++outputIt;
-      }
-    }
-}
+    },
+    this );
 
-
-template< typename TInputImage, typename TOutputImage >
-void
-AnalyticSignalImageFilter< TInputImage, TOutputImage >
-::AfterThreadedGenerateData()
-{
   // Trippy, eh?
-  m_FFTComplexToComplexFilter->SetInput( this->GetOutput() );
-  m_FFTComplexToComplexFilter->GetOutput()->SetRequestedRegion( this->GetOutput()->GetRequestedRegion() );
-  m_FFTComplexToComplexFilter->GetOutput()->SetLargestPossibleRegion( this->GetOutput()->GetLargestPossibleRegion() );
+  m_FFTComplexToComplexFilter->SetInput( output );
+  m_FFTComplexToComplexFilter->GetOutput()->SetRequestedRegion( output->GetRequestedRegion() );
+  m_FFTComplexToComplexFilter->GetOutput()->SetLargestPossibleRegion( output->GetLargestPossibleRegion() );
   m_FFTComplexToComplexFilter->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
   m_FFTComplexToComplexFilter->Update();
   this->GraftOutput( m_FFTComplexToComplexFilter->GetOutput() );

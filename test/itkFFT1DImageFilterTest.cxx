@@ -41,10 +41,10 @@ int itkFFT1DImageFilterTest( int argc, char* argv[] )
   const unsigned int Dimension = 2;
   const unsigned int direction = 1;
 
-  typedef itk::Image< PixelType, Dimension >                                         ImageType;
-  typedef itk::Image< std::complex< PixelType >, Dimension >                         ComplexImageType;
+  typedef itk::Image< PixelType, Dimension >                 ImageType;
+  typedef itk::Image< std::complex< PixelType >, Dimension > ComplexImageType;
 
-  typedef itk::ImageFileReader< ImageType >                                          ReaderType;
+  typedef itk::ImageFileReader< ImageType > ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImage );
 
@@ -58,7 +58,7 @@ int itkFFT1DImageFilterTest( int argc, char* argv[] )
   fftInverse->SetInput( fftForward->GetOutput() );
   fftInverse->SetDirection( direction );
 
-  typedef itk::ImageFileWriter< ImageType >                                          WriterType;
+  typedef itk::ImageFileWriter< ImageType > WriterType;
   WriterType::Pointer writer = WriterType::New();
   writer->SetInput( fftInverse->GetOutput() );
   writer->SetFileName( outputImage );

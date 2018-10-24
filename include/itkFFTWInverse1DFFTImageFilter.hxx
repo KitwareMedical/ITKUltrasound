@@ -34,6 +34,29 @@ namespace itk
 {
 
 template< typename TInputImage, typename TOutputImage >
+FFTWInverse1DFFTImageFilter< TInputImage, TOutputImage >
+::FFTWInverse1DFFTImageFilter():
+   m_PlanComputed( false ),
+   m_LastImageSize( 0 )
+{
+   // We cannot split over the FFT direction
+   this->m_ImageRegionSplitter = ImageRegionSplitterDirection::New();
+   this->DynamicMultiThreadingOff();
+}
+
+
+template< typename TInputImage, typename TOutputImage >
+FFTWInverse1DFFTImageFilter< TInputImage, TOutputImage >
+::~FFTWInverse1DFFTImageFilter()
+{
+  if ( m_PlanComputed )
+    {
+    this->DestroyPlans();
+    }
+}
+
+
+template< typename TInputImage, typename TOutputImage >
 void
 FFTWInverse1DFFTImageFilter< TInputImage, TOutputImage >
 ::DestroyPlans()
@@ -47,12 +70,24 @@ FFTWInverse1DFFTImageFilter< TInputImage, TOutputImage >
     }
 }
 
+
+template< typename TInputImage, typename TOutputImage >
+const ImageRegionSplitterBase*
+FFTWInverse1DFFTImageFilter< TInputImage, TOutputImage >
+::GetImageRegionSplitter() const
+{
+  return this->m_ImageRegionSplitter.GetPointer();
+}
+
+
 template< typename TInputImage, typename TOutputImage >
 void
 FFTWInverse1DFFTImageFilter< TInputImage, TOutputImage >
 ::BeforeThreadedGenerateData()
 {
   Superclass::BeforeThreadedGenerateData();
+
+  this->m_ImageRegionSplitter->SetDirection( this->GetDirection() );
 
   OutputImageType * outputPtr = this->GetOutput();
 

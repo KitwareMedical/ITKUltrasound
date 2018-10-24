@@ -90,26 +90,6 @@ Inverse1DFFTImageFilter< TInputImage, TOutputImage >
 ::Inverse1DFFTImageFilter():
   m_Direction( 0 )
 {
-  this->m_ImageRegionSplitter = ImageRegionSplitterDirection::New();
-}
-
-
-template <typename TInputImage, typename TOutputImage>
-const ImageRegionSplitterBase*
-Inverse1DFFTImageFilter< TInputImage, TOutputImage >
-::GetImageRegionSplitter() const
-{
-  return this->m_ImageRegionSplitter.GetPointer();
-}
-
-
-template<typename TInputImage, typename TOutputImage >
-void
-Inverse1DFFTImageFilter< TInputImage, TOutputImage >
-::BeforeThreadedGenerateData()
-{
-  this->m_ImageRegionSplitter->SetDirection( this->GetDirection() );
-  this->DynamicMultiThreadingOff();
 }
 
 
@@ -122,11 +102,11 @@ Inverse1DFFTImageFilter< TInputImage, TOutputImage >
   Superclass::GenerateInputRequestedRegion();
 
   // get pointers to the inputs
-  typename InputImageType::Pointer inputPtr  =
+  typename InputImageType::Pointer input  =
     const_cast<InputImageType *> (this->GetInput());
-  typename OutputImageType::Pointer outputPtr = this->GetOutput();
+  typename OutputImageType::Pointer output = this->GetOutput();
 
-  if ( !inputPtr || !outputPtr )
+  if ( !input || !output )
     {
     return;
     }
@@ -134,10 +114,10 @@ Inverse1DFFTImageFilter< TInputImage, TOutputImage >
   // we need to compute the input requested region (size and start index)
   typedef const typename OutputImageType::SizeType& OutputSizeType;
   OutputSizeType outputRequestedRegionSize =
-    outputPtr->GetRequestedRegion().GetSize();
+    output->GetRequestedRegion().GetSize();
   typedef const typename OutputImageType::IndexType& OutputIndexType;
   OutputIndexType outputRequestedRegionStartIndex =
-    outputPtr->GetRequestedRegion().GetIndex();
+    output->GetRequestedRegion().GetIndex();
 
   //// the regions other than the fft direction are fine
   typename InputImageType::SizeType  inputRequestedRegionSize = outputRequestedRegionSize;
@@ -146,39 +126,39 @@ Inverse1DFFTImageFilter< TInputImage, TOutputImage >
   // we but need all of the input in the fft direction
   const unsigned int direction = this->m_Direction;
   const typename InputImageType::SizeType& inputLargeSize =
-    inputPtr->GetLargestPossibleRegion().GetSize();
+    input->GetLargestPossibleRegion().GetSize();
   inputRequestedRegionSize[direction] = inputLargeSize[direction];
   const typename InputImageType::IndexType& inputLargeIndex =
-    inputPtr->GetLargestPossibleRegion().GetIndex();
+    input->GetLargestPossibleRegion().GetIndex();
   inputRequestedRegionStartIndex[direction] = inputLargeIndex[direction];
 
   typename InputImageType::RegionType inputRequestedRegion;
   inputRequestedRegion.SetSize( inputRequestedRegionSize );
   inputRequestedRegion.SetIndex( inputRequestedRegionStartIndex );
 
-  inputPtr->SetRequestedRegion( inputRequestedRegion );
+  input->SetRequestedRegion( inputRequestedRegion );
 }
 
 
 template< typename TInputImage, typename TOutputImage >
 void
 Inverse1DFFTImageFilter< TInputImage, TOutputImage >
-::EnlargeOutputRequestedRegion(DataObject *output)
+::EnlargeOutputRequestedRegion(DataObject * out)
 {
-  OutputImageType* outputPtr = dynamic_cast<OutputImageType*>( output );
+  OutputImageType* output = dynamic_cast<OutputImageType*>( out );
 
   // we need to enlarge the region in the fft direction to the
   // largest possible in that direction
   typedef const typename OutputImageType::SizeType& ConstOutputSizeType;
   ConstOutputSizeType requestedSize =
-    outputPtr->GetRequestedRegion().GetSize();
+    output->GetRequestedRegion().GetSize();
   ConstOutputSizeType outputLargeSize =
-    outputPtr->GetLargestPossibleRegion().GetSize();
+    output->GetLargestPossibleRegion().GetSize();
   typedef const typename OutputImageType::IndexType& ConstOutputIndexType;
   ConstOutputIndexType requestedIndex =
-    outputPtr->GetRequestedRegion().GetIndex();
+    output->GetRequestedRegion().GetIndex();
   ConstOutputIndexType outputLargeIndex =
-    outputPtr->GetLargestPossibleRegion().GetIndex();
+    output->GetLargestPossibleRegion().GetIndex();
 
   typename OutputImageType::SizeType enlargedSize   = requestedSize;
   typename OutputImageType::IndexType enlargedIndex = requestedIndex;
@@ -188,7 +168,7 @@ Inverse1DFFTImageFilter< TInputImage, TOutputImage >
   typename OutputImageType::RegionType enlargedRegion;
   enlargedRegion.SetSize( enlargedSize );
   enlargedRegion.SetIndex( enlargedIndex );
-  outputPtr->SetRequestedRegion( enlargedRegion );
+  output->SetRequestedRegion( enlargedRegion );
 }
 
 

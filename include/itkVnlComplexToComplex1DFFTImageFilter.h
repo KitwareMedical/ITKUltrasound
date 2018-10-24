@@ -58,7 +58,7 @@ protected:
   VnlComplexToComplex1DFFTImageFilter() {}
   virtual ~VnlComplexToComplex1DFFTImageFilter() {}
 
-  virtual void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) override;
+  void GenerateData() override;
 
 private:
   VnlComplexToComplex1DFFTImageFilter(const Self&) ITK_DELETED_FUNCTION;
