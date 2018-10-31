@@ -88,7 +88,7 @@ protected:
   void GenerateOutputInformation() override;
   void BeforeThreadedGenerateData() override;
   void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId ) override;
-  void VerifyInputInformation() override;
+  void VerifyInputInformation() const override;
 
 private:
   typedef vcl_complex< ScalarType >                  ComplexType;

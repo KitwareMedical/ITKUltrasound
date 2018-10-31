@@ -26,7 +26,7 @@ namespace itk
 template <typename TInputImage, typename TOutputImage>
 void
 RegionFromReferenceImageFilter<TInputImage, TOutputImage>
-::VerifyInputInformation()
+::VerifyInputInformation() const
 {
 }
 
