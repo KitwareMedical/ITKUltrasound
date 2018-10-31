@@ -112,7 +112,7 @@ protected:
     }
   ~RegionFromReferenceImageFilter() {}
 
-  virtual void VerifyInputInformation() override;
+  virtual void VerifyInputInformation() const override;
 
   virtual void GenerateOutputInformation() override;
 

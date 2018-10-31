@@ -91,7 +91,7 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
 template< typename TInputImage, typename TSupportWindowImage, typename TOutputImage >
 void
 Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
-::VerifyInputInformation()
+::VerifyInputInformation() const
 {
 }
 
