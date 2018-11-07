@@ -27,7 +27,7 @@
 #endif
 #endif
 
-#include "itkMutexLockHolder.h"
+#include <mutex>
 
 namespace itk
 {
@@ -67,7 +67,7 @@ public:
                                   int threads=1)
     {
 #ifndef ITK_USE_CUFFTW
-    MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
+    std::lock_guard< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftwf_plan_with_nthreads(threads);
 #else
     (void)threads;
@@ -83,7 +83,7 @@ public:
                                   int threads=1)
     {
 #ifndef ITK_USE_CUFFTW
-    MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
+    std::lock_guard< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftwf_plan_with_nthreads(threads);
 #else
     (void)threads;
@@ -100,7 +100,7 @@ public:
                                   int threads=1)
     {
 #ifndef ITK_USE_CUFFTW
-    MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
+    std::lock_guard< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftwf_plan_with_nthreads(threads);
 #else
     (void)threads;
@@ -116,7 +116,7 @@ public:
                                int threads=1)
     {
 #ifndef ITK_USE_CUFFTW
-    MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
+    std::lock_guard< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftwf_plan_with_nthreads(threads);
 #else
     (void)threads;
@@ -132,7 +132,7 @@ public:
                                   int threads=1)
     {
 #ifndef ITK_USE_CUFFTW
-    MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
+    std::lock_guard< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftwf_plan_with_nthreads(threads);
 #else
     (void)threads;
@@ -148,7 +148,7 @@ public:
                                   int threads=1)
     {
 #ifndef ITK_USE_CUFFTW
-    MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
+    std::lock_guard< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftwf_plan_with_nthreads(threads);
 #else
     (void)threads;
@@ -165,7 +165,7 @@ public:
                                   int threads=1)
     {
 #ifndef ITK_USE_CUFFTW
-    MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
+    std::lock_guard< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftwf_plan_with_nthreads(threads);
 #else
     (void)threads;
@@ -181,7 +181,7 @@ public:
                                int threads=1)
     {
 #ifndef ITK_USE_CUFFTW
-    MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
+    std::lock_guard< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftwf_plan_with_nthreads(threads);
 #else
     (void)threads;
@@ -197,7 +197,7 @@ public:
             int threads=1)
     {
 #ifndef ITK_USE_CUFFTW
-    MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
+    std::lock_guard< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftwf_plan_with_nthreads(threads);
 #else
     (void)threads;
@@ -237,7 +237,7 @@ public:
                                   int threads=1)
     {
 #ifndef ITK_USE_CUFFTW
-    MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
+    std::lock_guard< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftw_plan_with_nthreads(threads);
 #else
     (void)threads;
@@ -253,7 +253,7 @@ public:
                                   int threads=1)
     {
 #ifndef ITK_USE_CUFFTW
-    MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
+    std::lock_guard< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftw_plan_with_nthreads(threads);
 #else
     (void)threads;
@@ -270,7 +270,7 @@ public:
                                   int threads=1)
     {
 #ifndef ITK_USE_CUFFTW
-    MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
+    std::lock_guard< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftw_plan_with_nthreads(threads);
 #else
     (void)threads;
@@ -286,7 +286,7 @@ public:
                                int threads=1)
     {
 #ifndef ITK_USE_CUFFTW
-    MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
+    std::lock_guard< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftw_plan_with_nthreads(threads);
 #else
     (void)threads;
@@ -302,7 +302,7 @@ public:
                                   int threads=1)
     {
 #ifndef ITK_USE_CUFFTW
-    MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
+    std::lock_guard< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftw_plan_with_nthreads(threads);
 #else
     (void)threads;
@@ -319,7 +319,7 @@ public:
                                   int threads=1)
     {
 #ifndef ITK_USE_CUFFTW
-    MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
+    std::lock_guard< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftw_plan_with_nthreads(threads);
 #else
     (void)threads;
@@ -337,7 +337,7 @@ public:
                                   int threads=1)
     {
 #ifndef ITK_USE_CUFFTW
-    MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
+    std::lock_guard< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftw_plan_with_nthreads(threads);
 #else
     (void)threads;
@@ -354,7 +354,7 @@ public:
                                int threads=1)
     {
 #ifndef ITK_USE_CUFFTW
-    MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
+    std::lock_guard< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftw_plan_with_nthreads(threads);
 #else
     (void)threads;
@@ -370,7 +370,7 @@ public:
             int threads=1)
     {
 #ifndef ITK_USE_CUFFTW
-    MutexLockHolder< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
+    std::lock_guard< FFTWGlobalConfiguration::MutexType > lock( FFTWGlobalConfiguration::GetLockMutex() );
     fftw_plan_with_nthreads(threads);
 #else
     (void)threads;
