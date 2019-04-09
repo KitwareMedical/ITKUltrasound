@@ -11,6 +11,10 @@ ITKUltrasound
 .. image:: https://img.shields.io/appveyor/ci/thewtex/itkultrasound.svg
     :target: https://ci.appveyor.com/project/thewtex/itkultrasound
 
+.. image:: https://dev.azure.com/ITKUltrasound/ITKUltrasound/_apis/build/status/KitwareMedical.ITKUltrasound?branchName=master
+    :target: https://dev.azure.com/ITKUltrasound/ITKUltrasound/_build/latest?definitionId=1&branchName=master
+    :alt: Build status
+
 Purpose
 =======
 
