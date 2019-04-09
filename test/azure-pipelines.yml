@@ -1,7 +1,8 @@
 variables:
   ITKGitTag: v5.0.0
-  ITKPythonPost: '.post1'
+  ITKPythonGitTag: v5.0.0.post1
   CMakeBuildType: Release
+  RemoteModuleDependencies: 'https://github.com/InsightSoftwareConsortium/ITKSplitComponents;https://github.com/InsightSoftwareConsortium/ITKBSplineGradient;https://github.com/InsightSoftwareConsortium/ITKHigherOrderAccurateGradient'
 
 trigger:
   batch: true
@@ -58,7 +59,9 @@ jobs:
     displayName: 'Install build dependencies'
 
   - script: |
-      git clone --depth 5 --branch $(ITKGitTag) https://github.com/InsightSoftwareConsortium/ITK.git
+      git clone https://github.com/InsightSoftwareConsortium/ITK.git
+      cd ITK
+      git checkout $(ITKGitTag)
     workingDirectory: $(Agent.BuildDirectory)
     displayName: 'Download ITK'
 
@@ -71,16 +74,50 @@ jobs:
     workingDirectory: $(Agent.BuildDirectory)
     displayName: 'Build ITK'
 
+  - bash: |
+      set -x
+      dependencies='$(RemoteModuleDependencies)'
+      echo $dependencies | tr \; \\n | sed '/^$/d' > RemoteModuleDependencies.txt
+      cat RemoteModuleDependencies.txt | while read remoteModule; do
+        git clone $remoteModule
+      done
+    workingDirectory: $(Agent.BuildDirectory)
+    displayName: 'Fetch Remote Module dependencies'
+
   - script: |
       curl -L https://raw.githubusercontent.com/InsightSoftwareConsortium/ITK/dashboard/itk_common.cmake -O
     displayName: 'Fetch CTest driver script'
 
   - bash: |
+      echo "here"
+      ls
+      echo "build directory"
+      echo "$(Agent.BuildDirectory)"
       cat > dashboard.cmake << EOF
       set(CTEST_SITE "Azure.\$ENV{AGENT_MACHINENAME}")
       file(TO_CMAKE_PATH "\$ENV{AGENT_BUILDDIRECTORY}" CTEST_DASHBOARD_ROOT)
       file(TO_CMAKE_PATH "\$ENV{BUILD_SOURCESDIRECTORY}" CTEST_SOURCE_DIRECTORY)
       file(TO_CMAKE_PATH "\$ENV{AGENT_BUILDDIRECTORY}/build" CTEST_BINARY_DIRECTORY)
+
+      # Build Remote module dependencies
+      file(STRINGS "\${CTEST_DASHBOARD_ROOT}/RemoteModuleDependencies.txt" _remote_module_dependencies)
+      foreach(_dep IN LISTS _remote_module_dependencies)
+        set(_build_dir "\${CTEST_DASHBOARD_ROOT}/\${_dep}-build")
+        set(_source_dir "\${CTEST_DASHBOARD_ROOT}/\${_dep}")
+        file(MAKE_DIRECTORY "\${_build_dir}")
+        execute_process(COMMAND "\${CMAKE_COMMAND}"
+          "-DITK_DIR:PATH=\${CTEST_DASHBOARD_ROOT}/ITK-build"
+          "-DBUILD_TESTING:BOOL=OFF"
+          "-GNinja"
+          -B "\${_build_dir}"
+          "\${_source_dir}"
+          WORKING_DIRECTORY "\${_build_dir}"
+          )
+        execute_process(COMMAND "ninja"
+          WORKING_DIRECTORY "\${_build_dir}"
+          )
+      endforeach()
+
       set(dashboard_source_name "$(Build.Repository.Name)")
       if(DEFINED ENV{SYSTEM_PULLREQUEST_SOURCEBRANCH})
         set(branch "-\$ENV{SYSTEM_PULLREQUEST_SOURCEBRANCH}")
@@ -124,6 +161,7 @@ jobs:
 
   - script: |
       $(compilerInitialization)
+      cmake --version
       ctest -j 2 -V -S dashboard.cmake
     displayName: 'Build and test'
 
@@ -157,7 +195,7 @@ jobs:
     displayName: 'Fetch build script'
 
   - script: |
-      export ITK_PACKAGE_VERSION=$(ITKGitTag)$(ITKPythonPost)
+      export ITK_PACKAGE_VERSION=$(ITKPythonGitTag)
       ./dockcross-manylinux-download-cache-and-build-module-wheels.sh
     displayName: 'Build Python packages'
 
@@ -181,7 +219,7 @@ jobs:
     displayName: 'Fetch build script'
 
   - script: |
-      export ITK_PACKAGE_VERSION=$(ITKGitTag)$(ITKPythonPost)
+      export ITK_PACKAGE_VERSION=$(ITKPythonGitTag)
       ./macpython-download-cache-and-build-module-wheels.sh
     displayName: 'Build Python packages'
 
@@ -205,7 +243,7 @@ jobs:
 
   - script: |
       call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-      set ITK_PACKAGE_VERSION=$(ITKGitTag)$(ITKPythonPost)
+      set ITK_PACKAGE_VERSION=$(ITKPythonGitTag)
       set CC=cl.exe
       set CXX=cl.exe
       powershell.exe -file .\windows-download-cache-and-build-module-wheels.ps1
