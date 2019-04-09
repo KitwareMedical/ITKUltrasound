@@ -2,15 +2,6 @@
 ITKUltrasound
 ==================
 
-.. image:: https://circleci.com/gh/KitwareMedical/ITKUltrasound.svg?style=shield
-    :target: https://circleci.com/gh/KitwareMedical/ITKUltrasound
-
-.. image:: https://travis-ci.org/KitwareMedical/ITKUltrasound.svg?branch=master
-    :target: https://travis-ci.org/KitwareMedical/ITKUltrasound
-
-.. image:: https://img.shields.io/appveyor/ci/thewtex/itkultrasound.svg
-    :target: https://ci.appveyor.com/project/thewtex/itkultrasound
-
 Purpose
 =======
 
