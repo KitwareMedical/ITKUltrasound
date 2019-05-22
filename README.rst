@@ -30,7 +30,7 @@ Build
 =====
 
 Build against ITK 5 or later. ITK should be configured with
-*Module_SplitComponents* set to *ON*.
+*Module_SplitComponents*, *Module_Strain*, and *Module_BSplineGradient* set to *ON*.
 
 References
 ==========
