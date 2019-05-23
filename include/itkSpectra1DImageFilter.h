@@ -91,7 +91,7 @@ protected:
   void VerifyInputInformation() const override;
 
 private:
-  typedef vcl_complex< ScalarType >                  ComplexType;
+  typedef std::complex< ScalarType >                 ComplexType;
   typedef vnl_vector< ComplexType >                  ComplexVectorType;
   typedef std::vector< ScalarType >                  SpectraVectorType;
   typedef typename InputImageType::IndexType         IndexType;
