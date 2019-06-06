@@ -140,7 +140,7 @@ SearchRegionImageInitializer< TFixedImage, TMovingImage >
   typename FixedImageType::SizeType fixedSize = m_FixedImage->GetLargestPossibleRegion().GetSize();
   for( unsigned int i = 0; i < ImageDimension; ++i )
     {
-    size[i] = static_cast< typename OutputRegionType::SizeType::SizeValueType >( vcl_floor(
+    size[i] = static_cast< typename OutputRegionType::SizeType::SizeValueType >( std::floor(
     ( fixedSize[i] - m_FixedBlockRadius[i] - 1 ) * fixedSpacing[i] / spacing[i] ));
     }
   region.SetSize( size );

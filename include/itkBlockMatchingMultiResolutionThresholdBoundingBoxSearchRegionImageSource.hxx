@@ -173,10 +173,10 @@ TFixedImage, TMovingImage, TMetricImage, TDisplacementImage >
   typename MovingImageType::SpacingType movingSpacing = this->m_MovingImage->GetSpacing();
   for( i = 0; i < ImageDimension; ++i )
     {
-    radius[i] = vcl_ceil(( static_cast< float >( upperIndex[i] ) - static_cast< float >( lowerIndex[i] ) - 1.f ) / 2.f );
+    radius[i] = std::ceil(( static_cast< float >( upperIndex[i] ) - static_cast< float >( lowerIndex[i] ) - 1.f ) / 2.f );
     centerIndex[i] = lowerIndex[i] + radius[i];
     // The radius should be specified in terms of the moving image.
-    radius[i] = vcl_ceil( radius[i] * metricSpacing[i] / movingSpacing[i] );
+    radius[i] = std::ceil( radius[i] * metricSpacing[i] / movingSpacing[i] );
     }
 
   m_SearchRegionRadiusImage->SetPixel( index, radius );
@@ -294,7 +294,7 @@ TFixedImage, TMovingImage, TMetricImage, TDisplacementImage >
       // levels.
       for( unsigned int i = 0; i < ImageDimension; ++i )
         {
-        radius[i] = vcl_ceil( static_cast< float >( radiusIt.Get()[i] ) *
+        radius[i] = std::ceil( static_cast< float >( radiusIt.Get()[i] ) *
           static_cast< float >( this->m_PyramidSchedule( this->m_CurrentLevel - 1, i )) /
           static_cast< float >( this->m_PyramidSchedule( this->m_CurrentLevel, i )));
         if( radius[i] < m_MinimumSearchRegionRadius[i] )

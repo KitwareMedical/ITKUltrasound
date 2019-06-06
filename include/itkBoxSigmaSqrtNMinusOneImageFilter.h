@@ -141,7 +141,7 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
           ++(CornerItVec[k]);
           }
 
-        oIt.Set(static_cast<OutputPixelType>( vcl_sqrt(  SquareSum - Sum*Sum/pixelscount ) ) );
+        oIt.Set(static_cast<OutputPixelType>( std::sqrt(  SquareSum - Sum*Sum/pixelscount ) ) );
         }
       }
     else
@@ -209,7 +209,7 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
             }
           }
 
-        oIt.Set(static_cast<OutputPixelType>( vcl_sqrt( SquareSum - Sum*Sum/edgepixelscount ) ) );
+        oIt.Set(static_cast<OutputPixelType>( std::sqrt( SquareSum - Sum*Sum/edgepixelscount ) ) );
         }
       }
     }

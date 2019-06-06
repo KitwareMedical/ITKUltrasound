@@ -248,7 +248,7 @@ NormalizedCrossCorrelationMetricImageFilter< TFixedImage, TMovingImage, TMetricI
     temp = static_cast< MetricImagePixelType >( fixedMinusMeanConstIt.Get() );
     fixedPseudoSigma += temp * temp;
     }
-  fixedPseudoSigma = vcl_sqrt( fixedPseudoSigma );
+  fixedPseudoSigma = std::sqrt( fixedPseudoSigma );
 
   // Has the same value everywhere but the border.
   MetricImagePointerType fixedPseudoSigmaImage = this->GetOutput( 5 );
@@ -285,7 +285,7 @@ NormalizedCrossCorrelationMetricImageFilter< TFixedImage, TMovingImage, TMetricI
         !fixedPseudoSigmaFaceIt.IsAtEnd();
         ++fixedPseudoSigmaFaceIt, ++nIt )
         {
-        fixedPseudoSigmaFaceIt.Set( vcl_sqrt( innerProduct( nIt, fixedKernelOperator ) ) );
+        fixedPseudoSigmaFaceIt.Set( std::sqrt( innerProduct( nIt, fixedKernelOperator ) ) );
         }
       }
     }
@@ -312,7 +312,7 @@ NormalizedCrossCorrelationMetricImageFilter< TFixedImage, TMovingImage, TMetricI
       {
       movingPseudoSigmaVal += movingMinusMeanIt.Get() * movingMinusMeanIt.Get();
       }
-    movingPseudoSigmaVal = vcl_sqrt( movingPseudoSigmaVal );
+    movingPseudoSigmaVal = std::sqrt( movingPseudoSigmaVal );
     movingPseudoSigma->SetBufferedRegion( this->m_MovingImageRegion );
     movingPseudoSigma->Allocate();
     movingPseudoSigma->FillBuffer( movingPseudoSigmaVal );

@@ -83,7 +83,7 @@ ImageToImageMetricMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
     {
     for( unsigned int i = 0; i < ImageDimension; ++i )
       {
-      metricSize[i] = vcl_ceil( movingSize[i] * movingSpacing[i] / m_MetricImageSpacing[i] );
+      metricSize[i] = std::ceil( movingSize[i] * movingSpacing[i] / m_MetricImageSpacing[i] );
       }
     output->SetSpacing( m_MetricImageSpacing );
     }

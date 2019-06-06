@@ -63,10 +63,10 @@ VnlInverse1DFFTImageFilter< TInputImage, TOutputImage >
     outputIt.SetDirection( direction );
 
     typedef typename TOutputImage::PixelType OutputPixelType;
-    vnl_vector< vcl_complex< OutputPixelType > > inputBuffer( vectorSize );
-    typename vnl_vector< vcl_complex< OutputPixelType > >::iterator inputBufferIt = inputBuffer.begin();
+    vnl_vector< std::complex< OutputPixelType > > inputBuffer( vectorSize );
+    typename vnl_vector< std::complex< OutputPixelType > >::iterator inputBufferIt = inputBuffer.begin();
       // fft is done in-place
-    typename vnl_vector< vcl_complex< OutputPixelType > >::iterator outputBufferIt = inputBuffer.begin();
+    typename vnl_vector< std::complex< OutputPixelType > >::iterator outputBufferIt = inputBuffer.begin();
     vnl_fft_1d< OutputPixelType > v1d(vectorSize);
 
     // for every fft line

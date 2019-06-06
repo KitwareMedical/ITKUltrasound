@@ -69,7 +69,7 @@ VnlForward1DFFTImageFilter< TInputImage, TOutputImage >
     outputIt.SetDirection( direction );
 
     typedef typename TInputImage::PixelType PixelType;
-    typedef vcl_complex< PixelType >        ComplexType;
+    typedef std::complex< PixelType >       ComplexType;
     typedef vnl_vector< ComplexType >       ComplexVectorType;
     ComplexVectorType inputBuffer( vectorSize );
     typename ComplexVectorType::iterator inputBufferIt = inputBuffer.begin();
