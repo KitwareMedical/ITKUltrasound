@@ -1,7 +1,7 @@
 itk_wrap_include("list")
 
 itk_wrap_class("itk::Spectra1DSupportWindowToMaskImageFilter" POINTER_WITH_2_SUPERCLASSES)
-  foreach(d ${ITK_WRAP_DIMS})
+  foreach(d ${ITK_WRAP_IMAGE_DIMS})
     foreach(t ${WRAP_ITK_INT})
       itk_wrap_template("IlistitkIndex${d}${d}${ITKM_I${t}${d}}" "itk::Image< std::list< itk::Index< ${d} > >, ${d} >, ${ITKT_I${t}${d}}")
     endforeach(t)

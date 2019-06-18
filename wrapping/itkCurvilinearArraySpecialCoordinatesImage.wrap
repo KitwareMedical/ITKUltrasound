@@ -2,7 +2,7 @@ itk_wrap_include("list")
 itk_wrap_include("complex")
 
 itk_wrap_class("itk::CurvilinearArraySpecialCoordinatesImage" POINTER_WITH_SUPERCLASS)
-  foreach(d ${ITK_WRAP_DIMS})
+  foreach(d ${ITK_WRAP_IMAGE_DIMS})
     foreach(t ${WRAP_ITK_SCALAR})
       itk_wrap_template("${ITKM_${t}}${d}" "${ITKT_${t}}, ${d}")
     endforeach()
@@ -14,7 +14,7 @@ itk_end_wrap_class()
 
 itk_wrap_include("itkCastImageFilter.h")
 itk_wrap_class("itk::CastImageFilter" POINTER_WITH_2_SUPERCLASSES)
-  foreach(d ${ITK_WRAP_DIMS})
+  foreach(d ${ITK_WRAP_IMAGE_DIMS})
     foreach(t1 ${WRAP_ITK_SCALAR})
       foreach(t2 ${WRAP_ITK_SCALAR})
         itk_wrap_template("CASCI${ITKM_${t1}}${d}CASCI${ITKM_${t2}}${d}"
@@ -28,7 +28,7 @@ itk_end_wrap_class()
 
 itk_wrap_include("itkRescaleIntensityImageFilter.h")
 itk_wrap_class("itk::RescaleIntensityImageFilter" POINTER_WITH_2_SUPERCLASSES)
-  foreach(d ${ITK_WRAP_DIMS})
+  foreach(d ${ITK_WRAP_IMAGE_DIMS})
     foreach(t ${WRAP_ITK_SCALAR})
       foreach(ut ${WRAP_ITK_INT})
         itk_wrap_template("I${ITKM_${t}}${d}CASCI${ITKM_${ut}}${d}"
@@ -39,7 +39,7 @@ itk_wrap_class("itk::RescaleIntensityImageFilter" POINTER_WITH_2_SUPERCLASSES)
 itk_end_wrap_class()
 
 itk_wrap_class("itk::ImageToImageFilter" POINTER_WITH_SUPERCLASS)
-  foreach(d ${ITK_WRAP_DIMS})
+  foreach(d ${ITK_WRAP_IMAGE_DIMS})
     foreach(t ${WRAP_ITK_SCALAR})
       foreach(ut ${WRAP_ITK_INT})
         itk_wrap_template("I${ITKM_${t}}${d}CASCI${ITKM_${ut}}${d}"
@@ -48,17 +48,17 @@ itk_wrap_class("itk::ImageToImageFilter" POINTER_WITH_SUPERCLASS)
       foreach(t2 ${WRAP_ITK_SCALAR})
         itk_wrap_template("CASCI${ITKM_${t}}${d}CASCI${ITKM_${t2}}${d}"
           "itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t2}}, ${d} >")
-      endforeach() 
+      endforeach()
     endforeach()
     foreach(t3 ${WRAP_ITK_COMPLEX_REAL})
-      itk_wrap_template("CASCI${ITKM_${t3}}${d}CASCI${ITKM_${t3}}${d}" 
+      itk_wrap_template("CASCI${ITKM_${t3}}${d}CASCI${ITKM_${t3}}${d}"
         "itk::CurvilinearArraySpecialCoordinatesImage<  ${ITKT_${t3}}, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage<  ${ITKT_${t3}}, ${d} >")
     endforeach()
   endforeach()
 itk_end_wrap_class()
 
 itk_wrap_class("itk::ImageFileReader" POINTER_WITH_SUPERCLASS)
-  foreach(d ${ITK_WRAP_DIMS})
+  foreach(d ${ITK_WRAP_IMAGE_DIMS})
     foreach(t ${WRAP_ITK_SCALAR})
       itk_wrap_template("CASCI${ITKM_${t}}${d}"
         "itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >")
@@ -67,7 +67,7 @@ itk_wrap_class("itk::ImageFileReader" POINTER_WITH_SUPERCLASS)
 itk_end_wrap_class()
 
 itk_wrap_class("itk::ImageFileWriter" POINTER)
-  foreach(d ${ITK_WRAP_DIMS})
+  foreach(d ${ITK_WRAP_IMAGE_DIMS})
     foreach(t ${WRAP_ITK_SCALAR})
       itk_wrap_template("CASCI${ITKM_${t}}${d}"
         "itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >")
@@ -77,7 +77,7 @@ itk_end_wrap_class()
 
 itk_wrap_include("itkResampleImageFilter.h")
 itk_wrap_class("itk::ResampleImageFilter" POINTER_WITH_2_SUPERCLASSES)
-  foreach(d ${ITK_WRAP_DIMS})
+  foreach(d ${ITK_WRAP_IMAGE_DIMS})
     foreach(t1 ${WRAP_ITK_SCALAR})
       foreach(t2 ${WRAP_ITK_SCALAR})
         itk_wrap_template("CASCI${ITKM_${t1}}${d}I${ITKM_${t2}}${d}"
@@ -89,7 +89,7 @@ itk_end_wrap_class()
 
 itk_wrap_include("itkSpectra1DSupportWindowToMaskImageFilter.h")
 itk_wrap_class("itk::Spectra1DSupportWindowToMaskImageFilter" POINTER_WITH_2_SUPERCLASSES)
-  foreach(d ${ITK_WRAP_DIMS})
+  foreach(d ${ITK_WRAP_IMAGE_DIMS})
     foreach(t ${WRAP_ITK_INT})
       itk_wrap_template("IlistitkIndex${d}${d}CASCI${ITKM_${t}}${d}"
         "itk::Image< std::list< itk::Index< ${d} > >, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >")
