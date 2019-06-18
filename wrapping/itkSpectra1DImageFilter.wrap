@@ -1,7 +1,7 @@
 itk_wrap_include("list")
 
 itk_wrap_class("itk::Spectra1DImageFilter" POINTER)
-  foreach(d ${ITK_WRAP_DIMS})
+  foreach(d ${ITK_WRAP_IMAGE_DIMS})
     foreach(scalar_t ${WRAP_ITK_SCALAR})
       foreach(real_t ${WRAP_ITK_REAL})
         itk_wrap_template("${ITKM_I${scalar_t}${d}}IlistitkIndex${d}${d}${ITKM_VI${real_t}${d}}"

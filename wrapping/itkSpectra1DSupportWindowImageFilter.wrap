@@ -1,6 +1,6 @@
 itk_wrap_include("list")
 set(TEMPLATE_LIST_INDEX "")
-foreach(d ${ITK_WRAP_DIMS})
+foreach(d ${ITK_WRAP_IMAGE_DIMS})
   set(TEMPLATE_LIST_INDEX "${TEMPLATE_LIST_INDEX}
 %template(listIndex${d}) std::list< itk::Index< ${d} > >;
 ")
@@ -14,7 +14,7 @@ set(WRAPPER_SWIG_LIBRARY_FILES ${WRAPPER_SWIG_LIBRARY_FILES}
   "${CMAKE_CURRENT_BINARY_DIR}/stdlistitkIndex.i")
 
 itk_wrap_class("itk::Image" POINTER)
-  foreach(d ${ITK_WRAP_DIMS})
+  foreach(d ${ITK_WRAP_IMAGE_DIMS})
     itk_wrap_template("listitkIndex${d}${d}" "std::list< itk::Index< ${d} > >, ${d}")
   endforeach(d)
 itk_end_wrap_class()

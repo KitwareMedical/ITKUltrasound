@@ -12,6 +12,7 @@ set(WRAPPER_LIBRARY_GROUPS
   itkCurvilinearArraySpecialCoordinatesImage
   itkFrequencyDomain1DFilterFunction
   itkFrequencyDomain1DImageFilter
+  itkBModeImageFilter
   )
 itk_auto_load_submodules()
 itk_end_wrap_module()
