@@ -25,7 +25,7 @@
 #include "itkImageLinearIteratorWithIndex.h"
 #include "itkIndent.h"
 #include "itkMetaDataObject.h"
-#include "itkExceptionObject.h"
+#include "itkMacro.h"
 #include "itkVnlFFTCommon.h"
 #include "vnl/algo/vnl_fft_base.h"
 #include "vnl/algo/vnl_fft_1d.h"
