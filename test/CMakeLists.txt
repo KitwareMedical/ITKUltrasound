@@ -7,12 +7,14 @@ else()
 endif()
 
 set(UltrasoundTests
+  itkAcousticImpulseResponseImageFilterTest.cxx
   itkAnalyticSignalImageFilterTest.cxx
   itkBModeImageFilterTestTiming.cxx
   itkCurvilinearArraySpecialCoordinatesImageTest.cxx
   itkCurvilinearArrayUltrasoundImageFileReaderTest.cxx
   itkComplexToComplex1DFFTImageFilterTest.cxx
   itkFFT1DImageFilterTest.cxx
+  itkGradientBasedAngleOfIncidenceImageFilterTest.cxx
   itkHDF5BModeUltrasoundImageFileReaderTest.cxx
   itkHDF5UltrasoundImageIOTest.cxx
   itkHDF5UltrasoundImageIOCanReadITKImageTest.cxx
@@ -52,6 +54,142 @@ endif()
 
 CreateTestDriver(Ultrasound "${Ultrasound-Test_LIBRARIES}" "${UltrasoundTests}")
 
+itk_add_test(NAME itkAcousticImpulseResponseImageFilterTest1
+  COMMAND UltrasoundTestDriver
+  --compareNumberOfPixelsTolerance 50
+  --compare
+      DATA{Baseline/itkAcousticImpulseResponseImageFilterTest1GradientImageFilter.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkAcousticImpulseResponseImageFilterTest1GradientImageFilter.mha
+  --compare
+      DATA{Baseline/itkAcousticImpulseResponseImageFilterTest1GradientRecursiveGaussianImageFilter.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkAcousticImpulseResponseImageFilterTest1GradientRecursiveGaussianImageFilter.mha
+    itkAcousticImpulseResponseImageFilterTest
+      DATA{Input/itkLabelMapToAcousticImpedanceImageFilterTest.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkAcousticImpulseResponseImageFilterTest1GradientImageFilter.mha
+      ${ITK_TEST_OUTPUT_DIR}/itkAcousticImpulseResponseImageFilterTest1GradientRecursiveGaussianImageFilter.mha
+      31.8
+      -24.8
+      1.0
+  )
+itk_add_test(NAME itkAcousticImpulseResponseImageFilterTest2
+  COMMAND UltrasoundTestDriver
+  --compareNumberOfPixelsTolerance 50
+  --compare
+      DATA{Baseline/itkAcousticImpulseResponseImageFilterTest2GradientImageFilter.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkAcousticImpulseResponseImageFilterTest2GradientImageFilter.mha
+  --compare
+      DATA{Baseline/itkAcousticImpulseResponseImageFilterTest2GradientRecursiveGaussianImageFilter.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkAcousticImpulseResponseImageFilterTest2GradientRecursiveGaussianImageFilter.mha
+    itkAcousticImpulseResponseImageFilterTest
+      DATA{Input/itkLabelMapToAcousticImpedanceImageFilterTest.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkAcousticImpulseResponseImageFilterTest2GradientImageFilter.mha
+      ${ITK_TEST_OUTPUT_DIR}/itkAcousticImpulseResponseImageFilterTest2GradientRecursiveGaussianImageFilter.mha
+      136.5
+      -90.8
+      1.0
+  )
+itk_add_test(NAME itkAcousticImpulseResponseImageFilterTest3
+  COMMAND UltrasoundTestDriver
+  --compareNumberOfPixelsTolerance 50
+  --compare
+      DATA{Baseline/itkAcousticImpulseResponseImageFilterTest3GradientImageFilter.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkAcousticImpulseResponseImageFilterTest3GradientImageFilter.mha
+  --compare
+      DATA{Baseline/itkAcousticImpulseResponseImageFilterTest3GradientRecursiveGaussianImageFilter.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkAcousticImpulseResponseImageFilterTest3GradientRecursiveGaussianImageFilter.mha
+    itkAcousticImpulseResponseImageFilterTest
+      DATA{Input/itkLabelMapToAcousticImpedanceImageFilterTest.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkAcousticImpulseResponseImageFilterTest3GradientImageFilter.mha
+      ${ITK_TEST_OUTPUT_DIR}/itkAcousticImpulseResponseImageFilterTest3GradientRecursiveGaussianImageFilter.mha
+      136.5
+      -90.8
+      0.5
+  )
+itk_add_test(NAME itkAcousticImpulseResponseImageFilterTest4
+  COMMAND UltrasoundTestDriver
+  --compareNumberOfPixelsTolerance 50
+  --compare
+      DATA{Baseline/itkAcousticImpulseResponseImageFilterTest4GradientImageFilter.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkAcousticImpulseResponseImageFilterTest4GradientImageFilter.mha
+  --compare
+      DATA{Baseline/itkAcousticImpulseResponseImageFilterTest4GradientRecursiveGaussianImageFilter.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkAcousticImpulseResponseImageFilterTest4GradientRecursiveGaussianImageFilter.mha
+    itkAcousticImpulseResponseImageFilterTest
+      DATA{Input/itkLabelMapToAcousticImpedanceImageFilterTest.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkAcousticImpulseResponseImageFilterTest4GradientImageFilter.mha
+      ${ITK_TEST_OUTPUT_DIR}/itkAcousticImpulseResponseImageFilterTest4GradientRecursiveGaussianImageFilter.mha
+      136.5
+      -90.8
+      2.0
+  )
+itk_add_test(NAME itkGradientBasedAngleOfIncidenceImageFilterTest
+  COMMAND UltrasoundTestDriver
+  --compareNumberOfPixelsTolerance 50
+  --compare
+      DATA{Baseline/itkGradientBasedAngleOfIncidenceImageFilterTestGradientImageFilter.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkGradientBasedAngleOfIncidenceImageFilterTestGradientImageFilter.mha
+  --compare
+      DATA{Baseline/itkGradientBasedAngleOfIncidenceImageFilterTestGradientRecursiveGaussianImageFilter.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkGradientBasedAngleOfIncidenceImageFilterTestGradientRecursiveGaussianImageFilter.mha
+    itkGradientBasedAngleOfIncidenceImageFilterTest
+      DATA{Input/itkLabelMapToAcousticImpedanceImageFilterTest.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkGradientBasedAngleOfIncidenceImageFilterTestGradientImageFilter.mha
+      ${ITK_TEST_OUTPUT_DIR}/itkGradientBasedAngleOfIncidenceImageFilterTestGradientRecursiveGaussianImageFilter.mha
+      CURVILINEAR
+      31.8
+      -24.8
+    )
+itk_add_test(NAME itkGradientBasedAngleOfIncidenceImageFilterTest2
+  COMMAND UltrasoundTestDriver
+  --compareNumberOfPixelsTolerance 50
+  --compare
+      DATA{Baseline/itkGradientBasedAngleOfIncidenceImageFilterTest2GradientImageFilter.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkGradientBasedAngleOfIncidenceImageFilterTest2GradientImageFilter.mha
+  --compare
+      DATA{Baseline/itkGradientBasedAngleOfIncidenceImageFilterTest2GradientRecursiveGaussianImageFilter.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkGradientBasedAngleOfIncidenceImageFilterTest2GradientRecursiveGaussianImageFilter.mha
+    itkGradientBasedAngleOfIncidenceImageFilterTest
+    DATA{Input/itkLabelMapToAcousticImpedanceImageFilterTest.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkGradientBasedAngleOfIncidenceImageFilterTest2GradientImageFilter.mha
+      ${ITK_TEST_OUTPUT_DIR}/itkGradientBasedAngleOfIncidenceImageFilterTest2GradientRecursiveGaussianImageFilter.mha
+      CURVILINEAR
+      136.5
+      -90.8
+    )
+itk_add_test(NAME itkGradientBasedAngleOfIncidenceImageFilterTest3
+  COMMAND UltrasoundTestDriver
+  --compareNumberOfPixelsTolerance 50
+  --compare
+      DATA{Baseline/itkGradientBasedAngleOfIncidenceImageFilterTest3GradientImageFilter.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkGradientBasedAngleOfIncidenceImageFilterTest3GradientImageFilter.mha
+  --compare
+      DATA{Baseline/itkGradientBasedAngleOfIncidenceImageFilterTest3GradientRecursiveGaussianImageFilter.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkGradientBasedAngleOfIncidenceImageFilterTest3GradientRecursiveGaussianImageFilter.mha
+    itkGradientBasedAngleOfIncidenceImageFilterTest
+      DATA{Input/itkLabelMapToAcousticImpedanceImageFilterTest.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkGradientBasedAngleOfIncidenceImageFilterTest3GradientImageFilter.mha
+      ${ITK_TEST_OUTPUT_DIR}/itkGradientBasedAngleOfIncidenceImageFilterTest3GradientRecursiveGaussianImageFilter.mha
+      LINEAR
+      0.0
+      1.0
+  )
+itk_add_test(NAME itkGradientBasedAngleOfIncidenceImageFilterTest4
+  COMMAND UltrasoundTestDriver
+  --compareNumberOfPixelsTolerance 50
+  --compare
+      DATA{Baseline/itkGradientBasedAngleOfIncidenceImageFilterTest4GradientImageFilter.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkGradientBasedAngleOfIncidenceImageFilterTest4GradientImageFilter.mha
+  --compare
+      DATA{Baseline/itkGradientBasedAngleOfIncidenceImageFilterTest4GradientRecursiveGaussianImageFilter.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkGradientBasedAngleOfIncidenceImageFilterTest4GradientRecursiveGaussianImageFilter.mha
+    itkGradientBasedAngleOfIncidenceImageFilterTest
+      DATA{Input/itkLabelMapToAcousticImpedanceImageFilterTest.mha}
+      ${ITK_TEST_OUTPUT_DIR}/itkGradientBasedAngleOfIncidenceImageFilterTest4GradientImageFilter.mha
+      ${ITK_TEST_OUTPUT_DIR}/itkGradientBasedAngleOfIncidenceImageFilterTest4GradientRecursiveGaussianImageFilter.mha
+      LINEAR
+      0.5
+      0.5
+  )
 itk_add_test(NAME itkAnalyticSignalImageFilterTest
   COMMAND UltrasoundTestDriver
   --compare
