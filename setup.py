@@ -41,6 +41,7 @@ setup(
     keywords='ITK InsightToolkit ultrasound imaging',
     url=r'http://www.insight-journal.org/browse/publication/722',
     install_requires=[
-        r'itk>=5.0.0.post1'
+        r'itk>=5.0.0.post1',
+        r'itk-bsplinegradient'
     ]
     )
