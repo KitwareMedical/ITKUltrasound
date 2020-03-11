@@ -163,7 +163,7 @@ public:
 
   /** Method to return the latest modified time of this object or
    * any of its cached ivars */
-  unsigned long GetMTime() const override;
+  ModifiedTimeType GetMTime() const override;
 
   /** BlockMatching::ImageRegistrationMethod used to register each image at
    * every level. */

@@ -195,7 +195,7 @@ protected:
   void AfterThreadedGenerateData() override;
 
   /** Method Compute the Modified Time based on changed to the components. */
-  unsigned long GetMTime() const override;
+  ModifiedTimeType GetMTime() const override;
 
 private:
   SizeType                m_Size;       // Size of the output image
