@@ -57,17 +57,17 @@ int itkTimeGainCompensationImageFilterTest( int argc, char * argv[] )
   typedef TGCFilterType::GainType GainType;
 
   GainType gain = tgcFilter->GetGain();
-  TEST_SET_GET_VALUE( 1.0, gain(0, 1) );
+  ITK_TEST_SET_GET_VALUE( 1.0, gain(0, 1) );
 
   // Invalid number of columns
   gain.SetSize( 4, 3 );
   tgcFilter->SetGain( gain );
-  TRY_EXPECT_EXCEPTION( tgcFilter->Update() );
+  ITK_TRY_EXPECT_EXCEPTION( tgcFilter->Update() );
 
   // Invalid number of rows
   gain.SetSize( 1, 2 );
   tgcFilter->SetGain( gain );
-  TRY_EXPECT_EXCEPTION( tgcFilter->Update() );
+  ITK_TRY_EXPECT_EXCEPTION( tgcFilter->Update() );
 
   // Depths are not ascending
   gain.SetSize( 3, 2 );
@@ -78,7 +78,7 @@ int itkTimeGainCompensationImageFilterTest( int argc, char * argv[] )
   gain( 2, 0 ) = 1000.0;
   gain( 2, 1 ) = 5.0;
   tgcFilter->SetGain( gain );
-  TRY_EXPECT_EXCEPTION( tgcFilter->Update() );
+  ITK_TRY_EXPECT_EXCEPTION( tgcFilter->Update() );
 
   gain( 1, 0 ) = 1000.0;
   gain( 2, 0 ) = 2000.0;
@@ -92,15 +92,7 @@ int itkTimeGainCompensationImageFilterTest( int argc, char * argv[] )
   BModeFilterType::Pointer bmodeFilter = BModeFilterType::New();
   bmodeFilter->SetInput( caster->GetOutput() );
 
-  try
-    {
-    bmodeFilter->Update();
-    }
-  catch( itk::ExceptionObject & error )
-    {
-    std::cerr << "Error: " << error << std::endl;
-    return EXIT_FAILURE;
-    }
+  ITK_TRY_EXPECT_NO_EXCEPTION( bmodeFilter->Update() );
 
   tgcFilter->Print( std::cout );
 
@@ -139,15 +131,7 @@ int itkTimeGainCompensationImageFilterTest( int argc, char * argv[] )
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFileName );
   writer->SetInput( rescaler->GetOutput() );
-  try
-    {
-    writer->Update();
-    }
-  catch( itk::ExceptionObject & error )
-    {
-    std::cerr << "Error: " << error << std::endl;
-    return EXIT_FAILURE;
-    }
+  ITK_TRY_EXPECT_NO_EXCEPTION( writer->Update() );
 
   return EXIT_SUCCESS;
 }
