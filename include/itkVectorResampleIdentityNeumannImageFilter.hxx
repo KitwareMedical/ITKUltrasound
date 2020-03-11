@@ -263,7 +263,7 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
  * Verify if any of the components has been modified.
  */
 template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
-unsigned long
+ModifiedTimeType
 VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
 ::GetMTime() const
 {

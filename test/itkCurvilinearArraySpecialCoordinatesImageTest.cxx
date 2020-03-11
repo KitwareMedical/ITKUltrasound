@@ -47,15 +47,8 @@ int itkCurvilinearArraySpecialCoordinatesImageTest( int argc, char * argv[] )
   typedef itk::ImageFileReader < SpecialCoordinatesImageType > ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
-  try
-    {
-    reader->Update();
-    }
-  catch( itk::ExceptionObject & error )
-    {
-    std::cerr << "Error: " << error << std::endl;
-    return EXIT_FAILURE;
-    }
+  ITK_TRY_EXPECT_NO_EXCEPTION( reader->Update() );
+
   SpecialCoordinatesImageType::Pointer curvilinearArrayImage = reader->GetOutput();
   const SpecialCoordinatesImageType::SizeType inputSize = curvilinearArrayImage->GetLargestPossibleRegion().GetSize();
   const double lateralAngularSeparation = (vnl_math::pi / 2.0 + 0.5) /
@@ -117,24 +110,16 @@ int itkCurvilinearArraySpecialCoordinatesImageTest( int argc, char * argv[] )
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFileName );
   writer->SetInput( resampler->GetOutput() );
-  try
-    {
-    writer->Update();
-    }
-  catch( itk::ExceptionObject & error )
-    {
-    std::cerr << "Error: " << error << std::endl;
-    return EXIT_FAILURE;
-    }
+  ITK_TRY_EXPECT_NO_EXCEPTION( writer->Update() );
 
   // Check CopyInformation
   SpecialCoordinatesImageType::Pointer curvilinearArrayCopiedInformation = SpecialCoordinatesImageType::New();
   curvilinearArrayCopiedInformation->CopyInformation( curvilinearArrayImage );
 
   std::cout << "With copied information: " << curvilinearArrayCopiedInformation << std::endl;
-  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( curvilinearArrayCopiedInformation->GetLateralAngularSeparation(), 0.00862832, 10, 1e-6 ) );
-  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( curvilinearArrayCopiedInformation->GetRadiusSampleSize(), 0.0513434, 10, 1e-6 ) );
-  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( curvilinearArrayCopiedInformation->GetFirstSampleDistance(), 26.4, 10, 1e-6 ) );
+  ITK_TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( curvilinearArrayCopiedInformation->GetLateralAngularSeparation(), 0.00862832, 10, 1e-6 ) );
+  ITK_TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( curvilinearArrayCopiedInformation->GetRadiusSampleSize(), 0.0513434, 10, 1e-6 ) );
+  ITK_TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( curvilinearArrayCopiedInformation->GetFirstSampleDistance(), 26.4, 10, 1e-6 ) );
 
   return EXIT_SUCCESS;
 }

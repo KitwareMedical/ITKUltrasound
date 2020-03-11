@@ -32,7 +32,7 @@ itkHDF5UltrasoundImageIOCanReadITKImageTest( int argc, char * argv [] )
 
   // Do not read an HDF5 image in the ITK format -- let the ITK HDF5ImageIO do
   // that instead.
-  TEST_EXPECT_TRUE( !imageIO->CanReadFile( inputImageFileName ) );
+  ITK_TEST_EXPECT_TRUE( !imageIO->CanReadFile( inputImageFileName ) );
 
   return EXIT_SUCCESS;
 }

@@ -56,30 +56,14 @@ int itkSliceSeriesSpecialCoordinatesImageTest( int argc, char * argv[] )
   typedef itk::UltrasoundImageFileReader < SliceImageType > SliceReaderType;
   SliceReaderType::Pointer sliceReader = SliceReaderType::New();
   sliceReader->SetFileName( inputImageFileName );
-  try
-    {
-    sliceReader->Update();
-    }
-  catch( itk::ExceptionObject & error )
-    {
-    std::cerr << "Error: " << error << std::endl;
-    return EXIT_FAILURE;
-    }
+  ITK_TRY_EXPECT_NO_EXCEPTION( sliceReader->Update() );
   SliceImageType::Pointer sliceImage = sliceReader->GetOutput();
   sliceImage->Print( std::cout );
 
   typedef itk::ImageFileReader< SliceSeriesImageType > ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
-  try
-    {
-    reader->Update();
-    }
-  catch( itk::ExceptionObject & error )
-    {
-    std::cerr << "Error: " << error << std::endl;
-    return EXIT_FAILURE;
-    }
+  ITK_TRY_EXPECT_NO_EXCEPTION( reader->Update() );
   SliceSeriesImageType::Pointer image = reader->GetOutput();
   image->SetSliceImage( sliceImage );
 
@@ -232,15 +216,7 @@ int itkSliceSeriesSpecialCoordinatesImageTest( int argc, char * argv[] )
   writer->SetFileName( outputImageFileName );
   writer->SetInput( resampler->GetOutput() );
   writer->SetUseCompression( true );
-  try
-    {
-    writer->Update();
-    }
-  catch( itk::ExceptionObject & error )
-    {
-    std::cerr << "Error: " << error << std::endl;
-    return EXIT_FAILURE;
-    }
+  ITK_TRY_EXPECT_NO_EXCEPTION( writer->Update() );
 
   // Check CopyInformation
   SliceSeriesImageType::Pointer imageCopiedInformation = SliceSeriesImageType::New();
@@ -253,9 +229,9 @@ int itkSliceSeriesSpecialCoordinatesImageTest( int argc, char * argv[] )
   imageCopiedInformation->TransformContinuousIndexToPhysicalPoint( continuousIndex, point );
   std::cout << "Transformed point: " << point << std::endl;
   std::cout << imageCopiedInformation << std::endl;
-  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( point[0], 20.2306, 10, 1e-3 ) );
-  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( point[1], 74.3784, 10, 1e-3 ) );
-  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( point[2], 9.7921, 10, 1e-3 ) );
+  ITK_TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( point[0], 20.2306, 10, 1e-3 ) );
+  ITK_TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( point[1], 74.3784, 10, 1e-3 ) );
+  ITK_TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( point[2], 9.7921, 10, 1e-3 ) );
 
   return EXIT_SUCCESS;
 }

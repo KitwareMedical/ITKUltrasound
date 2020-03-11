@@ -41,7 +41,7 @@ int itkSpectra1DSupportWindowImageFilterTest( int argc, char* argv[] )
   typedef itk::ImageFileReader< ImageType > ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
-  TRY_EXPECT_NO_EXCEPTION( reader->UpdateLargestPossibleRegion() );
+  ITK_TRY_EXPECT_NO_EXCEPTION( reader->UpdateLargestPossibleRegion() );
 
   // Want RF to be along direction 0
   typedef itk::PermuteAxesImageFilter< ImageType > PermuteAxesFilterType;
@@ -51,15 +51,7 @@ int itkSpectra1DSupportWindowImageFilterTest( int argc, char* argv[] )
   permuteOrder[1] = 0;
   permuteAxesFilter->SetOrder( permuteOrder );
   permuteAxesFilter->SetInput( reader->GetOutput() );
-  try
-    {
-    permuteAxesFilter->UpdateOutputInformation();
-    }
-  catch( itk::ExceptionObject & error )
-    {
-    std::cout << "Error: " << error << std::endl;
-    return EXIT_FAILURE;
-    }
+  ITK_TRY_EXPECT_NO_EXCEPTION( permuteAxesFilter->UpdateOutputInformation() );
   ImageType::ConstPointer rfImage = permuteAxesFilter->GetOutput();
 
   ImageType::Pointer sideLines = ImageType::New();
@@ -71,30 +63,13 @@ int itkSpectra1DSupportWindowImageFilterTest( int argc, char* argv[] )
   typedef itk::Spectra1DSupportWindowImageFilter< ImageType > SpectraSupportWindowFilterType;
   SpectraSupportWindowFilterType::Pointer spectraSupportWindowFilter = SpectraSupportWindowFilterType::New();
   spectraSupportWindowFilter->SetInput( sideLines );
-
-  try
-    {
-    spectraSupportWindowFilter->Update();
-    }
-  catch( itk::ExceptionObject & error )
-    {
-    std::cout << "Error: " << error << std::endl;
-    return EXIT_FAILURE;
-    }
+  ITK_TRY_EXPECT_NO_EXCEPTION( spectraSupportWindowFilter->Update() );
 
   spectraSupportWindowFilter->Print( std::cout );
   spectraSupportWindowFilter->GetOutput()->GetMetaDataDictionary().Print(std::cout);
 
   spectraSupportWindowFilter->SetStep( 10 );
-  try
-    {
-    spectraSupportWindowFilter->UpdateLargestPossibleRegion();
-    }
-  catch( itk::ExceptionObject & error )
-    {
-    std::cout << "Error: " << error << std::endl;
-    return EXIT_FAILURE;
-    }
+  ITK_TRY_EXPECT_NO_EXCEPTION( spectraSupportWindowFilter->UpdateLargestPossibleRegion() );
   std::cout << "\n\nAfter setting the Step to 10: " << std::endl;
   spectraSupportWindowFilter->Print( std::cout );
 

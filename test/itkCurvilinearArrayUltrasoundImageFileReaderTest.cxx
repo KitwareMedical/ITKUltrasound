@@ -41,20 +41,12 @@ int itkCurvilinearArrayUltrasoundImageFileReaderTest( int argc, char * argv [] )
   typedef itk::UltrasoundImageFileReader< SpecialCoordinatesImageType > ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
-  try
-    {
-    reader->Update();
-    }
-  catch( itk::ExceptionObject & error )
-    {
-    std::cerr << "Error: " << error << std::endl;
-    return EXIT_FAILURE;
-    }
+  ITK_TRY_EXPECT_NO_EXCEPTION( reader->Update() );
 
   SpecialCoordinatesImageType::ConstPointer image = reader->GetOutput();
-  TEST_EXPECT_EQUAL( image->GetLateralAngularSeparation(), 0.00862832 );
-  TEST_EXPECT_EQUAL( image->GetRadiusSampleSize(), 0.0513434294 );
-  TEST_EXPECT_EQUAL( image->GetFirstSampleDistance(), 26.4 );
+  ITK_TEST_EXPECT_EQUAL( image->GetLateralAngularSeparation(), 0.00862832 );
+  ITK_TEST_EXPECT_EQUAL( image->GetRadiusSampleSize(), 0.0513434294 );
+  ITK_TEST_EXPECT_EQUAL( image->GetFirstSampleDistance(), 26.4 );
 
   return EXIT_SUCCESS;
 }

@@ -53,7 +53,7 @@ MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
 
 template <typename TFixedImage, typename TMovingImage,
           typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
-unsigned long
+ModifiedTimeType
 MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
                                        TMetricImage, TDisplacementImage, TCoordRep>
 ::GetMTime() const

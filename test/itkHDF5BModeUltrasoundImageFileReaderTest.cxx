@@ -48,15 +48,7 @@ int itkHDF5BModeUltrasoundImageFileReaderTest( int argc, char * argv [] )
   typedef itk::UltrasoundImageFileReader< SpecialCoordinatesImageType > ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
-  try
-    {
-    reader->Update();
-    }
-  catch( itk::ExceptionObject & error )
-    {
-    std::cerr << "Error: " << error << std::endl;
-    return EXIT_FAILURE;
-    }
+  ITK_TRY_EXPECT_NO_EXCEPTION( reader->Update() );
 
   SpecialCoordinatesImageType::ConstPointer image = reader->GetOutput();
   std::cout << image << std::endl;
@@ -64,16 +56,16 @@ int itkHDF5BModeUltrasoundImageFileReaderTest( int argc, char * argv [] )
   SpecialCoordinatesImageType::SliceImageType::ConstPointer sliceImage = image->GetSliceImage();
 
   const SpecialCoordinatesImageType::SliceImageType::SpacingType sliceSpacing = sliceImage->GetSpacing();
-  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceSpacing[0], 0.1925 ) );
-  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceSpacing[1], 0.167811, 10, 1e-6 ) );
+  ITK_TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceSpacing[0], 0.1925 ) );
+  ITK_TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceSpacing[1], 0.167811, 10, 1e-6 ) );
 
   const SpecialCoordinatesImageType::SliceImageType::PointType sliceOrigin = sliceImage->GetOrigin();
-  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceOrigin[0], 0.0 ) );
-  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceOrigin[1], -27.2693, 10, 1e-3 ) );
+  ITK_TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceOrigin[0], 0.0 ) );
+  ITK_TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceOrigin[1], -27.2693, 10, 1e-3 ) );
 
   const TransformType * transform = image->GetSliceTransform( 0 );
   transform->Print( std::cout );
-  TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( transform->GetAngleY(), -1.0821, 10, 1e-3 ) );
+  ITK_TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( transform->GetAngleY(), -1.0821, 10, 1e-3 ) );
 
   return EXIT_SUCCESS;
 }

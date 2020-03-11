@@ -78,7 +78,7 @@ int itkButterworthBandpass1DFilterTest( int argc, char* argv[] )
   writer->SetInput( fftInverse->GetOutput() );
   writer->SetFileName( outputImage );
 
-  TRY_EXPECT_NO_EXCEPTION( writer->Update() );
+  ITK_TRY_EXPECT_NO_EXCEPTION( writer->Update() );
 
   return EXIT_SUCCESS;
 }
