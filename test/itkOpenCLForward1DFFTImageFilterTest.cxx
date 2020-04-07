@@ -4,13 +4,6 @@
  * @date 2010-02-09
  */
 
-#include "itkTestMain.h"
-
-void RegisterTests()
-{
-  REGISTER_TEST( itkOpenCL1DRealToComplexConjugateImageFilterTest );
-}
-
 #include <complex>
 #include <iostream>
 #include <string>
@@ -21,9 +14,9 @@ void RegisterTests()
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 
-#include "itkOpenCL1DRealToComplexConjugateImageFilter.h"
+#include "itkOpenCLForward1DFFTImageFilter.h"
 
-int itkOpenCL1DRealToComplexConjugateImageFilterTest( int argc, char* argv[] )
+int itkOpenCLForward1DFFTImageFilterTest( int argc, char* argv[] )
 {
   if( argc < 3 )
     {

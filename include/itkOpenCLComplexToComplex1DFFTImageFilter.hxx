@@ -1,8 +1,8 @@
-#ifndef __itkOpenCL1DComplexToComplexImageFilter_txx
-#define __itkOpenCL1DComplexToComplexImageFilter_txx
+#ifndef itkOpenCLComplexToComplex1DFFTImageFilter_hxx
+#define itkOpenCLComplexToComplex1DFFTImageFilter_hxx
 
-#include "itkFFT1DComplexToComplexImageFilter.txx"
-#include "itkOpenCL1DComplexToComplexImageFilter.h"
+#include "itkComplexToComplex1DFFTImageFilter.hxx"
+#include "itkOpenCLComplexToComplex1DFFTImageFilter.h"
 
 #include <vector>
 
@@ -210,4 +210,4 @@ GenerateData()
 
 } // namespace itk
 
-#endif //_itkOpenCL1DComplexToComplexImageFilter_txx
+#endif //itkOpenCLComplexToComplex1DFFTImageFilter_hxx

@@ -1,7 +1,7 @@
-#ifndef __itkOpenCL1DComplexConjugateToRealImageFilter_h
-#define __itkOpenCL1DComplexConjugateToRealImageFilter_h
+#ifndef itkOpenCLInverse1DFFTImageFilter_h
+#define itkOpenCLInverse1DFFTImageFilter_h
 
-#include "itkFFT1DComplexConjugateToRealImageFilter.h"
+#include "itkInverse1DFFTImageFilter.h"
 
 #define __CL_ENABLE_EXCEPTIONS
 #include "CL/cl.hpp"
@@ -84,7 +84,7 @@ private:
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkOpenCL1DComplexConjugateToRealImageFilter.txx"
+#include "itkOpenCLInverse1DFFTImageFilter.hxx"
 #endif
 
-#endif //__itkOpenCL1DComplexConjugateToRealImageFilter_h
+#endif //itkOpenCLInverse1DFFTImageFilter_h
