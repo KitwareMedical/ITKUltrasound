@@ -43,6 +43,13 @@ if(use_fftw)
     itkFFTWComplexToComplex1DFFTImageFilterTest.cxx
     )
 endif()
+if(ITK_USE_GPU)
+  list(APPEND UltrasoundTests
+    itkOpenCLComplexToComplex1DFFTImageFilterTest.cxx
+    itkOpenCLForward1DFFTImageFilterTest.cxx
+    itkOpenCLInverse1DFFTImageFilterTest.cxx
+    )
+endif()
 if(ITKUltrasound_USE_VTK)
   list(APPEND UltrasoundTests
     itkSpecialCoordinatesImageToVTKStructuredGridFilterTest.cxx
@@ -146,7 +153,7 @@ itk_add_test( NAME itkVnlInverse1DFFTImageFilterTest
     ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkForward1DFFTImageFilterTestBaseline
     ${ITK_TEST_OUTPUT_DIR}/itkVnlInverse1DFFTImageFilterTestOutput.mhd
     )
-  itk_add_test(NAME itkSliceSeriesSpecialCoordinatesImageTest
+itk_add_test(NAME itkSliceSeriesSpecialCoordinatesImageTest
   COMMAND UltrasoundTestDriver
   --compareIntensityTolerance 10.0
   --compare
@@ -352,76 +359,36 @@ if(use_fftw)
       )
 endif()
 
-if( USE_OPENCL )
-  target_link_libraries( itkFFT1DImageFilterTest
-    OpenCL_FFT
-    )
-  target_link_libraries( itkFFT1DComplexToComplexImageFilterTest
-    OpenCL_FFT
-    )
-
-  add_executable( itkOpenCL1DRealToComplexConjugateImageFilterTest
-    itkOpenCL1DRealToComplexConjugateImageFilterTest.cxx
-    )
-  target_link_libraries( itkOpenCL1DRealToComplexConjugateImageFilterTest
-    ITKCommon
-    ITKIO
-    ITKAlgorithms
-    OpenCL_FFT
-    ${OPENCL_LIBRARIES}
-    )
-  # gdb-pretty http://gitorious.com/gdb-pretty
-  add_custom_command (TARGET itkOpenCL1DRealToComplexConjugateImageFilterTest
-    POST_BUILD
-    COMMAND cmake -E copy
-    ${CMAKE_CURRENT_SOURCE_DIR}/itkOpenCL1DRealToComplexConjugateImageFilterTest-gdb.py
-    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
-    )
-  add_test( itkOpenCL1DRealToComplexConjugateImageFilterTest
-    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/itkOpenCL1DRealToComplexConjugateImageFilterTest
-    --compare ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaselineReal128.mhd
-	      itkOpenCL1DRealToComplexConjugateImageFilterTestOutputReal.mha
-    --compare ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaselineImaginary128.mhd
-	      itkOpenCL1DRealToComplexConjugateImageFilterTestOutputImaginary.mha
-    itkOpenCL1DRealToComplexConjugateImageFilterTest
-      ${DATA_INPUT}/TreeBarkTexture.png
-      itkOpenCL1DRealToComplexConjugateImageFilterTestOutput
+if( ITK_USE_GPU )
+  itk_add_test(NAME itkOpenCLForward1DFFTImageFilterTest
+    COMMAND UltrasoundTestDriver
+    --compare
+      ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkForward1DFFTImageFilterTestBaselineRealFull.mhd
+      ${ITK_TEST_OUTPUT_DIR}/itkOpenCLForward1DFFTImageFilterTestOutputReal.mha
+    --compare
+      ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkForward1DFFTImageFilterTestBaselineImaginaryFull.mhd
+      ${ITK_TEST_OUTPUT_DIR}/itkOpenCLForward1DFFTImageFilterTestOutputImaginary.mha
+    itkOpenCLForward1DFFTImageFilterTest
+      ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
+      ${ITK_TEST_OUTPUT_DIR}/itkOpenCLForward1DFFTImageFilterTestOutput
       )
-  add_executable( itkOpenCL1DComplexConjugateToRealImageFilterTest
-    itkOpenCL1DComplexConjugateToRealImageFilterTest.cxx
-    )
-  target_link_libraries( itkOpenCL1DComplexConjugateToRealImageFilterTest
-    ITKCommon
-    ITKIO
-    ITKAlgorithms
-    OpenCL_FFT
-    ${OPENCL_LIBRARIES}
-    )
-  add_test( itkOpenCL1DComplexConjugateToRealImageFilterTest
-    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/itkOpenCL1DComplexConjugateToRealImageFilterTest
-    --compare ${DATA_INPUT}/TreeBarkTexture.png
-	      itkOpenCL1DComplexConjugateToRealImageFilterTestOutput.mha
-    itkOpenCL1DComplexConjugateToRealImageFilterTest
-      ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaseline
-      itkOpenCL1DComplexConjugateToRealImageFilterTestOutput.mha
+  itk_add_test(NAME itkOpenCLInverse1DFFTImageFilterTest
+    COMMAND UltrasoundTestDriver
+    --compare
+      ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
+      ${ITK_TEST_OUTPUT_DIR}/itkOpenCLInverse1DFFTImageFilterTestOutput.mha
+    itkOpenCLInverse1DFFTImageFilterTest
+      ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkForward1DFFTImageFilterTestBaseline
+      ${ITK_TEST_OUTPUT_DIR}/itkOpenCLInverse1DFFTImageFilterTestOutput.mha
       )
-  add_executable( itkOpenCL1DComplexToComplexImageFilterTest
-    itkOpenCL1DComplexToComplexImageFilterTest.cxx
-    )
-  target_link_libraries( itkOpenCL1DComplexToComplexImageFilterTest
-    ITKCommon
-    ITKIO
-    ITKAlgorithms
-    OpenCL_FFT
-    ${OPENCL_LIBRARIES}
-    )
-  add_test( itkOpenCL1DComplexToComplexImageFilterTest
-    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/itkOpenCL1DComplexToComplexImageFilterTest
-    --compare ${DATA_INPUT}/TreeBarkTexture.png
-	      itkOpenCL1DComplexToComplexImageFilterTestOutput.mha
-    itkOpenCL1DComplexToComplexImageFilterTest
-      ${DATA_INPUT}/itkFFT1DRealToComplexConjugateImageFilterTestBaseline
-      itkOpenCL1DComplexToComplexImageFilterTestOutput.mha
+  itk_add_test(NAME itkOpenCLComplexToComplex1DFFTImageFilterTest
+    COMMAND UltrasoundTestDriver
+    --compare
+      ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
+      ${ITK_TEST_OUTPUT_DIR}/itkOpenCLComplexToComplex1DFFTImageFilterTestOutput.mha
+    itkOpenCLComplexToComplex1DFFTImageFilterTest
+      ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkForward1DFFTImageFilterTestBaseline
+      ${ITK_TEST_OUTPUT_DIR}/itkOpenCLComplexToComplex1DFFTImageFilterTestOutput.mha
       )
 endif()
 
