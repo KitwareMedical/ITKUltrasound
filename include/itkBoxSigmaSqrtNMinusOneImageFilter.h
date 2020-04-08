@@ -28,11 +28,11 @@ namespace itk
 // copied and tweaked from BoxSigmaCalculatorFunction
 template <class TInputImage, class TOutputImage>
 void
-BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
-                          TOutputImage * outputImage,
-                          const typename TInputImage::RegionType & inputRegion,
-                          const typename TOutputImage::RegionType & outputRegion,
-                          const typename TInputImage::SizeType & Radius)
+BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage *                       accImage,
+                                        TOutputImage *                            outputImage,
+                                        const typename TInputImage::RegionType &  inputRegion,
+                                        const typename TOutputImage::RegionType & outputRegion,
+                                        const typename TInputImage::SizeType &    Radius)
 {
   // type alias
   using InputImageType = TInputImage;
@@ -44,28 +44,28 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
   using OutputImageType = TOutputImage;
   using OutputPixelType = typename TOutputImage::PixelType;
   using InputPixelType = typename TInputImage::PixelType;
-   // use the face generator for speed
+  // use the face generator for speed
   using FaceCalculatorType = typename NeighborhoodAlgorithm::ImageBoundaryFacesCalculator<InputImageType>;
   using FaceListType = typename FaceCalculatorType::FaceListType;
   using FaceListTypeIt = typename FaceCalculatorType::FaceListType::iterator;
   FaceCalculatorType faceCalculator;
 
-  FaceListType faceList;
-  FaceListTypeIt fit;
+  FaceListType                                  faceList;
+  FaceListTypeIt                                fit;
   ZeroFluxNeumannBoundaryCondition<TInputImage> nbc;
 
   // this process is actually slightly asymmetric because we need to
   // subtract rectangles that are next to our kernel, not overlapping it
-  SizeType kernelSize;
-  SizeType internalRadius;
-  SizeType RegionLimit;
+  SizeType  kernelSize;
+  SizeType  internalRadius;
+  SizeType  RegionLimit;
   IndexType RegionStart = inputRegion.GetIndex();
-  for( unsigned int i = 0; i < TInputImage::ImageDimension; ++i )
-    {
+  for (unsigned int i = 0; i < TInputImage::ImageDimension; ++i)
+  {
     kernelSize[i] = Radius[i] * 2 + 1;
     internalRadius[i] = Radius[i] + 1;
     RegionLimit[i] = inputRegion.GetSize()[i] + RegionStart[i] - 1;
-    }
+  }
 
   using AccPixType = typename NumericTraits<OutputPixelType>::RealType;
   // get a set of offsets to corners for a unit hypercube in this image
@@ -74,40 +74,40 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
   std::vector<AccPixType> Weights;
   // now compute the weights
   for (unsigned int k = 0; k < UnitCorners.size(); ++k)
-    {
-    int prod = 1;
+  {
+    int        prod = 1;
     OffsetType ThisCorner;
     for (unsigned int i = 0; i < TInputImage::ImageDimension; ++i)
-      {
+    {
       prod *= UnitCorners[k][i];
       if (UnitCorners[k][i] > 0)
-        {
+      {
         ThisCorner[i] = Radius[i];
-        }
-      else
-        {
-        ThisCorner[i] = -( (int) Radius[i]+1);
-        }
       }
+      else
+      {
+        ThisCorner[i] = -((int)Radius[i] + 1);
+      }
+    }
     Weights.push_back((AccPixType)prod);
     RealCorners.push_back(ThisCorner);
-    }
+  }
 
 
   faceList = faceCalculator(accImage, outputRegion, internalRadius);
   // start with the body region
   for (fit = faceList.begin(); fit != faceList.end(); ++fit)
-    {
+  {
     if (fit == faceList.begin())
-      {
+    {
       // this is the body region. This is meant to be an optimized
       // version that doesn't use neigborhood regions
       // compute the various offsets
       AccPixType pixelscount = 1;
       for (unsigned int i = 0; i < TInputImage::ImageDimension; ++i)
-        {
-        pixelscount *= (AccPixType)(2*Radius[i] + 1);
-        }
+      {
+        pixelscount *= (AccPixType)(2 * Radius[i] + 1);
+      }
 
       using OutputIteratorType = ImageRegionIterator<OutputImageType>;
       using InputIteratorType = ImageRegionConstIterator<InputImageType>;
@@ -116,56 +116,56 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
       CornerItVecType CornerItVec;
       // set up the iterators for each corner
       for (unsigned int k = 0; k < RealCorners.size(); ++k)
-        {
-        typename InputImageType::RegionType tReg=(*fit);
+      {
+        typename InputImageType::RegionType tReg = (*fit);
         tReg.SetIndex(tReg.GetIndex() + RealCorners[k]);
         InputIteratorType tempIt(accImage, tReg);
         tempIt.GoToBegin();
         CornerItVec.push_back(tempIt);
-        }
+      }
       // set up the output iterator
       OutputIteratorType oIt(outputImage, *fit);
       // now do the work
       for (oIt.GoToBegin(); !oIt.IsAtEnd(); ++oIt)
-        {
+      {
         AccPixType Sum = 0;
         AccPixType SquareSum = 0;
         // check each corner
         for (unsigned int k = 0; k < CornerItVec.size(); ++k)
-          {
+        {
           const InputPixelType & i = CornerItVec[k].Get();
           Sum += Weights[k] * i[0];
           SquareSum += Weights[k] * i[1];
           // increment each corner iterator
           ++(CornerItVec[k]);
-          }
-
-        oIt.Set(static_cast<OutputPixelType>( std::sqrt(  SquareSum - Sum*Sum/pixelscount ) ) );
         }
+
+        oIt.Set(static_cast<OutputPixelType>(std::sqrt(SquareSum - Sum * Sum / pixelscount)));
       }
+    }
     else
-      {
+    {
       // now we need to deal with the border regions
       using OutputIteratorType = ImageRegionIteratorWithIndex<OutputImageType>;
       OutputIteratorType oIt(outputImage, *fit);
       // now do the work
       for (oIt.GoToBegin(); !oIt.IsAtEnd(); ++oIt)
-        {
+      {
         // figure out the number of pixels in the box by creating an
         // equivalent region and cropping - this could probably be
         // included in the loop below.
         RegionType currentKernelRegion;
-        currentKernelRegion.SetSize( kernelSize );
+        currentKernelRegion.SetSize(kernelSize);
         // compute the region's index
         IndexType kernelRegionIdx = oIt.GetIndex();
         IndexType CentIndex = kernelRegionIdx;
-        for( unsigned int i = 0; i < TInputImage::ImageDimension; ++i )
-          {
+        for (unsigned int i = 0; i < TInputImage::ImageDimension; ++i)
+        {
           kernelRegionIdx[i] -= Radius[i];
-          }
-        currentKernelRegion.SetIndex( kernelRegionIdx );
-        currentKernelRegion.Crop( inputRegion );
-        long edgepixelscount = currentKernelRegion.GetNumberOfPixels();
+        }
+        currentKernelRegion.SetIndex(kernelRegionIdx);
+        currentKernelRegion.Crop(inputRegion);
+        long       edgepixelscount = currentKernelRegion.GetNumberOfPixels();
         AccPixType Sum = 0;
         AccPixType SquareSum = 0;
         // rules are : for each corner,
@@ -177,41 +177,41 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
         //                  a trailing edge. Ignore if it is outside
         //                  image region
         for (unsigned int k = 0; k < RealCorners.size(); ++k)
-          {
+        {
           IndexType ThisCorner = CentIndex + RealCorners[k];
-          bool IncludeCorner = true;
+          bool      IncludeCorner = true;
           for (unsigned int j = 0; j < TInputImage::ImageDimension; ++j)
-            {
+          {
             if (UnitCorners[k][j] > 0)
-              {
+            {
               // leading edge - crop it
-              if( ThisCorner[j] > static_cast< OffsetValueType >( RegionLimit[j]) )
-                {
-                ThisCorner[j] = static_cast< OffsetValueType>( RegionLimit[j] );
-                }
-              }
-            else
+              if (ThisCorner[j] > static_cast<OffsetValueType>(RegionLimit[j]))
               {
-              // trailing edge - check bounds
-              if (ThisCorner[j] < RegionStart[j])
-                {
-                IncludeCorner = false;
-                break;
-                }
+                ThisCorner[j] = static_cast<OffsetValueType>(RegionLimit[j]);
               }
             }
-          if (IncludeCorner)
+            else
             {
+              // trailing edge - check bounds
+              if (ThisCorner[j] < RegionStart[j])
+              {
+                IncludeCorner = false;
+                break;
+              }
+            }
+          }
+          if (IncludeCorner)
+          {
             const InputPixelType & i = accImage->GetPixel(ThisCorner);
             Sum += Weights[k] * i[0];
             SquareSum += Weights[k] * i[1];
-            }
           }
-
-        oIt.Set(static_cast<OutputPixelType>( std::sqrt( SquareSum - Sum*Sum/edgepixelscount ) ) );
         }
+
+        oIt.Set(static_cast<OutputPixelType>(std::sqrt(SquareSum - Sum * Sum / edgepixelscount)));
       }
     }
+  }
 }
 
 
@@ -226,9 +226,8 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
  *
  * \ingroup Ultrasound
  */
-template<class TInputImage, class TOutputImage=TInputImage>
-class ITK_TEMPLATE_EXPORT BoxSigmaSqrtNMinusOneImageFilter :
-    public BoxImageFilter<TInputImage, TOutputImage>
+template <class TInputImage, class TOutputImage = TInputImage>
+class ITK_TEMPLATE_EXPORT BoxSigmaSqrtNMinusOneImageFilter : public BoxImageFilter<TInputImage, TOutputImage>
 {
 public:
   /** Standard class type alias. */
@@ -255,16 +254,15 @@ public:
   using OutputPixelType = typename TOutputImage::PixelType;
 
   /** Image related type alias. */
-  itkStaticConstMacro(OutputImageDimension, unsigned int,
-                      TOutputImage::ImageDimension);
-  itkStaticConstMacro(InputImageDimension, unsigned int,
-                      TInputImage::ImageDimension);
+  itkStaticConstMacro(OutputImageDimension, unsigned int, TOutputImage::ImageDimension);
+  itkStaticConstMacro(InputImageDimension, unsigned int, TInputImage::ImageDimension);
 
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   /** Begin concept checking */
   itkConceptMacro(SameDimension,
-                  (Concept::SameDimension<itkGetStaticConstMacro(InputImageDimension),itkGetStaticConstMacro(OutputImageDimension)>));
+                  (Concept::SameDimension<itkGetStaticConstMacro(InputImageDimension),
+                                          itkGetStaticConstMacro(OutputImageDimension)>));
 
 
   /** End concept checking */
@@ -273,27 +271,28 @@ public:
 
 protected:
   BoxSigmaSqrtNMinusOneImageFilter();
-  ~BoxSigmaSqrtNMinusOneImageFilter() {};
+  ~BoxSigmaSqrtNMinusOneImageFilter(){};
 
   /** Multi-thread version GenerateData. */
 #if ITK_VERSION_MAJOR < 5
-  void ThreadedGenerateData (const OutputImageRegionType&
-                              outputRegionForThread,
-                              ThreadIdType threadId) override;
+  void
+  ThreadedGenerateData(const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId) override;
 #else
-  void DynamicThreadedGenerateData (const OutputImageRegionType& outputRegionForThread) override;
+  void
+  DynamicThreadedGenerateData(const OutputImageRegionType & outputRegionForThread) override;
 #endif
 
 private:
-  BoxSigmaSqrtNMinusOneImageFilter(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  BoxSigmaSqrtNMinusOneImageFilter(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
 }; // end of class
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBoxSigmaSqrtNMinusOneImageFilter.hxx"
+#  include "itkBoxSigmaSqrtNMinusOneImageFilter.hxx"
 #endif
 
 #endif

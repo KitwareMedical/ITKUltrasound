@@ -28,7 +28,7 @@
 #include "itkSliceSeriesSpecialCoordinatesImage.h"
 
 #ifdef ITK_HAS_GCC_PRAGMA_DIAG_PUSHPOP
-  ITK_GCC_PRAGMA_DIAG_PUSH()
+ITK_GCC_PRAGMA_DIAG_PUSH()
 #endif
 ITK_GCC_PRAGMA_DIAG(ignored "-Wattributes")
 namespace
@@ -38,153 +38,155 @@ double
 GetMetaDataAsDouble(const itk::MetaDataDictionary & dictionary, const std::string & key)
 {
   std::string valueAsStr;
-  itk::ExposeMetaData< std::string >( dictionary, key, valueAsStr );
-  std::istringstream istrm( valueAsStr );
-  double value;
+  itk::ExposeMetaData<std::string>(dictionary, key, valueAsStr);
+  std::istringstream istrm(valueAsStr);
+  double             value;
   istrm >> value;
   return value;
 }
 
 
-template< typename TImage >
+template <typename TImage>
 class UltrasoundImageFileReaderDispatch
 {
 public:
   using ImageType = TImage;
-  static void ExtractMetaData( TImage * image ) {};
+  static void
+  ExtractMetaData(TImage * image){};
 };
 
 
-template< typename TPixel, unsigned int VDimension >
-class UltrasoundImageFileReaderDispatch< itk::CurvilinearArraySpecialCoordinatesImage< TPixel, VDimension > >
+template <typename TPixel, unsigned int VDimension>
+class UltrasoundImageFileReaderDispatch<itk::CurvilinearArraySpecialCoordinatesImage<TPixel, VDimension>>
 {
 public:
-  using ImageType = itk::CurvilinearArraySpecialCoordinatesImage< TPixel, VDimension >;
-  static void ExtractMetaData( ImageType * image )
+  using ImageType = itk::CurvilinearArraySpecialCoordinatesImage<TPixel, VDimension>;
+  static void
+  ExtractMetaData(ImageType * image)
   {
     const itk::MetaDataDictionary & dictionary = image->GetMetaDataDictionary();
-    if( dictionary.HasKey( "LateralAngularSeparation" ) )
-      {
-      image->SetLateralAngularSeparation( GetMetaDataAsDouble( dictionary, "LateralAngularSeparation" ) );
-      }
-    if( dictionary.HasKey( "FirstSampleDistance" ) )
-      {
-      image->SetFirstSampleDistance( GetMetaDataAsDouble( dictionary, "FirstSampleDistance" ) );
-      }
-    if( dictionary.HasKey( "RadiusSampleSize" ) )
-      {
-      image->SetRadiusSampleSize( GetMetaDataAsDouble( dictionary, "RadiusSampleSize" ) );
-      }
+    if (dictionary.HasKey("LateralAngularSeparation"))
+    {
+      image->SetLateralAngularSeparation(GetMetaDataAsDouble(dictionary, "LateralAngularSeparation"));
+    }
+    if (dictionary.HasKey("FirstSampleDistance"))
+    {
+      image->SetFirstSampleDistance(GetMetaDataAsDouble(dictionary, "FirstSampleDistance"));
+    }
+    if (dictionary.HasKey("RadiusSampleSize"))
+    {
+      image->SetRadiusSampleSize(GetMetaDataAsDouble(dictionary, "RadiusSampleSize"));
+    }
   }
 };
 
 
-template< typename TPixel, unsigned int VDimension, typename TParametersValue >
-class UltrasoundImageFileReaderDispatch< itk::SliceSeriesSpecialCoordinatesImage< itk::Image< TPixel, VDimension - 1 >, itk::Euler3DTransform< TParametersValue >, TPixel, VDimension > >
+template <typename TPixel, unsigned int VDimension, typename TParametersValue>
+class UltrasoundImageFileReaderDispatch<itk::SliceSeriesSpecialCoordinatesImage<itk::Image<TPixel, VDimension - 1>,
+                                                                                itk::Euler3DTransform<TParametersValue>,
+                                                                                TPixel,
+                                                                                VDimension>>
 {
 public:
   static const unsigned int Dimension = VDimension;
-  static const unsigned int SliceDimension = VDimension -1;
+  static const unsigned int SliceDimension = VDimension - 1;
 
   using PixelType = TPixel;
   using ParametersValueType = TParametersValue;
-  using SliceImageType = itk::Image< PixelType, SliceDimension >;
-  using TransformType = itk::Euler3DTransform< ParametersValueType >;
-  using ImageType = itk::SliceSeriesSpecialCoordinatesImage< SliceImageType, TransformType,
-    PixelType, Dimension >;
-  static void ExtractMetaData( ImageType * image )
+  using SliceImageType = itk::Image<PixelType, SliceDimension>;
+  using TransformType = itk::Euler3DTransform<ParametersValueType>;
+  using ImageType = itk::SliceSeriesSpecialCoordinatesImage<SliceImageType, TransformType, PixelType, Dimension>;
+  static void
+  ExtractMetaData(ImageType * image)
   {
     const itk::MetaDataDictionary & dictionary = image->GetMetaDataDictionary();
     // Currently only an Image SliceType is supported.
-    if( !dictionary.HasKey( "SliceType" ) )
-      {
+    if (!dictionary.HasKey("SliceType"))
+    {
       return;
-      }
+    }
     else
-      {
+    {
       std::string sliceType;
-      itk::ExposeMetaData< std::string >( dictionary, "SliceType", sliceType );
-      if( sliceType != "Image" )
-        {
+      itk::ExposeMetaData<std::string>(dictionary, "SliceType", sliceType);
+      if (sliceType != "Image")
+      {
         return;
-        }
       }
+    }
 
     typename SliceImageType::Pointer sliceImage = SliceImageType::New();
 
-    if( dictionary.HasKey( "SliceSpacing" ) )
-      {
-      using SliceSpacingArrayType = itk::Array< double >;
-      SliceSpacingArrayType sliceSpacingArray( SliceDimension );
-      itk::ExposeMetaData< SliceSpacingArrayType >( dictionary, "SliceSpacing", sliceSpacingArray );
+    if (dictionary.HasKey("SliceSpacing"))
+    {
+      using SliceSpacingArrayType = itk::Array<double>;
+      SliceSpacingArrayType sliceSpacingArray(SliceDimension);
+      itk::ExposeMetaData<SliceSpacingArrayType>(dictionary, "SliceSpacing", sliceSpacingArray);
       typename SliceImageType::SpacingType sliceSpacing;
-      for( unsigned int ii = 0; ii < SliceDimension; ++ii )
-        {
+      for (unsigned int ii = 0; ii < SliceDimension; ++ii)
+      {
         sliceSpacing[ii] = sliceSpacingArray[ii];
-        }
-      sliceImage->SetSpacing( sliceSpacing );
       }
+      sliceImage->SetSpacing(sliceSpacing);
+    }
 
-    if( dictionary.HasKey( "SliceOrigin" ) )
-      {
-      using SliceOriginArrayType = itk::Array< double >;
-      SliceOriginArrayType sliceOriginArray( SliceDimension );
-      itk::ExposeMetaData< SliceOriginArrayType >( dictionary, "SliceOrigin", sliceOriginArray );
+    if (dictionary.HasKey("SliceOrigin"))
+    {
+      using SliceOriginArrayType = itk::Array<double>;
+      SliceOriginArrayType sliceOriginArray(SliceDimension);
+      itk::ExposeMetaData<SliceOriginArrayType>(dictionary, "SliceOrigin", sliceOriginArray);
       typename SliceImageType::PointType sliceOrigin;
-      for( unsigned int ii = 0; ii < SliceDimension; ++ii )
-        {
+      for (unsigned int ii = 0; ii < SliceDimension; ++ii)
+      {
         sliceOrigin[ii] = sliceOriginArray[ii];
-        }
-      sliceImage->SetOrigin( sliceOrigin );
       }
+      sliceImage->SetOrigin(sliceOrigin);
+    }
 
-    image->SetSliceImage( sliceImage );
+    image->SetSliceImage(sliceImage);
 
-    if( dictionary.HasKey( "ElevationalSliceAngles" ) )
-      {
-      using ElevationalSliceAnglesType = itk::Array< double >;
+    if (dictionary.HasKey("ElevationalSliceAngles"))
+    {
+      using ElevationalSliceAnglesType = itk::Array<double>;
       const typename ImageType::RegionType & largestRegion = image->GetLargestPossibleRegion();
-      const typename ImageType::SizeType & largestSize = largestRegion.GetSize();
-      const itk::SizeValueType angles = largestSize[SliceDimension];
-      ElevationalSliceAnglesType elevationalSliceAngles( angles );
-      itk::ExposeMetaData< ElevationalSliceAnglesType >( dictionary, "ElevationalSliceAngles", elevationalSliceAngles );
+      const typename ImageType::SizeType &   largestSize = largestRegion.GetSize();
+      const itk::SizeValueType               angles = largestSize[SliceDimension];
+      ElevationalSliceAnglesType             elevationalSliceAngles(angles);
+      itk::ExposeMetaData<ElevationalSliceAnglesType>(dictionary, "ElevationalSliceAngles", elevationalSliceAngles);
       typename SliceImageType::PointType sliceOrigin;
-      for( unsigned int ii = 0; ii < angles; ++ii )
-        {
+      for (unsigned int ii = 0; ii < angles; ++ii)
+      {
         typename TransformType::Pointer transform = TransformType::New();
-        transform->SetRotation( 0.0, elevationalSliceAngles[ii], 0.0 );
-        image->SetSliceTransform( ii, transform );
-        }
+        transform->SetRotation(0.0, elevationalSliceAngles[ii], 0.0);
+        image->SetSliceTransform(ii, transform);
       }
+    }
   }
 };
 
 
 } // end anonymous namespace
 #ifdef ITK_HAS_GCC_PRAGMA_DIAG_PUSHPOP
-  ITK_GCC_PRAGMA_DIAG_POP()
+ITK_GCC_PRAGMA_DIAG_POP()
 #else
-  ITK_GCC_PRAGMA_DIAG(warning "-Wattributes")
+ITK_GCC_PRAGMA_DIAG(warning "-Wattributes")
 #endif
 
 
 namespace itk
 {
 
-template < typename TOutputImage >
-UltrasoundImageFileReader< TOutputImage >
-::UltrasoundImageFileReader()
-{
-}
+template <typename TOutputImage>
+UltrasoundImageFileReader<TOutputImage>::UltrasoundImageFileReader()
+{}
 
 
-template < typename TOutputImage >
+template <typename TOutputImage>
 void
-UltrasoundImageFileReader< TOutputImage >
-::GenerateOutputInformation()
+UltrasoundImageFileReader<TOutputImage>::GenerateOutputInformation()
 {
   Superclass::GenerateOutputInformation();
-  UltrasoundImageFileReaderDispatch< TOutputImage >::ExtractMetaData( this->GetOutput() );
+  UltrasoundImageFileReaderDispatch<TOutputImage>::ExtractMetaData(this->GetOutput());
 }
 
 } // end namespace itk

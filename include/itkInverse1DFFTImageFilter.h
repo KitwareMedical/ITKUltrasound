@@ -31,9 +31,10 @@ namespace itk
  * \ingroup FourierTransform
  * \ingroup Ultrasound
  */
-template< typename TInputImage, typename TOutputImage=Image< typename NumericTraits< typename TInputImage::PixelType >::ValueType, TInputImage::ImageDimension > >
-class ITK_TEMPLATE_EXPORT Inverse1DFFTImageFilter:
-  public ImageToImageFilter< TInputImage, TOutputImage >
+template <typename TInputImage,
+          typename TOutputImage =
+            Image<typename NumericTraits<typename TInputImage::PixelType>::ValueType, TInputImage::ImageDimension>>
+class ITK_TEMPLATE_EXPORT Inverse1DFFTImageFilter : public ImageToImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(Inverse1DFFTImageFilter);
@@ -44,20 +45,21 @@ public:
   using OutputImageRegionType = typename OutputImageType::RegionType;
 
   using Self = Inverse1DFFTImageFilter;
-  using Superclass = ImageToImageFilter< InputImageType, OutputImageType >;
-  using Pointer = SmartPointer< Self >;
-  using ConstPointer = SmartPointer< const Self >;
+  using Superclass = ImageToImageFilter<InputImageType, OutputImageType>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
-  itkStaticConstMacro(ImageDimension, unsigned int, InputImageType::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, InputImageType::ImageDimension);
 
-  itkTypeMacro( Inverse1DFFTImageFilter, ImageToImageFilter );
+  itkTypeMacro(Inverse1DFFTImageFilter, ImageToImageFilter);
 
   /** Customized object creation methods that support configuration-based
-    * selection of FFT implementation.
-    *
-    * Default implementation is VnlFFT1D.
-    */
-  static Pointer New(void);
+   * selection of FFT implementation.
+   *
+   * Default implementation is VnlFFT1D.
+   */
+  static Pointer
+  New(void);
 
   /** Get the direction in which the filter is to be applied. */
   itkGetMacro(Direction, unsigned int);
@@ -69,10 +71,13 @@ protected:
   Inverse1DFFTImageFilter();
   virtual ~Inverse1DFFTImageFilter() {}
 
-  void PrintSelf(std::ostream& os, Indent indent) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
-  void GenerateInputRequestedRegion() override;
-  void EnlargeOutputRequestedRegion(DataObject *output) override;
+  void
+  GenerateInputRequestedRegion() override;
+  void
+  EnlargeOutputRequestedRegion(DataObject * output) override;
 
   /** Direction in which the filter is to be applied
    * this should be in the range [0,ImageDimension-1]. */
@@ -80,18 +85,18 @@ protected:
 
 private:
 };
-}
+} // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#ifndef itkVnlInverse1DFFTImageFilter_h
-#ifndef itkVnlInverse1DFFTImageFilter_hxx
-#ifndef itkFFTWInverse1DFFTImageFilter_h
-#ifndef itkFFTWInverse1DFFTImageFilter_hxx
-#include "itkInverse1DFFTImageFilter.hxx"
-#endif
-#endif
-#endif
-#endif
+#  ifndef itkVnlInverse1DFFTImageFilter_h
+#    ifndef itkVnlInverse1DFFTImageFilter_hxx
+#      ifndef itkFFTWInverse1DFFTImageFilter_h
+#        ifndef itkFFTWInverse1DFFTImageFilter_hxx
+#          include "itkInverse1DFFTImageFilter.hxx"
+#        endif
+#      endif
+#    endif
+#  endif
 #endif
 
 #endif // itkInverse1DFFTImageFilter_h

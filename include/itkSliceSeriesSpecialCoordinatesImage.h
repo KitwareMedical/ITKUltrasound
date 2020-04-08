@@ -49,17 +49,19 @@ namespace itk
  *
  * \ingroup ImageObjects
  */
-template< typename TSliceImage, typename TTransform, typename TPixel=typename TSliceImage::PixelType, unsigned int VDimension=TSliceImage::ImageDimension + 1 >
-class ITK_TEMPLATE_EXPORT SliceSeriesSpecialCoordinatesImage:
-  public SpecialCoordinatesImage< TPixel, VDimension >
+template <typename TSliceImage,
+          typename TTransform,
+          typename TPixel = typename TSliceImage::PixelType,
+          unsigned int VDimension = TSliceImage::ImageDimension + 1>
+class ITK_TEMPLATE_EXPORT SliceSeriesSpecialCoordinatesImage : public SpecialCoordinatesImage<TPixel, VDimension>
 {
 public:
   /** Standard class type alias */
   using Self = SliceSeriesSpecialCoordinatesImage;
-  using Superclass = SpecialCoordinatesImage< TPixel, VDimension >;
-  using Pointer = SmartPointer< Self >;
-  using ConstPointer = SmartPointer< const Self >;
-  using ConstWeakPointer = WeakPointer< const Self >;
+  using Superclass = SpecialCoordinatesImage<TPixel, VDimension>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
+  using ConstWeakPointer = WeakPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -84,7 +86,7 @@ public:
 
   /** Typedef of the array of transform used to store the per-slice
    * transforms. */
-  using SliceTransformsType = VectorContainer< IdentifierType, typename TransformType::Pointer >;
+  using SliceTransformsType = VectorContainer<IdentifierType, typename TransformType::Pointer>;
 
   /** Internal Pixel representation. Used to maintain a uniform API
    * with Image Adaptors and allow to keep a particular internal
@@ -96,16 +98,16 @@ public:
 
   /** Accessor type that convert data between internal and external
    *  representations.  */
-  using AccessorType = DefaultPixelAccessor< PixelType >;
+  using AccessorType = DefaultPixelAccessor<PixelType>;
 
   /** Accessor functor to choose between accessors: DefaultPixelAccessor for
    * the Image, and DefaultVectorPixelAccessor for the vector image. The
    * functor provides a generic API between the two accessors. */
-  using AccessorFunctorType = DefaultPixelAccessorFunctor< Self >;
+  using AccessorFunctorType = DefaultPixelAccessorFunctor<Self>;
 
   /** Typedef for the functor used to access a neighborhood of pixel
    * pointers. */
-  using NeighborhoodAccessorFunctorType = NeighborhoodAccessorFunctor< Self >;
+  using NeighborhoodAccessorFunctorType = NeighborhoodAccessorFunctor<Self>;
 
   /** Dimension of the image.  This constant is used by functions that are
    * templated over image type (as opposed to being templated over pixel type
@@ -125,7 +127,7 @@ public:
   using SizeValueType = typename Superclass::SizeValueType;
 
   /** Container used to store pixels in the image. */
-  using PixelContainer = ImportImageContainer< SizeValueType, PixelType >;
+  using PixelContainer = ImportImageContainer<SizeValueType, PixelType>;
 
   /** Region type alias support. A region is used to specify a subset of
    *  an image.
@@ -157,8 +159,10 @@ public:
   itkSetObjectMacro(SliceImage, SliceImageType);
   itkGetConstObjectMacro(SliceImage, SliceImageType);
 
-  void SetSliceTransform( IndexValueType sliceIndex, TransformType * transform );
-  const TransformType * GetSliceTransform( IndexValueType sliceIndex ) const;
+  void
+  SetSliceTransform(IndexValueType sliceIndex, TransformType * transform);
+  const TransformType *
+  GetSliceTransform(IndexValueType sliceIndex) const;
 
   /** Graft the data and information from one image to another. This
    * is a convenience method to setup a second image with all the meta
@@ -170,110 +174,112 @@ public:
    * simply calls CopyInformation() and copies the region ivars.
    * The implementation here refers to the superclass' implementation
    * and then copies over the pixel container. */
-  virtual void Graft(const DataObject *data) override;
+  virtual void
+  Graft(const DataObject * data) override;
 
   /** \brief Get the continuous index from a physical point
    *
    * Returns true if the resulting index is within the image, false otherwise.
    * \sa Transform */
-  template< typename TCoordRep, typename TIndexRep >
-  bool TransformPhysicalPointToContinuousIndex(
-    const Point< TCoordRep, VDimension > & point,
-    ContinuousIndex< TIndexRep, VDimension > & index) const
+  template <typename TCoordRep, typename TIndexRep>
+  bool
+  TransformPhysicalPointToContinuousIndex(const Point<TCoordRep, VDimension> &     point,
+                                          ContinuousIndex<TIndexRep, VDimension> & index) const
   {
-    const RegionType & region = this->GetLargestPossibleRegion();
-    const unsigned int sliceDimensionIndex = ImageDimension - 1;
-    IndexValueType lowerIndex = region.GetIndex( sliceDimensionIndex );
-    IndexValueType upperIndex = lowerIndex + region.GetSize( sliceDimensionIndex ) - 1;
-    IndexValueType nextIndex = lowerIndex;
-    PointType lowerPoint;
-    const TransformType * transform = this->GetSliceInverseTransform( lowerIndex );
-    if( transform == nullptr )
-      {
+    const RegionType &    region = this->GetLargestPossibleRegion();
+    const unsigned int    sliceDimensionIndex = ImageDimension - 1;
+    IndexValueType        lowerIndex = region.GetIndex(sliceDimensionIndex);
+    IndexValueType        upperIndex = lowerIndex + region.GetSize(sliceDimensionIndex) - 1;
+    IndexValueType        nextIndex = lowerIndex;
+    PointType             lowerPoint;
+    const TransformType * transform = this->GetSliceInverseTransform(lowerIndex);
+    if (transform == nullptr)
+    {
       itkExceptionMacro("Inverse slice transform not available for index: " << lowerIndex);
-      }
-    lowerPoint = transform->TransformPoint( point );
-    int lowerSign = Math::sgn( lowerPoint[sliceDimensionIndex] );
+    }
+    lowerPoint = transform->TransformPoint(point);
+    int       lowerSign = Math::sgn(lowerPoint[sliceDimensionIndex]);
     PointType upperPoint;
-    transform = this->GetSliceInverseTransform( upperIndex );
-    if( transform == nullptr )
-      {
+    transform = this->GetSliceInverseTransform(upperIndex);
+    if (transform == nullptr)
+    {
       itkExceptionMacro("Inverse slice transform not available for index: " << upperIndex);
-      }
-    upperPoint = transform->TransformPoint( point );
-    int upperSign = Math::sgn( upperPoint[sliceDimensionIndex] );
+    }
+    upperPoint = transform->TransformPoint(point);
+    int       upperSign = Math::sgn(upperPoint[sliceDimensionIndex]);
     PointType nextPoint = lowerPoint;
-    int nextSign = 0;
-    if( lowerSign == 0 )
-      {
+    int       nextSign = 0;
+    if (lowerSign == 0)
+    {
       nextSign = 0;
       nextPoint = lowerPoint;
-      }
-    else if( upperSign == 0 )
-      {
+    }
+    else if (upperSign == 0)
+    {
       nextSign = 0;
       nextPoint = upperPoint;
-      }
+    }
     else
+    {
+      if (lowerSign == upperSign)
       {
-      if( lowerSign == upperSign )
-        {
         // outside the image
         return false;
-        }
+      }
 
       // Binary search for the transforms that bounds the slice
-      while( upperIndex - lowerIndex > 1 )
+      while (upperIndex - lowerIndex > 1)
+      {
+        nextIndex = lowerIndex + (upperIndex - lowerIndex) / 2;
+        transform = this->GetSliceInverseTransform(nextIndex);
+        nextPoint = transform->TransformPoint(point);
+        nextSign = Math::sgn(nextPoint[sliceDimensionIndex]);
+        if (nextSign == 0)
         {
-        nextIndex = lowerIndex + ( upperIndex - lowerIndex ) / 2;
-        transform = this->GetSliceInverseTransform( nextIndex );
-        nextPoint = transform->TransformPoint( point );
-        nextSign = Math::sgn( nextPoint[sliceDimensionIndex] );
-        if( nextSign == 0 )
-          {
           break;
-          }
-        else if( nextSign == lowerSign )
-          {
+        }
+        else if (nextSign == lowerSign)
+        {
           lowerIndex = nextIndex;
           lowerPoint = nextPoint;
-          }
+        }
         else
-          {
+        {
           upperIndex = nextIndex;
           upperPoint = nextPoint;
-          }
         }
       }
+    }
 
-    if( nextSign != 0 )
-      {
-      const TCoordRep fraction = - lowerPoint[sliceDimensionIndex] / ( upperPoint[sliceDimensionIndex] - lowerPoint[sliceDimensionIndex] );
+    if (nextSign != 0)
+    {
+      const TCoordRep fraction =
+        -lowerPoint[sliceDimensionIndex] / (upperPoint[sliceDimensionIndex] - lowerPoint[sliceDimensionIndex]);
       nextPoint[sliceDimensionIndex] = lowerIndex + fraction * (upperIndex - lowerIndex);
-      for( unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii )
-        {
-        nextPoint[ii] = lowerPoint[ii] + fraction * (upperPoint[ii] - lowerPoint[ii]);
-        }
-      }
-    else
+      for (unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii)
       {
-      nextPoint[sliceDimensionIndex] = nextIndex;
+        nextPoint[ii] = lowerPoint[ii] + fraction * (upperPoint[ii] - lowerPoint[ii]);
       }
+    }
+    else
+    {
+      nextPoint[sliceDimensionIndex] = nextIndex;
+    }
 
     typename SliceImageType::PointType slicePoint;
-    for( unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii )
-      {
+    for (unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii)
+    {
       slicePoint[ii] = nextPoint[ii];
-      }
-    ContinuousIndex< TIndexRep, SliceImageType::ImageDimension > sliceIndex;
-    this->m_SliceImage->TransformPhysicalPointToContinuousIndex( slicePoint, sliceIndex );
-    for( unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii )
-      {
+    }
+    ContinuousIndex<TIndexRep, SliceImageType::ImageDimension> sliceIndex;
+    this->m_SliceImage->TransformPhysicalPointToContinuousIndex(slicePoint, sliceIndex);
+    for (unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii)
+    {
       index[ii] = sliceIndex[ii];
-      }
+    }
     index[sliceDimensionIndex] = nextPoint[sliceDimensionIndex];
     // Now, check to see if the index is within allowed bounds
-    const bool isInside = region.IsInside( index );
+    const bool isInside = region.IsInside(index);
 
     return isInside;
   }
@@ -282,104 +288,104 @@ public:
    * Floating point index results are truncated to integers.
    * Returns true if the resulting index is within the image, false otherwise
    * \sa Transform */
-  template< typename TCoordRep >
-  bool TransformPhysicalPointToIndex(
-    const Point< TCoordRep, VDimension > & point,
-    IndexType & index) const
+  template <typename TCoordRep>
+  bool
+  TransformPhysicalPointToIndex(const Point<TCoordRep, VDimension> & point, IndexType & index) const
   {
-    const RegionType & region = this->GetLargestPossibleRegion();
-    const unsigned int sliceDimensionIndex = ImageDimension - 1;
-    IndexValueType lowerIndex = region.GetIndex( sliceDimensionIndex );
-    IndexValueType upperIndex = lowerIndex + region.GetSize( sliceDimensionIndex ) - 1;
-    IndexValueType nextIndex = lowerIndex;
-    PointType lowerPoint;
-    const TransformType * transform = this->GetSliceInverseTransform( lowerIndex );
-    if( transform == nullptr )
-      {
+    const RegionType &    region = this->GetLargestPossibleRegion();
+    const unsigned int    sliceDimensionIndex = ImageDimension - 1;
+    IndexValueType        lowerIndex = region.GetIndex(sliceDimensionIndex);
+    IndexValueType        upperIndex = lowerIndex + region.GetSize(sliceDimensionIndex) - 1;
+    IndexValueType        nextIndex = lowerIndex;
+    PointType             lowerPoint;
+    const TransformType * transform = this->GetSliceInverseTransform(lowerIndex);
+    if (transform == nullptr)
+    {
       itkExceptionMacro("Inverse slice transform not available for index: " << lowerIndex);
-      }
-    lowerPoint = transform->TransformPoint( point );
-    int lowerSign = Math::sgn( lowerPoint[sliceDimensionIndex] );
+    }
+    lowerPoint = transform->TransformPoint(point);
+    int       lowerSign = Math::sgn(lowerPoint[sliceDimensionIndex]);
     PointType upperPoint;
-    transform = this->GetSliceInverseTransform( upperIndex );
-    if( transform == nullptr )
-      {
+    transform = this->GetSliceInverseTransform(upperIndex);
+    if (transform == nullptr)
+    {
       itkExceptionMacro("Inverse slice transform not available for index: " << upperIndex);
-      }
-    upperPoint = transform->TransformPoint( point );
-    int upperSign = Math::sgn( upperPoint[sliceDimensionIndex] );
+    }
+    upperPoint = transform->TransformPoint(point);
+    int       upperSign = Math::sgn(upperPoint[sliceDimensionIndex]);
     PointType nextPoint = lowerPoint;
-    int nextSign = 0;
-    if( lowerSign == 0 )
-      {
+    int       nextSign = 0;
+    if (lowerSign == 0)
+    {
       nextSign = 0;
       nextPoint = lowerPoint;
-      }
-    else if( upperSign == 0 )
-      {
+    }
+    else if (upperSign == 0)
+    {
       nextSign = 0;
       nextPoint = upperPoint;
-      }
+    }
     else
+    {
+      if (lowerSign == upperSign)
       {
-      if( lowerSign == upperSign )
-        {
         // outside the image
         return false;
-        }
+      }
 
       // Binary search for the transforms that bounds the slice
-      while( upperIndex - lowerIndex > 1 )
+      while (upperIndex - lowerIndex > 1)
+      {
+        nextIndex = lowerIndex + (upperIndex - lowerIndex) / 2;
+        transform = this->GetSliceInverseTransform(nextIndex);
+        nextPoint = transform->TransformPoint(point);
+        nextSign = Math::sgn(nextPoint[sliceDimensionIndex]);
+        if (nextSign == 0)
         {
-        nextIndex = lowerIndex + ( upperIndex - lowerIndex ) / 2;
-        transform = this->GetSliceInverseTransform( nextIndex );
-        nextPoint = transform->TransformPoint( point );
-        nextSign = Math::sgn( nextPoint[sliceDimensionIndex] );
-        if( nextSign == 0 )
-          {
           break;
-          }
-        else if( nextSign == lowerSign )
-          {
+        }
+        else if (nextSign == lowerSign)
+        {
           lowerIndex = nextIndex;
           lowerPoint = nextPoint;
-          }
+        }
         else
-          {
+        {
           upperIndex = nextIndex;
           upperPoint = nextPoint;
-          }
         }
       }
+    }
 
-    if( nextSign != 0 )
-      {
-      const TCoordRep fraction = - lowerPoint[sliceDimensionIndex] / ( upperPoint[sliceDimensionIndex] - lowerPoint[sliceDimensionIndex] );
+    if (nextSign != 0)
+    {
+      const TCoordRep fraction =
+        -lowerPoint[sliceDimensionIndex] / (upperPoint[sliceDimensionIndex] - lowerPoint[sliceDimensionIndex]);
       nextPoint[sliceDimensionIndex] = lowerIndex + fraction * (upperIndex - lowerIndex);
-      for( unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii )
-        {
-        nextPoint[ii] = lowerPoint[ii] + fraction * (upperPoint[ii] - lowerPoint[ii]);
-        }
-      }
-    else
+      for (unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii)
       {
-      nextPoint[sliceDimensionIndex] = nextIndex;
+        nextPoint[ii] = lowerPoint[ii] + fraction * (upperPoint[ii] - lowerPoint[ii]);
       }
+    }
+    else
+    {
+      nextPoint[sliceDimensionIndex] = nextIndex;
+    }
 
     typename SliceImageType::PointType slicePoint;
-    for( unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii )
-      {
+    for (unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii)
+    {
       slicePoint[ii] = nextPoint[ii];
-      }
+    }
     typename SliceImageType::IndexType sliceIndex;
-    this->m_SliceImage->TransformPhysicalPointToIndex( slicePoint, sliceIndex );
-    for( unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii )
-      {
+    this->m_SliceImage->TransformPhysicalPointToIndex(slicePoint, sliceIndex);
+    for (unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii)
+    {
       index[ii] = sliceIndex[ii];
-      }
-    index[sliceDimensionIndex] = Math::RoundHalfIntegerUp< IndexValueType >( nextPoint[sliceDimensionIndex] );
+    }
+    index[sliceDimensionIndex] = Math::RoundHalfIntegerUp<IndexValueType>(nextPoint[sliceDimensionIndex]);
     // Now, check to see if the index is within allowed bounds
-    const bool isInside = region.IsInside( index );
+    const bool isInside = region.IsInside(index);
 
     return isInside;
   }
@@ -388,83 +394,85 @@ public:
    * the origin and spacing information comes from)
    * from a continuous index (in the index space)
    * \sa Transform */
-  template< typename TCoordRep, typename TIndexRep >
-  void TransformContinuousIndexToPhysicalPoint(
-    const ContinuousIndex< TIndexRep, VDimension > & index,
-    Point< TCoordRep, VDimension > & point) const
+  template <typename TCoordRep, typename TIndexRep>
+  void
+  TransformContinuousIndexToPhysicalPoint(const ContinuousIndex<TIndexRep, VDimension> & index,
+                                          Point<TCoordRep, VDimension> &                 point) const
   {
-    point.Fill( 0.0 );
-    ContinuousIndex< TIndexRep, SliceImageType::ImageDimension > sliceIndex;
-    for( unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii )
-      {
+    point.Fill(0.0);
+    ContinuousIndex<TIndexRep, SliceImageType::ImageDimension> sliceIndex;
+    for (unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii)
+    {
       sliceIndex[ii] = index[ii];
-      }
-    Point< TCoordRep, SliceImageType::ImageDimension > slicePoint;
-    this->m_SliceImage->TransformContinuousIndexToPhysicalPoint( sliceIndex, slicePoint );
-    for( unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii )
-      {
+    }
+    Point<TCoordRep, SliceImageType::ImageDimension> slicePoint;
+    this->m_SliceImage->TransformContinuousIndexToPhysicalPoint(sliceIndex, slicePoint);
+    for (unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii)
+    {
       point[ii] += slicePoint[ii];
-      }
-    using PointType = Point< TCoordRep, VDimension >;
-    PointType lowerPoint;
-    const IndexValueType floor = Math::Floor< IndexValueType, TIndexRep >( index[ImageDimension - 1] );
-    const IndexValueType ceil = Math::Ceil< IndexValueType, TIndexRep >( index[ImageDimension - 1] );
-    const TransformType * transform = this->GetSliceTransform( floor );
-    if( transform != nullptr )
-      {
-      lowerPoint = transform->TransformPoint( point );
-      }
+    }
+    using PointType = Point<TCoordRep, VDimension>;
+    PointType             lowerPoint;
+    const IndexValueType  floor = Math::Floor<IndexValueType, TIndexRep>(index[ImageDimension - 1]);
+    const IndexValueType  ceil = Math::Ceil<IndexValueType, TIndexRep>(index[ImageDimension - 1]);
+    const TransformType * transform = this->GetSliceTransform(floor);
+    if (transform != nullptr)
+    {
+      lowerPoint = transform->TransformPoint(point);
+    }
     else
-      {
+    {
       const RegionType & largestRegion = this->GetLargestPossibleRegion();
-      const IndexType & largestIndex = largestRegion.GetIndex();
-      if( index[ImageDimension - 1] < largestIndex[ImageDimension - 1] )
-        {
+      const IndexType &  largestIndex = largestRegion.GetIndex();
+      if (index[ImageDimension - 1] < largestIndex[ImageDimension - 1])
+      {
         point[ImageDimension - 1] = index[ImageDimension - 1] - largestIndex[ImageDimension - 1];
-        point = transform->TransformPoint( point );
+        point = transform->TransformPoint(point);
         return;
-        }
+      }
 
       const SizeType & largestSize = largestRegion.GetSize();
-      if( index[ImageDimension - 1] > largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1 )
-        {
-        point[ImageDimension - 1] = index[ImageDimension - 1] - largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1;
-        point = transform->TransformPoint( point );
-        }
-      return;
+      if (index[ImageDimension - 1] > largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1)
+      {
+        point[ImageDimension - 1] =
+          index[ImageDimension - 1] - largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1;
+        point = transform->TransformPoint(point);
       }
+      return;
+    }
 
-    transform = this->GetSliceTransform( ceil );
+    transform = this->GetSliceTransform(ceil);
     PointType upperPoint;
-    if( transform != nullptr )
-      {
-      upperPoint = transform->TransformPoint( point );
-      }
+    if (transform != nullptr)
+    {
+      upperPoint = transform->TransformPoint(point);
+    }
     else
-      {
+    {
       const RegionType & largestRegion = this->GetLargestPossibleRegion();
-      const IndexType & largestIndex = largestRegion.GetIndex();
-      if( index[ImageDimension - 1] < largestIndex[ImageDimension - 1] )
-        {
+      const IndexType &  largestIndex = largestRegion.GetIndex();
+      if (index[ImageDimension - 1] < largestIndex[ImageDimension - 1])
+      {
         point[ImageDimension - 1] = index[ImageDimension - 1] - largestIndex[ImageDimension - 1];
-        point = transform->TransformPoint( point );
+        point = transform->TransformPoint(point);
         return;
-        }
+      }
 
       const SizeType & largestSize = largestRegion.GetSize();
-      if( index[ImageDimension - 1] > largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1 )
-        {
-        point[ImageDimension - 1] = index[ImageDimension - 1] - largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1;
-        point = transform->TransformPoint( point );
-        }
-      return;
+      if (index[ImageDimension - 1] > largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1)
+      {
+        point[ImageDimension - 1] =
+          index[ImageDimension - 1] - largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1;
+        point = transform->TransformPoint(point);
       }
+      return;
+    }
 
     const TIndexRep fraction = index[ImageDimension - 1] - floor;
-    for( unsigned int ii = 0; ii < ImageDimension; ++ii )
-      {
+    for (unsigned int ii = 0; ii < ImageDimension; ++ii)
+    {
       point[ii] = lowerPoint[ii] + fraction * (upperPoint[ii] - lowerPoint[ii]);
-      }
+    }
   }
 
   /** Get a physical point (in the space which
@@ -472,90 +480,108 @@ public:
    * from a discrete index (in the index space)
    *
    * \sa Transform */
-  template< typename TCoordRep >
-  void TransformIndexToPhysicalPoint(
-    const IndexType & index,
-    Point< TCoordRep, VDimension > & point) const
+  template <typename TCoordRep>
+  void
+  TransformIndexToPhysicalPoint(const IndexType & index, Point<TCoordRep, VDimension> & point) const
   {
-    point.Fill( 0.0 );
+    point.Fill(0.0);
     typename SliceImageType::IndexType sliceIndex;
-    for( unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii )
-      {
+    for (unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii)
+    {
       sliceIndex[ii] = index[ii];
-      }
-    Point< TCoordRep, SliceImageType::ImageDimension > slicePoint;
-    this->m_SliceImage->TransformIndexToPhysicalPoint( sliceIndex, slicePoint );
-    for( unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii )
-      {
+    }
+    Point<TCoordRep, SliceImageType::ImageDimension> slicePoint;
+    this->m_SliceImage->TransformIndexToPhysicalPoint(sliceIndex, slicePoint);
+    for (unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii)
+    {
       point[ii] += slicePoint[ii];
-      }
-    const TransformType * transform = this->GetSliceTransform( index[ImageDimension - 1] );
-    if( transform != nullptr )
-      {
-      point = transform->TransformPoint( point );
+    }
+    const TransformType * transform = this->GetSliceTransform(index[ImageDimension - 1]);
+    if (transform != nullptr)
+    {
+      point = transform->TransformPoint(point);
       return;
-      }
+    }
     const RegionType & largestRegion = this->GetLargestPossibleRegion();
-    const IndexType & largestIndex = largestRegion.GetIndex();
-    if( index[ImageDimension - 1] < largestIndex[ImageDimension - 1] )
-      {
+    const IndexType &  largestIndex = largestRegion.GetIndex();
+    if (index[ImageDimension - 1] < largestIndex[ImageDimension - 1])
+    {
       point[ImageDimension - 1] = index[ImageDimension - 1] - largestIndex[ImageDimension - 1];
-      transform = this->GetSliceTransform( largestIndex[ImageDimension - 1] );
-      point = transform->TransformPoint( point );
+      transform = this->GetSliceTransform(largestIndex[ImageDimension - 1]);
+      point = transform->TransformPoint(point);
       return;
-      }
+    }
 
     const SizeType & largestSize = largestRegion.GetSize();
-    if( index[ImageDimension - 1] > static_cast< IndexValueType >( largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1 ) )
-      {
-      point[ImageDimension - 1] = index[ImageDimension - 1] - largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1;
-      transform = this->GetSliceTransform( largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1 );
-      point = transform->TransformPoint( point );
-      }
+    if (index[ImageDimension - 1] >
+        static_cast<IndexValueType>(largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1))
+    {
+      point[ImageDimension - 1] =
+        index[ImageDimension - 1] - largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1;
+      transform = this->GetSliceTransform(largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1);
+      point = transform->TransformPoint(point);
+    }
   }
 
-  template< typename TCoordRep >
-  void TransformLocalVectorToPhysicalVector(
-    FixedArray< TCoordRep, VDimension > & ) const
-    {}
+  template <typename TCoordRep>
+  void
+  TransformLocalVectorToPhysicalVector(FixedArray<TCoordRep, VDimension> &) const
+  {}
 
-  template< typename TCoordRep >
-  void TransformPhysicalVectorToLocalVector(
-    const FixedArray< TCoordRep, VDimension > & ,
-    FixedArray< TCoordRep, VDimension > & ) const
-    {}
+  template <typename TCoordRep>
+  void
+  TransformPhysicalVectorToLocalVector(const FixedArray<TCoordRep, VDimension> &,
+                                       FixedArray<TCoordRep, VDimension> &) const
+  {}
 
   /** Return the Pixel Accessor object */
-  AccessorType GetPixelAccessor(void)
-  { return AccessorType(); }
+  AccessorType
+  GetPixelAccessor(void)
+  {
+    return AccessorType();
+  }
 
   /** Return the Pixel Accesor object */
-  const AccessorType GetPixelAccessor(void) const
-  { return AccessorType(); }
+  const AccessorType
+  GetPixelAccessor(void) const
+  {
+    return AccessorType();
+  }
 
   /** Return the NeighborhoodAccessor functor */
-  NeighborhoodAccessorFunctorType GetNeighborhoodAccessor()
-  { return NeighborhoodAccessorFunctorType(); }
+  NeighborhoodAccessorFunctorType
+  GetNeighborhoodAccessor()
+  {
+    return NeighborhoodAccessorFunctorType();
+  }
 
   /** Return the NeighborhoodAccessor functor */
-  const NeighborhoodAccessorFunctorType GetNeighborhoodAccessor() const
-  { return NeighborhoodAccessorFunctorType(); }
+  const NeighborhoodAccessorFunctorType
+  GetNeighborhoodAccessor() const
+  {
+    return NeighborhoodAccessorFunctorType();
+  }
 
-  virtual void SetLargestPossibleRegion(const RegionType & region) override;
+  virtual void
+  SetLargestPossibleRegion(const RegionType & region) override;
 
-  virtual void CopyInformation( const DataObject * data ) override;
+  virtual void
+  CopyInformation(const DataObject * data) override;
 
 protected:
   SliceSeriesSpecialCoordinatesImage();
 
   virtual ~SliceSeriesSpecialCoordinatesImage() {}
-  virtual void PrintSelf(std::ostream & os, Indent indent) const override;
+  virtual void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
-  const TransformType * GetSliceInverseTransform( IndexValueType sliceIndex ) const;
+  const TransformType *
+  GetSliceInverseTransform(IndexValueType sliceIndex) const;
 
 private:
   SliceSeriesSpecialCoordinatesImage(const Self &); // purposely not implemented
-  void operator=(const Self &);                          // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   typename SliceImageType::Pointer      m_SliceImage;
   typename SliceTransformsType::Pointer m_SliceTransforms;
@@ -564,7 +590,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkSliceSeriesSpecialCoordinatesImage.hxx"
+#  include "itkSliceSeriesSpecialCoordinatesImage.hxx"
 #endif
 
 #endif

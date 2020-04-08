@@ -32,9 +32,8 @@
 namespace itk
 {
 
-template< typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension >
-SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension >
-::SliceSeriesSpecialCoordinatesImage()
+template <typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension>
+SliceSeriesSpecialCoordinatesImage<TSliceImage, TTransform, TPixel, VDimension>::SliceSeriesSpecialCoordinatesImage()
 {
   this->m_SliceImage = SliceImageType::New();
   this->m_SliceTransforms = SliceTransformsType::New();
@@ -42,161 +41,155 @@ SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension 
 }
 
 
-template< typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension >
+template <typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension>
 void
-SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension >
-::SetLargestPossibleRegion( const RegionType & region )
+SliceSeriesSpecialCoordinatesImage<TSliceImage, TTransform, TPixel, VDimension>::SetLargestPossibleRegion(
+  const RegionType & region)
 {
-  Superclass::SetLargestPossibleRegion( region );
+  Superclass::SetLargestPossibleRegion(region);
   const SizeType & largestSize = this->GetLargestPossibleRegion().GetSize();
-  this->m_SliceTransforms->Reserve( largestSize[ImageDimension - 1] + 1 );
-  this->m_SliceInverseTransforms->Reserve( largestSize[ImageDimension - 1] + 1 );
+  this->m_SliceTransforms->Reserve(largestSize[ImageDimension - 1] + 1);
+  this->m_SliceInverseTransforms->Reserve(largestSize[ImageDimension - 1] + 1);
 }
 
 
-template< typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension >
+template <typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension>
 void
-SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension >
-::CopyInformation( const DataObject * data )
+SliceSeriesSpecialCoordinatesImage<TSliceImage, TTransform, TPixel, VDimension>::CopyInformation(
+  const DataObject * data)
 {
-  Superclass::CopyInformation( data );
+  Superclass::CopyInformation(data);
 
-  if ( data )
-    {
+  if (data)
+  {
     // Attempt to cast data to an ImageBase
-    const SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension > * const sliceSeries =
-      dynamic_cast< const SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension > * >( data );
+    const SliceSeriesSpecialCoordinatesImage<TSliceImage, TTransform, TPixel, VDimension> * const sliceSeries =
+      dynamic_cast<const SliceSeriesSpecialCoordinatesImage<TSliceImage, TTransform, TPixel, VDimension> *>(data);
 
-    if ( sliceSeries != nullptr )
-      {
+    if (sliceSeries != nullptr)
+    {
       // Copy the meta data for this data type
       typename SliceImageType::Pointer sliceImage = SliceImageType::New();
-      sliceImage->CopyInformation( sliceSeries->GetSliceImage() );
-      this->SetSliceImage( sliceImage );
+      sliceImage->CopyInformation(sliceSeries->GetSliceImage());
+      this->SetSliceImage(sliceImage);
 
       const SizeValueType numberOfTransforms = sliceSeries->GetLargestPossibleRegion().GetSize()[ImageDimension - 1];
-      for( SizeValueType transformIndex = 0; transformIndex < numberOfTransforms; ++transformIndex )
+      for (SizeValueType transformIndex = 0; transformIndex < numberOfTransforms; ++transformIndex)
+      {
+        const TransformType * transform = sliceSeries->GetSliceTransform(transformIndex);
+        if (transform != nullptr)
         {
-        const TransformType * transform = sliceSeries->GetSliceTransform( transformIndex );
-        if( transform != nullptr )
-          {
           typename TransformType::Pointer transformClone = transform->Clone();
-          this->SetSliceTransform( transformIndex, transformClone );
-          }
+          this->SetSliceTransform(transformIndex, transformClone);
         }
       }
-    else
-      {
-      // pointer could not be cast back down
-      itkExceptionMacro( << "itk::SliceSeriesSpecialCoordinatesImage::CopyInformation() cannot cast "
-                         << typeid( data ).name() << " to "
-                         << typeid( const SliceSeriesSpecialCoordinatesImage * ).name() );
-      }
     }
+    else
+    {
+      // pointer could not be cast back down
+      itkExceptionMacro(<< "itk::SliceSeriesSpecialCoordinatesImage::CopyInformation() cannot cast "
+                        << typeid(data).name() << " to " << typeid(const SliceSeriesSpecialCoordinatesImage *).name());
+    }
+  }
 }
 
 
-template< typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension >
+template <typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension>
 void
-SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension >
-::SetSliceTransform( IndexValueType sliceIndex, TransformType * transform )
+SliceSeriesSpecialCoordinatesImage<TSliceImage, TTransform, TPixel, VDimension>::SetSliceTransform(
+  IndexValueType  sliceIndex,
+  TransformType * transform)
 {
-  const RegionType & largestRegion = this->GetLargestPossibleRegion();
+  const RegionType &   largestRegion = this->GetLargestPossibleRegion();
   const IndexValueType largestIndex = largestRegion.GetIndex(ImageDimension - 1);
-  const SizeValueType transformsIndex = static_cast< SizeValueType >( sliceIndex - largestIndex );
-  if( this->m_SliceTransforms->Size() > transformsIndex && this->m_SliceTransforms->GetElement( transformsIndex ).GetPointer() == transform )
-    {
+  const SizeValueType  transformsIndex = static_cast<SizeValueType>(sliceIndex - largestIndex);
+  if (this->m_SliceTransforms->Size() > transformsIndex &&
+      this->m_SliceTransforms->GetElement(transformsIndex).GetPointer() == transform)
+  {
     return;
-    }
-  this->m_SliceTransforms->SetElement( transformsIndex, transform );
+  }
+  this->m_SliceTransforms->SetElement(transformsIndex, transform);
   typename TransformType::Pointer inverse = TransformType::New();
-  if( transform->GetInverse( inverse ) )
-    {
-    this->m_SliceInverseTransforms->SetElement( transformsIndex, inverse );
-    }
+  if (transform->GetInverse(inverse))
+  {
+    this->m_SliceInverseTransforms->SetElement(transformsIndex, inverse);
+  }
   else
-    {
+  {
     itkExceptionMacro("Could not get inverse for transform: " << transform);
-    }
+  }
   this->Modified();
 }
 
 
-template< typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension >
-const typename SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension >::TransformType *
-SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension >
-::GetSliceTransform( IndexValueType sliceIndex ) const
+template <typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension>
+const typename SliceSeriesSpecialCoordinatesImage<TSliceImage, TTransform, TPixel, VDimension>::TransformType *
+SliceSeriesSpecialCoordinatesImage<TSliceImage, TTransform, TPixel, VDimension>::GetSliceTransform(
+  IndexValueType sliceIndex) const
 {
-  const RegionType & largestRegion = this->GetLargestPossibleRegion();
+  const RegionType &   largestRegion = this->GetLargestPossibleRegion();
   const IndexValueType largestIndex = largestRegion.GetIndex(ImageDimension - 1);
-  const SizeValueType transformsIndex = static_cast< SizeValueType >( sliceIndex - largestIndex );
-  if( this->m_SliceTransforms->Size() > transformsIndex )
-    {
-    return this->m_SliceTransforms->GetElement( transformsIndex ).GetPointer();
-    }
+  const SizeValueType  transformsIndex = static_cast<SizeValueType>(sliceIndex - largestIndex);
+  if (this->m_SliceTransforms->Size() > transformsIndex)
+  {
+    return this->m_SliceTransforms->GetElement(transformsIndex).GetPointer();
+  }
   return nullptr;
 }
 
 
-template< typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension >
-const typename SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension >::TransformType *
-SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension >
-::GetSliceInverseTransform( IndexValueType sliceIndex ) const
+template <typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension>
+const typename SliceSeriesSpecialCoordinatesImage<TSliceImage, TTransform, TPixel, VDimension>::TransformType *
+SliceSeriesSpecialCoordinatesImage<TSliceImage, TTransform, TPixel, VDimension>::GetSliceInverseTransform(
+  IndexValueType sliceIndex) const
 {
-  const RegionType & largestRegion = this->GetLargestPossibleRegion();
+  const RegionType &   largestRegion = this->GetLargestPossibleRegion();
   const IndexValueType largestIndex = largestRegion.GetIndex(ImageDimension - 1);
-  const SizeValueType transformsIndex = static_cast< SizeValueType >( sliceIndex - largestIndex );
-  if( this->m_SliceInverseTransforms->Size() > transformsIndex )
-    {
-    return this->m_SliceInverseTransforms->GetElement( transformsIndex ).GetPointer();
-    }
+  const SizeValueType  transformsIndex = static_cast<SizeValueType>(sliceIndex - largestIndex);
+  if (this->m_SliceInverseTransforms->Size() > transformsIndex)
+  {
+    return this->m_SliceInverseTransforms->GetElement(transformsIndex).GetPointer();
+  }
   return nullptr;
 }
 
 
-template< typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension >
+template <typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension>
 void
-SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension >
-::PrintSelf(std::ostream & os, Indent indent) const
+SliceSeriesSpecialCoordinatesImage<TSliceImage, TTransform, TPixel, VDimension>::PrintSelf(std::ostream & os,
+                                                                                           Indent         indent) const
 {
   Superclass::PrintSelf(os, indent);
 
-  os << indent
-     << "SliceImage = " << m_SliceImage
-     << std::endl;
-  os << indent
-     << "SliceTransforms = " << m_SliceTransforms
-     << std::endl;
+  os << indent << "SliceImage = " << m_SliceImage << std::endl;
+  os << indent << "SliceTransforms = " << m_SliceTransforms << std::endl;
 }
 
 
-template< typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension >
+template <typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension>
 void
-SliceSeriesSpecialCoordinatesImage< TSliceImage, TTransform, TPixel, VDimension >
-::Graft(const DataObject *data)
+SliceSeriesSpecialCoordinatesImage<TSliceImage, TTransform, TPixel, VDimension>::Graft(const DataObject * data)
 {
   // call the superclass' implementation
   Superclass::Graft(data);
 
-  if ( data )
-    {
+  if (data)
+  {
     // Attempt to cast data to a SliceSeriesSpecialCoordinatesImage
-    const Self * const imgData = dynamic_cast< const Self * >( data );
+    const Self * const imgData = dynamic_cast<const Self *>(data);
 
-    if ( imgData )
-      {
+    if (imgData)
+    {
       // Now copy anything remaining that is needed
-      this->SetPixelContainer( const_cast< PixelContainer * >
-                               ( imgData->GetPixelContainer() ) );
-      }
-    else
-      {
-      // pointer could not be cast back down
-      itkExceptionMacro( << "itk::Image::Graft() cannot cast "
-                         << typeid( data ).name() << " to "
-                         << typeid( const Self * ).name() );
-      }
+      this->SetPixelContainer(const_cast<PixelContainer *>(imgData->GetPixelContainer()));
     }
+    else
+    {
+      // pointer could not be cast back down
+      itkExceptionMacro(<< "itk::Image::Graft() cannot cast " << typeid(data).name() << " to "
+                        << typeid(const Self *).name());
+    }
+  }
 }
 
 } // end namespace itk

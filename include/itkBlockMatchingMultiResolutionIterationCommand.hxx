@@ -25,23 +25,22 @@ namespace itk
 namespace BlockMatching
 {
 
-template< typename TMultiResolutionMethod >
+template <typename TMultiResolutionMethod>
 void
-MultiResolutionIterationCommand< TMultiResolutionMethod >
-::Execute( const Object * object , const EventObject & event )
+MultiResolutionIterationCommand<TMultiResolutionMethod>::Execute(const Object * object, const EventObject & event)
 {
-  if( !(IterationEvent().CheckEvent( &event )) )
-    {
+  if (!(IterationEvent().CheckEvent(&event)))
+  {
     return;
-    }
+  }
 
-  if( m_MultiResolutionMethod.GetPointer() == nullptr )
-    {
-    itkExceptionMacro( << "The associated MultiResolutionMethod must be set." );
-    }
+  if (m_MultiResolutionMethod.GetPointer() == nullptr)
+  {
+    itkExceptionMacro(<< "The associated MultiResolutionMethod must be set.");
+  }
 
-  m_FixedImagePyramid     = m_MultiResolutionMethod->GetFixedImagePyramid();
-  m_MovingImagePyramid    = m_MultiResolutionMethod->GetMovingImagePyramid();
+  m_FixedImagePyramid = m_MultiResolutionMethod->GetFixedImagePyramid();
+  m_MovingImagePyramid = m_MultiResolutionMethod->GetMovingImagePyramid();
 
   m_BlockRadiusCalculator = m_MultiResolutionMethod->GetBlockRadiusCalculator();
 

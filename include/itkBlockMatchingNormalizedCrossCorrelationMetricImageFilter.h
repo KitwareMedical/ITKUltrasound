@@ -43,16 +43,16 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  */
-template< class TFixedImage, class TMovingImage, class TMetricImage >
-class ITK_TEMPLATE_EXPORT NormalizedCrossCorrelationMetricImageFilter :
-  public MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
+template <class TFixedImage, class TMovingImage, class TMetricImage>
+class ITK_TEMPLATE_EXPORT NormalizedCrossCorrelationMetricImageFilter
+  : public MetricImageFilter<TFixedImage, TMovingImage, TMetricImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(NormalizedCrossCorrelationMetricImageFilter);
 
   /** Standard class type alias. */
   using Self = NormalizedCrossCorrelationMetricImageFilter;
-  using Superclass = MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >;
+  using Superclass = MetricImageFilter<TFixedImage, TMovingImage, TMetricImage>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
@@ -81,13 +81,16 @@ protected:
 
   /** The mean and pseudo-standarddeviation images are stored in the outputs so
     they fix in with the pipline architecture. */
-  virtual void GenerateOutputInformation() override;
+  virtual void
+  GenerateOutputInformation() override;
 
   /** All outputs generate the largest possible region. */
-  virtual void EnlargeOutputRequestedRegion( DataObject * data ) override;
+  virtual void
+  EnlargeOutputRequestedRegion(DataObject * data) override;
 
   /** Don't let the default mess with our output requested regions. */
-  virtual void GenerateOutputRequestedRegion( DataObject * data ) override {};
+  virtual void
+  GenerateOutputRequestedRegion(DataObject * data) override{};
 
   /** Generates helper images for the calculation.  These are only needed for
    * internal calculation, but they are put on the
@@ -96,16 +99,17 @@ protected:
    *
    * Calculates an image of means for each block neighborhood.  Also calculates
    * an image of standard deviations (times sqrt(N-1)) for each block neighborhood. */
-  virtual void GenerateHelperImages();
+  virtual void
+  GenerateHelperImages();
 
-  using BoxMeanFilterType = BoxMeanImageFilter< MovingImageType, MetricImageType >;
-  using BoxPseudoSigmaFilterType = BoxSigmaSqrtNMinusOneImageFilter< MovingImageType, MetricImageType >;
+  using BoxMeanFilterType = BoxMeanImageFilter<MovingImageType, MetricImageType>;
+  using BoxPseudoSigmaFilterType = BoxSigmaSqrtNMinusOneImageFilter<MovingImageType, MetricImageType>;
 
   typename BoxMeanFilterType::Pointer        m_BoxMeanFilter;
   typename BoxPseudoSigmaFilterType::Pointer m_BoxPseudoSigmaFilter;
 
 private:
-  using BoundaryConditionType = ConstantBoundaryCondition< MetricImageType >;
+  using BoundaryConditionType = ConstantBoundaryCondition<MetricImageType>;
   BoundaryConditionType m_BoundaryCondition;
 };
 
@@ -113,7 +117,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter.hxx"
+#  include "itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter.hxx"
 #endif
 
 #endif

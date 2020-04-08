@@ -43,16 +43,14 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  */
-template< class TFixedImage, class TMovingImage, class TMetricImage >
-class ITK_TEMPLATE_EXPORT NormalizedCrossCorrelationFFTMetricImageFilter :
-  public NormalizedCrossCorrelationMetricImageFilter< TFixedImage,
-                                                      TMovingImage, TMetricImage >
+template <class TFixedImage, class TMovingImage, class TMetricImage>
+class ITK_TEMPLATE_EXPORT NormalizedCrossCorrelationFFTMetricImageFilter
+  : public NormalizedCrossCorrelationMetricImageFilter<TFixedImage, TMovingImage, TMetricImage>
 {
 public:
   /** Standard class type alias. */
   using Self = NormalizedCrossCorrelationFFTMetricImageFilter;
-  using Superclass = NormalizedCrossCorrelationMetricImageFilter< TFixedImage,
-                                                       TMovingImage, TMetricImage >;
+  using Superclass = NormalizedCrossCorrelationMetricImageFilter<TFixedImage, TMovingImage, TMetricImage>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
@@ -60,8 +58,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(NormalizedCrossCorrelationFFTMetricImageFilter,
-               NormalizedCrossCorrelationMetricImageFilter);
+  itkTypeMacro(NormalizedCrossCorrelationFFTMetricImageFilter, NormalizedCrossCorrelationMetricImageFilter);
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, TFixedImage::ImageDimension);
@@ -97,16 +94,17 @@ e  */
 protected:
   NormalizedCrossCorrelationFFTMetricImageFilter();
 
-  virtual void GenerateData() override;
+  virtual void
+  GenerateData() override;
 
-  using PadFilterType = ConstantPadImageFilter< MetricImageType, MetricImageType >;
-  using FFTShiftFilterType = FFTShiftImageFilter< MetricImageType, MetricImageType >;
-  using FFTFilterType = RealToHalfHermitianForwardFFTImageFilter< MetricImageType >;
+  using PadFilterType = ConstantPadImageFilter<MetricImageType, MetricImageType>;
+  using FFTShiftFilterType = FFTShiftImageFilter<MetricImageType, MetricImageType>;
+  using FFTFilterType = RealToHalfHermitianForwardFFTImageFilter<MetricImageType>;
   using ComplexImageType = typename FFTFilterType::OutputImageType;
-  using IFFTFilterType = HalfHermitianToRealInverseFFTImageFilter< ComplexImageType >;
-  using ComplexConjugateFilterType = ComplexConjugateImageFilter< ComplexImageType, ComplexImageType >;
-  using MultiplyFilterType = MultiplyImageFilter< ComplexImageType, ComplexImageType, ComplexImageType >;
-  using CropFilterType = RegionFromReferenceImageFilter< MetricImageType, MetricImageType >;
+  using IFFTFilterType = HalfHermitianToRealInverseFFTImageFilter<ComplexImageType>;
+  using ComplexConjugateFilterType = ComplexConjugateImageFilter<ComplexImageType, ComplexImageType>;
+  using MultiplyFilterType = MultiplyImageFilter<ComplexImageType, ComplexImageType, ComplexImageType>;
+  using CropFilterType = RegionFromReferenceImageFilter<MetricImageType, MetricImageType>;
 
   typename PadFilterType::Pointer              m_KernelPadFilter;
   typename PadFilterType::Pointer              m_MovingPadFilter;
@@ -118,18 +116,19 @@ protected:
   typename IFFTFilterType::Pointer             m_IFFTFilter;
   typename CropFilterType::Pointer             m_CropFilter;
 
-  SizeValueType                                                 m_SizeGreatestPrimeFactor;
+  SizeValueType m_SizeGreatestPrimeFactor;
 
 private:
-  NormalizedCrossCorrelationFFTMetricImageFilter( const Self& ); // purposely not implemented
-  void operator=( const Self& ); // purposely not implemented
+  NormalizedCrossCorrelationFFTMetricImageFilter(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace BlockMatching
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilter.hxx"
+#  include "itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilter.hxx"
 #endif
 
 #endif

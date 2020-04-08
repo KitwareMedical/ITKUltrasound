@@ -25,18 +25,16 @@ namespace itk
 namespace BlockMatching
 {
 
-template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
-ImageToImageMetricMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
-::ImageToImageMetricMetricImageFilter():
-  m_MetricImageSpacingDefined( false )
-{
-}
+template <typename TFixedImage, typename TMovingImage, typename TMetricImage>
+ImageToImageMetricMetricImageFilter<TFixedImage, TMovingImage, TMetricImage>::ImageToImageMetricMetricImageFilter()
+  : m_MetricImageSpacingDefined(false)
+{}
 
 
-template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
+template <typename TFixedImage, typename TMovingImage, typename TMetricImage>
 void
-ImageToImageMetricMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
-::SetMetricImageSpacing( const MetricImageSpacingType & spacing )
+ImageToImageMetricMetricImageFilter<TFixedImage, TMovingImage, TMetricImage>::SetMetricImageSpacing(
+  const MetricImageSpacingType & spacing)
 {
   m_MetricImageSpacing = spacing;
   m_MetricImageSpacingDefined = true;
@@ -44,56 +42,55 @@ ImageToImageMetricMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 }
 
 
-template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
+template <typename TFixedImage, typename TMovingImage, typename TMetricImage>
 void
-ImageToImageMetricMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
-::GenerateOutputInformation()
+ImageToImageMetricMetricImageFilter<TFixedImage, TMovingImage, TMetricImage>::GenerateOutputInformation()
 {
   // get origin and direction from fixed image.
   Superclass::Superclass::GenerateOutputInformation();
 
   const MovingImageType * moving = this->GetInput(1);
-  if( !moving )
-    {
-    itkExceptionMacro( << "MovingImage input has not been set" );
-    }
+  if (!moving)
+  {
+    itkExceptionMacro(<< "MovingImage input has not been set");
+  }
 
   MetricImageType * output = this->GetOutput(0);
-  if( !output )
-    {
+  if (!output)
+  {
     return;
-    }
+  }
 
-  if( !this->m_MovingImageRegionDefined )
-    {
-    itkExceptionMacro( << "MovingImageRegion has not been set" );
-    }
+  if (!this->m_MovingImageRegionDefined)
+  {
+    itkExceptionMacro(<< "MovingImageRegion has not been set");
+  }
 
   typename MovingImageType::SpacingType movingSpacing = moving->GetSpacing();
 
-  MetricImageRegionType metricRegion;
+  MetricImageRegionType                     metricRegion;
   typename MetricImageRegionType::IndexType metricIndex;
-  metricIndex.Fill( 0 );
-  metricRegion.SetIndex( metricIndex );
-  typename MetricImageRegionType::SizeType  metricSize;
+  metricIndex.Fill(0);
+  metricRegion.SetIndex(metricIndex);
+  typename MetricImageRegionType::SizeType metricSize;
 
   typename MovingImageRegionType::SizeType movingSize = this->m_MovingImageRegion.GetSize();
 
-  if( m_MetricImageSpacingDefined )
+  if (m_MetricImageSpacingDefined)
+  {
+    for (unsigned int i = 0; i < ImageDimension; ++i)
     {
-    for( unsigned int i = 0; i < ImageDimension; ++i )
-      {
-      metricSize[i] = std::ceil( movingSize[i] * movingSpacing[i] / m_MetricImageSpacing[i] );
-      }
-    output->SetSpacing( m_MetricImageSpacing );
+      metricSize[i] = std::ceil(movingSize[i] * movingSpacing[i] / m_MetricImageSpacing[i]);
     }
+    output->SetSpacing(m_MetricImageSpacing);
+  }
   else
-    {
+  {
     metricSize = movingSize;
-    output->SetSpacing( movingSpacing );
-    }
-  metricRegion.SetSize( metricSize );
-  output->SetLargestPossibleRegion( metricRegion );
+    output->SetSpacing(movingSpacing);
+  }
+  metricRegion.SetSize(metricSize);
+  output->SetLargestPossibleRegion(metricRegion);
 }
 
 } // end namespace BlockMatching

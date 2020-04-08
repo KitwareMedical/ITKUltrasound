@@ -37,9 +37,8 @@ namespace itk
  * \ingroup FourierTransform
  * \ingroup Ultrasound
  */
-template< typename TInputImage, typename TOutputImage = TInputImage >
-class ITK_TEMPLATE_EXPORT FrequencyDomain1DImageFilter:
-  public ImageToImageFilter< TInputImage, TOutputImage >
+template <typename TInputImage, typename TOutputImage = TInputImage>
+class ITK_TEMPLATE_EXPORT FrequencyDomain1DImageFilter : public ImageToImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(FrequencyDomain1DImageFilter);
@@ -52,44 +51,48 @@ public:
   itkStaticConstMacro(ImageDimension, unsigned int, InputImageType::ImageDimension);
 
   using Self = FrequencyDomain1DImageFilter;
-  using Superclass = ImageToImageFilter< InputImageType, OutputImageType >;
-  using Pointer = SmartPointer< Self >;
-  using ConstPointer = SmartPointer< const Self >;
+  using Superclass = ImageToImageFilter<InputImageType, OutputImageType>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
-  itkTypeMacro( FrequencyDomain1DImageFilter, ImageToImageFilter );
-  itkNewMacro( Self );
+  itkTypeMacro(FrequencyDomain1DImageFilter, ImageToImageFilter);
+  itkNewMacro(Self);
 
 
   itkSetMacro(Direction, unsigned int);
   itkGetMacro(Direction, unsigned int);
 
-  void SetFilterFunction(FrequencyDomain1DFilterFunction *function)
-    {
+  void
+  SetFilterFunction(FrequencyDomain1DFilterFunction * function)
+  {
     m_FilterFunction = function;
-    };
+  };
 
 protected:
   FrequencyDomain1DImageFilter();
   virtual ~FrequencyDomain1DImageFilter() {}
 
-  void PrintSelf(std::ostream& os, Indent indent) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   // These behave like their analogs in Forward1DFFTImageFilter.
-  void GenerateInputRequestedRegion() override;
-  void EnlargeOutputRequestedRegion(DataObject *output) override;
+  void
+  GenerateInputRequestedRegion() override;
+  void
+  EnlargeOutputRequestedRegion(DataObject * output) override;
 
-  void GenerateData() override;
+  void
+  GenerateData() override;
 
 private:
   FrequencyDomain1DFilterFunction::Pointer m_FilterFunction;
 
   unsigned int m_Direction;
-
 };
-}
+} // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkFrequencyDomain1DImageFilter.hxx"
+#  include "itkFrequencyDomain1DImageFilter.hxx"
 #endif
 
 #endif // itkFrequencyDomain1DImageFilter_h

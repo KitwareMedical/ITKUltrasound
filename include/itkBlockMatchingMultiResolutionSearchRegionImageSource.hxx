@@ -25,60 +25,59 @@ namespace itk
 namespace BlockMatching
 {
 
-template< typename TFixedImage, typename TMovingImage, typename TDisplacementImage >
-MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >
-::MultiResolutionSearchRegionImageSource():
-  m_CurrentLevel( 0 )
+template <typename TFixedImage, typename TMovingImage, typename TDisplacementImage>
+MultiResolutionSearchRegionImageSource<TFixedImage, TMovingImage, TDisplacementImage>::
+  MultiResolutionSearchRegionImageSource()
+  : m_CurrentLevel(0)
 {
-  m_PreviousDisplacements  = DisplacementImageType::New();
+  m_PreviousDisplacements = DisplacementImageType::New();
   m_DisplacementDuplicator = DisplacementDuplicatorType::New();
-  m_DisplacementResampler  = DisplacementResamplerType::New();
+  m_DisplacementResampler = DisplacementResamplerType::New();
 }
 
 
-template< typename TFixedImage, typename TMovingImage, typename TDisplacementImage >
+template <typename TFixedImage, typename TMovingImage, typename TDisplacementImage>
 void
-MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >
-::SetPreviousDisplacements( const DisplacementImageType* displacements )
+MultiResolutionSearchRegionImageSource<TFixedImage, TMovingImage, TDisplacementImage>::SetPreviousDisplacements(
+  const DisplacementImageType * displacements)
 {
   // We make a copy because the ImageRegistrationMethods will mess with the
   // output information on GenerateOutputInformation before the
   // SearchRegionImageSource has a chance to use it in GenerateData.
-  m_DisplacementDuplicator->SetInputImage( displacements );
+  m_DisplacementDuplicator->SetInputImage(displacements);
   m_DisplacementDuplicator->Update();
   m_PreviousDisplacements = m_DisplacementDuplicator->GetOutput();
 }
 
 
-template< typename TFixedImage, typename TMovingImage, typename TDisplacementImage >
+template <typename TFixedImage, typename TMovingImage, typename TDisplacementImage>
 void
-MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >
-::SetOverlapSchedule( const double& schedule )
+MultiResolutionSearchRegionImageSource<TFixedImage, TMovingImage, TDisplacementImage>::SetOverlapSchedule(
+  const double & schedule)
 {
   // Check to make sure the PyramidSchedule has been set.
-  if( m_PyramidSchedule.size() == 0 )
-    {
-    itkExceptionMacro(<<"The PyramidSchedule must be set before calling this method.");
-    }
+  if (m_PyramidSchedule.size() == 0)
+  {
+    itkExceptionMacro(<< "The PyramidSchedule must be set before calling this method.");
+  }
 
-  m_OverlapSchedule.SetSize( m_PyramidSchedule.rows(), m_PyramidSchedule.cols() );
-  m_OverlapSchedule.Fill( schedule );
+  m_OverlapSchedule.SetSize(m_PyramidSchedule.rows(), m_PyramidSchedule.cols());
+  m_OverlapSchedule.Fill(schedule);
 }
 
 
-template < typename TFixedImage, typename TMovingImage, typename TDisplacement >
+template <typename TFixedImage, typename TMovingImage, typename TDisplacement>
 void
-MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacement >
-::GenerateOutputInformation()
+MultiResolutionSearchRegionImageSource<TFixedImage, TMovingImage, TDisplacement>::GenerateOutputInformation()
 {
   OutputImageType * output = this->GetOutput();
 
-  if( m_FixedImage.IsNull() )
-    {
-    itkExceptionMacro( << "Fixed Image is not present." );
-    }
+  if (m_FixedImage.IsNull())
+  {
+    itkExceptionMacro(<< "Fixed Image is not present.");
+  }
   m_FixedImage->UpdateOutputInformation();
-  output->SetDirection( m_FixedImage->GetDirection() );
+  output->SetDirection(m_FixedImage->GetDirection());
 
   // Set origin.  The first block is in the corner of the fixed image.
   typename FixedImageType::PointType  fixedOrigin = m_FixedImage->GetOrigin();
@@ -87,69 +86,68 @@ MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacement
   typename FixedImageType::SpacingType fixedSpacing = m_FixedImage->GetSpacing();
 
   RadiusType nullRadius;
-  nullRadius.Fill( 0 );
-  if( m_FixedBlockRadius == nullRadius )
-    {
-    itkExceptionMacro( << "The FixedBlockRadius has not been set." );
-    }
+  nullRadius.Fill(0);
+  if (m_FixedBlockRadius == nullRadius)
+  {
+    itkExceptionMacro(<< "The FixedBlockRadius has not been set.");
+  }
 
-  if( m_OverlapSchedule.size() == 0 )
-    {
-    itkExceptionMacro( << "OverlapSchedule is not present." );
-    }
+  if (m_OverlapSchedule.size() == 0)
+  {
+    itkExceptionMacro(<< "OverlapSchedule is not present.");
+  }
 
   typename FixedImageType::IndexType fixedIndex = m_FixedImage->GetLargestPossibleRegion().GetIndex();
-  for( unsigned int i = 0; i < ImageDimension; ++i )
-    {
-    origin[i] = fixedOrigin[i] +
-      + ( fixedIndex[i] + m_FixedBlockRadius[i] ) * fixedSpacing[i];
-    }
-  output->SetOrigin( origin );
+  for (unsigned int i = 0; i < ImageDimension; ++i)
+  {
+    origin[i] = fixedOrigin[i] + +(fixedIndex[i] + m_FixedBlockRadius[i]) * fixedSpacing[i];
+  }
+  output->SetOrigin(origin);
 
   typename OutputImageType::SpacingType spacing;
-  for( unsigned int i = 0; i < ImageDimension; ++i )
-    {
-    spacing[i] = 2 * m_FixedBlockRadius[i] * fixedSpacing[i] * m_OverlapSchedule( m_CurrentLevel, i );
-    }
-  output->SetSpacing( spacing );
+  for (unsigned int i = 0; i < ImageDimension; ++i)
+  {
+    spacing[i] = 2 * m_FixedBlockRadius[i] * fixedSpacing[i] * m_OverlapSchedule(m_CurrentLevel, i);
+  }
+  output->SetSpacing(spacing);
 
   OutputRegionType                     region;
   typename OutputRegionType::IndexType index;
-  index.Fill( 0 );
-  region.SetIndex( index );
+  index.Fill(0);
+  region.SetIndex(index);
   typename OutputRegionType::SizeType size;
-  typename FixedImageType::SizeType fixedSize = m_FixedImage->GetLargestPossibleRegion().GetSize();
-  for( unsigned int i = 0; i < ImageDimension; ++i )
-    {
-    size[i] = static_cast< SizeValueType >( std::floor(( fixedSize[i] - m_FixedBlockRadius[i] * 2 - 2 ) * fixedSpacing[i] / spacing[i] ) - 2);
-    }
-  region.SetSize( size );
-  output->SetLargestPossibleRegion( region );
+  typename FixedImageType::SizeType   fixedSize = m_FixedImage->GetLargestPossibleRegion().GetSize();
+  for (unsigned int i = 0; i < ImageDimension; ++i)
+  {
+    size[i] = static_cast<SizeValueType>(
+      std::floor((fixedSize[i] - m_FixedBlockRadius[i] * 2 - 2) * fixedSpacing[i] / spacing[i]) - 2);
+  }
+  region.SetSize(size);
+  output->SetLargestPossibleRegion(region);
 }
 
 
-template< typename TFixedImage, typename TMovingImage, typename TDisplacement >
+template <typename TFixedImage, typename TMovingImage, typename TDisplacement>
 void
-MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacement >
-::BeforeThreadedGenerateData()
+MultiResolutionSearchRegionImageSource<TFixedImage, TMovingImage, TDisplacement>::BeforeThreadedGenerateData()
 {
-  if( this->m_CurrentLevel != 0 )
-    {
+  if (this->m_CurrentLevel != 0)
+  {
     // ! @todo these resampler should be replaced by resamplers for each
     // component that can specify a neumann boundary condition
     // ditto with FixedSearchRegionImageSource
-    m_DisplacementResampler->SetInput( this->m_PreviousDisplacements );
+    m_DisplacementResampler->SetInput(this->m_PreviousDisplacements);
     typename OutputImageType::Pointer output = this->GetOutput();
-    m_DisplacementResampler->SetSize(             output->GetRequestedRegion().GetSize() );
-    m_DisplacementResampler->SetOutputStartIndex( output->GetRequestedRegion().GetIndex() );
-    m_DisplacementResampler->SetOutputSpacing(    output->GetSpacing() );
-    m_DisplacementResampler->SetOutputOrigin(     output->GetOrigin() );
-    m_DisplacementResampler->SetOutputDirection(  output->GetDirection() );
+    m_DisplacementResampler->SetSize(output->GetRequestedRegion().GetSize());
+    m_DisplacementResampler->SetOutputStartIndex(output->GetRequestedRegion().GetIndex());
+    m_DisplacementResampler->SetOutputSpacing(output->GetSpacing());
+    m_DisplacementResampler->SetOutputOrigin(output->GetOrigin());
+    m_DisplacementResampler->SetOutputDirection(output->GetDirection());
     m_DisplacementResampler->UpdateLargestPossibleRegion();
-    }
+  }
 }
 
-} // end namespace itk
-} // end namespace BlockMatching
+} // namespace BlockMatching
+} // namespace itk
 
 #endif

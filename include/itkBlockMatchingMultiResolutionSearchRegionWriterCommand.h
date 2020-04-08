@@ -33,9 +33,8 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  * */
-template < typename TMultiResolutionMethod >
-class MultiResolutionSearchRegionWriterCommand :
-  public MultiResolutionIterationCommand< TMultiResolutionMethod >
+template <typename TMultiResolutionMethod>
+class MultiResolutionSearchRegionWriterCommand : public MultiResolutionIterationCommand<TMultiResolutionMethod>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionSearchRegionWriterCommand);
@@ -44,14 +43,16 @@ public:
   using Superclass = MultiResolutionIterationCommand<TMultiResolutionMethod>;
   using Pointer = SmartPointer<Self>;
 
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
-  void Execute(itk::Object *caller, const itk::EventObject & event) override
-    {
-    Execute( (const itk::Object *)caller, event);
-    }
+  void
+  Execute(itk::Object * caller, const itk::EventObject & event) override
+  {
+    Execute((const itk::Object *)caller, event);
+  }
 
-  void Execute(const itk::Object * object, const itk::EventObject & event) override;
+  void
+  Execute(const itk::Object * object, const itk::EventObject & event) override;
 
   using MultiResolutionMethodType = TMultiResolutionMethod;
 
@@ -59,13 +60,13 @@ public:
   using SearchRegionImageType = typename SearchRegionImageSourceType::OutputImageType;
   using SearchRegionType = typename SearchRegionImageType::PixelType;
 
-  using SearchRegionImageComponentType = Image< unsigned short, 2 >;
+  using SearchRegionImageComponentType = Image<unsigned short, 2>;
   using SearchRegionImageComponentPointer = SearchRegionImageComponentType::Pointer;
 
-  using SearchRegionComponentWriterType = ImageFileWriter< SearchRegionImageComponentType >;
+  using SearchRegionComponentWriterType = ImageFileWriter<SearchRegionImageComponentType>;
 
-  itkSetStringMacro( OutputFilePrefix );
-  itkGetConstMacro( OutputFilePrefix, std::string );
+  itkSetStringMacro(OutputFilePrefix);
+  itkGetConstMacro(OutputFilePrefix, std::string);
 
 protected:
   MultiResolutionSearchRegionWriterCommand();

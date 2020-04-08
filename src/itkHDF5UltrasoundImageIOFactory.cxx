@@ -24,17 +24,15 @@ namespace itk
 
 HDF5UltrasoundImageIOFactory::HDF5UltrasoundImageIOFactory()
 {
-  this->RegisterOverride( "itkImageIOBase",
-                          "itkHDF5UltrasoundImageIO",
-                          "HDF5 Ultrasound Image IO",
-                          1,
-                          CreateObjectFunction< HDF5UltrasoundImageIO >::New() );
+  this->RegisterOverride("itkImageIOBase",
+                         "itkHDF5UltrasoundImageIO",
+                         "HDF5 Ultrasound Image IO",
+                         1,
+                         CreateObjectFunction<HDF5UltrasoundImageIO>::New());
 }
 
 
-HDF5UltrasoundImageIOFactory::~HDF5UltrasoundImageIOFactory()
-{
-}
+HDF5UltrasoundImageIOFactory::~HDF5UltrasoundImageIOFactory() {}
 
 
 const char *
@@ -52,10 +50,8 @@ HDF5UltrasoundImageIOFactory::GetDescription() const
 
 
 void
-HDF5UltrasoundImageIOFactory
-::PrintSelf(std::ostream &, Indent) const
-{
-}
+HDF5UltrasoundImageIOFactory ::PrintSelf(std::ostream &, Indent) const
+{}
 
 
 // Undocumented API used to register during static initialization.
@@ -63,13 +59,14 @@ HDF5UltrasoundImageIOFactory
 
 static bool HDF5UltrasoundImageIOFactoryHasBeenRegistered;
 
-void Ultrasound_EXPORT HDF5UltrasoundImageIOFactoryRegister__Private()
+void Ultrasound_EXPORT
+     HDF5UltrasoundImageIOFactoryRegister__Private()
 {
-  if( ! HDF5UltrasoundImageIOFactoryHasBeenRegistered )
-    {
+  if (!HDF5UltrasoundImageIOFactoryHasBeenRegistered)
+  {
     HDF5UltrasoundImageIOFactoryHasBeenRegistered = true;
     HDF5UltrasoundImageIOFactory::RegisterOneFactory();
-    }
+  }
 }
 
 } // end namespace itk

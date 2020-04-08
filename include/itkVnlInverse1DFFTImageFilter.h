@@ -31,40 +31,42 @@ namespace itk
  *
  * \ingroup Ultrasound
  */
-template< typename TInputImage, typename TOutputImage=Image< typename NumericTraits< typename TInputImage::PixelType >::ValueType, TInputImage::ImageDimension > >
-class ITK_TEMPLATE_EXPORT VnlInverse1DFFTImageFilter:
-  public Inverse1DFFTImageFilter< TInputImage, TOutputImage >
+template <typename TInputImage,
+          typename TOutputImage =
+            Image<typename NumericTraits<typename TInputImage::PixelType>::ValueType, TInputImage::ImageDimension>>
+class ITK_TEMPLATE_EXPORT VnlInverse1DFFTImageFilter : public Inverse1DFFTImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(VnlInverse1DFFTImageFilter);
 
   /** Standard class type alias. */
   using Self = VnlInverse1DFFTImageFilter;
-  using Superclass = Inverse1DFFTImageFilter< TInputImage, TOutputImage >;
-  using Pointer = SmartPointer< Self >;
-  using ConstPointer = SmartPointer< const Self >;
+  using Superclass = Inverse1DFFTImageFilter<TInputImage, TOutputImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   using InputImageType = typename Superclass::InputImageType;
   using OutputImageType = typename Superclass::OutputImageType;
   using OutputImageRegionType = typename OutputImageType::RegionType;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( VnlInverse1DFFTImageFilter, Inverse1DFFTImageFilter );
+  itkTypeMacro(VnlInverse1DFFTImageFilter, Inverse1DFFTImageFilter);
 
 protected:
-  void GenerateData() override;
+  void
+  GenerateData() override;
 
-  VnlInverse1DFFTImageFilter() { }
-  virtual ~VnlInverse1DFFTImageFilter() { }
+  VnlInverse1DFFTImageFilter() {}
+  virtual ~VnlInverse1DFFTImageFilter() {}
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkVnlInverse1DFFTImageFilter.hxx"
+#  include "itkVnlInverse1DFFTImageFilter.hxx"
 #endif
 
 #endif

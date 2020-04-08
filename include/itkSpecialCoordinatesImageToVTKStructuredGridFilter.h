@@ -32,8 +32,8 @@ namespace itk
  *
  * \ingroup Ultrasound
  */
-template< typename TInputImage >
-class ITK_TEMPLATE_EXPORT SpecialCoordinatesImageToVTKStructuredGridFilter: public ProcessObject
+template <typename TInputImage>
+class ITK_TEMPLATE_EXPORT SpecialCoordinatesImageToVTKStructuredGridFilter : public ProcessObject
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(SpecialCoordinatesImageToVTKStructuredGridFilter);
@@ -52,17 +52,20 @@ public:
 
   using InputImageType = TInputImage;
 
-  using StructuredGridPointerType = vtkSmartPointer< vtkStructuredGrid >;
-  using DecoratedStructuredGridPointerType = SimpleDataObjectDecorator< StructuredGridPointerType >;
+  using StructuredGridPointerType = vtkSmartPointer<vtkStructuredGrid>;
+  using DecoratedStructuredGridPointerType = SimpleDataObjectDecorator<StructuredGridPointerType>;
 
   itkStaticConstMacro(ImageDimension, unsigned int, InputImageType::ImageDimension);
 
 
   using Superclass::SetInput;
-  virtual void SetInput(const InputImageType * image);
-  const InputImageType * GetInput() const;
+  virtual void
+  SetInput(const InputImageType * image);
+  const InputImageType *
+  GetInput() const;
 
-  vtkStructuredGrid * GetOutput();
+  vtkStructuredGrid *
+  GetOutput();
   itkGetDecoratedOutputMacro(StructuredGrid, StructuredGridPointerType);
 
 protected:
@@ -72,18 +75,19 @@ protected:
   /** Make a DataObject of the correct type to be used as the specified output. */
   using DataObjectPointerArraySizeType = ProcessObject::DataObjectPointerArraySizeType;
   using Superclass::MakeOutput;
-  virtual DataObjectPointer MakeOutput( DataObjectPointerArraySizeType ) override;
+  virtual DataObjectPointer MakeOutput(DataObjectPointerArraySizeType) override;
 
-  virtual void GenerateData() override;
+  virtual void
+  GenerateData() override;
 
 private:
-  vtkSmartPointer< vtkStructuredGrid > m_StructuredGrid;
+  vtkSmartPointer<vtkStructuredGrid> m_StructuredGrid;
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkSpecialCoordinatesImageToVTKStructuredGridFilter.hxx"
+#  include "itkSpecialCoordinatesImageToVTKStructuredGridFilter.hxx"
 #endif
 
 #endif

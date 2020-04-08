@@ -55,8 +55,8 @@ namespace BlockMatching
  * \ingroup Ultrasound
  */
 template <typename TMetricImage, typename TDisplacementImage, typename TStrainValueType>
-class ITK_TEMPLATE_EXPORT StrainWindowDisplacementCalculator :
-  public MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
+class ITK_TEMPLATE_EXPORT StrainWindowDisplacementCalculator
+  : public MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(StrainWindowDisplacementCalculator);
@@ -71,16 +71,17 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( StrainWindowDisplacementCalculator, MetricImageToDisplacementCalculator );
+  itkTypeMacro(StrainWindowDisplacementCalculator, MetricImageToDisplacementCalculator);
 
   using DisplacementImageType = typename Superclass::DisplacementImageType;
   using RegionType = typename DisplacementImageType::RegionType;
 
-  using StrainImageFilterType = ImageToImageFilter<DisplacementImageType,
-                                  Image<SymmetricSecondRankTensor<TStrainValueType, ImageDimension>, ImageDimension> >;
+  using StrainImageFilterType =
+    ImageToImageFilter<DisplacementImageType,
+                       Image<SymmetricSecondRankTensor<TStrainValueType, ImageDimension>, ImageDimension>>;
   using StrainTensorType = typename StrainImageFilterType::OutputImagePixelType;
   using StrainImageType = typename StrainImageFilterType::OutputImageType;
 
@@ -94,51 +95,53 @@ public:
   using MetricImageType = typename Superclass::MetricImageType;
   using MetricPixelType = typename MetricImageType::PixelType;
 
-  void SetDisplacementImage( DisplacementImageType* image ) override
-    {
-    Superclass::SetDisplacementImage( image );
-    m_DisplacementCalculator->SetDisplacementImage( image );
-    }
+  void
+  SetDisplacementImage(DisplacementImageType * image) override
+  {
+    Superclass::SetDisplacementImage(image);
+    m_DisplacementCalculator->SetDisplacementImage(image);
+  }
 
-  void SetMetricImagePixel( const PointType & point,
-    const IndexType& index,
-    MetricImageType * image ) override;
+  void
+  SetMetricImagePixel(const PointType & point, const IndexType & index, MetricImageType * image) override;
 
-  void Compute() override;
+  void
+  Compute() override;
 
   /** Set/Get the internal displacement calculator that is used to calculate the
    * displacements after regularization.  Defaults to a
    * MaximumPixelDisplacementCalcultor. */
-  itkSetObjectMacro( DisplacementCalculator, Superclass );
-  itkGetConstObjectMacro( DisplacementCalculator, Superclass );
+  itkSetObjectMacro(DisplacementCalculator, Superclass);
+  itkGetConstObjectMacro(DisplacementCalculator, Superclass);
 
   /** Set/Get the strain image filter that is used to calculate the strain
    * image. This defaults to an itk::StrainImageFilter. */
-  itkSetObjectMacro( StrainImageFilter, StrainImageFilterType );
-  itkGetConstObjectMacro( StrainImageFilter, StrainImageFilterType );
+  itkSetObjectMacro(StrainImageFilter, StrainImageFilterType);
+  itkGetConstObjectMacro(StrainImageFilter, StrainImageFilterType);
 
   /** Set/Get the maxmimum absolute strain allowed.  If any of strain components are below
    * the values in this tensor, the displacement is interpolated or extrapolated
    * by surrounding values. */
-  virtual void SetMaximumAbsStrain( const StrainTensorType& max )
+  virtual void
+  SetMaximumAbsStrain(const StrainTensorType & max)
+  {
+    if (m_MaximumAbsStrain != max)
     {
-    if( m_MaximumAbsStrain != max )
-      {
       m_MaximumAbsStrain = max;
       this->Modified();
-      }
     }
-  itkGetConstReferenceMacro( MaximumAbsStrain, StrainTensorType );
+  }
+  itkGetConstReferenceMacro(MaximumAbsStrain, StrainTensorType);
 
   /** Set/Get the maximum iterations the algorithm is applied.  The algorithm
    * will be applied repeatedly until the number of strain pixels outside the
    * specified window converges or this value is reached.  Defaults to 1. */
-  itkSetMacro( MaximumIterations, unsigned int );
-  itkGetConstMacro( MaximumIterations, unsigned int );
+  itkSetMacro(MaximumIterations, unsigned int);
+  itkGetConstMacro(MaximumIterations, unsigned int);
 
   /** Get the current or last iteration of the algorithm.  Starts from 1.  See
    * also SetMaximumIterations(). */
-  itkGetConstMacro( CurrentIteration, unsigned int );
+  itkGetConstMacro(CurrentIteration, unsigned int);
 
 protected:
   StrainWindowDisplacementCalculator();
@@ -146,10 +149,12 @@ protected:
   /** Determine the values outside the strain window, and set the internal mask
    * image to true if the value needs to be replaced.  Return the number of
    * values outside the strain window. */
-  unsigned long long GenerateMask( const RegionType & region );
+  unsigned long long
+  GenerateMask(const RegionType & region);
 
   /** Replace the displacements where the mask is true. */
-  void ReplaceDisplacements( const RegionType & region );
+  void
+  ReplaceDisplacements(const RegionType & region);
 
   typename Superclass::Pointer m_DisplacementCalculator;
 
@@ -164,26 +169,26 @@ protected:
   using MaskType = Image<bool, ImageDimension>;
   typename MaskType::Pointer m_Mask;
 
-  using NthElementAdaptorType = NthElementImageAdaptor< StrainImageType, MetricPixelType >;
-  typename NthElementAdaptorType::Pointer                            m_NthElementAdaptor;
+  using NthElementAdaptorType = NthElementImageAdaptor<StrainImageType, MetricPixelType>;
+  typename NthElementAdaptorType::Pointer m_NthElementAdaptor;
 
-  using AbsFilterType = AbsImageFilter< NthElementAdaptorType, MetricImageType >;
-  typename AbsFilterType::Pointer                                  m_AbsFilter;
+  using AbsFilterType = AbsImageFilter<NthElementAdaptorType, MetricImageType>;
+  typename AbsFilterType::Pointer m_AbsFilter;
 
   // There are cases where you will get a large negative pixel, followed by a
   // normal pixel, followed by a large positive strain pixel, for instance.
   // This filter helps address that problem.
-  using BoxMeanImageFilterType = BoxMeanImageFilter< MetricImageType, MetricImageType >;
-  typename BoxMeanImageFilterType::Pointer                       m_BoxMeanFilter;
+  using BoxMeanImageFilterType = BoxMeanImageFilter<MetricImageType, MetricImageType>;
+  typename BoxMeanImageFilterType::Pointer m_BoxMeanFilter;
 
 private:
 };
 
-} // end namespace itk
-} // end namespace BlockMatching
+} // namespace BlockMatching
+} // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingStrainWindowDisplacementCalculator.hxx"
+#  include "itkBlockMatchingStrainWindowDisplacementCalculator.hxx"
 #endif
 
 #endif

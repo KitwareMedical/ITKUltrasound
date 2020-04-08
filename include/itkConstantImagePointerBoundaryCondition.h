@@ -58,9 +58,8 @@ namespace itk
  * \ingroup ImageObjects
  * \ingroup Ultrasound
  */
-template< typename TImage >
-class ITK_TEMPLATE_EXPORT ConstantImagePointerBoundaryCondition
-  : public ImageBoundaryCondition< TImage >
+template <typename TImage>
+class ITK_TEMPLATE_EXPORT ConstantImagePointerBoundaryCondition : public ImageBoundaryCondition<TImage>
 {
 public:
   /** Self & superclass type alias */
@@ -74,58 +73,71 @@ public:
   using OffsetType = typename Superclass::OffsetType;
   using NeighborhoodType = typename Superclass::NeighborhoodType;
 
-  typedef typename Superclass::NeighborhoodAccessorFunctorType
-                                 NeighborhoodAccessorFunctorType;
+  typedef typename Superclass::NeighborhoodAccessorFunctorType NeighborhoodAccessorFunctorType;
 
   /** Save the image dimension. */
   itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
 
   /** Default constructor. */
   ConstantImagePointerBoundaryCondition()
-    {
+  {
     PixelType imagePtr = nullptr;
     m_Constant = imagePtr;
-    }
+  }
 
   /** Computes and returns appropriate out-of-bounds values from
    * neighborhood iterator data. */
-  virtual PixelType operator()(const OffsetType&,
-                               const OffsetType&,
-                               const NeighborhoodType *) const
-    { return m_Constant; }
+  virtual PixelType
+  operator()(const OffsetType &, const OffsetType &, const NeighborhoodType *) const
+  {
+    return m_Constant;
+  }
 
   /** Computes and returns the appropriate pixel value from
    * neighborhood iterator data, using the functor. */
-  virtual PixelType operator()(
-      const OffsetType& ,
-      const OffsetType& ,
-      const NeighborhoodType *,
-      const NeighborhoodAccessorFunctorType & ) const
-    { return m_Constant; }
+  virtual PixelType
+  operator()(const OffsetType &,
+             const OffsetType &,
+             const NeighborhoodType *,
+             const NeighborhoodAccessorFunctorType &) const
+  {
+    return m_Constant;
+  }
 
   /** Set the value of the constant. */
-  void SetConstant(const PixelType &c)
-    {  m_Constant = c; }
+  void
+  SetConstant(const PixelType & c)
+  {
+    m_Constant = c;
+  }
 
   /** Get the value of the constant. */
-  const PixelType &GetConstant() const
-    {  return m_Constant;  }
+  const PixelType &
+  GetConstant() const
+  {
+    return m_Constant;
+  }
 
   /** Tell if the boundary condition can index to any location within
-    * the associated iterator's neighborhood or if it has some limited
-    * subset (such as none) that it relies upon. */
-  bool RequiresCompleteNeighborhood() { return false; }
+   * the associated iterator's neighborhood or if it has some limited
+   * subset (such as none) that it relies upon. */
+  bool
+  RequiresCompleteNeighborhood()
+  {
+    return false;
+  }
 
-  PixelType GetPixel( const IndexType & index, const TImage * image ) const
-    {
+  PixelType
+  GetPixel(const IndexType & index, const TImage * image) const
+  {
     typename TImage::RegionType imageRegion = image->GetLargestPossibleRegion();
-    if ( imageRegion.IsInside( index ) )
-      {
-      return static_cast< PixelType >( image->GetPixel( index ) );
-      }
+    if (imageRegion.IsInside(index))
+    {
+      return static_cast<PixelType>(image->GetPixel(index));
+    }
 
     return m_Constant;
-    }
+  }
 
 private:
   PixelType m_Constant;

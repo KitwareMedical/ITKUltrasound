@@ -27,38 +27,35 @@ namespace itk
 namespace BlockMatching
 {
 
-template< typename TMetricImage, typename TDisplacementImage, typename TCoordRep >
-CosineInterpolationDisplacementCalculator< TMetricImage, TDisplacementImage,
-  TCoordRep >
-::CosineInterpolationDisplacementCalculator()
-{
-}
+template <typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
+CosineInterpolationDisplacementCalculator<TMetricImage, TDisplacementImage, TCoordRep>::
+  CosineInterpolationDisplacementCalculator()
+{}
 
-template< typename TMetricImage, typename TDisplacementImage, typename TCoordRep >
+template <typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
 void
-CosineInterpolationDisplacementCalculator< TMetricImage, TDisplacementImage,
-  TCoordRep >
-::SetMetricImagePixel( const PointType& centerPoint,
-  const IndexType& displacementIndex,
-  MetricImageType* metricImage )
+CosineInterpolationDisplacementCalculator<TMetricImage, TDisplacementImage, TCoordRep>::SetMetricImagePixel(
+  const PointType & centerPoint,
+  const IndexType & displacementIndex,
+  MetricImageType * metricImage)
 {
-  Superclass::SetMetricImagePixel( centerPoint, displacementIndex, metricImage );
+  Superclass::SetMetricImagePixel(centerPoint, displacementIndex, metricImage);
 
   // Find index of the maximum value.
-  PixelType max = NumericTraits< PixelType >::min();
+  PixelType max = NumericTraits<PixelType>::min();
   IndexType maxIndex;
-  maxIndex.Fill( 0 );
+  maxIndex.Fill(0);
 
-  const typename MetricImageType::RegionType region = metricImage->GetBufferedRegion();
-  ImageRegionConstIteratorWithIndex< MetricImageType > it( metricImage, region );
-  for( it.GoToBegin(); !it.IsAtEnd(); ++it )
+  const typename MetricImageType::RegionType         region = metricImage->GetBufferedRegion();
+  ImageRegionConstIteratorWithIndex<MetricImageType> it(metricImage, region);
+  for (it.GoToBegin(); !it.IsAtEnd(); ++it)
+  {
+    if (it.Get() > max)
     {
-    if( it.Get() > max )
-      {
       max = it.Get();
       maxIndex = it.GetIndex();
-      }
     }
+  }
 
   TCoordRep y1 = max;
   TCoordRep y0;
@@ -67,35 +64,35 @@ CosineInterpolationDisplacementCalculator< TMetricImage, TDisplacementImage,
   TCoordRep theta;
 
   PointType maxPoint;
-  metricImage->TransformIndexToPhysicalPoint( maxIndex, maxPoint );
+  metricImage->TransformIndexToPhysicalPoint(maxIndex, maxPoint);
 
   SpacingType spacing = metricImage->GetSpacing();
-  IndexType tempIndex = maxIndex;
-  for( unsigned int i = 0; i < ImageDimension; i++ )
-    {
+  IndexType   tempIndex = maxIndex;
+  for (unsigned int i = 0; i < ImageDimension; i++)
+  {
     tempIndex[i] = maxIndex[i] - 1;
-    if( ! region.IsInside( tempIndex ) )
-      {
+    if (!region.IsInside(tempIndex))
+    {
       tempIndex[i] = maxIndex[i];
       continue;
-      }
-    y0 = metricImage->GetPixel( tempIndex );
+    }
+    y0 = metricImage->GetPixel(tempIndex);
     tempIndex[i] = maxIndex[i] + 1;
-    if( ! region.IsInside( tempIndex ) )
-      {
+    if (!region.IsInside(tempIndex))
+    {
       tempIndex[i] = maxIndex[i];
       continue;
-      }
-    y2 = metricImage->GetPixel( tempIndex );
+    }
+    y2 = metricImage->GetPixel(tempIndex);
     tempIndex[i] = maxIndex[i];
 
-    omega = std::acos( ( y0 + y2 ) / ( 2 * y1 ) );
-    theta = std::atan( ( y0 - y2 ) / ( 2 * y1 * std::sin( omega ) ) );
+    omega = std::acos((y0 + y2) / (2 * y1));
+    theta = std::atan((y0 - y2) / (2 * y1 * std::sin(omega)));
     // @todo is this rght ?
     maxPoint[i] += spacing[i] / ::itk::Math::pi * -1 * theta / omega;
-    }
+  }
 
-  this->m_DisplacementImage->SetPixel( displacementIndex, maxPoint - centerPoint );
+  this->m_DisplacementImage->SetPixel(displacementIndex, maxPoint - centerPoint);
 }
 
 } // end namespace BlockMatching

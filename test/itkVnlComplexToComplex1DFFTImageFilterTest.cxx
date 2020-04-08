@@ -26,57 +26,58 @@
 
 #include "itkVnlComplexToComplex1DFFTImageFilter.h"
 
-int itkVnlComplexToComplex1DFFTImageFilterTest( int argc, char* argv[] )
+int
+itkVnlComplexToComplex1DFFTImageFilterTest(int argc, char * argv[])
 {
-  if( argc < 3 )
-    {
+  if (argc < 3)
+  {
     std::cerr << "Usage: " << argv[0];
     std::cerr << " inputImagePrefix outputImage";
     std::cerr << std::endl;
     return EXIT_FAILURE;
-    }
+  }
 
   using PixelType = double;
   const unsigned int Dimension = 2;
 
-  using ImageType = itk::Image< PixelType, Dimension >;
-  using ComplexImageType = itk::Image< std::complex< PixelType >, Dimension >;
+  using ImageType = itk::Image<PixelType, Dimension>;
+  using ComplexImageType = itk::Image<std::complex<PixelType>, Dimension>;
 
-  using ReaderType = itk::ImageFileReader< ImageType >;
-  using FFTType = itk::VnlComplexToComplex1DFFTImageFilter< ComplexImageType, ComplexImageType >;
-  using JoinFilterType = itk::ComposeImageFilter< ImageType, ComplexImageType >;
-  using ToRealFilterType = itk::ComplexToRealImageFilter< ComplexImageType, ImageType >;
-  using WriterType = itk::ImageFileWriter< ImageType >;
+  using ReaderType = itk::ImageFileReader<ImageType>;
+  using FFTType = itk::VnlComplexToComplex1DFFTImageFilter<ComplexImageType, ComplexImageType>;
+  using JoinFilterType = itk::ComposeImageFilter<ImageType, ComplexImageType>;
+  using ToRealFilterType = itk::ComplexToRealImageFilter<ComplexImageType, ImageType>;
+  using WriterType = itk::ImageFileWriter<ImageType>;
 
-  ReaderType::Pointer readerReal = ReaderType::New();
-  ReaderType::Pointer readerImag = ReaderType::New();
-  FFTType::Pointer    fft    = FFTType::New();
-  JoinFilterType::Pointer joinFilter = JoinFilterType::New();
+  ReaderType::Pointer       readerReal = ReaderType::New();
+  ReaderType::Pointer       readerImag = ReaderType::New();
+  FFTType::Pointer          fft = FFTType::New();
+  JoinFilterType::Pointer   joinFilter = JoinFilterType::New();
   ToRealFilterType::Pointer toReal = ToRealFilterType::New();
-  WriterType::Pointer writer = WriterType::New();
+  WriterType::Pointer       writer = WriterType::New();
 
-  readerReal->SetFileName( std::string( argv[1] ) + "RealFull.mhd" );
-  readerImag->SetFileName( std::string( argv[1] ) + "ImaginaryFull.mhd" );
-  joinFilter->SetInput1( readerReal->GetOutput() );
-  joinFilter->SetInput2( readerImag->GetOutput() );
-  fft->SetTransformDirection( FFTType::INVERSE );
-  fft->SetInput( joinFilter->GetOutput() );
-  toReal->SetInput( fft->GetOutput() );
-  writer->SetInput( toReal->GetOutput() );
-  writer->SetFileName( argv[2] );
+  readerReal->SetFileName(std::string(argv[1]) + "RealFull.mhd");
+  readerImag->SetFileName(std::string(argv[1]) + "ImaginaryFull.mhd");
+  joinFilter->SetInput1(readerReal->GetOutput());
+  joinFilter->SetInput2(readerImag->GetOutput());
+  fft->SetTransformDirection(FFTType::INVERSE);
+  fft->SetInput(joinFilter->GetOutput());
+  toReal->SetInput(fft->GetOutput());
+  writer->SetInput(toReal->GetOutput());
+  writer->SetFileName(argv[2]);
 
   try
-    {
+  {
     writer->Update();
-    }
-  catch( itk::ExceptionObject & excep )
-    {
+  }
+  catch (itk::ExceptionObject & excep)
+  {
     std::cerr << "Exception caught !" << std::endl;
     std::cerr << excep << std::endl;
     return EXIT_FAILURE;
-    }
+  }
 
-  fft.Print( std::cout );
+  fft.Print(std::cout);
 
   return EXIT_SUCCESS;
 }

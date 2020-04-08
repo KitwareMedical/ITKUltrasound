@@ -35,7 +35,7 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  * */
-template< typename TMultiResolutionMethod >
+template <typename TMultiResolutionMethod>
 class MultiResolutionIterationCommand : public Command
 {
 public:
@@ -43,21 +43,24 @@ public:
 
   using Self = MultiResolutionIterationCommand;
   using Superclass = Command;
-  using Pointer = SmartPointer< Self >;
+  using Pointer = SmartPointer<Self>;
 
-  void Execute(itk::Object *caller, const itk::EventObject & event) override
-    {
-    Execute( (const itk::Object *)caller, event);
-    }
+  void
+  Execute(itk::Object * caller, const itk::EventObject & event) override
+  {
+    Execute((const itk::Object *)caller, event);
+  }
 
-  void Execute(const itk::Object * object, const itk::EventObject & event) override;
+  void
+  Execute(const itk::Object * object, const itk::EventObject & event) override;
 
   using MultiResolutionMethodType = TMultiResolutionMethod;
 
-  void SetMultiResolutionMethod( MultiResolutionMethodType * method )
-    {
+  void
+  SetMultiResolutionMethod(MultiResolutionMethodType * method)
+  {
     m_MultiResolutionMethod = method;
-    }
+  }
 
   using FixedImagePyramidType = typename MultiResolutionMethodType::FixedImagePyramidType;
   using FixedImagePyramidPointer = typename FixedImagePyramidType::ConstPointer;
@@ -71,18 +74,15 @@ public:
   using SearchRegionImageSourcePointer = typename SearchRegionImageSourceType::ConstPointer;
 
 protected:
-  MultiResolutionIterationCommand()
-    {
-    m_MultiResolutionMethod = nullptr;
-    }
-  virtual ~MultiResolutionIterationCommand() {};
+  MultiResolutionIterationCommand() { m_MultiResolutionMethod = nullptr; }
+  virtual ~MultiResolutionIterationCommand(){};
 
   typename MultiResolutionMethodType::Pointer m_MultiResolutionMethod;
 
-  FixedImagePyramidPointer       m_FixedImagePyramid;
-  MovingImagePyramidPointer      m_MovingImagePyramid;
+  FixedImagePyramidPointer  m_FixedImagePyramid;
+  MovingImagePyramidPointer m_MovingImagePyramid;
 
-  BlockRadiusCalculatorPointer   m_BlockRadiusCalculator;
+  BlockRadiusCalculatorPointer m_BlockRadiusCalculator;
 
   SearchRegionImageSourcePointer m_SearchRegionImageSource;
 

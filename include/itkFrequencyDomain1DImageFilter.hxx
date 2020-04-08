@@ -28,157 +28,141 @@
 namespace itk
 {
 
-template< typename TInputImage, typename TOutputImage >
-FrequencyDomain1DImageFilter< TInputImage, TOutputImage >
-::FrequencyDomain1DImageFilter()
+template <typename TInputImage, typename TOutputImage>
+FrequencyDomain1DImageFilter<TInputImage, TOutputImage>::FrequencyDomain1DImageFilter()
 {
-  this->SetDirection( 0 );
+  this->SetDirection(0);
   this->m_FilterFunction = FrequencyDomain1DFilterFunction::New();
 }
 
 
-template< typename TInputImage, typename TOutputImage >
+template <typename TInputImage, typename TOutputImage>
 void
-FrequencyDomain1DImageFilter< TInputImage, TOutputImage >
-::GenerateInputRequestedRegion()
+FrequencyDomain1DImageFilter<TInputImage, TOutputImage>::GenerateInputRequestedRegion()
 {
   // call the superclass' implementation of this method
   Superclass::GenerateInputRequestedRegion();
 
   // get pointers to the inputs
-  typename InputImageType::Pointer inputPtr  =
-    const_cast<InputImageType *> (this->GetInput());
+  typename InputImageType::Pointer  inputPtr = const_cast<InputImageType *>(this->GetInput());
   typename OutputImageType::Pointer outputPtr = this->GetOutput();
 
   // we need to compute the input requested region (size and start index)
-  using OutputSizeType = const typename OutputImageType::SizeType&;
-  OutputSizeType outputRequestedRegionSize =
-    outputPtr->GetRequestedRegion().GetSize();
-  using OutputIndexType = const typename OutputImageType::IndexType&;
-  OutputIndexType outputRequestedRegionStartIndex =
-    outputPtr->GetRequestedRegion().GetIndex();
+  using OutputSizeType = const typename OutputImageType::SizeType &;
+  OutputSizeType outputRequestedRegionSize = outputPtr->GetRequestedRegion().GetSize();
+  using OutputIndexType = const typename OutputImageType::IndexType &;
+  OutputIndexType outputRequestedRegionStartIndex = outputPtr->GetRequestedRegion().GetIndex();
 
   //// the regions other than the fft direction are fine
   typename InputImageType::SizeType  inputRequestedRegionSize = outputRequestedRegionSize;
   typename InputImageType::IndexType inputRequestedRegionStartIndex = outputRequestedRegionStartIndex;
 
   // we but need all of the input in the fft direction
-  const unsigned int direction = this->GetDirection();
-  const typename InputImageType::SizeType& inputLargeSize =
-    inputPtr->GetLargestPossibleRegion().GetSize();
+  const unsigned int                        direction = this->GetDirection();
+  const typename InputImageType::SizeType & inputLargeSize = inputPtr->GetLargestPossibleRegion().GetSize();
   inputRequestedRegionSize[direction] = inputLargeSize[direction];
-  const typename InputImageType::IndexType& inputLargeIndex =
-    inputPtr->GetLargestPossibleRegion().GetIndex();
+  const typename InputImageType::IndexType & inputLargeIndex = inputPtr->GetLargestPossibleRegion().GetIndex();
   inputRequestedRegionStartIndex[direction] = inputLargeIndex[direction];
 
   typename InputImageType::RegionType inputRequestedRegion;
-  inputRequestedRegion.SetSize( inputRequestedRegionSize );
-  inputRequestedRegion.SetIndex( inputRequestedRegionStartIndex );
+  inputRequestedRegion.SetSize(inputRequestedRegionSize);
+  inputRequestedRegion.SetIndex(inputRequestedRegionStartIndex);
 
-  inputPtr->SetRequestedRegion( inputRequestedRegion );
+  inputPtr->SetRequestedRegion(inputRequestedRegion);
 }
 
 
-template< typename TInputImage, typename TOutputImage >
+template <typename TInputImage, typename TOutputImage>
 void
-FrequencyDomain1DImageFilter< TInputImage, TOutputImage >
-::EnlargeOutputRequestedRegion(DataObject *output)
+FrequencyDomain1DImageFilter<TInputImage, TOutputImage>::EnlargeOutputRequestedRegion(DataObject * output)
 {
-  OutputImageType* outputPtr = dynamic_cast< OutputImageType* >( output );
+  OutputImageType * outputPtr = dynamic_cast<OutputImageType *>(output);
 
   // we need to enlarge the region in the fft direction to the
   // largest possible in that direction
-  using ConstOutputSizeType = const typename OutputImageType::SizeType&;
-  ConstOutputSizeType requestedSize =
-    outputPtr->GetRequestedRegion().GetSize();
-  ConstOutputSizeType outputLargeSize =
-    outputPtr->GetLargestPossibleRegion().GetSize();
-  using ConstOutputIndexType = const typename OutputImageType::IndexType&;
-  ConstOutputIndexType requestedIndex =
-    outputPtr->GetRequestedRegion().GetIndex();
-  ConstOutputIndexType outputLargeIndex =
-    outputPtr->GetLargestPossibleRegion().GetIndex();
+  using ConstOutputSizeType = const typename OutputImageType::SizeType &;
+  ConstOutputSizeType requestedSize = outputPtr->GetRequestedRegion().GetSize();
+  ConstOutputSizeType outputLargeSize = outputPtr->GetLargestPossibleRegion().GetSize();
+  using ConstOutputIndexType = const typename OutputImageType::IndexType &;
+  ConstOutputIndexType requestedIndex = outputPtr->GetRequestedRegion().GetIndex();
+  ConstOutputIndexType outputLargeIndex = outputPtr->GetLargestPossibleRegion().GetIndex();
 
-  typename OutputImageType::SizeType enlargedSize   = requestedSize;
+  typename OutputImageType::SizeType  enlargedSize = requestedSize;
   typename OutputImageType::IndexType enlargedIndex = requestedIndex;
-  const unsigned int direction = this->GetDirection ();
-  enlargedSize[direction]  = outputLargeSize[direction];
+  const unsigned int                  direction = this->GetDirection();
+  enlargedSize[direction] = outputLargeSize[direction];
   enlargedIndex[direction] = outputLargeIndex[direction];
 
   typename OutputImageType::RegionType enlargedRegion;
-  enlargedRegion.SetSize( enlargedSize );
-  enlargedRegion.SetIndex( enlargedIndex );
-  outputPtr->SetRequestedRegion( enlargedRegion );
+  enlargedRegion.SetSize(enlargedSize);
+  enlargedRegion.SetIndex(enlargedIndex);
+  outputPtr->SetRequestedRegion(enlargedRegion);
 }
 
 
-template< typename TInputImage, typename TOutputImage >
+template <typename TInputImage, typename TOutputImage>
 void
-FrequencyDomain1DImageFilter< TInputImage, TOutputImage >
-::PrintSelf( std::ostream& os, Indent indent ) const
+FrequencyDomain1DImageFilter<TInputImage, TOutputImage>::PrintSelf(std::ostream & os, Indent indent) const
 {
-  Superclass::PrintSelf( os, indent );
+  Superclass::PrintSelf(os, indent);
 
   os << indent << "FilterFunction: " << m_FilterFunction << std::endl;
 }
 
 
-template< typename TInputImage, typename TOutputImage >
+template <typename TInputImage, typename TOutputImage>
 void
-FrequencyDomain1DImageFilter< TInputImage, TOutputImage >
-::GenerateData()
+FrequencyDomain1DImageFilter<TInputImage, TOutputImage>::GenerateData()
 {
   this->AllocateOutputs();
 
-  const InputImageType * input = this->GetInput();
-  OutputImageType * output = this->GetOutput();
-  const typename OutputImageType::SizeType &inputSize = input->GetRequestedRegion().GetSize();
-  const unsigned int direction = this->GetDirection ();
-  const SizeValueType size = inputSize[direction];
+  const InputImageType *                     input = this->GetInput();
+  OutputImageType *                          output = this->GetOutput();
+  const typename OutputImageType::SizeType & inputSize = input->GetRequestedRegion().GetSize();
+  const unsigned int                         direction = this->GetDirection();
+  const SizeValueType                        size = inputSize[direction];
 
-  this->m_FilterFunction->SetSignalSize( size );
+  this->m_FilterFunction->SetSignalSize(size);
 
-  MultiThreaderBase* multiThreader = this->GetMultiThreader();
-  multiThreader->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
+  MultiThreaderBase * multiThreader = this->GetMultiThreader();
+  multiThreader->SetNumberOfWorkUnits(this->GetNumberOfWorkUnits());
 
 
-  multiThreader->template ParallelizeImageRegionRestrictDirection< ImageDimension >(direction,
+  multiThreader->template ParallelizeImageRegionRestrictDirection<ImageDimension>(
+    direction,
     output->GetRequestedRegion(),
-    [this]( const typename OutputImageType::RegionType & lambdaRegion )
-    {
-    // get pointers to the input and output
-    const InputImageType * input = this->GetInput();
-    OutputImageType * output = this->GetOutput();
-    const unsigned int direction = this->GetDirection ();
+    [this](const typename OutputImageType::RegionType & lambdaRegion) {
+      // get pointers to the input and output
+      const InputImageType * input = this->GetInput();
+      OutputImageType *      output = this->GetOutput();
+      const unsigned int     direction = this->GetDirection();
 
-    using InputIteratorType = ImageLinearConstIteratorWithIndex< OutputImageType >;
-    using OutputIteratorType = ImageLinearIteratorWithIndex< OutputImageType >;
-    InputIteratorType inputIt( input, lambdaRegion );
-    OutputIteratorType outputIt( output, lambdaRegion );
-    inputIt.SetDirection( direction );
-    outputIt.SetDirection( direction );
+      using InputIteratorType = ImageLinearConstIteratorWithIndex<OutputImageType>;
+      using OutputIteratorType = ImageLinearIteratorWithIndex<OutputImageType>;
+      InputIteratorType  inputIt(input, lambdaRegion);
+      OutputIteratorType outputIt(output, lambdaRegion);
+      inputIt.SetDirection(direction);
+      outputIt.SetDirection(direction);
 
-    // for every fft line
-    for( inputIt.GoToBegin(), outputIt.GoToBegin(); !inputIt.IsAtEnd();
-      outputIt.NextLine(), inputIt.NextLine() )
+      // for every fft line
+      for (inputIt.GoToBegin(), outputIt.GoToBegin(); !inputIt.IsAtEnd(); outputIt.NextLine(), inputIt.NextLine())
       {
-      SizeValueType i = 0;
-      inputIt.GoToBeginOfLine();
-      outputIt.GoToBeginOfLine();
-      while( !outputIt.IsAtEndOfLine() )
+        SizeValueType i = 0;
+        inputIt.GoToBeginOfLine();
+        outputIt.GoToBeginOfLine();
+        while (!outputIt.IsAtEndOfLine())
         {
-        outputIt.Set( inputIt.Get() *
-              static_cast< typename TInputImage::PixelType>(
-                   m_FilterFunction->EvaluateIndex( i ) ) );
-        ++outputIt;
-        ++inputIt;
-        ++i;
+          outputIt.Set(inputIt.Get() *
+                       static_cast<typename TInputImage::PixelType>(m_FilterFunction->EvaluateIndex(i)));
+          ++outputIt;
+          ++inputIt;
+          ++i;
         }
       }
     },
     this);
 
-  this->GraftOutput( this->GetOutput() );
+  this->GraftOutput(this->GetOutput());
 }
 
 } // end namespace itk

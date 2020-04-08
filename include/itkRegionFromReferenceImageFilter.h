@@ -36,14 +36,13 @@ namespace itk
  * \ingroup GeometricTransforms
  * \ingroup Ultrasound
  */
-template< typename TInputImage, typename TOutputImage=TInputImage >
-class ITK_TEMPLATE_EXPORT RegionFromReferenceImageFilter:
-    public ExtractImageFilter<TInputImage,TOutputImage>
+template <typename TInputImage, typename TOutputImage = TInputImage>
+class ITK_TEMPLATE_EXPORT RegionFromReferenceImageFilter : public ExtractImageFilter<TInputImage, TOutputImage>
 {
 public:
   /** Standard class type alias. */
   using Self = RegionFromReferenceImageFilter;
-  using Superclass = ExtractImageFilter<TInputImage,TOutputImage>;
+  using Superclass = ExtractImageFilter<TInputImage, TOutputImage>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
@@ -69,62 +68,61 @@ public:
   using SizeType = InputImageSizeType;
 
   /** ImageDimension constants */
-  itkStaticConstMacro(InputImageDimension, unsigned int,
-                      Superclass::InputImageDimension);
-  itkStaticConstMacro(OutputImageDimension, unsigned int,
-                      Superclass::OutputImageDimension);
-  itkStaticConstMacro(ImageDimension, unsigned int,
-                      Superclass::OutputImageDimension);
+  itkStaticConstMacro(InputImageDimension, unsigned int, Superclass::InputImageDimension);
+  itkStaticConstMacro(OutputImageDimension, unsigned int, Superclass::OutputImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, Superclass::OutputImageDimension);
 
-  using ReferenceImageType = ImageBase< itkGetStaticConstMacro( ImageDimension ) >;
+  using ReferenceImageType = ImageBase<itkGetStaticConstMacro(ImageDimension)>;
 
   /** Copy the output information from another Image. */
-  void SetReferenceImage ( const ReferenceImageType *image );
+  void
+  SetReferenceImage(const ReferenceImageType * image);
 
-  const ReferenceImageType * GetReferenceImage() const;
+  const ReferenceImageType *
+  GetReferenceImage() const;
 
   /** Set the input image */
-  void SetInput1(const TInputImage *input)
-    {
-    this->SetInput( input );
-    }
+  void
+  SetInput1(const TInputImage * input)
+  {
+    this->SetInput(input);
+  }
 
   /** Set the reference image */
-  void SetInput2(const ReferenceImageType *input)
-    {
-    this->SetReferenceImage( input );
-    }
+  void
+  SetInput2(const ReferenceImageType * input)
+  {
+    this->SetReferenceImage(input);
+  }
 
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   /** Begin concept checking */
-  itkConceptMacro(InputConvertibleToOutputCheck,
-    (Concept::Convertible<InputImagePixelType, OutputImagePixelType>));
-  itkConceptMacro(SameDimensionCheck,
-    (Concept::SameDimension<InputImageDimension, OutputImageDimension>));
+  itkConceptMacro(InputConvertibleToOutputCheck, (Concept::Convertible<InputImagePixelType, OutputImagePixelType>));
+  itkConceptMacro(SameDimensionCheck, (Concept::SameDimension<InputImageDimension, OutputImageDimension>));
   /** End concept checking */
 #endif
 
 protected:
-  RegionFromReferenceImageFilter()
-    {
-    this->SetNumberOfRequiredInputs(2);
-    }
+  RegionFromReferenceImageFilter() { this->SetNumberOfRequiredInputs(2); }
   ~RegionFromReferenceImageFilter() {}
 
-  virtual void VerifyInputInformation() const override;
+  virtual void
+  VerifyInputInformation() const override;
 
-  virtual void GenerateOutputInformation() override;
+  virtual void
+  GenerateOutputInformation() override;
 
 private:
-  RegionFromReferenceImageFilter(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  RegionFromReferenceImageFilter(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkRegionFromReferenceImageFilter.hxx"
+#  include "itkRegionFromReferenceImageFilter.hxx"
 #endif
 
 #endif

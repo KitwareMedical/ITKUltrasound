@@ -27,53 +27,49 @@
 #include "itkImageLinearIteratorWithIndex.h"
 #include "itkMetaDataObject.h"
 
-#if defined( ITK_USE_FFTWF ) || defined( ITK_USE_FFTWD )
+#if defined(ITK_USE_FFTWF) || defined(ITK_USE_FFTWD)
 
 namespace itk
 {
 
-template< typename TInputImage, typename TOutputImage >
-FFTWForward1DFFTImageFilter< TInputImage, TOutputImage >
-::FFTWForward1DFFTImageFilter():
-   m_PlanComputed( false ),
-   m_LastImageSize( 0 )
+template <typename TInputImage, typename TOutputImage>
+FFTWForward1DFFTImageFilter<TInputImage, TOutputImage>::FFTWForward1DFFTImageFilter()
+  : m_PlanComputed(false)
+  , m_LastImageSize(0)
 {
-   // We cannot split over the FFT direction
-   this->m_ImageRegionSplitter = ImageRegionSplitterDirection::New();
-   this->DynamicMultiThreadingOff();
+  // We cannot split over the FFT direction
+  this->m_ImageRegionSplitter = ImageRegionSplitterDirection::New();
+  this->DynamicMultiThreadingOff();
 }
 
 
-template< typename TInputImage, typename TOutputImage >
-FFTWForward1DFFTImageFilter< TInputImage, TOutputImage >
-::~FFTWForward1DFFTImageFilter()
+template <typename TInputImage, typename TOutputImage>
+FFTWForward1DFFTImageFilter<TInputImage, TOutputImage>::~FFTWForward1DFFTImageFilter()
 {
-  if ( m_PlanComputed )
-    {
+  if (m_PlanComputed)
+  {
     this->DestroyPlans();
-    }
+  }
 }
 
 
-template< typename TInputImage, typename TOutputImage >
+template <typename TInputImage, typename TOutputImage>
 void
-FFTWForward1DFFTImageFilter< TInputImage, TOutputImage >
-::DestroyPlans()
+FFTWForward1DFFTImageFilter<TInputImage, TOutputImage>::DestroyPlans()
 {
-  for( unsigned int i = 0; i < m_PlanArray.size(); i++ )
-    {
-    FFTW1DProxyType::DestroyPlan( m_PlanArray[i]  );
+  for (unsigned int i = 0; i < m_PlanArray.size(); i++)
+  {
+    FFTW1DProxyType::DestroyPlan(m_PlanArray[i]);
     delete[] m_InputBufferArray[i];
     delete[] m_OutputBufferArray[i];
     this->m_PlanComputed = false;
-    }
+  }
 }
 
 
-template< typename TInputImage, typename TOutputImage >
-const ImageRegionSplitterBase*
-FFTWForward1DFFTImageFilter< TInputImage, TOutputImage >
-::GetImageRegionSplitter() const
+template <typename TInputImage, typename TOutputImage>
+const ImageRegionSplitterBase *
+FFTWForward1DFFTImageFilter<TInputImage, TOutputImage>::GetImageRegionSplitter() const
 {
   return this->m_ImageRegionSplitter.GetPointer();
 }
@@ -81,105 +77,99 @@ FFTWForward1DFFTImageFilter< TInputImage, TOutputImage >
 
 template <typename TInputImage, typename TOutputImage>
 void
-FFTWForward1DFFTImageFilter< TInputImage, TOutputImage >
-::BeforeThreadedGenerateData()
+FFTWForward1DFFTImageFilter<TInputImage, TOutputImage>::BeforeThreadedGenerateData()
 {
   Superclass::BeforeThreadedGenerateData();
 
-  this->m_ImageRegionSplitter->SetDirection( this->GetDirection() );
+  this->m_ImageRegionSplitter->SetDirection(this->GetDirection());
 
   OutputImageType * outputPtr = this->GetOutput();
 
-  const typename OutputImageType::SizeType& outputSize = outputPtr->GetRequestedRegion().GetSize();
-  const unsigned int lineSize = outputSize[this->GetDirection()];
+  const typename OutputImageType::SizeType & outputSize = outputPtr->GetRequestedRegion().GetSize();
+  const unsigned int                         lineSize = outputSize[this->GetDirection()];
 
-  if( this->m_PlanComputed )
-    {
+  if (this->m_PlanComputed)
+  {
     // if the image sizes aren't the same,
     // we have to compute the plan again
-    if( this->m_LastImageSize != lineSize )
-      {
-      this->DestroyPlans();
-      }
-    }
-  if( ! this->m_PlanComputed )
+    if (this->m_LastImageSize != lineSize)
     {
+      this->DestroyPlans();
+    }
+  }
+  if (!this->m_PlanComputed)
+  {
     const int threads = this->GetNumberOfWorkUnits();
-    m_PlanArray.resize( threads );
-    m_InputBufferArray.resize( threads );
-    m_OutputBufferArray.resize( threads );
-    for( int i = 0; i < threads; i++ )
-      {
+    m_PlanArray.resize(threads);
+    m_InputBufferArray.resize(threads);
+    m_OutputBufferArray.resize(threads);
+    for (int i = 0; i < threads; i++)
+    {
       try
-  {
-  m_InputBufferArray[i]  = new typename FFTW1DProxyType::ComplexType[lineSize];
-  m_OutputBufferArray[i] = new typename FFTW1DProxyType::ComplexType[lineSize];
-  }
-      catch( std::bad_alloc & )
-  {
-  itkExceptionMacro("Problem allocating memory for internal computations");
-  }
-      m_PlanArray[i] = FFTW1DProxyType::Plan_dft_1d( lineSize,
-               m_InputBufferArray[i],
-               m_OutputBufferArray[i],
-               FFTW_FORWARD,
-               FFTW_ESTIMATE,
-               1 );
+      {
+        m_InputBufferArray[i] = new typename FFTW1DProxyType::ComplexType[lineSize];
+        m_OutputBufferArray[i] = new typename FFTW1DProxyType::ComplexType[lineSize];
       }
+      catch (std::bad_alloc &)
+      {
+        itkExceptionMacro("Problem allocating memory for internal computations");
+      }
+      m_PlanArray[i] = FFTW1DProxyType::Plan_dft_1d(
+        lineSize, m_InputBufferArray[i], m_OutputBufferArray[i], FFTW_FORWARD, FFTW_ESTIMATE, 1);
+    }
     this->m_LastImageSize = lineSize;
     this->m_PlanComputed = true;
-    }
+  }
 }
 
 
-template< typename TInputImage, typename TOutputImage >
+template <typename TInputImage, typename TOutputImage>
 void
-FFTWForward1DFFTImageFilter< TInputImage, TOutputImage >
-::ThreadedGenerateData( const OutputImageRegionType& outputRegion, ThreadIdType threadID )
+FFTWForward1DFFTImageFilter<TInputImage, TOutputImage>::ThreadedGenerateData(const OutputImageRegionType & outputRegion,
+                                                                             ThreadIdType                  threadID)
 {
   // get pointers to the input and output
   const InputImageType * inputPtr = this->GetInput();
-  OutputImageType * outputPtr = this->GetOutput();
+  OutputImageType *      outputPtr = this->GetOutput();
 
-  using InputIteratorType = itk::ImageLinearConstIteratorWithIndex< InputImageType >;
-  using OutputIteratorType = itk::ImageLinearIteratorWithIndex< OutputImageType >;
-  InputIteratorType inputIt( inputPtr, outputRegion );
-  OutputIteratorType outputIt( outputPtr, outputRegion );
+  using InputIteratorType = itk::ImageLinearConstIteratorWithIndex<InputImageType>;
+  using OutputIteratorType = itk::ImageLinearIteratorWithIndex<OutputImageType>;
+  InputIteratorType  inputIt(inputPtr, outputRegion);
+  OutputIteratorType outputIt(outputPtr, outputRegion);
 
   inputIt.SetDirection(this->GetDirection());
   outputIt.SetDirection(this->GetDirection());
 
-  typename FFTW1DProxyType::ComplexType* inputBufferIt;
-  typename FFTW1DProxyType::ComplexType* outputBufferIt;
+  typename FFTW1DProxyType::ComplexType * inputBufferIt;
+  typename FFTW1DProxyType::ComplexType * outputBufferIt;
 
   // for every fft line
-  for( inputIt.GoToBegin(), outputIt.GoToBegin(); !inputIt.IsAtEnd();
-    outputIt.NextLine(), inputIt.NextLine() )
-    {
+  for (inputIt.GoToBegin(), outputIt.GoToBegin(); !inputIt.IsAtEnd(); outputIt.NextLine(), inputIt.NextLine())
+  {
     // copy the input line into our buffer
     inputIt.GoToBeginOfLine();
     inputBufferIt = m_InputBufferArray[threadID];
-    while( !inputIt.IsAtEndOfLine() )
-      {
+    while (!inputIt.IsAtEndOfLine())
+    {
       (*inputBufferIt)[0] = inputIt.Get();
       (*inputBufferIt)[1] = 0.;
       ++inputIt;
       ++inputBufferIt;
-      }
+    }
 
     // do the transform
-    FFTW1DProxyType::Execute( m_PlanArray[threadID] );
+    FFTW1DProxyType::Execute(m_PlanArray[threadID]);
 
     // copy the output from the buffer into our line
     outputBufferIt = m_OutputBufferArray[threadID];
     outputIt.GoToBeginOfLine();
-    while( !outputIt.IsAtEndOfLine() )
-      {
-      outputIt.Set( *(reinterpret_cast<typename OutputIteratorType::PixelType*>(outputBufferIt)) );
+    while (!outputIt.IsAtEndOfLine())
+    {
+      outputIt.Set(*(reinterpret_cast<typename OutputIteratorType::PixelType *>(outputBufferIt)));
       ++outputIt;
       ++outputBufferIt;
-      }
     }
+  }
 }
 
 } // namespace itk

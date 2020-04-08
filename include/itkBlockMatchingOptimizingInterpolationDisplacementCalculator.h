@@ -42,27 +42,27 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  */
-template < typename TMetricImage, typename TDisplacementImage, typename TCoordRep=double >
-class ITK_TEMPLATE_EXPORT OptimizingInterpolationDisplacementCalculator:
-  public MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
+template <typename TMetricImage, typename TDisplacementImage, typename TCoordRep = double>
+class ITK_TEMPLATE_EXPORT OptimizingInterpolationDisplacementCalculator
+  : public MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(OptimizingInterpolationDisplacementCalculator);
 
   /** Standard class type alias. */
   using Self = OptimizingInterpolationDisplacementCalculator;
-  using Superclass = MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >;
-  using Pointer = SmartPointer< Self >;
-  using ConstPointer = SmartPointer< const Self >;
+  using Superclass = MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( OptimizingInterpolationDisplacementCalculator, MetricImageToDisplacementCalculator );
+  itkTypeMacro(OptimizingInterpolationDisplacementCalculator, MetricImageToDisplacementCalculator);
 
   using MetricImageType = typename Superclass::MetricImageType;
   using MetricImagePointerType = typename Superclass::MetricImagePointerType;
@@ -72,42 +72,47 @@ public:
   using IndexType = typename Superclass::IndexType;
 
   /** Type of the interpolator. */
-  using InterpolatorType = typename itk::InterpolateImageFunction< MetricImageType, TCoordRep >;
-  typedef typename InterpolatorType::ContinuousIndexType
-    ContinuousIndexType;
+  using InterpolatorType = typename itk::InterpolateImageFunction<MetricImageType, TCoordRep>;
+  typedef typename InterpolatorType::ContinuousIndexType ContinuousIndexType;
 
   /** Type of the optimizer. */
   using OptimizerType = SingleValuedNonLinearOptimizer;
 
-  void SetMetricImagePixel( const PointType & point, const IndexType& index, MetricImageType* image ) override;
+  void
+  SetMetricImagePixel(const PointType & point, const IndexType & index, MetricImageType * image) override;
 
-  void Compute() override {
+  void
+  Compute() override
+  {
     // We do this here instead of SetMetricImagePixel so it only has to be done
     // once.
     this->m_DisplacementImage->Modified();
   };
 
   /** Set the interpolator.  Windowed sinc interpolators are recommended. */
-  virtual void SetInterpolator( InterpolatorType* interpolator )
-    {
-    m_CostFunction->SetInterpolator( interpolator );
+  virtual void
+  SetInterpolator(InterpolatorType * interpolator)
+  {
+    m_CostFunction->SetInterpolator(interpolator);
     this->Modified();
-    }
-  InterpolatorType* GetInterpolator()
-    {
+  }
+  InterpolatorType *
+  GetInterpolator()
+  {
     return m_CostFunction->GetInterpolator();
-    }
+  }
 
   /** Set the optimizer.  The parameter step size is in pixel indices; it should
    * be less than unity.  Since some optimizer only support minimization, the
    * metric image value is inverted. */
-  virtual void SetOptimizer( OptimizerType * optimizer )
-    {
+  virtual void
+  SetOptimizer(OptimizerType * optimizer)
+  {
     m_Optimizer = optimizer;
-    m_Optimizer->SetCostFunction( m_CostFunction );
+    m_Optimizer->SetCostFunction(m_CostFunction);
     this->Modified();
-    }
-  itkGetConstObjectMacro( Optimizer, OptimizerType );
+  }
+  itkGetConstObjectMacro(Optimizer, OptimizerType);
 
   using CostFunctionType = typename OptimizerType::CostFunctionType;
 
@@ -118,11 +123,11 @@ public:
     using Self = OptimizingInterpolationCostFunction;
     using Superclass = CostFunctionType;
 
-    using Pointer = SmartPointer< Self >;
+    using Pointer = SmartPointer<Self>;
 
-    itkTypeMacro( OptimizingInterpolationCostFunction, SingleValuedCostFunction );
+    itkTypeMacro(OptimizingInterpolationCostFunction, SingleValuedCostFunction);
 
-    itkNewMacro( Self );
+    itkNewMacro(Self);
 
     /**  MeasureType type alias.
      *  It defines a type used to return the cost function value. */
@@ -137,30 +142,35 @@ public:
     using DerivativeType = Superclass::DerivativeType;
 
     /** This method returns the value of the cost function corresponding
-      * to the specified parameters.    */
-    MeasureType GetValue( const ParametersType & parameters ) const override;
+     * to the specified parameters.    */
+    MeasureType
+    GetValue(const ParametersType & parameters) const override;
 
     /** This method returns the derivative of the cost function corresponding
-      * to the specified parameters.   */
-    void GetDerivative( const ParametersType & parameters,
-                                DerivativeType & derivative ) const override;
+     * to the specified parameters.   */
+    void
+    GetDerivative(const ParametersType & parameters, DerivativeType & derivative) const override;
 
     /** Return the number of parameters required to compute
      *  this cost function.
      *  This method MUST be overloaded by derived classes. */
-    unsigned int GetNumberOfParameters() const override
-      { return ImageDimension; }
+    unsigned int
+    GetNumberOfParameters() const override
+    {
+      return ImageDimension;
+    }
 
     /** Set the previous parameters before the start of optimization.  Used for
      * calculating the step length in GetDerivative(). */
-    void Initialize( const ParametersType& parameters )
-      {
+    void
+    Initialize(const ParametersType & parameters)
+    {
       m_PreviousParameters = parameters;
       this->m_PreviousParametersPtr = this->m_PreviousParameters.data_block();
-      }
+    }
 
-    itkSetObjectMacro( Interpolator, InterpolatorType );
-    itkGetConstObjectMacro( Interpolator, InterpolatorType );
+    itkSetObjectMacro(Interpolator, InterpolatorType);
+    itkGetConstObjectMacro(Interpolator, InterpolatorType);
 
     typename InterpolatorType::Pointer m_Interpolator;
 
@@ -168,28 +178,28 @@ public:
     OptimizingInterpolationCostFunction();
 
   private:
-    ParametersType m_PreviousParameters;
-    ParametersType::ValueType* m_PreviousParametersPtr;
+    ParametersType              m_PreviousParameters;
+    ParametersType::ValueType * m_PreviousParametersPtr;
 
-    ContinuousIndexType m_ContinuousIndex;
-    typename ContinuousIndexType::ValueType* m_ContinuousIndexPtr;
+    ContinuousIndexType                       m_ContinuousIndex;
+    typename ContinuousIndexType::ValueType * m_ContinuousIndexPtr;
   };
 
 protected:
   OptimizingInterpolationDisplacementCalculator();
 
   typename OptimizingInterpolationCostFunction::Pointer m_CostFunction;
-  typename OptimizerType::Pointer m_Optimizer;
+  typename OptimizerType::Pointer                       m_Optimizer;
 
 private:
 };
 
 
-} // end namespace itk
-} // end namespace BlockMatching
+} // namespace BlockMatching
+} // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingOptimizingInterpolationDisplacementCalculator.hxx"
+#  include "itkBlockMatchingOptimizingInterpolationDisplacementCalculator.hxx"
 #endif
 
 #endif

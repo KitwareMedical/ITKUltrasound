@@ -37,25 +37,24 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  */
-template < typename TFixedImage, typename TMovingImage, typename TDisplacementImage >
-class ITK_TEMPLATE_EXPORT MultiResolutionMinMaxSearchRegionImageSource :
-  public MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >
+template <typename TFixedImage, typename TMovingImage, typename TDisplacementImage>
+class ITK_TEMPLATE_EXPORT MultiResolutionMinMaxSearchRegionImageSource
+  : public MultiResolutionSearchRegionImageSource<TFixedImage, TMovingImage, TDisplacementImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionMinMaxSearchRegionImageSource);
 
   /** Standard class type alias. */
   using Self = MultiResolutionMinMaxSearchRegionImageSource;
-  using Superclass = MultiResolutionSearchRegionImageSource< TFixedImage,
-          TMovingImage, TDisplacementImage >;
-  using Pointer = SmartPointer< Self >;
-  using ConstPointer = SmartPointer< const Self >;
+  using Superclass = MultiResolutionSearchRegionImageSource<TFixedImage, TMovingImage, TDisplacementImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MultiResolutionMinMaxSearchRegionImageSource, MultiResolutionSearchRegionImageSource );
+  itkTypeMacro(MultiResolutionMinMaxSearchRegionImageSource, MultiResolutionSearchRegionImageSource);
 
   /** New macro for creation of through a Smart Pointer. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, TMovingImage::ImageDimension);
@@ -82,46 +81,50 @@ public:
   using PyramidScheduleType = typename Superclass::PyramidScheduleType;
 
   /** Type of the search region to block radius ratio. */
-  using FactorType = FixedArray< double, ImageDimension >;
+  using FactorType = FixedArray<double, ImageDimension>;
 
   /** Set the ration of the search region radius to the matching block radius at
    * the bottom level. */
-  void SetMinFactor( const FactorType& factor )
-    {
+  void
+  SetMinFactor(const FactorType & factor)
+  {
     m_MinFactor = factor;
     this->Modified();
-    }
-  void SetMinFactor( const double& factor )
-    {
+  }
+  void
+  SetMinFactor(const double & factor)
+  {
     FactorType f;
-    f.Fill( factor );
-    this->SetMinFactor( f );
-    }
-  itkGetConstReferenceMacro( MinFactor, FactorType );
+    f.Fill(factor);
+    this->SetMinFactor(f);
+  }
+  itkGetConstReferenceMacro(MinFactor, FactorType);
 
   /** Set the ration of the search region radius to the matching block radius at
    * the top level. */
-  void SetMaxFactor( const FactorType& factor )
-    {
+  void
+  SetMaxFactor(const FactorType & factor)
+  {
     m_MaxFactor = factor;
     this->Modified();
-    }
-  void SetMaxFactor( const double& factor )
-    {
+  }
+  void
+  SetMaxFactor(const double & factor)
+  {
     FactorType f;
-    f.Fill( factor );
-    this->SetMaxFactor( f );
-    }
-  itkGetConstReferenceMacro( MaxFactor, FactorType );
+    f.Fill(factor);
+    this->SetMaxFactor(f);
+  }
+  itkGetConstReferenceMacro(MaxFactor, FactorType);
 
 protected:
-  MultiResolutionMinMaxSearchRegionImageSource():
-    m_MinFactor( 1.1 ),
-    m_MaxFactor( 3.0 )
-    {
-    }
+  MultiResolutionMinMaxSearchRegionImageSource()
+    : m_MinFactor(1.1)
+    , m_MaxFactor(3.0)
+  {}
 
-  void DynamicThreadedGenerateData( const OutputRegionType& outputRegion ) override;
+  void
+  DynamicThreadedGenerateData(const OutputRegionType & outputRegion) override;
 
   FactorType m_MinFactor;
   FactorType m_MaxFactor;
@@ -133,7 +136,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingMultiResolutionMinMaxSearchRegionImageSource.hxx"
+#  include "itkBlockMatchingMultiResolutionMinMaxSearchRegionImageSource.hxx"
 #endif
 
 #endif

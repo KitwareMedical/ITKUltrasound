@@ -28,78 +28,84 @@ namespace itk
 namespace BlockMatching
 {
 
-template <typename TFixedImage, typename TMovingImage,
-          typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
-MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
-                                       TMetricImage, TDisplacementImage, TCoordRep>
-::MultiResolutionImageRegistrationMethod() :
-  m_FixedImage( nullptr ),
-  m_MovingImage( nullptr ),
-  m_NumberOfLevels( 1 ),
-  m_CurrentLevel( 0 ),
-  m_Stop( false ),
-  m_ScheduleSpecified( false ),
-  m_NumberOfLevelsSpecified( false ),
-  m_ImageRegistrationMethod( nullptr ),
-  m_BlockRadiusCalculator( nullptr ),
-  m_SearchRegionImageSource( nullptr )
+template <typename TFixedImage,
+          typename TMovingImage,
+          typename TMetricImage,
+          typename TDisplacementImage,
+          typename TCoordRep>
+MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+  MultiResolutionImageRegistrationMethod()
+  : m_FixedImage(nullptr)
+  , m_MovingImage(nullptr)
+  , m_NumberOfLevels(1)
+  , m_CurrentLevel(0)
+  , m_Stop(false)
+  , m_ScheduleSpecified(false)
+  , m_NumberOfLevelsSpecified(false)
+  , m_ImageRegistrationMethod(nullptr)
+  , m_BlockRadiusCalculator(nullptr)
+  , m_SearchRegionImageSource(nullptr)
 {
-  m_FixedImagePyramid  = RecursiveMultiResolutionPyramidImageFilter<
-      FixedImageType, FixedImageType>::New();
-  m_MovingImagePyramid = RecursiveMultiResolutionPyramidImageFilter<
-      MovingImageType, MovingImageType>::New();
+  m_FixedImagePyramid = RecursiveMultiResolutionPyramidImageFilter<FixedImageType, FixedImageType>::New();
+  m_MovingImagePyramid = RecursiveMultiResolutionPyramidImageFilter<MovingImageType, MovingImageType>::New();
 }
 
 
-template <typename TFixedImage, typename TMovingImage,
-          typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
+template <typename TFixedImage,
+          typename TMovingImage,
+          typename TMetricImage,
+          typename TDisplacementImage,
+          typename TCoordRep>
 ModifiedTimeType
-MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
-                                       TMetricImage, TDisplacementImage, TCoordRep>
-::GetMTime() const
+MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+  GetMTime() const
 {
   unsigned long mtime = Superclass::GetMTime();
   unsigned long m;
 
-  if( m_FixedImage )
-    {
+  if (m_FixedImage)
+  {
     m = m_FixedImage->GetMTime();
     mtime = (m > mtime ? m : mtime);
-    }
+  }
 
-  if( m_MovingImage )
-    {
+  if (m_MovingImage)
+  {
     m = m_MovingImage->GetMTime();
     mtime = (m > mtime ? m : mtime);
-    }
+  }
 
   return mtime;
 }
 
 
-template <typename TFixedImage, typename TMovingImage,
-          typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
+template <typename TFixedImage,
+          typename TMovingImage,
+          typename TMetricImage,
+          typename TDisplacementImage,
+          typename TCoordRep>
 void
-MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
-                                       TMetricImage, TDisplacementImage, TCoordRep>
-::StopRegistration( void )
+MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+  StopRegistration(void)
 {
   m_Stop = true;
 }
 
 
-template <typename TFixedImage, typename TMovingImage,
-          typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
+template <typename TFixedImage,
+          typename TMovingImage,
+          typename TMetricImage,
+          typename TDisplacementImage,
+          typename TCoordRep>
 void
-MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
-                                       TMetricImage, TDisplacementImage, TCoordRep>
-::Initialize()
+MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+  Initialize()
 {
   // Sanity checks
-  if( !m_ImageRegistrationMethod )
-    {
+  if (!m_ImageRegistrationMethod)
+  {
     itkExceptionMacro(<< "ImageRegistrationMethod is not present");
-    }
+  }
 
   this->PrepareBlockRadiusCalculator();
   this->PrepareSearchRegionImageSource();
@@ -110,50 +116,53 @@ MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
  * Set the schedules for the fixed and moving image pyramid.  Taken form
  * itkMultiResolutionImageRegistrationMethod.
  */
-template <typename TFixedImage, typename TMovingImage,
-          typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
+template <typename TFixedImage,
+          typename TMovingImage,
+          typename TMetricImage,
+          typename TDisplacementImage,
+          typename TCoordRep>
 void
-MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
-                                       TMetricImage, TDisplacementImage, TCoordRep>
-::SetSchedules( const ScheduleType & fixedImagePyramidSchedule, const ScheduleType & movingImagePyramidSchedule )
+MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+  SetSchedules(const ScheduleType & fixedImagePyramidSchedule, const ScheduleType & movingImagePyramidSchedule)
 {
-  if( m_NumberOfLevelsSpecified )
-    {
-    itkExceptionMacro( "SetSchedules should not be used "
-                       << "if numberOfLevelves are specified using SetNumberOfLevels" );
-    }
+  if (m_NumberOfLevelsSpecified)
+  {
+    itkExceptionMacro("SetSchedules should not be used "
+                      << "if numberOfLevelves are specified using SetNumberOfLevels");
+  }
   m_FixedImagePyramidSchedule = fixedImagePyramidSchedule;
   m_MovingImagePyramidSchedule = movingImagePyramidSchedule;
   m_ScheduleSpecified = true;
 
   // Set the number of levels based on the pyramid schedule specified
-  if( m_FixedImagePyramidSchedule.rows() !=
-      m_MovingImagePyramidSchedule.rows() )
-    {
+  if (m_FixedImagePyramidSchedule.rows() != m_MovingImagePyramidSchedule.rows())
+  {
     itkExceptionMacro("The specified schedules contain unequal number of levels");
-    }
+  }
   else
-    {
+  {
     m_NumberOfLevels = m_FixedImagePyramidSchedule.rows();
-    }
+  }
 
-  m_BlockRadiusCalculator->SetPyramidSchedule( fixedImagePyramidSchedule );
+  m_BlockRadiusCalculator->SetPyramidSchedule(fixedImagePyramidSchedule);
   this->Modified();
 }
 
 
-template <typename TFixedImage, typename TMovingImage,
-          typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
+template <typename TFixedImage,
+          typename TMovingImage,
+          typename TMetricImage,
+          typename TDisplacementImage,
+          typename TCoordRep>
 void
-MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
-                                       TMetricImage, TDisplacementImage, TCoordRep>
-::SetNumberOfLevels( unsigned long numberOfLevels )
+MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+  SetNumberOfLevels(unsigned long numberOfLevels)
 {
-  if( m_ScheduleSpecified )
-    {
-    itkExceptionMacro( "SetNumberOfLevels should not be used "
-                       << "if schedules have been specified using SetSchedules method " );
-    }
+  if (m_ScheduleSpecified)
+  {
+    itkExceptionMacro("SetNumberOfLevels should not be used "
+                      << "if schedules have been specified using SetSchedules method ");
+  }
 
   m_NumberOfLevels = numberOfLevels;
   m_NumberOfLevelsSpecified = true;
@@ -161,163 +170,173 @@ MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
 }
 
 
-template <typename TFixedImage, typename TMovingImage,
-          typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
+template <typename TFixedImage,
+          typename TMovingImage,
+          typename TMetricImage,
+          typename TDisplacementImage,
+          typename TCoordRep>
 void
-MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
-                                       TMetricImage, TDisplacementImage, TCoordRep>
-::GenerateOutputInformation()
+MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+  GenerateOutputInformation()
 {
-  if( !m_FixedImage )
-    {
+  if (!m_FixedImage)
+  {
     itkExceptionMacro(<< "FixedImage is not present");
-    }
+  }
   // So that SearchRegionImageSource has the right information to work with,
   // possibly others too.
   m_FixedImage->UpdateOutputInformation();
 
-  if( !m_MovingImage )
-    {
+  if (!m_MovingImage)
+  {
     itkExceptionMacro(<< "MovingImage is not present");
-    }
+  }
   m_MovingImage->UpdateOutputInformation();
 
-  m_SearchRegionImageSource->SetFixedImage( m_FixedImage );
-  m_SearchRegionImageSource->SetMovingImage( m_MovingImage );
-  m_SearchRegionImageSource->SetCurrentLevel( m_NumberOfLevels - 1 );
-  m_SearchRegionImageSource->SetFixedBlockRadius( m_BlockRadiusCalculator->Compute( m_NumberOfLevels - 1 ) );
+  m_SearchRegionImageSource->SetFixedImage(m_FixedImage);
+  m_SearchRegionImageSource->SetMovingImage(m_MovingImage);
+  m_SearchRegionImageSource->SetCurrentLevel(m_NumberOfLevels - 1);
+  m_SearchRegionImageSource->SetFixedBlockRadius(m_BlockRadiusCalculator->Compute(m_NumberOfLevels - 1));
   m_SearchRegionImageSource->UpdateOutputInformation();
 
-  TDisplacementImage* output = this->GetOutput( 0 );
-  if( !output )
-    {
+  TDisplacementImage * output = this->GetOutput(0);
+  if (!output)
+  {
     return;
-    }
+  }
 
-  output->CopyInformation( m_SearchRegionImageSource->GetOutput( 0 ) );
+  output->CopyInformation(m_SearchRegionImageSource->GetOutput(0));
 }
 
 
-template <typename TFixedImage, typename TMovingImage,
-          typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
+template <typename TFixedImage,
+          typename TMovingImage,
+          typename TMetricImage,
+          typename TDisplacementImage,
+          typename TCoordRep>
 void
-MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
-                                       TMetricImage, TDisplacementImage, TCoordRep>
-::PreparePyramids()
+MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+  PreparePyramids()
 {
   // Sanity checks
-  if( !m_FixedImagePyramid )
-    {
+  if (!m_FixedImagePyramid)
+  {
     itkExceptionMacro(<< "Fixed image pyramid is not present");
-    }
+  }
 
-  if( !m_MovingImagePyramid )
-    {
+  if (!m_MovingImagePyramid)
+  {
     itkExceptionMacro(<< "Moving image pyramid is not present");
-    }
+  }
 
   // Setup the fixed and moving image pyramid
-  if( m_NumberOfLevelsSpecified )
-    {
-    m_FixedImagePyramid->SetNumberOfLevels( m_NumberOfLevels );
-    m_MovingImagePyramid->SetNumberOfLevels( m_NumberOfLevels );
-    }
+  if (m_NumberOfLevelsSpecified)
+  {
+    m_FixedImagePyramid->SetNumberOfLevels(m_NumberOfLevels);
+    m_MovingImagePyramid->SetNumberOfLevels(m_NumberOfLevels);
+  }
 
-  if( m_ScheduleSpecified )
-    {
-    m_FixedImagePyramid->SetNumberOfLevels( m_FixedImagePyramidSchedule.rows() );
-    m_FixedImagePyramid->SetSchedule( m_FixedImagePyramidSchedule );
+  if (m_ScheduleSpecified)
+  {
+    m_FixedImagePyramid->SetNumberOfLevels(m_FixedImagePyramidSchedule.rows());
+    m_FixedImagePyramid->SetSchedule(m_FixedImagePyramidSchedule);
 
-    m_MovingImagePyramid->SetNumberOfLevels( m_MovingImagePyramidSchedule.rows() );
-    m_MovingImagePyramid->SetSchedule( m_MovingImagePyramidSchedule );
-    }
+    m_MovingImagePyramid->SetNumberOfLevels(m_MovingImagePyramidSchedule.rows());
+    m_MovingImagePyramid->SetSchedule(m_MovingImagePyramidSchedule);
+  }
 
-  m_FixedImagePyramid->SetInput( m_FixedImage );
+  m_FixedImagePyramid->SetInput(m_FixedImage);
   m_FixedImagePyramid->UpdateLargestPossibleRegion();
 
-  m_MovingImagePyramid->SetInput( m_MovingImage );
+  m_MovingImagePyramid->SetInput(m_MovingImage);
   m_MovingImagePyramid->UpdateLargestPossibleRegion();
 }
 
 
-template <typename TFixedImage, typename TMovingImage,
-          typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
+template <typename TFixedImage,
+          typename TMovingImage,
+          typename TMetricImage,
+          typename TDisplacementImage,
+          typename TCoordRep>
 void
-MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
-                                       TMetricImage, TDisplacementImage, TCoordRep>
-::PrepareBlockRadiusCalculator()
+MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+  PrepareBlockRadiusCalculator()
 {
   // Sanity checks
-  if( !m_BlockRadiusCalculator )
-    {
+  if (!m_BlockRadiusCalculator)
+  {
     itkExceptionMacro(<< "BlockRadiusCalculator is not present");
-    }
+  }
 
-  m_BlockRadiusCalculator->SetFixedImage( m_FixedImage );
-  m_BlockRadiusCalculator->SetPyramidSchedule( m_FixedImagePyramid->GetSchedule() );
+  m_BlockRadiusCalculator->SetFixedImage(m_FixedImage);
+  m_BlockRadiusCalculator->SetPyramidSchedule(m_FixedImagePyramid->GetSchedule());
 }
 
 
-template <typename TFixedImage, typename TMovingImage,
-          typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
+template <typename TFixedImage,
+          typename TMovingImage,
+          typename TMetricImage,
+          typename TDisplacementImage,
+          typename TCoordRep>
 void
-MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
-                                       TMetricImage, TDisplacementImage, TCoordRep>
-::PrepareSearchRegionImageSource()
+MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+  PrepareSearchRegionImageSource()
 {
   // Sanity checks
-  if( !m_SearchRegionImageSource )
-    {
+  if (!m_SearchRegionImageSource)
+  {
     itkExceptionMacro(<< "SearchRegionImageSource is not present");
-    }
+  }
 
-  m_SearchRegionImageSource->SetPyramidSchedule( m_FixedImagePyramid->GetSchedule() );
-  m_ImageRegistrationMethod->SetInput( m_SearchRegionImageSource->GetOutput() );
+  m_SearchRegionImageSource->SetPyramidSchedule(m_FixedImagePyramid->GetSchedule());
+  m_ImageRegistrationMethod->SetInput(m_SearchRegionImageSource->GetOutput());
 }
 
 
-template <typename TFixedImage, typename TMovingImage,
-          typename TMetricImage, typename TDisplacementImage, typename TCoordRep>
+template <typename TFixedImage,
+          typename TMovingImage,
+          typename TMetricImage,
+          typename TDisplacementImage,
+          typename TCoordRep>
 void
-MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage,
-                                       TMetricImage, TDisplacementImage, TCoordRep>
-::GenerateData()
+MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+  GenerateData()
 {
   m_Stop = false;
 
   this->PreparePyramids();
-  for( m_CurrentLevel = 0; m_CurrentLevel < m_NumberOfLevels; ++m_CurrentLevel )
-    {
+  for (m_CurrentLevel = 0; m_CurrentLevel < m_NumberOfLevels; ++m_CurrentLevel)
+  {
     this->Initialize();
 
     // Check if there has been a stop request
-    if( m_Stop )
-      {
+    if (m_Stop)
+    {
       break;
-      }
+    }
 
-    m_SearchRegionImageSource->SetFixedImage( m_FixedImagePyramid->GetOutput( m_CurrentLevel ) );
-    m_SearchRegionImageSource->SetMovingImage( m_MovingImagePyramid->GetOutput( m_CurrentLevel ) );
-    m_SearchRegionImageSource->SetCurrentLevel( m_CurrentLevel );
-    m_SearchRegionImageSource->SetFixedBlockRadius( m_BlockRadiusCalculator->Compute( m_CurrentLevel ) );
+    m_SearchRegionImageSource->SetFixedImage(m_FixedImagePyramid->GetOutput(m_CurrentLevel));
+    m_SearchRegionImageSource->SetMovingImage(m_MovingImagePyramid->GetOutput(m_CurrentLevel));
+    m_SearchRegionImageSource->SetCurrentLevel(m_CurrentLevel);
+    m_SearchRegionImageSource->SetFixedBlockRadius(m_BlockRadiusCalculator->Compute(m_CurrentLevel));
     m_SearchRegionImageSource->UpdateLargestPossibleRegion();
-    m_ImageRegistrationMethod->SetRadius( m_BlockRadiusCalculator->Compute( m_CurrentLevel ) );
-    m_ImageRegistrationMethod->SetFixedImage(  m_FixedImagePyramid->GetOutput( m_CurrentLevel ) );
-    m_ImageRegistrationMethod->SetMovingImage( m_MovingImagePyramid->GetOutput( m_CurrentLevel ) );
+    m_ImageRegistrationMethod->SetRadius(m_BlockRadiusCalculator->Compute(m_CurrentLevel));
+    m_ImageRegistrationMethod->SetFixedImage(m_FixedImagePyramid->GetOutput(m_CurrentLevel));
+    m_ImageRegistrationMethod->SetMovingImage(m_MovingImagePyramid->GetOutput(m_CurrentLevel));
 
     // Invoke an iteration event.
     // This allows a UI to reset any of the components between
     // resolution level.
-    this->InvokeEvent( IterationEvent() );
+    this->InvokeEvent(IterationEvent());
 
     m_ImageRegistrationMethod->UpdateLargestPossibleRegion();
-    m_SearchRegionImageSource->SetPreviousDisplacements( m_ImageRegistrationMethod->GetOutput() );
-    }
+    m_SearchRegionImageSource->SetPreviousDisplacements(m_ImageRegistrationMethod->GetOutput());
+  }
 
-  this->GraftOutput( m_ImageRegistrationMethod->GetOutput() );
+  this->GraftOutput(m_ImageRegistrationMethod->GetOutput());
 }
 
-} // end namespace itk
-} // end namespace BlockMatching
+} // namespace BlockMatching
+} // namespace itk
 
 #endif

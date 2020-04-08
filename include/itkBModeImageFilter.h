@@ -47,23 +47,23 @@ namespace itk
  *
  * \ingroup Ultrasound
  */
-template < typename TInputImage, typename TOutputImage=TInputImage, typename TComplexImage=Image< std::complex< typename TInputImage::PixelType >, TInputImage::ImageDimension > >
-class ITK_TEMPLATE_EXPORT BModeImageFilter :
-  public ImageToImageFilter< TInputImage, TOutputImage >
+template <typename TInputImage,
+          typename TOutputImage = TInputImage,
+          typename TComplexImage = Image<std::complex<typename TInputImage::PixelType>, TInputImage::ImageDimension>>
+class ITK_TEMPLATE_EXPORT BModeImageFilter : public ImageToImageFilter<TInputImage, TOutputImage>
 {
 public:
   /** Standard class type alias.   */
   using Self = BModeImageFilter;
-  using Superclass = ImageToImageFilter< TInputImage, TOutputImage >;
-  using Pointer = SmartPointer< Self >;
-  using ConstPointer = SmartPointer< const Self >;
+  using Superclass = ImageToImageFilter<TInputImage, TOutputImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** The type of input image.   */
   using InputImageType = TInputImage;
 
   /** Dimension of the input and output images. */
-  itkStaticConstMacro (ImageDimension, unsigned int,
-                       TInputImage::ImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, TInputImage::ImageDimension);
 
   /** Typedef support for the input image scalar value type. */
   using InputPixelType = typename InputImageType::PixelType;
@@ -84,54 +84,62 @@ public:
   using InputIndexType = typename InputImageType::IndexType;
 
   /** Run-time type information (and related methods) */
-  itkTypeMacro( BModeImageFilter, ImageToImageFilter );
+  itkTypeMacro(BModeImageFilter, ImageToImageFilter);
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
-  using FrequencyFilterType = FrequencyDomain1DImageFilter< ComplexImageType, ComplexImageType >;
+  using FrequencyFilterType = FrequencyDomain1DImageFilter<ComplexImageType, ComplexImageType>;
 
   /** Set the direction in which the envelope is to be calculated. */
-  virtual void SetDirection( unsigned int direction )
-    {
-    this->m_AnalyticFilter->SetDirection( direction );
+  virtual void
+  SetDirection(unsigned int direction)
+  {
+    this->m_AnalyticFilter->SetDirection(direction);
     this->Modified();
-    }
+  }
 
   /** Get the direction in which the envelope is to be calculated. */
-  virtual unsigned int GetDirection() const
-    {
+  virtual unsigned int
+  GetDirection() const
+  {
     return m_AnalyticFilter->GetDirection();
-    }
+  }
 
-  void SetFrequencyFilter(FrequencyFilterType *filter)
-    {
-    m_AnalyticFilter->SetFrequencyFilter( filter );
-    }
+  void
+  SetFrequencyFilter(FrequencyFilterType * filter)
+  {
+    m_AnalyticFilter->SetFrequencyFilter(filter);
+  }
 
 protected:
   BModeImageFilter();
   ~BModeImageFilter() {}
 
-  virtual void PrintSelf( std::ostream& os, Indent indent ) const override;
+  virtual void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
-  virtual void GenerateData() override;
+  virtual void
+  GenerateData() override;
 
   // These behave like their analogs in Forward1DFFTImageFilter.
-  virtual void GenerateInputRequestedRegion() override;
-  virtual void EnlargeOutputRequestedRegion(DataObject *output) override;
+  virtual void
+  GenerateInputRequestedRegion() override;
+  virtual void
+  EnlargeOutputRequestedRegion(DataObject * output) override;
 
   /** Component filters. */
-  using AnalyticType = AnalyticSignalImageFilter< InputImageType, ComplexImageType >;
-  using ComplexToModulusType = ComplexToModulusImageFilter< typename AnalyticType::OutputImageType, OutputImageType >;
-  using PadType = ConstantPadImageFilter< InputImageType, InputImageType >;
-  using AddConstantType = AddImageFilter< InputImageType, InputImageType >;
-  using LogType = Log10ImageFilter< InputImageType, OutputImageType >;
-  using ROIType = RegionFromReferenceImageFilter< OutputImageType, OutputImageType >;
+  using AnalyticType = AnalyticSignalImageFilter<InputImageType, ComplexImageType>;
+  using ComplexToModulusType = ComplexToModulusImageFilter<typename AnalyticType::OutputImageType, OutputImageType>;
+  using PadType = ConstantPadImageFilter<InputImageType, InputImageType>;
+  using AddConstantType = AddImageFilter<InputImageType, InputImageType>;
+  using LogType = Log10ImageFilter<InputImageType, OutputImageType>;
+  using ROIType = RegionFromReferenceImageFilter<OutputImageType, OutputImageType>;
 
 private:
-  BModeImageFilter( const Self& ); // purposely not implemented
-  void operator=( const Self& ); // purposely not implemented
+  BModeImageFilter(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   typename AnalyticType::Pointer         m_AnalyticFilter;
   typename ComplexToModulusType::Pointer m_ComplexToModulusFilter;
@@ -144,7 +152,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBModeImageFilter.hxx"
+#  include "itkBModeImageFilter.hxx"
 #endif
 
 #endif // itkBModeImageFilter_h

@@ -23,73 +23,76 @@
 #include "itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter.h"
 #include "itkBlockMatchingSearchRegionImageInitializer.h"
 
-int itkBlockMatchingImageRegistrationMethodTest( int argc, char* argv[] )
+int
+itkBlockMatchingImageRegistrationMethodTest(int argc, char * argv[])
 {
-  if( argc < 4 )
-    {
+  if (argc < 4)
+  {
     std::cerr << "Usage: " << argv[0];
     std::cerr << " fixedImage movingImage displacementImage";
     std::cerr << std::endl;
     return EXIT_FAILURE;
-    }
+  }
 
   const unsigned int Dimension = 2;
   using InputPixelType = signed short;
-  using InputImageType = itk::Image< InputPixelType, Dimension >;
+  using InputImageType = itk::Image<InputPixelType, Dimension>;
   using RadiusType = InputImageType::SizeType;
 
   using MetricPixelType = double;
-  using MetricImageType = itk::Image< MetricPixelType, Dimension >;
+  using MetricImageType = itk::Image<MetricPixelType, Dimension>;
 
-  using VectorType = itk::Vector< MetricPixelType, Dimension >;
-  using DisplacementImageType = itk::Image< VectorType, Dimension >;
+  using VectorType = itk::Vector<MetricPixelType, Dimension>;
+  using DisplacementImageType = itk::Image<VectorType, Dimension>;
 
   using CoordRepType = double;
 
-  using ReaderType = itk::ImageFileReader< InputImageType >;
+  using ReaderType = itk::ImageFileReader<InputImageType>;
   ReaderType::Pointer fixedReader = ReaderType::New();
-  fixedReader->SetFileName( argv[1] );
+  fixedReader->SetFileName(argv[1]);
   ReaderType::Pointer movingReader = ReaderType::New();
-  movingReader->SetFileName( argv[2] );
+  movingReader->SetFileName(argv[2]);
 
-  using SearchRegionInitializerType = itk::BlockMatching::SearchRegionImageInitializer< InputImageType, InputImageType >;
+  using SearchRegionInitializerType = itk::BlockMatching::SearchRegionImageInitializer<InputImageType, InputImageType>;
   SearchRegionInitializerType::Pointer searchRegions = SearchRegionInitializerType::New();
-  searchRegions->SetFixedImage( fixedReader->GetOutput() );
-  searchRegions->SetMovingImage( movingReader->GetOutput() );
+  searchRegions->SetFixedImage(fixedReader->GetOutput());
+  searchRegions->SetMovingImage(movingReader->GetOutput());
   RadiusType blockRadius;
   blockRadius[0] = 20;
   blockRadius[1] = 4;
   RadiusType searchRadius;
   searchRadius[0] = 130;
   searchRadius[1] = 5;
-  searchRegions->SetFixedBlockRadius( blockRadius );
-  searchRegions->SetSearchRegionRadius( searchRadius );
+  searchRegions->SetFixedBlockRadius(blockRadius);
+  searchRegions->SetSearchRegionRadius(searchRadius);
 
-  using RegistrationMethodType = itk::BlockMatching::ImageRegistrationMethod< InputImageType, InputImageType, MetricImageType, DisplacementImageType, CoordRepType >;
+  using RegistrationMethodType = itk::BlockMatching::
+    ImageRegistrationMethod<InputImageType, InputImageType, MetricImageType, DisplacementImageType, CoordRepType>;
   RegistrationMethodType::Pointer registrationMethod = RegistrationMethodType::New();
-  registrationMethod->SetFixedImage( fixedReader->GetOutput() );
-  registrationMethod->SetMovingImage( movingReader->GetOutput() );
-  registrationMethod->SetInput( searchRegions->GetOutput() );
-  registrationMethod->SetRadius( blockRadius );
+  registrationMethod->SetFixedImage(fixedReader->GetOutput());
+  registrationMethod->SetMovingImage(movingReader->GetOutput());
+  registrationMethod->SetInput(searchRegions->GetOutput());
+  registrationMethod->SetRadius(blockRadius);
 
-  using MetricImageFilterType = itk::BlockMatching::NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< InputImageType, InputImageType, MetricImageType >;
+  using MetricImageFilterType = itk::BlockMatching::
+    NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter<InputImageType, InputImageType, MetricImageType>;
   MetricImageFilterType::Pointer metricImageFilter = MetricImageFilterType::New();
 
-  registrationMethod->SetMetricImageFilter( metricImageFilter );
+  registrationMethod->SetMetricImageFilter(metricImageFilter);
 
-  using WriterType = itk::ImageFileWriter< DisplacementImageType >;
+  using WriterType = itk::ImageFileWriter<DisplacementImageType>;
   WriterType::Pointer displacementWriter = WriterType::New();
-  displacementWriter->SetFileName( argv[3] );
-  displacementWriter->SetInput( registrationMethod->GetOutput() );
+  displacementWriter->SetFileName(argv[3]);
+  displacementWriter->SetInput(registrationMethod->GetOutput());
   try
-    {
+  {
     displacementWriter->Update();
-    }
-  catch (itk::ExceptionObject& ex)
-    {
-      std::cerr << "Exception caught!" << std::endl;
-      std::cerr << ex << std::endl;
-      return EXIT_FAILURE;
-    }
+  }
+  catch (itk::ExceptionObject & ex)
+  {
+    std::cerr << "Exception caught!" << std::endl;
+    std::cerr << ex << std::endl;
+    return EXIT_FAILURE;
+  }
   return EXIT_SUCCESS;
 }

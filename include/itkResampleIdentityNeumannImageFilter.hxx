@@ -30,11 +30,9 @@
 namespace itk
 {
 
-template <class TInputImage,
-          class TOutputImage,
-          class TInterpolatorPrecisionType>
-ResampleIdentityNeumannImageFilter<TInputImage, TOutputImage,TInterpolatorPrecisionType>
-::ResampleIdentityNeumannImageFilter()
+template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
+ResampleIdentityNeumannImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::
+  ResampleIdentityNeumannImageFilter()
 {
   m_OutputOrigin.Fill(0.0);
   m_OutputSpacing.Fill(1.0);
@@ -42,22 +40,20 @@ ResampleIdentityNeumannImageFilter<TInputImage, TOutputImage,TInterpolatorPrecis
 
   m_UseReferenceImage = false;
 
-  m_Size.Fill( 0 );
-  m_OutputStartIndex.Fill( 0 );
+  m_Size.Fill(0);
+  m_OutputStartIndex.Fill(0);
 
-  m_Interpolator = LinearInterpolateImageFunction<InputImageType,
-                                  TInterpolatorPrecisionType>::New();
+  m_Interpolator = LinearInterpolateImageFunction<InputImageType, TInterpolatorPrecisionType>::New();
 }
 
 
-template <class TInputImage,
-          class TOutputImage,
-          class TInterpolatorPrecisionType>
+template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
 void
-ResampleIdentityNeumannImageFilter<TInputImage, TOutputImage,TInterpolatorPrecisionType>
-::PrintSelf( std::ostream& os, Indent indent ) const
+ResampleIdentityNeumannImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::PrintSelf(
+  std::ostream & os,
+  Indent         indent) const
 {
-  Superclass::PrintSelf(os,indent);
+  Superclass::PrintSelf(os, indent);
 
   os << indent << "Size: " << m_Size << std::endl;
   os << indent << "OutputStartIndex: " << m_OutputStartIndex << std::endl;
@@ -65,104 +61,89 @@ ResampleIdentityNeumannImageFilter<TInputImage, TOutputImage,TInterpolatorPrecis
   os << indent << "OutputOrigin: " << m_OutputOrigin << std::endl;
   os << indent << "OutputDirection: " << m_OutputDirection << std::endl;
   os << indent << "Interpolator: " << m_Interpolator.GetPointer() << std::endl;
-  os << indent << "UseReferenceImage: " << (m_UseReferenceImage ? "On" : "Off")
-               << std::endl;
+  os << indent << "UseReferenceImage: " << (m_UseReferenceImage ? "On" : "Off") << std::endl;
   return;
 }
 
 
-template <class TInputImage,
-          class TOutputImage,
-          class TInterpolatorPrecisionType>
+template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
 void
-ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
-::SetOutputSpacing( const double* spacing )
+ResampleIdentityNeumannImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::SetOutputSpacing(
+  const double * spacing)
 {
   SpacingType s(spacing);
-  this->SetOutputSpacing( s );
+  this->SetOutputSpacing(s);
 }
 
 
-template <class TInputImage,
-          class TOutputImage,
-          class TInterpolatorPrecisionType>
+template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
 void
-ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
-::SetOutputOrigin( const double* origin )
+ResampleIdentityNeumannImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::SetOutputOrigin(
+  const double * origin)
 {
   OriginPointType p(origin);
-  this->SetOutputOrigin( p );
+  this->SetOutputOrigin(p);
 }
 
 /** Helper method to set the output parameters based on this image */
-template <class TInputImage,
-          class TOutputImage,
-          class TInterpolatorPrecisionType>
+template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
 void
-ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
-::SetOutputParametersFromImage ( const ImageBaseType * image )
+ResampleIdentityNeumannImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::SetOutputParametersFromImage(
+  const ImageBaseType * image)
 {
-  this->SetOutputOrigin ( image->GetOrigin() );
-  this->SetOutputSpacing ( image->GetSpacing() );
-  this->SetOutputDirection ( image->GetDirection() );
-  this->SetOutputStartIndex ( image->GetLargestPossibleRegion().GetIndex() );
-  this->SetSize ( image->GetLargestPossibleRegion().GetSize() );
+  this->SetOutputOrigin(image->GetOrigin());
+  this->SetOutputSpacing(image->GetSpacing());
+  this->SetOutputDirection(image->GetDirection());
+  this->SetOutputStartIndex(image->GetLargestPossibleRegion().GetIndex());
+  this->SetSize(image->GetLargestPossibleRegion().GetSize());
 }
 
 
-template <class TInputImage,
-          class TOutputImage,
-          class TInterpolatorPrecisionType>
+template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
 void
-ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
-::BeforeThreadedGenerateData()
+ResampleIdentityNeumannImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::BeforeThreadedGenerateData()
 {
-  if( !m_Interpolator )
-    {
+  if (!m_Interpolator)
+  {
     itkExceptionMacro(<< "Interpolator not set");
-    }
+  }
 
   // Connect input image to interpolator
-  m_Interpolator->SetInputImage( this->GetInput() );
+  m_Interpolator->SetInputImage(this->GetInput());
 }
 
 
-template <class TInputImage,
-          class TOutputImage,
-          class TInterpolatorPrecisionType>
+template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
 void
-ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
-::AfterThreadedGenerateData()
+ResampleIdentityNeumannImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::AfterThreadedGenerateData()
 {
   // Disconnect input image from the interpolator
-  m_Interpolator->SetInputImage( nullptr );
+  m_Interpolator->SetInputImage(nullptr);
 }
 
 
-template <class TInputImage,
-          class TOutputImage,
-          class TInterpolatorPrecisionType>
+template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
 void
-ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
-::ThreadedGenerateData( const OutputImageRegionType& outputRegionForThread,
-                        ThreadIdType threadId)
+ResampleIdentityNeumannImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::ThreadedGenerateData(
+  const OutputImageRegionType & outputRegionForThread,
+  ThreadIdType                  threadId)
 {
   // Get the output pointers
-  OutputImagePointer      outputPtr = this->GetOutput();
+  OutputImagePointer outputPtr = this->GetOutput();
 
   // Get ths input pointers
-  InputImageConstPointer inputPtr=this->GetInput();
+  InputImageConstPointer inputPtr = this->GetInput();
 
   // Create an iterator that will walk the output region for this thread.
   using OutputIterator = ImageLinearIteratorWithIndex<TOutputImage>;
 
   OutputIterator outIt(outputPtr, outputRegionForThread);
-  outIt.SetDirection( 0 );
+  outIt.SetDirection(0);
 
   // Define a few indices that will be used to translate from an input pixel
   // to an output pixel
-  PointType outputPoint;         // Coordinates of current output pixel
-  PointType inputPoint;          // Coordinates of current input pixel
+  PointType outputPoint; // Coordinates of current output pixel
+  PointType inputPoint;  // Coordinates of current input pixel
   PointType tmpOutputPoint;
   PointType tmpInputPoint;
 
@@ -171,13 +152,11 @@ ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisi
   ContinuousIndexType tmpInputIndex;
 
   using VectorType = typename PointType::VectorType;
-  VectorType delta;          // delta in input continuous index coordinate frame
-  IndexType index;
+  VectorType delta; // delta in input continuous index coordinate frame
+  IndexType  index;
 
   // Support for progress methods/callbacks
-  ProgressReporter progress(this,
-                            threadId,
-                            outputRegionForThread.GetNumberOfPixels());
+  ProgressReporter progress(this, threadId, outputRegionForThread.GetNumberOfPixels());
 
   using OutputType = typename InterpolatorType::OutputType;
 
@@ -185,15 +164,15 @@ ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisi
   IndexType startIndex = inputPtr->GetBufferedRegion().GetIndex();
   IndexType endIndex;
   IndexType closestIndex;
-  for( unsigned int i = 0; i < ImageDimension; ++i )
-    {
+  for (unsigned int i = 0; i < ImageDimension; ++i)
+  {
     endIndex[i] = startIndex[i] + inputPtr->GetBufferedRegion().GetSize()[i] - 1;
-    }
+  }
 
   // Min/max values of the output pixel type AND these values
   // represented as the output type of the interpolator
-  const PixelType minValue =  NumericTraits<PixelType >::NonpositiveMin();
-  const PixelType maxValue =  NumericTraits<PixelType >::max();
+  const PixelType minValue = NumericTraits<PixelType>::NonpositiveMin();
+  const PixelType maxValue = NumericTraits<PixelType>::max();
 
   const OutputType minOutputValue = static_cast<OutputType>(minValue);
   const OutputType maxOutputValue = static_cast<OutputType>(maxValue);
@@ -201,7 +180,7 @@ ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisi
 
   // Determine the position of the first pixel in the scanline
   index = outIt.GetIndex();
-  outputPtr->TransformIndexToPhysicalPoint( index, outputPoint );
+  outputPtr->TransformIndexToPhysicalPoint(index, outputPoint);
 
 
   // Compute corresponding input pixel position
@@ -225,17 +204,16 @@ ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisi
   // are both handled properly (taking into account the direction cosines).
   //
   ++index[0];
-  outputPtr->TransformIndexToPhysicalPoint( index, tmpOutputPoint );
+  outputPtr->TransformIndexToPhysicalPoint(index, tmpOutputPoint);
   tmpInputPoint = tmpOutputPoint;
-  inputPtr->TransformPhysicalPointToContinuousIndex(tmpInputPoint,
-                                                    tmpInputIndex);
+  inputPtr->TransformPhysicalPointToContinuousIndex(tmpInputPoint, tmpInputIndex);
   delta = tmpInputIndex - inputIndex;
 
 
   // This fix works for images up to approximately 2^25 pixels in
   // any dimension.  If the image is larger than this, this constant
   // needs to be made lower.
-  double precisionConstant = 1<<(NumericTraits<double>::digits>>1);
+  double precisionConstant = 1 << (NumericTraits<double>::digits >> 1);
 
   // Delta is precise to many decimal points, but this precision
   // involves some error in the last bits.  This error can accumulate
@@ -249,30 +227,28 @@ ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisi
   // Therefore, the following routine uses a
   // precisionConstant that specifies the number of relevant bits,
   // and the value is truncated to this precision.
-  for( unsigned int i = 0; i < ImageDimension; ++i)
-    {
+  for (unsigned int i = 0; i < ImageDimension; ++i)
+  {
     long roundedInputIndex = (long)(inputIndex[i]);
-    if(inputIndex[i]<0.0 && inputIndex[i]!=(double)roundedInputIndex)
-      {
-      --roundedInputIndex;
-      }
-    double inputIndexFrac = inputIndex[i] - roundedInputIndex;
-    double newInputIndexFrac = (long)(precisionConstant
-                                          * inputIndexFrac)
-                               / precisionConstant;
-    inputIndex[i] = roundedInputIndex + newInputIndexFrac;
-    }
-
-
-  while ( !outIt.IsAtEnd() )
+    if (inputIndex[i] < 0.0 && inputIndex[i] != (double)roundedInputIndex)
     {
+      --roundedInputIndex;
+    }
+    double inputIndexFrac = inputIndex[i] - roundedInputIndex;
+    double newInputIndexFrac = (long)(precisionConstant * inputIndexFrac) / precisionConstant;
+    inputIndex[i] = roundedInputIndex + newInputIndexFrac;
+  }
+
+
+  while (!outIt.IsAtEnd())
+  {
     // Determine the continuous index of the first pixel of output
     // scanline when mapped to the input coordinate frame.
     //
 
     // First get the position of the pixel in the output coordinate frame
     index = outIt.GetIndex();
-    outputPtr->TransformIndexToPhysicalPoint( index, outputPoint );
+    outputPtr->TransformIndexToPhysicalPoint(index, outputPoint);
 
     // Compute corresponding input pixel continuous index, this index
     // will incremented in the scanline loop
@@ -289,128 +265,124 @@ ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisi
     // Therefore, the following routine uses a
     // precisionConstant that specifies the number of relevant bits,
     // and the value is truncated to this precision.
-    for( unsigned int i = 0; i < ImageDimension; ++i)
-      {
+    for (unsigned int i = 0; i < ImageDimension; ++i)
+    {
       long roundedInputIndex = (long)(inputIndex[i]);
-      if(inputIndex[i]<0.0 && inputIndex[i]!=(double)roundedInputIndex)
-        {
+      if (inputIndex[i] < 0.0 && inputIndex[i] != (double)roundedInputIndex)
+      {
         --roundedInputIndex;
-        }
+      }
       double inputIndexFrac = inputIndex[i] - roundedInputIndex;
-      double newInputIndexFrac = (long)(precisionConstant
-                                            * inputIndexFrac)
-                                 / precisionConstant;
+      double newInputIndexFrac = (long)(precisionConstant * inputIndexFrac) / precisionConstant;
       inputIndex[i] = roundedInputIndex + newInputIndexFrac;
-      }
+    }
 
-    if(  !outIt.IsAtEnndOfLine() &&
-         !m_Interpolator->IsInsideBuffer(inputIndex) )
+    if (!outIt.IsAtEnndOfLine() && !m_Interpolator->IsInsideBuffer(inputIndex))
+    {
+      for (unsigned int i = 0; i < ImageDimension; ++i)
       {
-      for( unsigned int i = 0; i < ImageDimension; ++i )
+        closestIndex[i] = Math::Round(inputIndex[i]);
+      }
+      for (unsigned int i = 0; i < ImageDimension; ++i)
+      {
+        if (inputIndex[i] < startIndex[i])
         {
-        closestIndex[i] = Math::Round( inputIndex[i] );
-        }
-      for( unsigned int i = 0; i < ImageDimension; ++i )
-        {
-        if( inputIndex[i] < startIndex[i] )
-          {
           closestIndex[i] = startIndex[i];
-          }
-        if( inputIndex[i] > endIndex[i] )
-          {
+        }
+        if (inputIndex[i] > endIndex[i])
+        {
           closestIndex[i] = endIndex[i];
-          }
         }
       }
-    while( !outIt.IsAtEndOfLine() &&
-           !m_Interpolator->IsInsideBuffer(inputIndex) )
-      {
+    }
+    while (!outIt.IsAtEndOfLine() && !m_Interpolator->IsInsideBuffer(inputIndex))
+    {
       outIt.Set(closestIndex);
       progress.CompletedPixel();
       ++outIt;
       inputIndex += delta;
-      }
+    }
 
-    if( !outIt.IsAtEndOfLine() && m_Interpolator->IsInsideBuffer(inputIndex) )
-      {
-      PixelType pixval;
+    if (!outIt.IsAtEndOfLine() && m_Interpolator->IsInsideBuffer(inputIndex))
+    {
+      PixelType  pixval;
       OutputType value;
       value = m_Interpolator->EvaluateAtContinuousIndex(inputIndex);
-      if( value <  minOutputValue )
-        {
+      if (value < minOutputValue)
+      {
         pixval = minValue;
-        }
-      else if( value > maxOutputValue )
-        {
+      }
+      else if (value > maxOutputValue)
+      {
         pixval = maxValue;
-        }
+      }
       else
-        {
-        pixval = static_cast<PixelType>( value );
-        }
-      outIt.Set( pixval );
+      {
+        pixval = static_cast<PixelType>(value);
+      }
+      outIt.Set(pixval);
 
       progress.CompletedPixel();
       ++outIt;
       inputIndex += delta;
-      }
+    }
 
-    while( !outIt.IsAtEndOfLine() )
-      {
+    while (!outIt.IsAtEndOfLine())
+    {
       // Evaluate input at right position and copy to the output
-      if( m_Interpolator->IsInsideBuffer(inputIndex) )
-        {
-        PixelType pixval;
+      if (m_Interpolator->IsInsideBuffer(inputIndex))
+      {
+        PixelType  pixval;
         OutputType value;
         value = m_Interpolator->EvaluateAtContinuousIndex(inputIndex);
-        if( value <  minOutputValue )
-          {
-          pixval = minValue;
-          }
-        else if( value > maxOutputValue )
-          {
-          pixval = maxValue;
-          }
-        else
-          {
-          pixval = static_cast<PixelType>( value );
-          }
-        outIt.Set( pixval );
-        }
-      else
+        if (value < minOutputValue)
         {
-        for( unsigned int i = 0; i < ImageDimension; ++i )
-          closestIndex[i] = Math::Round( inputIndex[i] );
-        for( unsigned int i = 0; i < ImageDimension; ++i )
-          {
-          if( inputIndex[i] < startIndex[i] )
-            {
-            closestIndex[i] = startIndex[i];
-            }
-          if( inputIndex[i] > endIndex[i] )
-            {
-            closestIndex[i] = endIndex[i];
-            }
-          }
-        outIt.Set( inputPtr->GetPixel( closestIndex )); // default background value
-        break;
+          pixval = minValue;
         }
+        else if (value > maxOutputValue)
+        {
+          pixval = maxValue;
+        }
+        else
+        {
+          pixval = static_cast<PixelType>(value);
+        }
+        outIt.Set(pixval);
+      }
+      else
+      {
+        for (unsigned int i = 0; i < ImageDimension; ++i)
+          closestIndex[i] = Math::Round(inputIndex[i]);
+        for (unsigned int i = 0; i < ImageDimension; ++i)
+        {
+          if (inputIndex[i] < startIndex[i])
+          {
+            closestIndex[i] = startIndex[i];
+          }
+          if (inputIndex[i] > endIndex[i])
+          {
+            closestIndex[i] = endIndex[i];
+          }
+        }
+        outIt.Set(inputPtr->GetPixel(closestIndex)); // default background value
+        break;
+      }
 
       progress.CompletedPixel();
       ++outIt;
       inputIndex += delta;
-      }
+    }
 
-    while( !outIt.IsAtEndOfLine() )
-      {
+    while (!outIt.IsAtEndOfLine())
+    {
       outIt.Set(closestIndex); // default background value
       progress.CompletedPixel();
       ++outIt;
       inputIndex += delta;
-      }
+    }
 
     outIt.NextLine();
-    }
+  }
 
   return;
 }
@@ -423,24 +395,21 @@ ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisi
  * when we cannot assume anything about the transform being used.
  * So we do the easy thing and request the entire input image.
  */
-template <class TInputImage,
-          class TOutputImage,
-          class TInterpolatorPrecisionType>
+template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
 void
-ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
-::GenerateInputRequestedRegion()
+ResampleIdentityNeumannImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::
+  GenerateInputRequestedRegion()
 {
   // call the superclass's implementation of this method
   Superclass::GenerateInputRequestedRegion();
 
-  if ( !this->GetInput() )
-    {
+  if (!this->GetInput())
+  {
     return;
-    }
+  }
 
   // get pointers to the input and output
-  InputImagePointer  inputPtr  =
-    const_cast< TInputImage *>( this->GetInput() );
+  InputImagePointer inputPtr = const_cast<TInputImage *>(this->GetInput());
 
   // Request the entire input image
   inputPtr->SetRequestedRegionToLargestPossibleRegion();
@@ -453,19 +422,13 @@ ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisi
  * Set the smart pointer to the reference image that will provide
  * the grid parameters for the output image.
  */
-template <class TInputImage,
-          class TOutputImage,
-          class TInterpolatorPrecisionType>
-const typename ResampleIdentityNeumannImageFilter<TInputImage,
-                                      TOutputImage,
-                                      TInterpolatorPrecisionType>
-               ::OutputImageType *
-ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
-::GetReferenceImage() const
+template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
+const typename ResampleIdentityNeumannImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::
+  OutputImageType *
+  ResampleIdentityNeumannImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::GetReferenceImage() const
 {
-  Self * surrogate = const_cast< Self * >( this );
-  const OutputImageType * referenceImage =
-    static_cast<const OutputImageType *>(surrogate->ProcessObject::GetInput(1));
+  Self *                  surrogate = const_cast<Self *>(this);
+  const OutputImageType * referenceImage = static_cast<const OutputImageType *>(surrogate->ProcessObject::GetInput(1));
   return referenceImage;
 }
 
@@ -474,70 +437,64 @@ ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisi
  * Set the smart pointer to the reference image that will provide
  * the grid parameters for the output image.
  */
-template <class TInputImage,
-          class TOutputImage,
-          class TInterpolatorPrecisionType>
+template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
 void
-ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
-::SetReferenceImage( const TOutputImage *image )
+ResampleIdentityNeumannImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::SetReferenceImage(
+  const TOutputImage * image)
 {
   itkDebugMacro("setting input ReferenceImage to " << image);
-  if( image != static_cast<const TOutputImage *>(this->ProcessObject::GetInput( 1 )) )
-    {
-    this->ProcessObject::SetNthInput(1, const_cast< TOutputImage *>( image ) );
+  if (image != static_cast<const TOutputImage *>(this->ProcessObject::GetInput(1)))
+  {
+    this->ProcessObject::SetNthInput(1, const_cast<TOutputImage *>(image));
     this->Modified();
-    }
+  }
 }
 
 /**
  * Inform pipeline of required output region
  */
-template <class TInputImage,
-          class TOutputImage,
-          class TInterpolatorPrecisionType>
+template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
 void
-ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
-::GenerateOutputInformation()
+ResampleIdentityNeumannImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::GenerateOutputInformation()
 {
   // call the superclass' implementation of this method
   Superclass::GenerateOutputInformation();
 
   // get pointers to the input and output
   OutputImagePointer outputPtr = this->GetOutput();
-  if ( !outputPtr )
-    {
+  if (!outputPtr)
+  {
     return;
-    }
+  }
 
   const OutputImageType * referenceImage = this->GetReferenceImage();
 
   // Set the size of the output region
-  if( m_UseReferenceImage && referenceImage )
-    {
-    outputPtr->SetLargestPossibleRegion(
-                                  referenceImage->GetLargestPossibleRegion() );
-    }
+  if (m_UseReferenceImage && referenceImage)
+  {
+    outputPtr->SetLargestPossibleRegion(referenceImage->GetLargestPossibleRegion());
+  }
   else
-    {
+  {
     typename TOutputImage::RegionType outputLargestPossibleRegion;
-    outputLargestPossibleRegion.SetSize( m_Size );
-    outputLargestPossibleRegion.SetIndex( m_OutputStartIndex );
-    outputPtr->SetLargestPossibleRegion( outputLargestPossibleRegion );
-    }
+    outputLargestPossibleRegion.SetSize(m_Size);
+    outputLargestPossibleRegion.SetIndex(m_OutputStartIndex);
+    outputPtr->SetLargestPossibleRegion(outputLargestPossibleRegion);
+  }
 
   // Set spacing and origin
   if (m_UseReferenceImage && referenceImage)
-    {
-    outputPtr->SetSpacing( referenceImage->GetSpacing() );
-    outputPtr->SetOrigin( referenceImage->GetOrigin() );
-    outputPtr->SetDirection( referenceImage->GetDirection() );
-    }
+  {
+    outputPtr->SetSpacing(referenceImage->GetSpacing());
+    outputPtr->SetOrigin(referenceImage->GetOrigin());
+    outputPtr->SetDirection(referenceImage->GetDirection());
+  }
   else
-    {
-    outputPtr->SetSpacing( m_OutputSpacing );
-    outputPtr->SetOrigin( m_OutputOrigin );
-    outputPtr->SetDirection( m_OutputDirection );
-    }
+  {
+    outputPtr->SetSpacing(m_OutputSpacing);
+    outputPtr->SetOrigin(m_OutputOrigin);
+    outputPtr->SetDirection(m_OutputDirection);
+  }
 
   return;
 }
@@ -546,22 +503,19 @@ ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisi
 /**
  * Verify if any of the components has been modified.
  */
-template <class TInputImage,
-          class TOutputImage,
-          class TInterpolatorPrecisionType>
+template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType>
 unsigned long
-ResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType>
-::GetMTime( void ) const
+ResampleIdentityNeumannImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::GetMTime(void) const
 {
   unsigned long latestTime = Object::GetMTime();
 
-  if( m_Interpolator )
+  if (m_Interpolator)
+  {
+    if (latestTime < m_Interpolator->GetMTime())
     {
-    if( latestTime < m_Interpolator->GetMTime() )
-      {
       latestTime = m_Interpolator->GetMTime();
-      }
     }
+  }
 
   return latestTime;
 }

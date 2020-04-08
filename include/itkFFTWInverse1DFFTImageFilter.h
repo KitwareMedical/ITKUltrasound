@@ -32,17 +32,18 @@ namespace itk
  * \ingroup Ultrasound
  */
 
-template< typename TInputImage, typename TOutputImage=Image< typename NumericTraits< typename TInputImage::PixelType >::ValueType, TInputImage::ImageDimension > >
-class ITK_TEMPLATE_EXPORT FFTWInverse1DFFTImageFilter:
-  public Inverse1DFFTImageFilter< TInputImage, TOutputImage >
+template <typename TInputImage,
+          typename TOutputImage =
+            Image<typename NumericTraits<typename TInputImage::PixelType>::ValueType, TInputImage::ImageDimension>>
+class ITK_TEMPLATE_EXPORT FFTWInverse1DFFTImageFilter : public Inverse1DFFTImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(FFTWInverse1DFFTImageFilter);
 
   using Self = FFTWInverse1DFFTImageFilter;
-  using Superclass = Inverse1DFFTImageFilter< TInputImage, TOutputImage >;
-  using Pointer = SmartPointer< Self >;
-  using ConstPointer = SmartPointer< const Self >;
+  using Superclass = Inverse1DFFTImageFilter<TInputImage, TOutputImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Standard class type alias.*/
   using InputImageType = typename Superclass::InputImageType;
@@ -56,9 +57,9 @@ public:
    * is trying to use double if only the float FFTW1D version is
    * configured in, or float if only double is configured.
    */
-  using FFTW1DProxyType = typename fftw::ComplexToComplexProxy< typename TOutputImage::PixelType >;
-  using PlanArrayType = typename std::vector< typename FFTW1DProxyType::PlanType >;
-  using PlanBufferPointerType = typename std::vector< typename FFTW1DProxyType::ComplexType* >;
+  using FFTW1DProxyType = typename fftw::ComplexToComplexProxy<typename TOutputImage::PixelType>;
+  using PlanArrayType = typename std::vector<typename FFTW1DProxyType::PlanType>;
+  using PlanBufferPointerType = typename std::vector<typename FFTW1DProxyType::ComplexType *>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -71,18 +72,22 @@ protected:
   FFTWInverse1DFFTImageFilter();
   virtual ~FFTWInverse1DFFTImageFilter();
 
-  void BeforeThreadedGenerateData() override;
-  void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadID ) override;
+  void
+  BeforeThreadedGenerateData() override;
+  void
+  ThreadedGenerateData(const OutputImageRegionType & outputRegionForThread, ThreadIdType threadID) override;
 
   /** Override to return a splitter that does not split along the direction we
    *  are performing the transform. */
-  const ImageRegionSplitterBase* GetImageRegionSplitter() const override;
+  const ImageRegionSplitterBase *
+  GetImageRegionSplitter() const override;
 
 private:
   ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;
 
   /** Destroy FFTW Plans and associated buffers. */
-  void DestroyPlans();
+  void
+  DestroyPlans();
 
   bool                  m_PlanComputed;
   PlanArrayType         m_PlanArray;
@@ -94,7 +99,7 @@ private:
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkFFTWInverse1DFFTImageFilter.hxx"
+#  include "itkFFTWInverse1DFFTImageFilter.hxx"
 #endif
 
-#endif //itkFFTWInverse1DFFTImageFilter_h
+#endif // itkFFTWInverse1DFFTImageFilter_h

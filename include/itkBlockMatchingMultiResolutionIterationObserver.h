@@ -39,9 +39,8 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  * */
-template< typename TMultiResolutionMethod >
-class MultiResolutionIterationObserver :
-  public MultiResolutionIterationCommand< TMultiResolutionMethod >
+template <typename TMultiResolutionMethod>
+class MultiResolutionIterationObserver : public MultiResolutionIterationCommand<TMultiResolutionMethod>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionIterationObserver);
@@ -50,22 +49,23 @@ public:
   using Superclass = MultiResolutionIterationCommand<TMultiResolutionMethod>;
   using Pointer = SmartPointer<Self>;
 
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
-  void Execute(itk::Object *caller, const itk::EventObject & event) override;
-    //{
-    //Execute( (const itk::Object *)caller, event);
-    //}
+  void
+  Execute(itk::Object * caller, const itk::EventObject & event) override;
+  //{
+  // Execute( (const itk::Object *)caller, event);
+  //}
 
-  //void Execute(const itk::Object * object, const itk::EventObject & event) override;
+  // void Execute(const itk::Object * object, const itk::EventObject & event) override;
 
   using MultiResolutionMethodType = TMultiResolutionMethod;
   using FixedImageType = typename MultiResolutionMethodType::FixedImageType;
   using MovingImageType = typename MultiResolutionMethodType::MovingImageType;
   using DisplacementImageType = typename MultiResolutionMethodType::DisplacementImageType;
 
-  itkSetStringMacro( OutputFilePrefix );
-  itkGetConstMacro( OutputFilePrefix, std::string );
+  itkSetStringMacro(OutputFilePrefix);
+  itkGetConstMacro(OutputFilePrefix, std::string);
 
 protected:
   MultiResolutionIterationObserver();
@@ -76,36 +76,33 @@ protected:
 
   std::ofstream m_CSVFile;
 
-  using FixedImageWriterType = ImageFileWriter< FixedImageType >;
+  using FixedImageWriterType = ImageFileWriter<FixedImageType>;
   typename FixedImageWriterType::Pointer m_FixedImageWriter;
 
-  using MovingImageWriterType = ImageFileWriter< MovingImageType >;
+  using MovingImageWriterType = ImageFileWriter<MovingImageType>;
   typename MovingImageWriterType::Pointer m_MovingImageWriter;
 
-  using DisplacementWriterType = ImageFileWriter< DisplacementImageType >;
+  using DisplacementWriterType = ImageFileWriter<DisplacementImageType>;
   typename DisplacementWriterType::Pointer m_DisplacementWriter;
 
   using MetricImageType = typename MultiResolutionMethodType::MetricImageType;
   using MetricPixelType = typename MetricImageType::PixelType;
-  using DisplacementComponentsFilterType = itk::SplitComponentsImageFilter< DisplacementImageType, MetricImageType,
-          MetricImageType::ImageDimension >;
-  typename DisplacementComponentsFilterType::Pointer
-    m_DisplacementComponentsFilter;
-  using DisplacementComponentsWriterType = typename itk::ImageFileWriter< MetricImageType >;
-  typename DisplacementComponentsWriterType::Pointer
-    m_DisplacementComponentsWriter;
+  using DisplacementComponentsFilterType =
+    itk::SplitComponentsImageFilter<DisplacementImageType, MetricImageType, MetricImageType::ImageDimension>;
+  typename DisplacementComponentsFilterType::Pointer m_DisplacementComponentsFilter;
+  using DisplacementComponentsWriterType = typename itk::ImageFileWriter<MetricImageType>;
+  typename DisplacementComponentsWriterType::Pointer m_DisplacementComponentsWriter;
 
-  using StrainFilterType = itk::StrainImageFilter< DisplacementImageType, MetricPixelType,
-          MetricPixelType >;
+  using StrainFilterType = itk::StrainImageFilter<DisplacementImageType, MetricPixelType, MetricPixelType>;
   typename StrainFilterType::Pointer m_StrainFilter;
   using StrainImageType = typename StrainFilterType::OutputImageType;
 
-  using StrainWriterType = itk::ImageFileWriter< StrainImageType >;
+  using StrainWriterType = itk::ImageFileWriter<StrainImageType>;
   typename StrainWriterType::Pointer m_StrainWriter;
 
-  using StrainComponentsFilterType = itk::SplitComponentsImageFilter< StrainImageType, MetricImageType, 3 >;
+  using StrainComponentsFilterType = itk::SplitComponentsImageFilter<StrainImageType, MetricImageType, 3>;
   typename StrainComponentsFilterType::Pointer m_StrainComponentsFilter;
-  using StrainComponentsWriterType = itk::ImageFileWriter< MetricImageType >;
+  using StrainComponentsWriterType = itk::ImageFileWriter<MetricImageType>;
   typename StrainComponentsWriterType::Pointer m_StrainComponentsWriter;
 
 private:

@@ -59,11 +59,14 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  */
-template< typename TFixedPixel = signed short, typename TMovingPixel = TFixedPixel,
-          typename TMetricPixel = double, typename TCoordRep = double,
-          unsigned int VImageDimension = 2 >
-class ITK_TEMPLATE_EXPORT DisplacementPipeline : public ImageToImageFilter<
-  Image< TFixedPixel, VImageDimension >, Image< Vector< TMetricPixel, VImageDimension>, VImageDimension > >
+template <typename TFixedPixel = signed short,
+          typename TMovingPixel = TFixedPixel,
+          typename TMetricPixel = double,
+          typename TCoordRep = double,
+          unsigned int VImageDimension = 2>
+class ITK_TEMPLATE_EXPORT DisplacementPipeline
+  : public ImageToImageFilter<Image<TFixedPixel, VImageDimension>,
+                              Image<Vector<TMetricPixel, VImageDimension>, VImageDimension>>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(DisplacementPipeline);
@@ -72,204 +75,223 @@ public:
   itkStaticConstMacro(ImageDimension, unsigned int, VImageDimension);
 
   using FixedPixelType = TFixedPixel;
-  using FixedImageType = Image< TFixedPixel, ImageDimension >;
+  using FixedImageType = Image<TFixedPixel, ImageDimension>;
   using RadiusType = typename FixedImageType::SizeType;
 
   using MovingPixelType = TMovingPixel;
-  using MovingImageType = Image< MovingPixelType, ImageDimension >;
+  using MovingImageType = Image<MovingPixelType, ImageDimension>;
 
   using MetricPixelType = TMetricPixel;
-  using MetricImageType = Image< MetricPixelType, ImageDimension >;
+  using MetricImageType = Image<MetricPixelType, ImageDimension>;
 
-  using VectorType = Vector<MetricPixelType, ImageDimension >;
-  using DisplacementImageType = Image<VectorType, ImageDimension >;
+  using VectorType = Vector<MetricPixelType, ImageDimension>;
+  using DisplacementImageType = Image<VectorType, ImageDimension>;
   using OutputImageType = DisplacementImageType;
 
   /** Standard class type alias. */
   using Self = DisplacementPipeline;
-  using Superclass = ImageToImageFilter< FixedImageType, DisplacementImageType >;
-  using Pointer = SmartPointer< Self >;
-  using ConstPointer = SmartPointer< const Self >;
+  using Superclass = ImageToImageFilter<FixedImageType, DisplacementImageType>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( DisplacementPipeline, ImageToImageFilter );
+  itkTypeMacro(DisplacementPipeline, ImageToImageFilter);
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   using CoordRepType = TCoordRep;
 
-  using FixedResamplerType = ResampleImageFilter< FixedImageType, FixedImageType, CoordRepType >;
-  using MovingResamplerType = ResampleImageFilter< MovingImageType, MovingImageType, CoordRepType >;
+  using FixedResamplerType = ResampleImageFilter<FixedImageType, FixedImageType, CoordRepType>;
+  using MovingResamplerType = ResampleImageFilter<MovingImageType, MovingImageType, CoordRepType>;
 
   const static unsigned int RESAMPLE_RADIUS = 4;
-  using ResampleWindowType = Function::WelchWindowFunction< RESAMPLE_RADIUS >;
-  using FixedBoundaryConditionType = ZeroFluxNeumannBoundaryCondition< FixedImageType >;
-  using FixedResamplerInterpolatorType = WindowedSincInterpolateImageFunction< FixedImageType,
-                                                    RESAMPLE_RADIUS, ResampleWindowType, FixedBoundaryConditionType,
-                                                    CoordRepType>;
-  using MovingBoundaryConditionType = ZeroFluxNeumannBoundaryCondition< MovingImageType >;
-  using MovingResamplerInterpolatorType = WindowedSincInterpolateImageFunction< MovingImageType,
-                                                    RESAMPLE_RADIUS, ResampleWindowType, MovingBoundaryConditionType,
-                                                    CoordRepType>;
+  using ResampleWindowType = Function::WelchWindowFunction<RESAMPLE_RADIUS>;
+  using FixedBoundaryConditionType = ZeroFluxNeumannBoundaryCondition<FixedImageType>;
+  using FixedResamplerInterpolatorType = WindowedSincInterpolateImageFunction<FixedImageType,
+                                                                              RESAMPLE_RADIUS,
+                                                                              ResampleWindowType,
+                                                                              FixedBoundaryConditionType,
+                                                                              CoordRepType>;
+  using MovingBoundaryConditionType = ZeroFluxNeumannBoundaryCondition<MovingImageType>;
+  using MovingResamplerInterpolatorType = WindowedSincInterpolateImageFunction<MovingImageType,
+                                                                               RESAMPLE_RADIUS,
+                                                                               ResampleWindowType,
+                                                                               MovingBoundaryConditionType,
+                                                                               CoordRepType>;
 
   /** The block radius calculator. */
-  using BlockRadiusCalculatorType = BlockMatching::MultiResolutionMinMaxBlockRadiusCalculator< FixedImageType >;
+  using BlockRadiusCalculatorType = BlockMatching::MultiResolutionMinMaxBlockRadiusCalculator<FixedImageType>;
 
   /** The search region image source. */
-  using SearchRegionImageSourceType = BlockMatching::MultiResolutionMinMaxSearchRegionImageSource< FixedImageType,
-          MovingImageType, DisplacementImageType >;
+  using SearchRegionImageSourceType =
+    BlockMatching::MultiResolutionMinMaxSearchRegionImageSource<FixedImageType, MovingImageType, DisplacementImageType>;
 
   /** The registration method. */
-  using LevelRegistrationMethodType = BlockMatching::ImageRegistrationMethod<FixedImageType,
-                                                      MovingImageType, MetricImageType, DisplacementImageType,
-                                                      CoordRepType>;
+  using LevelRegistrationMethodType = BlockMatching::
+    ImageRegistrationMethod<FixedImageType, MovingImageType, MetricImageType, DisplacementImageType, CoordRepType>;
 
   /** Interpolation classes. */
-  using ParabolicInterpolatorType = BlockMatching::ParabolicInterpolationDisplacementCalculator<
-    MetricImageType,
-    DisplacementImageType>;
-  using MaximumPixelDisplacementCalculatorType = BlockMatching::MaximumPixelDisplacementCalculator<MetricImageType,
-                                                                 DisplacementImageType>;
-  using FinalInterpolatorType = BlockMatching::OptimizingInterpolationDisplacementCalculator<MetricImageType,
-                                                                            DisplacementImageType>;
+  using ParabolicInterpolatorType =
+    BlockMatching::ParabolicInterpolationDisplacementCalculator<MetricImageType, DisplacementImageType>;
+  using MaximumPixelDisplacementCalculatorType =
+    BlockMatching::MaximumPixelDisplacementCalculator<MetricImageType, DisplacementImageType>;
+  using FinalInterpolatorType =
+    BlockMatching::OptimizingInterpolationDisplacementCalculator<MetricImageType, DisplacementImageType>;
   const static unsigned int OPTIMIZING_INTERPOLATOR_RADIUS = 4;
-  using WindowType = Function::WelchWindowFunction< OPTIMIZING_INTERPOLATOR_RADIUS >;
-  using ResampleBoundaryConditionType = ZeroFluxNeumannBoundaryCondition< MetricImageType >;
+  using WindowType = Function::WelchWindowFunction<OPTIMIZING_INTERPOLATOR_RADIUS>;
+  using ResampleBoundaryConditionType = ZeroFluxNeumannBoundaryCondition<MetricImageType>;
   using SubsampleInterpolatorType = WindowedSincInterpolateImageFunction<MetricImageType,
-                                                    OPTIMIZING_INTERPOLATOR_RADIUS, WindowType, ResampleBoundaryConditionType,
-                                                    CoordRepType>;
+                                                                         OPTIMIZING_INTERPOLATOR_RADIUS,
+                                                                         WindowType,
+                                                                         ResampleBoundaryConditionType,
+                                                                         CoordRepType>;
   using SubsampleOptimizerType = AmoebaOptimizer;
 
   /** Filter out peak hopping. */
-  using StrainWindowDisplacementCalculatorType = BlockMatching::StrainWindowDisplacementCalculator<MetricImageType, DisplacementImageType, MetricPixelType >;
+  using StrainWindowDisplacementCalculatorType =
+    BlockMatching::StrainWindowDisplacementCalculator<MetricImageType, DisplacementImageType, MetricPixelType>;
   using StrainWindowStrainFilterType = StrainImageFilter<DisplacementImageType, MetricPixelType, MetricPixelType>;
-  using HigherOrderAccurateGradientFilterType = HigherOrderAccurateGradientImageFilter<MetricImageType, MetricPixelType, MetricPixelType>;
-  using LinearLeastSquaresGradientFilterType = LinearLeastSquaresGradientImageFilter< MetricImageType, MetricPixelType, MetricPixelType >;
+  using HigherOrderAccurateGradientFilterType =
+    HigherOrderAccurateGradientImageFilter<MetricImageType, MetricPixelType, MetricPixelType>;
+  using LinearLeastSquaresGradientFilterType =
+    LinearLeastSquaresGradientImageFilter<MetricImageType, MetricPixelType, MetricPixelType>;
 
   /** The image similarity metric. */
-  using MetricImageFilterType = BlockMatching::NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter<
-    FixedImageType, MovingImageType, MetricImageType>;
+  using MetricImageFilterType = BlockMatching::
+    NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter<FixedImageType, MovingImageType, MetricImageType>;
 
   /** Scale the fixed block by the strain at higher levels. */
-  using BlockTransformMetricImageFilterType = BlockMatching::BlockAffineTransformMetricImageFilter< FixedImageType,
-          MovingImageType, MetricImageType, MetricPixelType >;
-  using BlockTransformCommandType = BlockMatching::StrainWindowBlockAffineTransformCommand< StrainWindowDisplacementCalculatorType,
-          BlockTransformMetricImageFilterType, StrainWindowStrainFilterType >;
+  using BlockTransformMetricImageFilterType = BlockMatching::
+    BlockAffineTransformMetricImageFilter<FixedImageType, MovingImageType, MetricImageType, MetricPixelType>;
+  using BlockTransformCommandType =
+    BlockMatching::StrainWindowBlockAffineTransformCommand<StrainWindowDisplacementCalculatorType,
+                                                           BlockTransformMetricImageFilterType,
+                                                           StrainWindowStrainFilterType>;
 
   /** Perform regularization. */
-  using DisplacmentRegularizerType = BlockMatching::BayesianRegularizationDisplacementCalculator<
-    MetricImageType, DisplacementImageType>;
+  using DisplacmentRegularizerType =
+    BlockMatching::BayesianRegularizationDisplacementCalculator<MetricImageType, DisplacementImageType>;
 
   /** Multi-resolution registration method. */
-  using RegistrationMethodType = BlockMatching::MultiResolutionImageRegistrationMethod< FixedImageType, MovingImageType, MetricImageType,
-                                                                     DisplacementImageType,
-                                                                     CoordRepType>;
+  using RegistrationMethodType = BlockMatching::MultiResolutionImageRegistrationMethod<FixedImageType,
+                                                                                       MovingImageType,
+                                                                                       MetricImageType,
+                                                                                       DisplacementImageType,
+                                                                                       CoordRepType>;
 
   /** Set the displacement calculator and regularizer iterations at every level. */
-  using DisplacementCalculatorCommandType = BlockMatching::MultiResolutionIterationDisplacementCalculatorCommand<RegistrationMethodType>;
+  using DisplacementCalculatorCommandType =
+    BlockMatching::MultiResolutionIterationDisplacementCalculatorCommand<RegistrationMethodType>;
 
   /** Calculate strains. */
   using StrainFilterType = StrainImageFilter<DisplacementImageType, MetricPixelType, MetricPixelType>;
   using TensorImageType = typename StrainFilterType::OutputImageType;
 
-  using UpsamplingRatioType = FixedArray< double, ImageDimension >;
+  using UpsamplingRatioType = FixedArray<double, ImageDimension>;
 
-  using BlockRadiusType = FixedArray< SizeValueType, ImageDimension >;
+  using BlockRadiusType = FixedArray<SizeValueType, ImageDimension>;
 
   using SearchRegionFactorType = typename SearchRegionImageSourceType::FactorType;
 
   using RegularizationStrainSigmaType = typename MetricImageType::SpacingType;
 
   /** Set the fixed image. */
-  void SetFixedImage( FixedImageType * fixed )
-    {
-    this->SetNthInput( 0, fixed );
-    }
-  const FixedImageType * GetFixedImage()
-    {
-    return static_cast< const FixedImageType * >( this->ProcessObject::GetInput( 0 ) );
-    }
+  void
+  SetFixedImage(FixedImageType * fixed)
+  {
+    this->SetNthInput(0, fixed);
+  }
+  const FixedImageType *
+  GetFixedImage()
+  {
+    return static_cast<const FixedImageType *>(this->ProcessObject::GetInput(0));
+  }
 
   /** Set the moving image. */
-  void SetMovingImage( MovingImageType * moving )
-    {
-    this->SetNthInput( 1, moving );
-    }
-  const MovingImageType * GetMovingImage()
-    {
-    return static_cast< const MovingImageType * >( this->ProcessObject::GetInput( 1 ) );
-    }
+  void
+  SetMovingImage(MovingImageType * moving)
+  {
+    this->SetNthInput(1, moving);
+  }
+  const MovingImageType *
+  GetMovingImage()
+  {
+    return static_cast<const MovingImageType *>(this->ProcessObject::GetInput(1));
+  }
 
   /** Any point with a strain component above the given value in the higher levels
    * will have its displacement interpolated by surrounding areas. */
-  itkSetMacro( MaximumAbsStrainAllowed, double );
-  itkGetConstMacro( MaximumAbsStrainAllowed, double );
+  itkSetMacro(MaximumAbsStrainAllowed, double);
+  itkGetConstMacro(MaximumAbsStrainAllowed, double);
 
   /** Display a text progress bar for the level registration method's creation
    * of the metric images. */
-  itkSetMacro( LevelRegistrationMethodTextProgressBar, bool );
-  itkGetConstMacro( LevelRegistrationMethodTextProgressBar, bool );
+  itkSetMacro(LevelRegistrationMethodTextProgressBar, bool);
+  itkGetConstMacro(LevelRegistrationMethodTextProgressBar, bool);
 
   /** Upsampling ratio applied to the input images */
-  itkSetMacro( UpsamplingRatio, UpsamplingRatioType );
-  itkGetConstReferenceMacro( UpsamplingRatio, UpsamplingRatioType );
+  itkSetMacro(UpsamplingRatio, UpsamplingRatioType);
+  itkGetConstReferenceMacro(UpsamplingRatio, UpsamplingRatioType);
 
 
   /** Set the block radius at the top level */
-  itkSetMacro( TopBlockRadius, BlockRadiusType );
-  itkGetConstReferenceMacro( TopBlockRadius, BlockRadiusType );
+  itkSetMacro(TopBlockRadius, BlockRadiusType);
+  itkGetConstReferenceMacro(TopBlockRadius, BlockRadiusType);
 
   /** Set the block radius at the bottom level */
-  itkSetMacro( BottomBlockRadius, BlockRadiusType );
-  itkGetConstReferenceMacro( BottomBlockRadius, BlockRadiusType );
+  itkSetMacro(BottomBlockRadius, BlockRadiusType);
+  itkGetConstReferenceMacro(BottomBlockRadius, BlockRadiusType);
 
   /** Block overlap. 1.0 is no overlap. 0.5 is 50% overlap. */
-  itkSetMacro( BlockOverlap, double );
-  itkGetConstMacro( BlockOverlap, double );
+  itkSetMacro(BlockOverlap, double);
+  itkGetConstMacro(BlockOverlap, double);
 
   /** In the multiresolution method, scale the matching block by the strain
    *   estimated at higher levels. */
-  itkSetMacro( ScaleBlockByStrain, bool );
-  itkGetConstMacro( ScaleBlockByStrain, bool );
+  itkSetMacro(ScaleBlockByStrain, bool);
+  itkGetConstMacro(ScaleBlockByStrain, bool);
 
 
   /** Search region radius at the top level is the following factor times the block radius.
    *  The factors at intermediate levels between the top level and bottom level
    *  are linearly interpolated.  */
-  itkSetMacro( SearchRegionTopFactor, SearchRegionFactorType );
-  itkGetConstReferenceMacro( SearchRegionTopFactor, SearchRegionFactorType );
+  itkSetMacro(SearchRegionTopFactor, SearchRegionFactorType);
+  itkGetConstReferenceMacro(SearchRegionTopFactor, SearchRegionFactorType);
 
   /** Search region radius at the bottom level is the following factor times the block radius. */
-  itkSetMacro( SearchRegionBottomFactor, SearchRegionFactorType );
-  itkGetConstReferenceMacro( SearchRegionBottomFactor, SearchRegionFactorType );
+  itkSetMacro(SearchRegionBottomFactor, SearchRegionFactorType);
+  itkGetConstReferenceMacro(SearchRegionBottomFactor, SearchRegionFactorType);
 
 
   /** RF beamline, i.e. axial, direction. */
-  itkSetMacro( Direction, unsigned int );
-  itkGetConstMacro( Direction, unsigned int );
+  itkSetMacro(Direction, unsigned int);
+  itkGetConstMacro(Direction, unsigned int);
 
 
   /** Strain regularization parameter. */
-  itkSetMacro( RegularizationStrainSigma, RegularizationStrainSigmaType );
-  itkGetConstReferenceMacro( RegularizationStrainSigma, RegularizationStrainSigmaType );
+  itkSetMacro(RegularizationStrainSigma, RegularizationStrainSigmaType);
+  itkGetConstReferenceMacro(RegularizationStrainSigma, RegularizationStrainSigmaType);
 
   /** Maximum number of iterations during regularization at the bottom level. */
-  itkSetMacro( RegularizationMaximumNumberOfIterations, unsigned int );
-  itkGetConstMacro( RegularizationMaximumNumberOfIterations, unsigned int );
+  itkSetMacro(RegularizationMaximumNumberOfIterations, unsigned int);
+  itkGetConstMacro(RegularizationMaximumNumberOfIterations, unsigned int);
 
   /** Get the multi-resolution image registration method. */
-  itkGetModifiableObjectMacro( MultiResolutionRegistrationMethod, RegistrationMethodType );
+  itkGetModifiableObjectMacro(MultiResolutionRegistrationMethod, RegistrationMethodType);
 
 protected:
   DisplacementPipeline();
 
-  void GenerateOutputInformation() override;
+  void
+  GenerateOutputInformation() override;
 
-  virtual void SetupPipeline();
+  virtual void
+  SetupPipeline();
 
   /** Execute the pipeline. */
-  void GenerateData() override;
+  void
+  GenerateData() override;
 
 
 private:
@@ -322,14 +344,13 @@ private:
 
   RegularizationStrainSigmaType m_RegularizationStrainSigma;
   unsigned int                  m_RegularizationMaximumNumberOfIterations;
-
 };
 
 } // end namespace BlockMatching
-} // end itk namespace
+} // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingDisplacementPipeline.hxx"
+#  include "itkBlockMatchingDisplacementPipeline.hxx"
 #endif
 
 #endif

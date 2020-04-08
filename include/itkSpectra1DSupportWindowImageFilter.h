@@ -38,54 +38,58 @@ namespace itk
  *
  * \ingroup Ultrasound
  */
-template< typename TInputImage >
-class ITK_TEMPLATE_EXPORT Spectra1DSupportWindowImageFilter:
-  public ImageToImageFilter< TInputImage,
-                             Image< std::list< typename TInputImage::IndexType >, TInputImage::ImageDimension > >
+template <typename TInputImage>
+class ITK_TEMPLATE_EXPORT Spectra1DSupportWindowImageFilter
+  : public ImageToImageFilter<TInputImage,
+                              Image<std::list<typename TInputImage::IndexType>, TInputImage::ImageDimension>>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(Spectra1DSupportWindowImageFilter);
 
-  itkStaticConstMacro( ImageDimension, unsigned int, TInputImage::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, TInputImage::ImageDimension);
 
   using InputImageType = TInputImage;
   using IndexType = typename InputImageType::IndexType;
 
-  using OutputPixelType = std::list< IndexType >;
-  using OutputImageType = Image< OutputPixelType, ImageDimension >;
+  using OutputPixelType = std::list<IndexType>;
+  using OutputImageType = Image<OutputPixelType, ImageDimension>;
 
   using FFT1DSizeType = unsigned int;
 
   /** Standard class type alias. */
   using Self = Spectra1DSupportWindowImageFilter;
-  using Superclass = ImageToImageFilter< InputImageType, OutputImageType >;
-  using Pointer = SmartPointer< Self >;
-  using ConstPointer = SmartPointer< const Self >;
+  using Superclass = ImageToImageFilter<InputImageType, OutputImageType>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
-  itkTypeMacro( Spectra1DSupportWindowImageFilter, ImageToImageFilter );
-  itkNewMacro( Self );
+  itkTypeMacro(Spectra1DSupportWindowImageFilter, ImageToImageFilter);
+  itkNewMacro(Self);
 
   /** Set/Get the nominal size of the FFT.  This will be truncated at the
    * boundary of image. */
-  itkGetConstMacro( FFT1DSize, FFT1DSizeType );
-  itkSetMacro( FFT1DSize, FFT1DSizeType );
+  itkGetConstMacro(FFT1DSize, FFT1DSizeType);
+  itkSetMacro(FFT1DSize, FFT1DSizeType);
 
   /** Set/Get the number of samples between windows -- defaults to 1. */
-  itkGetConstMacro( Step, SizeValueType );
-  itkSetMacro( Step, SizeValueType );
+  itkGetConstMacro(Step, SizeValueType);
+  itkSetMacro(Step, SizeValueType);
 
 protected:
   Spectra1DSupportWindowImageFilter();
-  virtual ~Spectra1DSupportWindowImageFilter() {};
+  virtual ~Spectra1DSupportWindowImageFilter(){};
 
   using OutputImageRegionType = typename OutputImageType::RegionType;
 
-  void GenerateOutputInformation() override;
+  void
+  GenerateOutputInformation() override;
 
-  void DynamicThreadedGenerateData( const OutputImageRegionType & outputRegionForThread ) override;
-  void AfterThreadedGenerateData() override;
+  void
+  DynamicThreadedGenerateData(const OutputImageRegionType & outputRegionForThread) override;
+  void
+  AfterThreadedGenerateData() override;
 
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
   FFT1DSizeType m_FFT1DSize;
@@ -95,7 +99,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkSpectra1DSupportWindowImageFilter.hxx"
+#  include "itkSpectra1DSupportWindowImageFilter.hxx"
 #endif
 
 #endif // itkSpectra1DSupportWindowImageFilter_h

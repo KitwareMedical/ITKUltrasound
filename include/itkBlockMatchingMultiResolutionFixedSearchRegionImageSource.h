@@ -38,18 +38,18 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  * */
-template < typename TFixedImage, typename TMovingImage, typename TDisplacementImage >
-class ITK_TEMPLATE_EXPORT MultiResolutionFixedSearchRegionImageSource :
-  public MultiResolutionSearchRegionImageSource < TFixedImage, TMovingImage, TDisplacementImage >
+template <typename TFixedImage, typename TMovingImage, typename TDisplacementImage>
+class ITK_TEMPLATE_EXPORT MultiResolutionFixedSearchRegionImageSource
+  : public MultiResolutionSearchRegionImageSource<TFixedImage, TMovingImage, TDisplacementImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionFixedSearchRegionImageSource);
 
   /** Standard class type alias. */
   using Self = MultiResolutionFixedSearchRegionImageSource;
-  using Superclass = MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >;
-  using Pointer = SmartPointer< Self >;
-  using ConstPointer = SmartPointer< const Self >;
+  using Superclass = MultiResolutionSearchRegionImageSource<TFixedImage, TMovingImage, TDisplacementImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, TMovingImage::ImageDimension);
@@ -66,7 +66,7 @@ public:
   using MovingRegionType = typename MovingImageType::RegionType;
 
   /** Type of the search region image. */
-  using OutputImageType = Image< typename MovingImageType::RegionType, ImageDimension >;
+  using OutputImageType = Image<typename MovingImageType::RegionType, ImageDimension>;
   using OutputRegionType = typename OutputImageType::RegionType;
 
   /** ScheduleType type alias support. */
@@ -87,37 +87,42 @@ public:
   using DisplacementResamplerPointer = typename DisplacementResamplerType::Pointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MultiResolutionFixedSearchRegionImageSource, MultiResolutionSearchRegionImageSource );
+  itkTypeMacro(MultiResolutionFixedSearchRegionImageSource, MultiResolutionSearchRegionImageSource);
 
   /** New macro for creation of through a Smart Pointer. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Set the search region, i.e. the radius of the search region in the
    * moving image. This is used across levels.
    * Therefore, the physical size of the search region scales with pyramid
    * schedule.
    * */
-  virtual void SetSearchRegionRadiusSchedule( const RadiusType& radius );
+  virtual void
+  SetSearchRegionRadiusSchedule(const RadiusType & radius);
 
   /** Set the search region radius the same in all directions. */
-  virtual void SetSearchRegionRadiusSchedule( const unsigned int rad );
+  virtual void
+  SetSearchRegionRadiusSchedule(const unsigned int rad);
 
-  virtual void SetSearchRegionRadiusSchedule( const RadiusScheduleType& schedule )
-    {
+  virtual void
+  SetSearchRegionRadiusSchedule(const RadiusScheduleType & schedule)
+  {
     m_SearchRegionRadiusSchedule = schedule;
-    m_SearchRegionRadiusSet      = true;
+    m_SearchRegionRadiusSet = true;
     this->Modified();
-    }
+  }
 
-  itkGetConstReferenceMacro( SearchRegionRadiusSchedule, RadiusScheduleType );
+  itkGetConstReferenceMacro(SearchRegionRadiusSchedule, RadiusScheduleType);
 
 
 protected:
   MultiResolutionFixedSearchRegionImageSource();
 
-  void BeforeThreadedGenerateData() override;
+  void
+  BeforeThreadedGenerateData() override;
 
-  void DynamicThreadedGenerateData( const OutputRegionType& outputRegion ) override;
+  void
+  DynamicThreadedGenerateData(const OutputRegionType & outputRegion) override;
 
   RadiusScheduleType m_SearchRegionRadiusSchedule;
 
@@ -126,11 +131,11 @@ protected:
 private:
 };
 
-} // end namespace itk
-} // end namespace BlockMatching
+} // namespace BlockMatching
+} // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingMultiResolutionFixedSearchRegionImageSource.hxx"
+#  include "itkBlockMatchingMultiResolutionFixedSearchRegionImageSource.hxx"
 #endif
 
 #endif

@@ -36,14 +36,14 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  */
-template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
-class ITK_TEMPLATE_EXPORT ImageToImageMetricMetricImageFilter :
-  public MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
+template <typename TFixedImage, typename TMovingImage, typename TMetricImage>
+class ITK_TEMPLATE_EXPORT ImageToImageMetricMetricImageFilter
+  : public MetricImageFilter<TFixedImage, TMovingImage, TMetricImage>
 {
 public:
   /** Standard class type alias. */
   using Self = ImageToImageMetricMetricImageFilter;
-  using Superclass = MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >;
+  using Superclass = MetricImageFilter<TFixedImage, TMovingImage, TMetricImage>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
@@ -54,8 +54,7 @@ public:
   itkTypeMacro(ImageToImageMetricMetricImageFilter, MetricImageFilter);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int,
-                      Superclass::ImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
 
   /** Type of the Moving image. */
   using MovingImageType = typename Superclass::MovingImageType;
@@ -69,28 +68,31 @@ public:
 
   /** Set the spacing in the output metric image.  This is optional.  If not
    * set, the spacing in the moving image will be used. */
-  void SetMetricImageSpacing( const MetricImageSpacingType& spacing );
-  itkGetConstReferenceMacro( MetricImageSpacing, MetricImageSpacingType );
+  void
+  SetMetricImageSpacing(const MetricImageSpacingType & spacing);
+  itkGetConstReferenceMacro(MetricImageSpacing, MetricImageSpacingType);
+
 protected:
   ImageToImageMetricMetricImageFilter();
   virtual ~ImageToImageMetricMetricImageFilter() {}
 
-  virtual void GenerateOutputInformation() override;
+  virtual void
+  GenerateOutputInformation() override;
 
   MetricImageSpacingType m_MetricImageSpacing;
   bool                   m_MetricImageSpacingDefined;
 
 private:
-  ImageToImageMetricMetricImageFilter( const Self& ); // purposely not implemented
-  void operator=( const Self& ); // purposely not implemented
-
+  ImageToImageMetricMetricImageFilter(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace BlockMatching
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingImageToImageMetricMetricImageFilter.hxx"
+#  include "itkBlockMatchingImageToImageMetricMetricImageFilter.hxx"
 #endif
 
 #endif

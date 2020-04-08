@@ -34,16 +34,16 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  */
-template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
-class ITK_TEMPLATE_EXPORT NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter :
-  public NormalizedCrossCorrelationMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
+template <typename TFixedImage, typename TMovingImage, typename TMetricImage>
+class ITK_TEMPLATE_EXPORT NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter
+  : public NormalizedCrossCorrelationMetricImageFilter<TFixedImage, TMovingImage, TMetricImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter);
 
   /** Standard class type alias. */
   using Self = NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter;
-  using Superclass = NormalizedCrossCorrelationMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >;
+  using Superclass = NormalizedCrossCorrelationMetricImageFilter<TFixedImage, TMovingImage, TMetricImage>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
@@ -69,11 +69,13 @@ public:
   using MetricImagePixelType = typename MetricImageType::PixelType;
 
 protected:
-  NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter(){}
+  NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter() {}
 
-  void BeforeThreadedGenerateData() override;
+  void
+  BeforeThreadedGenerateData() override;
 
-  void DynamicThreadedGenerateData( const MetricImageRegionType& outputRegion ) override;
+  void
+  DynamicThreadedGenerateData(const MetricImageRegionType & outputRegion) override;
 
 private:
 };
@@ -82,7 +84,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter.hxx"
+#  include "itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter.hxx"
 #endif
 
 #endif

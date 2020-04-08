@@ -52,9 +52,8 @@ namespace itk
  * \ingroup FourierTransform
  * \ingroup Ultrasound
  */
-template< typename TInputImage, typename TOutputImage >
-class ITK_TEMPLATE_EXPORT AnalyticSignalImageFilter:
-  public ImageToImageFilter< TInputImage, TOutputImage >
+template <typename TInputImage, typename TOutputImage>
+class ITK_TEMPLATE_EXPORT AnalyticSignalImageFilter : public ImageToImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(AnalyticSignalImageFilter);
@@ -67,71 +66,78 @@ public:
   itkStaticConstMacro(ImageDimension, unsigned int, InputImageType::ImageDimension);
 
   using Self = AnalyticSignalImageFilter;
-  using Superclass = ImageToImageFilter< InputImageType, OutputImageType >;
-  using Pointer = SmartPointer< Self >;
-  using ConstPointer = SmartPointer< const Self >;
+  using Superclass = ImageToImageFilter<InputImageType, OutputImageType>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
-  itkTypeMacro( AnalyticSignalImageFilter, ImageToImageFilter );
-  itkNewMacro( Self );
+  itkTypeMacro(AnalyticSignalImageFilter, ImageToImageFilter);
+  itkNewMacro(Self);
 
-  using FrequencyFilterType = FrequencyDomain1DImageFilter< OutputImageType, OutputImageType >;
+  using FrequencyFilterType = FrequencyDomain1DImageFilter<OutputImageType, OutputImageType>;
 
   /** Get the direction in which the filter is to be applied. */
-  virtual unsigned int GetDirection() const
-    {
+  virtual unsigned int
+  GetDirection() const
+  {
     return this->m_FFTRealToComplexFilter->GetDirection();
-    }
+  }
 
   /** Set the direction in which the filter is to be applied. */
-  virtual void SetDirection( const unsigned int direction )
+  virtual void
+  SetDirection(const unsigned int direction)
+  {
+    if (this->m_FFTRealToComplexFilter->GetDirection() != direction)
     {
-    if( this->m_FFTRealToComplexFilter->GetDirection() != direction )
+      this->m_FFTRealToComplexFilter->SetDirection(direction);
+      this->m_FFTComplexToComplexFilter->SetDirection(direction);
+      if (this->m_FrequencyFilter.IsNotNull())
       {
-      this->m_FFTRealToComplexFilter->SetDirection( direction );
-      this->m_FFTComplexToComplexFilter->SetDirection( direction );
-      if( this->m_FrequencyFilter.IsNotNull() )
-        {
-        this->m_FrequencyFilter->SetDirection( direction );
-        }
-      this->Modified();
+        this->m_FrequencyFilter->SetDirection(direction);
       }
+      this->Modified();
     }
+  }
 
-  virtual void SetFrequencyFilter(FrequencyFilterType *filter)
-   {
-   if( filter != this->m_FrequencyFilter.GetPointer() )
-     {
-     this->m_FrequencyFilter = filter;
-     this->m_FrequencyFilter->SetDirection( this->GetDirection() );
-     this->Modified();
-     }
-   }
+  virtual void
+  SetFrequencyFilter(FrequencyFilterType * filter)
+  {
+    if (filter != this->m_FrequencyFilter.GetPointer())
+    {
+      this->m_FrequencyFilter = filter;
+      this->m_FrequencyFilter->SetDirection(this->GetDirection());
+      this->Modified();
+    }
+  }
 
 protected:
   AnalyticSignalImageFilter();
   virtual ~AnalyticSignalImageFilter() {}
 
-  void PrintSelf(std::ostream& os, Indent indent) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   // These behave like their analogs in Forward1DFFTImageFilter.
-  void GenerateInputRequestedRegion() override;
-  void EnlargeOutputRequestedRegion(DataObject *output) override;
+  void
+  GenerateInputRequestedRegion() override;
+  void
+  EnlargeOutputRequestedRegion(DataObject * output) override;
 
-  void GenerateData() override;
+  void
+  GenerateData() override;
 
-  using FFTRealToComplexType = Forward1DFFTImageFilter< InputImageType, OutputImageType >;
-  typename FFTRealToComplexType::Pointer                             m_FFTRealToComplexFilter;
+  using FFTRealToComplexType = Forward1DFFTImageFilter<InputImageType, OutputImageType>;
+  typename FFTRealToComplexType::Pointer m_FFTRealToComplexFilter;
 
-  using FFTComplexToComplexType = ComplexToComplex1DFFTImageFilter< OutputImageType, OutputImageType >;
-  typename FFTComplexToComplexType::Pointer                                    m_FFTComplexToComplexFilter;
+  using FFTComplexToComplexType = ComplexToComplex1DFFTImageFilter<OutputImageType, OutputImageType>;
+  typename FFTComplexToComplexType::Pointer m_FFTComplexToComplexFilter;
 
 private:
   typename FrequencyFilterType::Pointer m_FrequencyFilter;
 };
-}
+} // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAnalyticSignalImageFilter.hxx"
+#  include "itkAnalyticSignalImageFilter.hxx"
 #endif
 
 #endif // itkAnalyticSignalImageFilter_h

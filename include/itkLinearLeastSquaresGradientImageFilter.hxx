@@ -29,33 +29,31 @@
 namespace itk
 {
 
-template< typename TInputImage, typename TOperatorValueType, typename TOutputValueType >
-LinearLeastSquaresGradientImageFilter< TInputImage, TOperatorValueType, TOutputValueType >
-::LinearLeastSquaresGradientImageFilter():
-  m_UseImageSpacing( true ),
-  m_UseImageDirection( true )
+template <typename TInputImage, typename TOperatorValueType, typename TOutputValueType>
+LinearLeastSquaresGradientImageFilter<TInputImage, TOperatorValueType, TOutputValueType>::
+  LinearLeastSquaresGradientImageFilter()
+  : m_UseImageSpacing(true)
+  , m_UseImageDirection(true)
 {
-  m_Radius.Fill( 1 );
+  m_Radius.Fill(1);
 }
 
 
-template< typename TInputImage, typename TOperatorValueType, typename TOutputValueType >
+template <typename TInputImage, typename TOperatorValueType, typename TOutputValueType>
 void
-LinearLeastSquaresGradientImageFilter< TInputImage, TOperatorValueType, TOutputValueType >
-::GenerateInputRequestedRegion()
+LinearLeastSquaresGradientImageFilter<TInputImage, TOperatorValueType, TOutputValueType>::GenerateInputRequestedRegion()
 {
   // call the superclass' implementation of this method
   Superclass::GenerateInputRequestedRegion();
 
   // get pointers to the input and output
-  InputImagePointer inputPtr =
-    const_cast< InputImageType * >( this->GetInput() );
+  InputImagePointer  inputPtr = const_cast<InputImageType *>(this->GetInput());
   OutputImagePointer outputPtr = this->GetOutput();
 
-  if ( !inputPtr || !outputPtr )
-    {
+  if (!inputPtr || !outputPtr)
+  {
     return;
-    }
+  }
 
   // get a copy of the input requested region (should equal the output
   // requested region)
@@ -63,16 +61,16 @@ LinearLeastSquaresGradientImageFilter< TInputImage, TOperatorValueType, TOutputV
   inputRequestedRegion = inputPtr->GetRequestedRegion();
 
   // pad the input requested region by the operator radius
-  inputRequestedRegion.PadByRadius( m_Radius );
+  inputRequestedRegion.PadByRadius(m_Radius);
 
   // crop the input requested region at the input's largest possible region
-  if ( inputRequestedRegion.Crop( inputPtr->GetLargestPossibleRegion() ) )
-    {
+  if (inputRequestedRegion.Crop(inputPtr->GetLargestPossibleRegion()))
+  {
     inputPtr->SetRequestedRegion(inputRequestedRegion);
     return;
-    }
+  }
   else
-    {
+  {
     // Couldn't crop the region (requested region is outside the largest
     // possible region).  Throw an exception.
 
@@ -85,137 +83,134 @@ LinearLeastSquaresGradientImageFilter< TInputImage, TOperatorValueType, TOutputV
     e.SetDescription("Requested region is (at least partially) outside the largest possible region.");
     e.SetDataObject(inputPtr);
     throw e;
-    }
+  }
 }
 
 
-template< typename TInputImage, typename TOperatorValueType, typename TOutputValueType >
+template <typename TInputImage, typename TOperatorValueType, typename TOutputValueType>
 TOutputValueType
-LinearLeastSquaresGradientImageFilter< TInputImage, TOperatorValueType, TOutputValueType >
-::GetDerivative( const std::slice & s, const ConstNeighborhoodIterator< TInputImage > & nit )
+LinearLeastSquaresGradientImageFilter<TInputImage, TOperatorValueType, TOutputValueType>::GetDerivative(
+  const std::slice &                             s,
+  const ConstNeighborhoodIterator<TInputImage> & nit)
 {
   unsigned int maxConsistentCount = 1;
   unsigned int currentConsistentCount = maxConsistentCount;
-  int previousSgn = vnl_math_sgn0( nit.GetPixel( s.start() ) );
-  int nextSgn;
+  int          previousSgn = vnl_math_sgn0(nit.GetPixel(s.start()));
+  int          nextSgn;
   unsigned int maxConsistentIdx = 0;
   unsigned int currentConsistentIdx = maxConsistentIdx;
   unsigned int sliceIdx;
   unsigned int nitIdx;
-  for( sliceIdx = 1, nitIdx = s.start() + s.stride();
-       sliceIdx < s.size();
-       ++sliceIdx, nitIdx += s.stride() )
+  for (sliceIdx = 1, nitIdx = s.start() + s.stride(); sliceIdx < s.size(); ++sliceIdx, nitIdx += s.stride())
+  {
+    nextSgn = vnl_math_sgn0(nit.GetPixel(nitIdx));
+    if (nextSgn == previousSgn)
     {
-    nextSgn = vnl_math_sgn0( nit.GetPixel( nitIdx ) );
-    if( nextSgn == previousSgn )
-      {
       ++currentConsistentCount;
-      if( currentConsistentCount > maxConsistentCount )
-        {
-        if( currentConsistentCount != maxConsistentCount + 1 )
-          {
-          maxConsistentIdx = currentConsistentIdx;
-          }
-        maxConsistentCount = currentConsistentCount;
-        }
-      }
-    else
+      if (currentConsistentCount > maxConsistentCount)
       {
+        if (currentConsistentCount != maxConsistentCount + 1)
+        {
+          maxConsistentIdx = currentConsistentIdx;
+        }
+        maxConsistentCount = currentConsistentCount;
+      }
+    }
+    else
+    {
       currentConsistentCount = 1;
       currentConsistentIdx = sliceIdx;
-      }
-    previousSgn = nextSgn;
     }
+    previousSgn = nextSgn;
+  }
 
   // If the max consistent count is less than the radius, then use the entire
   // slice.
-  if( maxConsistentCount < (s.size() - 1)/2 )
-    {
+  if (maxConsistentCount < (s.size() - 1) / 2)
+  {
     maxConsistentIdx = 0;
     maxConsistentCount = s.size();
-    }
+  }
 
-  vnl_matrix< OperatorValueType > A( maxConsistentCount, 2 );
-  A.set_column( 1, NumericTraits< OperatorValueType >::One );
-  vnl_vector< OperatorValueType > y( maxConsistentCount );
-  for( unsigned int i = 0, nitIdx = s.start() + maxConsistentIdx * s.stride();
-    i < maxConsistentCount;
-    ++i, nitIdx += s.stride() )
-    {
+  vnl_matrix<OperatorValueType> A(maxConsistentCount, 2);
+  A.set_column(1, NumericTraits<OperatorValueType>::One);
+  vnl_vector<OperatorValueType> y(maxConsistentCount);
+  for (unsigned int i = 0, nitIdx = s.start() + maxConsistentIdx * s.stride(); i < maxConsistentCount;
+       ++i, nitIdx += s.stride())
+  {
     A[i][0] = i;
-    y[i]    = nit.GetPixel( nitIdx );
-    }
+    y[i] = nit.GetPixel(nitIdx);
+  }
 
-  return static_cast< TOutputValueType >( vnl_svd< OperatorValueType >( A ).solve( y )[0] );
+  return static_cast<TOutputValueType>(vnl_svd<OperatorValueType>(A).solve(y)[0]);
 }
 
-template< typename TInputImage, typename TOperatorValueType, typename TOutputValueType >
+template <typename TInputImage, typename TOperatorValueType, typename TOutputValueType>
 void
-LinearLeastSquaresGradientImageFilter< TInputImage, TOperatorValueType, TOutputValueType >
-::DynamicThreadedGenerateData(const OutputImageRegionType & outputRegionForThread)
+LinearLeastSquaresGradientImageFilter<TInputImage, TOperatorValueType, TOutputValueType>::DynamicThreadedGenerateData(
+  const OutputImageRegionType & outputRegionForThread)
 {
   unsigned int    i;
   OutputPixelType gradient;
 
-  ZeroFluxNeumannBoundaryCondition< InputImageType > nbc;
+  ZeroFluxNeumannBoundaryCondition<InputImageType> nbc;
 
-  ConstNeighborhoodIterator< InputImageType > nit;
-  ImageRegionIterator< OutputImageType >      it;
+  ConstNeighborhoodIterator<InputImageType> nit;
+  ImageRegionIterator<OutputImageType>      it;
 
   // Get the input and output
-  OutputImageType *     outputImage = this->GetOutput();
-  const InputImageType *inputImage  = this->GetInput();
+  OutputImageType *      outputImage = this->GetOutput();
+  const InputImageType * inputImage = this->GetInput();
 
   // Find the data-set boundary "faces"
-  typename NeighborhoodAlgorithm::ImageBoundaryFacesCalculator< InputImageType >::FaceListType faceList;
-  NeighborhoodAlgorithm::ImageBoundaryFacesCalculator< InputImageType > bC;
+  typename NeighborhoodAlgorithm::ImageBoundaryFacesCalculator<InputImageType>::FaceListType faceList;
+  NeighborhoodAlgorithm::ImageBoundaryFacesCalculator<InputImageType>                        bC;
   faceList = bC(inputImage, outputRegionForThread, m_Radius);
 
-  typename NeighborhoodAlgorithm::ImageBoundaryFacesCalculator< InputImageType >::FaceListType::iterator fit;
+  typename NeighborhoodAlgorithm::ImageBoundaryFacesCalculator<InputImageType>::FaceListType::iterator fit;
   fit = faceList.begin();
 
   // Initialize the x_slice array
-  nit = ConstNeighborhoodIterator< InputImageType >(m_Radius, inputImage, *fit);
+  nit = ConstNeighborhoodIterator<InputImageType>(m_Radius, inputImage, *fit);
 
   typename InputImageType::SpacingType spacingScale;
-  if( m_UseImageSpacing )
-    {
+  if (m_UseImageSpacing)
+  {
     spacingScale = inputImage->GetSpacing();
-    }
+  }
   else
-    {
-    spacingScale.Fill( 1 );
-    }
+  {
+    spacingScale.Fill(1);
+  }
 
   // Process non-boundary face and then each of the boundary faces.
   // These are N-d regions which border the edge of the buffer.
-  for ( fit = faceList.begin(); fit != faceList.end(); ++fit )
-    {
-    nit = ConstNeighborhoodIterator< InputImageType >(m_Radius,
-                                                      inputImage, *fit);
-    it = ImageRegionIterator< OutputImageType >(outputImage, *fit);
+  for (fit = faceList.begin(); fit != faceList.end(); ++fit)
+  {
+    nit = ConstNeighborhoodIterator<InputImageType>(m_Radius, inputImage, *fit);
+    it = ImageRegionIterator<OutputImageType>(outputImage, *fit);
     nit.OverrideBoundaryCondition(&nbc);
     nit.GoToBegin();
 
-    while ( !nit.IsAtEnd() )
+    while (!nit.IsAtEnd())
+    {
+      for (i = 0; i < ImageDimension; ++i)
       {
-      for ( i = 0; i < ImageDimension; ++i )
-        {
-        gradient[i] = this->GetDerivative( nit.GetSlice( i ), nit ) / spacingScale[i];
-        }
+        gradient[i] = this->GetDerivative(nit.GetSlice(i), nit) / spacingScale[i];
+      }
 
-      if ( this->m_UseImageDirection )
-        {
-        inputImage->TransformLocalVectorToPhysicalVector( gradient, it.Value() );
-        }
+      if (this->m_UseImageDirection)
+      {
+        inputImage->TransformLocalVectorToPhysicalVector(gradient, it.Value());
+      }
       else
-        {
+      {
         it.Value() = gradient;
-        }
+      }
       ++nit;
       ++it;
-      }
     }
+  }
 }
 
 } // end namespace itk

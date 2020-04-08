@@ -23,55 +23,56 @@
 #include "itkPermuteAxesImageFilter.h"
 #include "itkTestingMacros.h"
 
-int itkSpectra1DSupportWindowImageFilterTest( int argc, char* argv[] )
+int
+itkSpectra1DSupportWindowImageFilterTest(int argc, char * argv[])
 {
-  if( argc < 2 )
-    {
+  if (argc < 2)
+  {
     std::cerr << "Usage: " << argv[0];
     std::cerr << " inputImage";
     std::cerr << std::endl;
     return EXIT_FAILURE;
-    }
+  }
   const char * inputImageFileName = argv[1];
 
   const unsigned int Dimension = 2;
   using PixelType = short;
-  using ImageType = itk::Image< PixelType, Dimension >;
+  using ImageType = itk::Image<PixelType, Dimension>;
 
-  using ReaderType = itk::ImageFileReader< ImageType >;
+  using ReaderType = itk::ImageFileReader<ImageType>;
   ReaderType::Pointer reader = ReaderType::New();
-  reader->SetFileName( inputImageFileName );
-  ITK_TRY_EXPECT_NO_EXCEPTION( reader->UpdateLargestPossibleRegion() );
+  reader->SetFileName(inputImageFileName);
+  ITK_TRY_EXPECT_NO_EXCEPTION(reader->UpdateLargestPossibleRegion());
 
   // Want RF to be along direction 0
-  using PermuteAxesFilterType = itk::PermuteAxesImageFilter< ImageType >;
-  PermuteAxesFilterType::Pointer permuteAxesFilter = PermuteAxesFilterType::New();
+  using PermuteAxesFilterType = itk::PermuteAxesImageFilter<ImageType>;
+  PermuteAxesFilterType::Pointer               permuteAxesFilter = PermuteAxesFilterType::New();
   PermuteAxesFilterType::PermuteOrderArrayType permuteOrder;
   permuteOrder[0] = 1;
   permuteOrder[1] = 0;
-  permuteAxesFilter->SetOrder( permuteOrder );
-  permuteAxesFilter->SetInput( reader->GetOutput() );
-  ITK_TRY_EXPECT_NO_EXCEPTION( permuteAxesFilter->UpdateOutputInformation() );
+  permuteAxesFilter->SetOrder(permuteOrder);
+  permuteAxesFilter->SetInput(reader->GetOutput());
+  ITK_TRY_EXPECT_NO_EXCEPTION(permuteAxesFilter->UpdateOutputInformation());
   ImageType::ConstPointer rfImage = permuteAxesFilter->GetOutput();
 
   ImageType::Pointer sideLines = ImageType::New();
-  sideLines->CopyInformation( rfImage );
-  sideLines->SetRegions( rfImage->GetLargestPossibleRegion() );
+  sideLines->CopyInformation(rfImage);
+  sideLines->SetRegions(rfImage->GetLargestPossibleRegion());
   sideLines->Allocate();
-  sideLines->FillBuffer( 5 );
+  sideLines->FillBuffer(5);
 
-  using SpectraSupportWindowFilterType = itk::Spectra1DSupportWindowImageFilter< ImageType >;
+  using SpectraSupportWindowFilterType = itk::Spectra1DSupportWindowImageFilter<ImageType>;
   SpectraSupportWindowFilterType::Pointer spectraSupportWindowFilter = SpectraSupportWindowFilterType::New();
-  spectraSupportWindowFilter->SetInput( sideLines );
-  ITK_TRY_EXPECT_NO_EXCEPTION( spectraSupportWindowFilter->Update() );
+  spectraSupportWindowFilter->SetInput(sideLines);
+  ITK_TRY_EXPECT_NO_EXCEPTION(spectraSupportWindowFilter->Update());
 
-  spectraSupportWindowFilter->Print( std::cout );
+  spectraSupportWindowFilter->Print(std::cout);
   spectraSupportWindowFilter->GetOutput()->GetMetaDataDictionary().Print(std::cout);
 
-  spectraSupportWindowFilter->SetStep( 10 );
-  ITK_TRY_EXPECT_NO_EXCEPTION( spectraSupportWindowFilter->UpdateLargestPossibleRegion() );
+  spectraSupportWindowFilter->SetStep(10);
+  ITK_TRY_EXPECT_NO_EXCEPTION(spectraSupportWindowFilter->UpdateLargestPossibleRegion());
   std::cout << "\n\nAfter setting the Step to 10: " << std::endl;
-  spectraSupportWindowFilter->Print( std::cout );
+  spectraSupportWindowFilter->Print(std::cout);
 
   return EXIT_SUCCESS;
 }

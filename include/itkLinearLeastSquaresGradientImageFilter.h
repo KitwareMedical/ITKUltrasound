@@ -43,15 +43,15 @@ namespace itk
  * \ingroup Ultrasound
  *
  */
-template< typename TInputImage, typename TOperatorValueType = double,
-  typename TOutputValueType = double >
-class ITK_TEMPLATE_EXPORT LinearLeastSquaresGradientImageFilter: public ImageToImageFilter< TInputImage,
-  Image< CovariantVector< TOutputValueType, TInputImage::ImageDimension >, TInputImage::ImageDimension > >
+template <typename TInputImage, typename TOperatorValueType = double, typename TOutputValueType = double>
+class ITK_TEMPLATE_EXPORT LinearLeastSquaresGradientImageFilter
+  : public ImageToImageFilter<
+      TInputImage,
+      Image<CovariantVector<TOutputValueType, TInputImage::ImageDimension>, TInputImage::ImageDimension>>
 {
 public:
   /** Extract dimension from input image. */
-  itkStaticConstMacro(ImageDimension, unsigned int,
-    TInputImage::ImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, TInputImage::ImageDimension);
 
   /** Standard class type alias. */
   using Self = LinearLeastSquaresGradientImageFilter;
@@ -59,15 +59,14 @@ public:
   /** Convenient type alias for simplifying declarations. */
   using InputImageType = TInputImage;
   using InputImagePointer = typename InputImageType::Pointer;
-  using OutputImageType = Image< CovariantVector<
-                   TOutputValueType, itkGetStaticConstMacro(OutputImageDimension) >,
-                 itkGetStaticConstMacro(OutputImageDimension) >;
+  using OutputImageType = Image<CovariantVector<TOutputValueType, itkGetStaticConstMacro(OutputImageDimension)>,
+                                itkGetStaticConstMacro(OutputImageDimension)>;
   using OutputImagePointer = typename OutputImageType::Pointer;
 
   /** Standard class type alias. */
-  using Superclass = ImageToImageFilter< InputImageType, OutputImageType >;
-  using Pointer = SmartPointer< Self >;
-  using ConstPointer = SmartPointer< const Self >;
+  using Superclass = ImageToImageFilter<InputImageType, OutputImageType>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -79,8 +78,7 @@ public:
   using InputPixelType = typename InputImageType::PixelType;
   using OperatorValueType = TOperatorValueType;
   using OutputValueType = TOutputValueType;
-  using OutputPixelType = CovariantVector<
-    OutputValueType, itkGetStaticConstMacro(OutputImageDimension) >;
+  using OutputPixelType = CovariantVector<OutputValueType, itkGetStaticConstMacro(OutputImageDimension)>;
   using OutputImageRegionType = typename OutputImageType::RegionType;
   using RadiusType = typename InputImageType::SizeType;
 
@@ -91,26 +89,26 @@ public:
   itkBooleanMacro(UseImageSpacing);
 
   /** Set/Get the radius of the linear least squares fit. */
-  virtual void SetRadius( const RadiusType& radius )
-    {
+  virtual void
+  SetRadius(const RadiusType & radius)
+  {
     m_Radius = radius;
     this->Modified();
-    }
+  }
   /** Set the radius to the given value in all directions. */
-  virtual void SetRadius( const unsigned int rad )
-    {
+  virtual void
+  SetRadius(const unsigned int rad)
+  {
     RadiusType radius;
-    radius.Fill( rad );
-    this->SetRadius( radius );
-    }
-  itkGetConstReferenceMacro( Radius, RadiusType );
+    radius.Fill(rad);
+    this->SetRadius(radius);
+  }
+  itkGetConstReferenceMacro(Radius, RadiusType);
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   /** Begin concept checking */
-  itkConceptMacro( InputConvertibleToOutputCheck,
-                  ( Concept::Convertible< InputPixelType, OutputValueType > ) );
-  itkConceptMacro( OutputHasNumericTraitsCheck,
-                  ( Concept::HasNumericTraits< OutputValueType > ) );
+  itkConceptMacro(InputConvertibleToOutputCheck, (Concept::Convertible<InputPixelType, OutputValueType>));
+  itkConceptMacro(OutputHasNumericTraitsCheck, (Concept::HasNumericTraits<OutputValueType>));
   /** End concept checking */
 #endif
 
@@ -118,9 +116,10 @@ protected:
   LinearLeastSquaresGradientImageFilter();
   virtual ~LinearLeastSquaresGradientImageFilter() {}
 
-  using NeighborhoodIteratorType = ConstNeighborhoodIterator< InputImageType >;
+  using NeighborhoodIteratorType = ConstNeighborhoodIterator<InputImageType>;
 
-  inline TOutputValueType GetDerivative( const std::slice & s, const NeighborhoodIteratorType & nit );
+  inline TOutputValueType
+  GetDerivative(const std::slice & s, const NeighborhoodIteratorType & nit);
 
   /** GradientImageFilter needs a larger input requested region than
    * the output requested region.  As such, GradientImageFilter needs
@@ -128,7 +127,8 @@ protected:
    * in order to inform the pipeline execution model.
    *
    * \sa ImageToImageFilter::GenerateInputRequestedRegion() */
-  void GenerateInputRequestedRegion() override;
+  void
+  GenerateInputRequestedRegion() override;
 
 
   /** GradientImageFilter can be implemented as a multithreaded filter.
@@ -141,7 +141,8 @@ protected:
    *
    * \sa ImageToImageFilter::ThreadedGenerateData(),
    *     ImageToImageFilter::GenerateData() */
-  void DynamicThreadedGenerateData(const OutputImageRegionType & outputRegionForThread) override;
+  void
+  DynamicThreadedGenerateData(const OutputImageRegionType & outputRegionForThread) override;
 
   /** The UseImageDirection flag determines whether image derivatives are
    * computed with respect to the image grid or with respect to the physical
@@ -158,20 +159,21 @@ protected:
   itkBooleanMacro(UseImageDirection);
 
 private:
-  LinearLeastSquaresGradientImageFilter( const Self & ); // purposely not implemented
-  void operator=( const Self & );                 // purposely not implemented
+  LinearLeastSquaresGradientImageFilter(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   bool       m_UseImageSpacing;
   RadiusType m_Radius;
   // flag to take or not the image direction into account
   // when computing the derivatives.
-  bool       m_UseImageDirection;
+  bool m_UseImageDirection;
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkLinearLeastSquaresGradientImageFilter.hxx"
+#  include "itkLinearLeastSquaresGradientImageFilter.hxx"
 #endif
 
 #endif

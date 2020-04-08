@@ -34,22 +34,22 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  */
-template< typename TMetricImage, typename TDisplacementImage >
-class ITK_TEMPLATE_EXPORT MaximumPixelDisplacementCalculator:
-  public MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
+template <typename TMetricImage, typename TDisplacementImage>
+class ITK_TEMPLATE_EXPORT MaximumPixelDisplacementCalculator
+  : public MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>
 {
 public:
   /** Standard class type alias. */
   using Self = MaximumPixelDisplacementCalculator;
-  using Superclass = MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >;
-  using Pointer = SmartPointer< Self >;
-  using ConstPointer = SmartPointer< const Self >;
+  using Superclass = MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MaximumPixelDisplacementCalculator, MetricImageToDisplacementCalculator );
+  itkTypeMacro(MaximumPixelDisplacementCalculator, MetricImageToDisplacementCalculator);
 
   using MetricImageType = typename Superclass::MetricImageType;
   using MetricImagePointerType = typename Superclass::MetricImagePointerType;
@@ -59,9 +59,12 @@ public:
 
   using IndexType = typename Superclass::IndexType;
 
-  void SetMetricImagePixel( const PointType & point, const IndexType& index, MetricImageType* image ) override;
+  void
+  SetMetricImagePixel(const PointType & point, const IndexType & index, MetricImageType * image) override;
 
-  void Compute() override {
+  void
+  Compute() override
+  {
     // We do this here instead of SetMetricImagePixel so it only has to be done
     // once.
     this->m_DisplacementImage->Modified();
@@ -71,15 +74,16 @@ protected:
   MaximumPixelDisplacementCalculator() {}
 
 private:
-  MaximumPixelDisplacementCalculator( const Self & );
-  void operator=( const Self & );
+  MaximumPixelDisplacementCalculator(const Self &);
+  void
+  operator=(const Self &);
 };
 
 } // end namespace BlockMatching
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingMaximumPixelDisplacementCalculator.hxx"
+#  include "itkBlockMatchingMaximumPixelDisplacementCalculator.hxx"
 #endif
 
 #endif

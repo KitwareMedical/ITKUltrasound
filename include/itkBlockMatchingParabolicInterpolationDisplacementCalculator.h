@@ -35,27 +35,27 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  */
-template < typename TMetricImage, typename TDisplacementImage, typename TCoordRep=double >
-class ITK_TEMPLATE_EXPORT ParabolicInterpolationDisplacementCalculator:
-  public MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
+template <typename TMetricImage, typename TDisplacementImage, typename TCoordRep = double>
+class ITK_TEMPLATE_EXPORT ParabolicInterpolationDisplacementCalculator
+  : public MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(ParabolicInterpolationDisplacementCalculator);
 
   /** Standard class type alias. */
   using Self = ParabolicInterpolationDisplacementCalculator;
-  using Superclass = MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >;
-  using Pointer = SmartPointer< Self >;
-  using ConstPointer = SmartPointer< const Self >;
+  using Superclass = MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ParabolicInterpolationDisplacementCalculator, MetricImageToDisplacementCalculator );
+  itkTypeMacro(ParabolicInterpolationDisplacementCalculator, MetricImageToDisplacementCalculator);
 
   using MetricImageType = typename Superclass::MetricImageType;
   using MetricImagePointerType = typename Superclass::MetricImagePointerType;
@@ -64,9 +64,8 @@ public:
   using RegionType = typename MetricImageType::RegionType;
 
   using MetricImageImageType = typename Superclass::MetricImageImageType;
-  typedef typename Superclass::MetricImageImagePointerType
-    MetricImageImagePointerType;
-  using MetricImageImageIteratorType = ImageRegionIterator< MetricImageImageType >;
+  typedef typename Superclass::MetricImageImagePointerType MetricImageImagePointerType;
+  using MetricImageImageIteratorType = ImageRegionIterator<MetricImageImageType>;
 
   using CenterPointsImageType = typename Superclass::CenterPointsImageType;
 
@@ -75,22 +74,24 @@ public:
   using PointType = typename Superclass::PointType;
   using IndexType = typename Superclass::IndexType;
 
-  void Compute() override;
+  void
+  Compute() override;
 
 protected:
   ParabolicInterpolationDisplacementCalculator();
 
   /** Use a parabolic fit to find the subsample peak. */
-  void ThreadedParabolicInterpolation( const RegionType& region );
+  void
+  ThreadedParabolicInterpolation(const RegionType & region);
 
 private:
 };
 
-} // end namespace itk
-} // end namespace BlockMatching
+} // namespace BlockMatching
+} // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingParabolicInterpolationDisplacementCalculator.hxx"
+#  include "itkBlockMatchingParabolicInterpolationDisplacementCalculator.hxx"
 #endif
 
 #endif

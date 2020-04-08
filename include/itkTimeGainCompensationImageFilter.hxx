@@ -27,137 +27,132 @@
 namespace itk
 {
 
-template< typename TInputImage, typename TOutputImage >
-TimeGainCompensationImageFilter< TInputImage, TOutputImage >
-::TimeGainCompensationImageFilter():
-  m_Gain( 2, 2 )
+template <typename TInputImage, typename TOutputImage>
+TimeGainCompensationImageFilter<TInputImage, TOutputImage>::TimeGainCompensationImageFilter()
+  : m_Gain(2, 2)
 {
-  m_Gain(0, 0) = NumericTraits< double >::min();
-  m_Gain(0, 1) = NumericTraits< double >::OneValue();
-  m_Gain(1, 0) = NumericTraits< double >::max();
-  m_Gain(1, 1) = NumericTraits< double >::OneValue();
+  m_Gain(0, 0) = NumericTraits<double>::min();
+  m_Gain(0, 1) = NumericTraits<double>::OneValue();
+  m_Gain(1, 0) = NumericTraits<double>::max();
+  m_Gain(1, 1) = NumericTraits<double>::OneValue();
 }
 
 
-template< typename TInputImage, typename TOutputImage >
+template <typename TInputImage, typename TOutputImage>
 void
-TimeGainCompensationImageFilter< TInputImage, TOutputImage >
-::PrintSelf( std::ostream & os, Indent indent ) const
+TimeGainCompensationImageFilter<TInputImage, TOutputImage>::PrintSelf(std::ostream & os, Indent indent) const
 {
-  Superclass::PrintSelf( os, indent );
+  Superclass::PrintSelf(os, indent);
 
   os << indent << "Gain:" << std::endl;
-  for( unsigned int ii = 0; ii < m_Gain.rows(); ++ii )
-    {
-    os << indent.GetNextIndent() << "[" << m_Gain( ii, 0 ) << ", " << m_Gain( ii, 1 ) << "]" << std::endl;
-    }
+  for (unsigned int ii = 0; ii < m_Gain.rows(); ++ii)
+  {
+    os << indent.GetNextIndent() << "[" << m_Gain(ii, 0) << ", " << m_Gain(ii, 1) << "]" << std::endl;
+  }
 }
 
 
-template< typename TInputImage, typename TOutputImage >
+template <typename TInputImage, typename TOutputImage>
 void
-TimeGainCompensationImageFilter< TInputImage, TOutputImage >
-::BeforeThreadedGenerateData()
+TimeGainCompensationImageFilter<TInputImage, TOutputImage>::BeforeThreadedGenerateData()
 {
   const GainType & gain = this->GetGain();
-  if( gain.cols() != 2 )
+  if (gain.cols() != 2)
+  {
+    itkExceptionMacro("Gain should have two columns.");
+  }
+  if (gain.rows() < 2)
+  {
+    itkExceptionMacro("Insufficient depths specified in Gain.");
+  }
+  double depth = gain(0, 0);
+  for (unsigned int ii = 1; ii < gain.rows(); ++ii)
+  {
+    if (gain(ii, 0) <= depth)
     {
-    itkExceptionMacro( "Gain should have two columns." );
+      itkExceptionMacro("Gain depths must be strictly increasing.");
     }
-  if( gain.rows() < 2 )
-    {
-    itkExceptionMacro( "Insufficient depths specified in Gain." );
-    }
-  double depth = gain( 0, 0 );
-  for( unsigned int ii = 1; ii < gain.rows(); ++ii )
-    {
-    if( gain( ii, 0 ) <= depth )
-      {
-      itkExceptionMacro( "Gain depths must be strictly increasing." );
-      }
-    depth = gain( ii, 0 );
-    }
+    depth = gain(ii, 0);
+  }
 }
 
 
-template< typename TInputImage, typename TOutputImage >
+template <typename TInputImage, typename TOutputImage>
 void
-TimeGainCompensationImageFilter< TInputImage, TOutputImage >
-::DynamicThreadedGenerateData( const OutputImageRegionType & outputRegionForThread )
+TimeGainCompensationImageFilter<TInputImage, TOutputImage>::DynamicThreadedGenerateData(
+  const OutputImageRegionType & outputRegionForThread)
 {
   const InputImageType * inputImage = this->GetInput();
-  OutputImageType * outputImage = this->GetOutput();
+  OutputImageType *      outputImage = this->GetOutput();
 
   // Compute the line gain once.
   const GainType & gain = this->GetGain();
-  double pieceStart = gain( 0, 0 );
-  double pieceEnd = gain( 1, 0 );
-  double gainStart = gain( 0, 1 );
-  double gainEnd = gain( 1, 1 );
-  SizeValueType gainSegment = 1;
+  double           pieceStart = gain(0, 0);
+  double           pieceEnd = gain(1, 0);
+  double           gainStart = gain(0, 1);
+  double           gainEnd = gain(1, 1);
+  SizeValueType    gainSegment = 1;
 
-  using LineGainType = Array< double >;
-  const SizeValueType lineGainSize = outputRegionForThread.GetSize()[0];
+  using LineGainType = Array<double>;
+  const SizeValueType                         lineGainSize = outputRegionForThread.GetSize()[0];
   const typename InputImageType::RegionType & inputRegion = inputImage->GetLargestPossibleRegion();
-  const IndexValueType imageStartIndex = inputRegion.GetIndex()[0];
-  const typename InputImageType::PointType origin = inputImage->GetOrigin();
-  const SpacePrecisionType pixelSpacing = inputImage->GetSpacing()[0];
-  IndexValueType indexOffset = outputRegionForThread.GetIndex()[0] - imageStartIndex;
-  LineGainType lineGain( lineGainSize );
-  for( SizeValueType lineGainIndex = 0; lineGainIndex < lineGainSize; ++lineGainIndex )
-    {
+  const IndexValueType                        imageStartIndex = inputRegion.GetIndex()[0];
+  const typename InputImageType::PointType    origin = inputImage->GetOrigin();
+  const SpacePrecisionType                    pixelSpacing = inputImage->GetSpacing()[0];
+  IndexValueType                              indexOffset = outputRegionForThread.GetIndex()[0] - imageStartIndex;
+  LineGainType                                lineGain(lineGainSize);
+  for (SizeValueType lineGainIndex = 0; lineGainIndex < lineGainSize; ++lineGainIndex)
+  {
     const SpacePrecisionType pixelLocation = origin[0] + pixelSpacing * indexOffset;
-    if( pixelLocation <= pieceStart )
-      {
-      lineGain[lineGainIndex] = gainStart;
-      }
-    else if( pixelLocation > pieceEnd )
-      {
-      if( gainSegment >= gain.rows() - 1 )
-        {
-        lineGain[lineGainIndex] = gainEnd;
-        }
-      else
-        {
-        ++gainSegment;
-        pieceStart = gain( gainSegment - 1, 0 );
-        pieceEnd = gain( gainSegment, 0 );
-        gainStart = gain( gainSegment - 1, 1 );
-        gainEnd = gain( gainSegment, 1 );
-
-        const SpacePrecisionType offset = static_cast< SpacePrecisionType >( pixelLocation - pieceStart );
-        lineGain[lineGainIndex] = offset * ( gainEnd - gainStart ) / ( pieceEnd - pieceStart ) + gainStart;
-        }
-      }
-    else
-      {
-      const SpacePrecisionType offset = static_cast< SpacePrecisionType >( pixelLocation - pieceStart );
-      lineGain[lineGainIndex] = offset * ( gainEnd - gainStart ) / ( pieceEnd - pieceStart ) + gainStart;
-      }
-    ++indexOffset;
-    }
-
-  using InputIteratorType = ImageScanlineConstIterator< InputImageType >;
-  InputIteratorType inputIt( inputImage, outputRegionForThread );
-
-  using OutputIteratorType = ImageScanlineIterator< OutputImageType >;
-  OutputIteratorType outputIt( outputImage, outputRegionForThread );
-
-  for( inputIt.GoToBegin(), outputIt.GoToBegin();
-       !outputIt.IsAtEnd();
-       inputIt.NextLine(), outputIt.NextLine() )
+    if (pixelLocation <= pieceStart)
     {
+      lineGain[lineGainIndex] = gainStart;
+    }
+    else if (pixelLocation > pieceEnd)
+    {
+      if (gainSegment >= gain.rows() - 1)
+      {
+        lineGain[lineGainIndex] = gainEnd;
+      }
+      else
+      {
+        ++gainSegment;
+        pieceStart = gain(gainSegment - 1, 0);
+        pieceEnd = gain(gainSegment, 0);
+        gainStart = gain(gainSegment - 1, 1);
+        gainEnd = gain(gainSegment, 1);
+
+        const SpacePrecisionType offset = static_cast<SpacePrecisionType>(pixelLocation - pieceStart);
+        lineGain[lineGainIndex] = offset * (gainEnd - gainStart) / (pieceEnd - pieceStart) + gainStart;
+      }
+    }
+    else
+    {
+      const SpacePrecisionType offset = static_cast<SpacePrecisionType>(pixelLocation - pieceStart);
+      lineGain[lineGainIndex] = offset * (gainEnd - gainStart) / (pieceEnd - pieceStart) + gainStart;
+    }
+    ++indexOffset;
+  }
+
+  using InputIteratorType = ImageScanlineConstIterator<InputImageType>;
+  InputIteratorType inputIt(inputImage, outputRegionForThread);
+
+  using OutputIteratorType = ImageScanlineIterator<OutputImageType>;
+  OutputIteratorType outputIt(outputImage, outputRegionForThread);
+
+  for (inputIt.GoToBegin(), outputIt.GoToBegin(); !outputIt.IsAtEnd(); inputIt.NextLine(), outputIt.NextLine())
+  {
     inputIt.GoToBeginOfLine();
     outputIt.GoToBeginOfLine();
     SizeValueType lineGainIndex = 0;
-    while( ! outputIt.IsAtEndOfLine() )
-      {
-      outputIt.Set( inputIt.Value() * lineGain[lineGainIndex] );
+    while (!outputIt.IsAtEndOfLine())
+    {
+      outputIt.Set(inputIt.Value() * lineGain[lineGainIndex]);
       ++inputIt;
       ++outputIt;
       ++lineGainIndex;
-      }
     }
+  }
 }
 
 } // end namespace itk

@@ -23,57 +23,58 @@
 
 #include <limits>
 
-int itkReplaceNonFiniteImageFilterTest( int argc, char * argv [] )
+int
+itkReplaceNonFiniteImageFilterTest(int argc, char * argv[])
 {
-  if( argc < 2 )
-    {
+  if (argc < 2)
+  {
     std::cerr << "Usage: " << argv[0];
     std::cerr << " outputImage";
     std::cerr << std::endl;
     return EXIT_FAILURE;
-    }
+  }
   const char * outputImageFileName = argv[1];
 
   const unsigned int Dimension = 2;
   using PixelType = float;
 
-  using ImageType = itk::Image< PixelType, Dimension >;
+  using ImageType = itk::Image<PixelType, Dimension>;
 
   ImageType::RegionType region;
-  ImageType::SizeType size;
-  size.Fill( 10 );
-  region.SetSize( size );
+  ImageType::SizeType   size;
+  size.Fill(10);
+  region.SetSize(size);
 
   ImageType::Pointer image = ImageType::New();
-  image->SetRegions( region );
+  image->SetRegions(region);
   image->Allocate();
-  image->FillBuffer( 7.5f );
+  image->FillBuffer(7.5f);
 
   ImageType::IndexType index;
-  index.Fill( 3 );
-  image->SetPixel( index, std::numeric_limits< PixelType >::infinity() );
-  index.Fill( 4 );
-  image->SetPixel( index, -std::numeric_limits< PixelType >::infinity() );
-  index.Fill( 5 );
-  image->SetPixel( index, std::numeric_limits< PixelType >::quiet_NaN() );
+  index.Fill(3);
+  image->SetPixel(index, std::numeric_limits<PixelType>::infinity());
+  index.Fill(4);
+  image->SetPixel(index, -std::numeric_limits<PixelType>::infinity());
+  index.Fill(5);
+  image->SetPixel(index, std::numeric_limits<PixelType>::quiet_NaN());
 
-  using FilterType = itk::ReplaceNonFiniteImageFilter< ImageType >;
+  using FilterType = itk::ReplaceNonFiniteImageFilter<ImageType>;
   FilterType::Pointer filter = FilterType::New();
-  filter->SetInput( image );
+  filter->SetInput(image);
 
-  using WriterType = itk::ImageFileWriter< ImageType >;
+  using WriterType = itk::ImageFileWriter<ImageType>;
   WriterType::Pointer writer = WriterType::New();
-  writer->SetFileName( outputImageFileName );
-  writer->SetInput( filter->GetOutput() );
+  writer->SetFileName(outputImageFileName);
+  writer->SetInput(filter->GetOutput());
   try
-    {
+  {
     writer->Update();
-    }
-  catch( itk::ExceptionObject & error )
-    {
+  }
+  catch (itk::ExceptionObject & error)
+  {
     std::cerr << "Error: " << error << std::endl;
     return EXIT_FAILURE;
-    }
+  }
 
   return EXIT_SUCCESS;
 }

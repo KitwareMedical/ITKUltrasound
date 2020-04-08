@@ -19,20 +19,20 @@
 #include "itkTestingMacros.h"
 
 int
-itkHDF5UltrasoundImageIOCanReadITKImageTest( int argc, char * argv [] )
+itkHDF5UltrasoundImageIOCanReadITKImageTest(int argc, char * argv[])
 {
-  if( argc < 2 )
-    {
+  if (argc < 2)
+  {
     std::cerr << "Usage: " << argv[0] << " inputImage" << std::endl;
     return EXIT_FAILURE;
-    }
+  }
   const char * inputImageFileName = argv[1];
 
   itk::HDF5UltrasoundImageIO::Pointer imageIO = itk::HDF5UltrasoundImageIO::New();
 
   // Do not read an HDF5 image in the ITK format -- let the ITK HDF5ImageIO do
   // that instead.
-  ITK_TEST_EXPECT_TRUE( !imageIO->CanReadFile( inputImageFileName ) );
+  ITK_TEST_EXPECT_TRUE(!imageIO->CanReadFile(inputImageFileName));
 
   return EXIT_SUCCESS;
 }

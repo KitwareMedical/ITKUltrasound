@@ -43,26 +43,24 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  */
-template< typename TFixedImage, typename TMovingImage,
-          typename TMetricImage, typename TStrainValueType >
-class ITK_TEMPLATE_EXPORT BlockAffineTransformMetricImageFilter :
-  public MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
+template <typename TFixedImage, typename TMovingImage, typename TMetricImage, typename TStrainValueType>
+class ITK_TEMPLATE_EXPORT BlockAffineTransformMetricImageFilter
+  : public MetricImageFilter<TFixedImage, TMovingImage, TMetricImage>
 {
 public:
   /** Standard class type alias. */
   using Self = BlockAffineTransformMetricImageFilter;
-  using Superclass = MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >;
+  using Superclass = MetricImageFilter<TFixedImage, TMovingImage, TMetricImage>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(BlockAffineTransformMetricImageFilter, MetricImageFilter);
 
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int,
-                      Superclass::ImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
 
   /** Type of the fixed image. */
   using FixedImageType = typename Superclass::FixedImageType;
@@ -80,37 +78,42 @@ public:
   using MetricImageRegionType = typename Superclass::MetricImageRegionType;
 
   /** Type of the strain image. */
-  using StrainImageType = Image< SymmetricSecondRankTensor< TStrainValueType, ImageDimension >, ImageDimension >;
+  using StrainImageType = Image<SymmetricSecondRankTensor<TStrainValueType, ImageDimension>, ImageDimension>;
   using StrainImagePointerType = typename StrainImageType::Pointer;
-  using StrainInterpolatorType = LinearInterpolateImageFunction< StrainImageType, double >;
+  using StrainInterpolatorType = LinearInterpolateImageFunction<StrainImageType, double>;
 
   /** Type of the transform. */
-  using TransformType = AffineTransform< MetricImagePixelType, ImageDimension >;
+  using TransformType = AffineTransform<MetricImagePixelType, ImageDimension>;
 
   /** Type of the interpolator. */
   itkStaticConstMacro(SincWindowRadius, unsigned int, 4);
-  using SincWindowType = Function::LanczosWindowFunction< SincWindowRadius >;
-  using SincWindowBoundaryConditionType = ZeroFluxNeumannBoundaryCondition< FixedImageType >;
-  using InterpolatorType = WindowedSincInterpolateImageFunction< FixedImageType, SincWindowRadius, SincWindowType,
-                                                SincWindowBoundaryConditionType, double >;
+  using SincWindowType = Function::LanczosWindowFunction<SincWindowRadius>;
+  using SincWindowBoundaryConditionType = ZeroFluxNeumannBoundaryCondition<FixedImageType>;
+  using InterpolatorType = WindowedSincInterpolateImageFunction<FixedImageType,
+                                                                SincWindowRadius,
+                                                                SincWindowType,
+                                                                SincWindowBoundaryConditionType,
+                                                                double>;
 
   /** Set/Get the Internal MetricImageFilter that actually generates the metric
    * image. */
-  itkSetObjectMacro( MetricImageFilter, Superclass );
-  itkGetConstObjectMacro( MetricImageFilter, Superclass );
+  itkSetObjectMacro(MetricImageFilter, Superclass);
+  itkGetConstObjectMacro(MetricImageFilter, Superclass);
 
   /** Set/Get the strain image used to modify the fixed image block. */
-  itkSetObjectMacro( StrainImage, StrainImageType );
-  itkGetConstObjectMacro( StrainImage, StrainImageType );
+  itkSetObjectMacro(StrainImage, StrainImageType);
+  itkGetConstObjectMacro(StrainImage, StrainImageType);
 
 protected:
   BlockAffineTransformMetricImageFilter();
 
   /** We need the entire input because we don't know where we will be resampling
    * from. */
-  virtual void GenerateInputRequestedRegion() override;
+  virtual void
+  GenerateInputRequestedRegion() override;
 
-  virtual void GenerateData() override;
+  virtual void
+  GenerateData() override;
 
   typename Superclass::Pointer m_MetricImageFilter;
   StrainImagePointerType       m_StrainImage;
@@ -119,18 +122,19 @@ protected:
   typename InterpolatorType::Pointer       m_Interpolator;
   typename StrainInterpolatorType::Pointer m_StrainInterpolator;
 
-  typename FixedImageType::Pointer         m_TransformedFixedImage;
+  typename FixedImageType::Pointer m_TransformedFixedImage;
 
 private:
-  BlockAffineTransformMetricImageFilter( const Self & );
-  void operator=( const Self & );
+  BlockAffineTransformMetricImageFilter(const Self &);
+  void
+  operator=(const Self &);
 };
 
 } // end namespace BlockMatching
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingBlockAffineTransformMetricImageFilter.hxx"
+#  include "itkBlockMatchingBlockAffineTransformMetricImageFilter.hxx"
 #endif
 
 #endif

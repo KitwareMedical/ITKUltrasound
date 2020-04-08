@@ -55,16 +55,16 @@ namespace itk
  *
  * \ingroup Ultrasound
  */
-template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType=double>
-class ITK_TEMPLATE_EXPORT VectorResampleIdentityNeumannImageFilter:
-    public ImageToImageFilter<TInputImage, TOutputImage>
+template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionType = double>
+class ITK_TEMPLATE_EXPORT VectorResampleIdentityNeumannImageFilter
+  : public ImageToImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(VectorResampleIdentityNeumannImageFilter);
 
   /** Standard class type alias. */
   using Self = VectorResampleIdentityNeumannImageFilter;
-  using Superclass = ImageToImageFilter<TInputImage,TOutputImage>;
+  using Superclass = ImageToImageFilter<TInputImage, TOutputImage>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
@@ -111,30 +111,32 @@ public:
 
   /** Set the interpolator function.  The default is
    * itk::VectorLinearInterpolateImageFunction<InputImageType, TInterpolatorPrecisionType>.  */
-  itkSetObjectMacro( Interpolator, InterpolatorType );
+  itkSetObjectMacro(Interpolator, InterpolatorType);
 
   /** Get a pointer to the interpolator function. */
-  itkGetConstObjectMacro( Interpolator, InterpolatorType );
+  itkGetConstObjectMacro(Interpolator, InterpolatorType);
 
   /** Set the size of the output image. */
-  itkSetMacro( Size, SizeType );
+  itkSetMacro(Size, SizeType);
 
   /** Get the size of the output image. */
-  itkGetConstReferenceMacro( Size, SizeType );
+  itkGetConstReferenceMacro(Size, SizeType);
 
   /** Set the output image spacing. */
   itkSetMacro(OutputSpacing, SpacingType);
-  virtual void SetOutputSpacing( const double* values);
+  virtual void
+  SetOutputSpacing(const double * values);
 
   /** Get the output image spacing. */
-  itkGetConstReferenceMacro( OutputSpacing, SpacingType );
+  itkGetConstReferenceMacro(OutputSpacing, SpacingType);
 
   /** Set the output image origin. */
   itkSetMacro(OutputOrigin, PointType);
-  virtual void SetOutputOrigin( const double* values);
+  virtual void
+  SetOutputOrigin(const double * values);
 
   /** Get the output image origin. */
-  itkGetConstReferenceMacro( OutputOrigin, PointType );
+  itkGetConstReferenceMacro(OutputOrigin, PointType);
 
   /** Set the output direciton cosine matrix. */
   itkSetMacro(OutputDirection, DirectionType);
@@ -142,25 +144,24 @@ public:
 
   /** Set the start index of the output largest possible region.
    * The default is an index of all zeros. */
-  itkSetMacro( OutputStartIndex, IndexType );
+  itkSetMacro(OutputStartIndex, IndexType);
 
   /** Get the start index of the output largest possible region. */
-  itkGetConstReferenceMacro( OutputStartIndex, IndexType );
+  itkGetConstReferenceMacro(OutputStartIndex, IndexType);
 
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   /** Begin concept checking */
-  itkConceptMacro(InputHasNumericTraitsCheck,
-    (Concept::HasNumericTraits<typename TInputImage::PixelType::ValueType>));
-  itkConceptMacro(OutputHasNumericTraitsCheck,
-    (Concept::HasNumericTraits<PixelComponentType>));
+  itkConceptMacro(InputHasNumericTraitsCheck, (Concept::HasNumericTraits<typename TInputImage::PixelType::ValueType>));
+  itkConceptMacro(OutputHasNumericTraitsCheck, (Concept::HasNumericTraits<PixelComponentType>));
   /** End concept checking */
 #endif
 
 protected:
   VectorResampleIdentityNeumannImageFilter();
-  ~VectorResampleIdentityNeumannImageFilter() {};
-  void PrintSelf(std::ostream& os, Indent indent) const override;
+  ~VectorResampleIdentityNeumannImageFilter(){};
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** VectorResampleIdentityNeumannImageFilter can be implemented as a multithreaded filter.  Therefore,
    * this implementation provides a ThreadedGenerateData() routine which
@@ -170,48 +171,54 @@ protected:
    * specified by the parameter "outputRegionForThread"
    * \sa ImageToImageFilter::ThreadedGenerateData(),
    *     ImageToImageFilter::GenerateData() */
-  void DynamicThreadedGenerateData(const OutputImageRegionType& outputRegionForThread ) override;
+  void
+  DynamicThreadedGenerateData(const OutputImageRegionType & outputRegionForThread) override;
 
   /** VectorResampleIdentityNeumannImageFilter produces an image which is a different size
    * than its input.  As such, it needs to provide an implementation
    * for GenerateOutputInformation() in order to inform the pipeline
    * execution model.  The original documentation of this method is
    * below. \sa ProcessObject::GenerateOutputInformaton() */
-  void GenerateOutputInformation() override;
+  void
+  GenerateOutputInformation() override;
 
   /** VectorResampleIdentityNeumannImageFilter needs a different input requested region than
    * the output requested region.  As such, VectorResampleIdentityNeumannImageFilter needs
    * to provide an implementation for GenerateInputRequestedRegion()
    * in order to inform the pipeline execution model.
    * \sa ProcessObject::GenerateInputRequestedRegion() */
-  void GenerateInputRequestedRegion() override;
+  void
+  GenerateInputRequestedRegion() override;
 
   /** This method is used to set the state of the filter before
    * multi-threading. */
-  void BeforeThreadedGenerateData() override;
+  void
+  BeforeThreadedGenerateData() override;
 
   /** This method is used to set the state of the filter after
    * multi-threading. */
-  void AfterThreadedGenerateData() override;
+  void
+  AfterThreadedGenerateData() override;
 
   /** Method Compute the Modified Time based on changed to the components. */
-  ModifiedTimeType GetMTime() const override;
+  ModifiedTimeType
+  GetMTime() const override;
 
 private:
-  SizeType                m_Size;       // Size of the output image
+  SizeType                m_Size; // Size of the output image
   InterpolatorPointerType m_Interpolator;
   // Image function for interpolation
-  SpacingType             m_OutputSpacing; // output image spacing
-  PointType               m_OutputOrigin;  // output image origin
-  DirectionType           m_OutputDirection; // output image direction cosines
-  IndexType               m_OutputStartIndex; // output start index
+  SpacingType   m_OutputSpacing;    // output image spacing
+  PointType     m_OutputOrigin;     // output image origin
+  DirectionType m_OutputDirection;  // output image direction cosines
+  IndexType     m_OutputStartIndex; // output start index
 };
 
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkVectorResampleIdentityNeumannImageFilter.hxx"
+#  include "itkVectorResampleIdentityNeumannImageFilter.hxx"
 #endif
 
 #endif

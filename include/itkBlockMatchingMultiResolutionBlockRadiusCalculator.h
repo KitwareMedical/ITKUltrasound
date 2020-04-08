@@ -36,22 +36,21 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  */
-template< class TFixedImage >
-class ITK_TEMPLATE_EXPORT MultiResolutionBlockRadiusCalculator :
-  public Object
+template <class TFixedImage>
+class ITK_TEMPLATE_EXPORT MultiResolutionBlockRadiusCalculator : public Object
 {
 public:
   /** Standard class type alias. */
   using Self = MultiResolutionBlockRadiusCalculator;
   using Superclass = Object;
-  using Pointer = SmartPointer< Self >;
-  using ConstPointer = SmartPointer< const Self >;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MultiResolutionBlockRadiusCalculator, Object );
+  itkTypeMacro(MultiResolutionBlockRadiusCalculator, Object);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro( ImageDimension, unsigned int, TFixedImage::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, TFixedImage::ImageDimension);
 
   /** Type of the fixed image type. */
   using FixedImageType = TFixedImage;
@@ -64,24 +63,26 @@ public:
   /** SetPyramidSchedule() gets called with the pyramid schedule after the pyramid has
    * been generated.  This information is the available for child classes if
    * they choose to use it.  */
-  virtual void SetPyramidSchedule( const ScheduleType& schedule )
-    {
+  virtual void
+  SetPyramidSchedule(const ScheduleType & schedule)
+  {
     m_PyramidSchedule = schedule;
     this->Modified();
-    }
+  }
 
   /** Get the multi-resolution schedule. */
-  itkGetConstReferenceMacro( PyramidSchedule, ScheduleType );
+  itkGetConstReferenceMacro(PyramidSchedule, ScheduleType);
 
   /** Set/Get the Fixed image. The fixed image is set during the
    * BlockMatching::MultiResolutionImageRegistrationMethod and is available for
    * child classes if the choose to use it.  */
-  itkSetConstObjectMacro( FixedImage, FixedImageType );
-  itkGetConstObjectMacro( FixedImage, FixedImageType ); 
+  itkSetConstObjectMacro(FixedImage, FixedImageType);
+  itkGetConstObjectMacro(FixedImage, FixedImageType);
 
   /** This abstract method must be implemented by child classes.  Given the
    * current level in the image pyramid, return the fixed block radius. */
-  virtual const RadiusType& Compute( unsigned long current_level ) = 0;
+  virtual const RadiusType &
+  Compute(unsigned long current_level) = 0;
 
 protected:
   MultiResolutionBlockRadiusCalculator() {}
@@ -91,8 +92,9 @@ protected:
   FixedImageConstPointer m_FixedImage;
 
 private:
-  MultiResolutionBlockRadiusCalculator( const Self & );
-  void operator=( const Self & );
+  MultiResolutionBlockRadiusCalculator(const Self &);
+  void
+  operator=(const Self &);
 };
 
 } // end namespace BlockMatching

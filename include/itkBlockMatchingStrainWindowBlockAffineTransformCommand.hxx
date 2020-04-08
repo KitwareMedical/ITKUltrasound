@@ -25,61 +25,60 @@ namespace itk
 namespace BlockMatching
 {
 
-template<typename TStrainWindowDisplacemenCalculator,
-         typename TBlockAffineTransformMetricImageFilter,
-         typename TStrainImageFilter>
+template <typename TStrainWindowDisplacemenCalculator,
+          typename TBlockAffineTransformMetricImageFilter,
+          typename TStrainImageFilter>
 StrainWindowBlockAffineTransformCommand<TStrainWindowDisplacemenCalculator,
                                         TBlockAffineTransformMetricImageFilter,
-                                        TStrainImageFilter>
-::StrainWindowBlockAffineTransformCommand():
-  m_UseStrainWindowStrain( true )
+                                        TStrainImageFilter>::StrainWindowBlockAffineTransformCommand()
+  : m_UseStrainWindowStrain(true)
 {
   m_BlockAffineTransformMetricImageFilter = nullptr;
 
   m_StrainImageFilter = StrainImageFilterType::New();
   m_LeastSquaresFilter = LeastSquaresFilterType::New();
   typename LeastSquaresFilterType::RadiusType radius; // @todo make this settable.
-  radius.Fill( 3 );
-  m_LeastSquaresFilter->SetRadius( radius );
-  m_StrainImageFilter->SetGradientFilter( m_LeastSquaresFilter );
+  radius.Fill(3);
+  m_LeastSquaresFilter->SetRadius(radius);
+  m_StrainImageFilter->SetGradientFilter(m_LeastSquaresFilter);
 }
 
-template<typename TStrainWindowDisplacemenCalculator,
-         typename TBlockAffineTransformMetricImageFilter,
-         typename TStrainImageFilter>
+template <typename TStrainWindowDisplacemenCalculator,
+          typename TBlockAffineTransformMetricImageFilter,
+          typename TStrainImageFilter>
 void
 StrainWindowBlockAffineTransformCommand<TStrainWindowDisplacemenCalculator,
                                         TBlockAffineTransformMetricImageFilter,
-                                        TStrainImageFilter>
-::Execute( const itk::Object * object, const itk::EventObject & event )
+                                        TStrainImageFilter>::Execute(const itk::Object *      object,
+                                                                     const itk::EventObject & event)
 {
-  if( !(itk::EndEvent().CheckEvent( &event )) )
-    {
+  if (!(itk::EndEvent().CheckEvent(&event)))
+  {
     return;
-    }
+  }
 
-  if( m_BlockAffineTransformMetricImageFilter.GetPointer() == nullptr )
-    {
-    itkExceptionMacro(<< "The BlockAffineTransformMetricImageFilter has not been set." );
-    }
+  if (m_BlockAffineTransformMetricImageFilter.GetPointer() == nullptr)
+  {
+    itkExceptionMacro(<< "The BlockAffineTransformMetricImageFilter has not been set.");
+  }
 
-  StrainWindowDisplacementCalculatorType * strainWindower = const_cast< StrainWindowDisplacementCalculatorType* >(
-    dynamic_cast< const StrainWindowDisplacementCalculatorType * >( object ) );
-  if( !strainWindower )
-    {
-    itkExceptionMacro(<<"Could not downcast to a StrainWindowDisplacementCalculator.");
-    }
+  StrainWindowDisplacementCalculatorType * strainWindower = const_cast<StrainWindowDisplacementCalculatorType *>(
+    dynamic_cast<const StrainWindowDisplacementCalculatorType *>(object));
+  if (!strainWindower)
+  {
+    itkExceptionMacro(<< "Could not downcast to a StrainWindowDisplacementCalculator.");
+  }
 
-  if( m_UseStrainWindowStrain )
-    {
-    m_BlockAffineTransformMetricImageFilter->SetStrainImage( strainWindower->GetStrainImageFilter()->GetOutput() );
-    }
+  if (m_UseStrainWindowStrain)
+  {
+    m_BlockAffineTransformMetricImageFilter->SetStrainImage(strainWindower->GetStrainImageFilter()->GetOutput());
+  }
   else
-    {
-    m_StrainImageFilter->SetInput( strainWindower->GetStrainImageFilter()->GetInput() );
+  {
+    m_StrainImageFilter->SetInput(strainWindower->GetStrainImageFilter()->GetInput());
     m_StrainImageFilter->Update();
-    m_BlockAffineTransformMetricImageFilter->SetStrainImage( m_StrainImageFilter->GetOutput() );
-    }
+    m_BlockAffineTransformMetricImageFilter->SetStrainImage(m_StrainImageFilter->GetOutput());
+  }
 }
 
 } // end namespace BlockMatching

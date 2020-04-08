@@ -34,9 +34,8 @@ namespace itk
  *
  * \ingroup Ultrasound
  * */
-template< typename TInputImage, typename TOutputImage = TInputImage >
-class ITK_TEMPLATE_EXPORT TimeGainCompensationImageFilter:
-  public ImageToImageFilter< TInputImage, TOutputImage >
+template <typename TInputImage, typename TOutputImage = TInputImage>
+class ITK_TEMPLATE_EXPORT TimeGainCompensationImageFilter : public ImageToImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(TimeGainCompensationImageFilter);
@@ -46,20 +45,20 @@ public:
   using OutputImageType = TOutputImage;
 
   using Self = TimeGainCompensationImageFilter;
-  using Superclass = ImageToImageFilter< InputImageType, OutputImageType >;
+  using Superclass = ImageToImageFilter<InputImageType, OutputImageType>;
 
-  using Pointer = SmartPointer< Self >;
-  using ConstPointer = SmartPointer< const Self >;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
-  itkTypeMacro( TimeGainCompensationImageFilter, ImageToImageFilter );
-  itkNewMacro( Self );
+  itkTypeMacro(TimeGainCompensationImageFilter, ImageToImageFilter);
+  itkNewMacro(Self);
 
-  using GainType = Array2D< double >;
+  using GainType = Array2D<double>;
 
   /** Set/Get the gain.  The first column specifies the depth. The second
    * column specifies the gain. */
-  itkSetMacro( Gain, GainType );
-  itkGetConstReferenceMacro( Gain, GainType );
+  itkSetMacro(Gain, GainType);
+  itkGetConstReferenceMacro(Gain, GainType);
 
 protected:
   using OutputImageRegionType = typename OutputImageType::RegionType;
@@ -67,19 +66,22 @@ protected:
   TimeGainCompensationImageFilter();
   virtual ~TimeGainCompensationImageFilter() {}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
-  void BeforeThreadedGenerateData() override;
-  void DynamicThreadedGenerateData( const OutputImageRegionType& outputRegionForThread ) override;
+  void
+  BeforeThreadedGenerateData() override;
+  void
+  DynamicThreadedGenerateData(const OutputImageRegionType & outputRegionForThread) override;
 
 private:
   GainType m_Gain;
 };
 
-}
+} // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkTimeGainCompensationImageFilter.hxx"
+#  include "itkTimeGainCompensationImageFilter.hxx"
 #endif
 
 #endif // itkTimeGainCompensationImageFilter_h
