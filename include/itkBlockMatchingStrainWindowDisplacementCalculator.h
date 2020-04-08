@@ -110,12 +110,12 @@ public:
    * displacements after regularization.  Defaults to a
    * MaximumPixelDisplacementCalcultor. */
   itkSetObjectMacro( DisplacementCalculator, Superclass );
-  itkGetObjectMacro( DisplacementCalculator, Superclass );
+  itkGetConstObjectMacro( DisplacementCalculator, Superclass );
 
   /** Set/Get the strain image filter that is used to calculate the strain
    * image. This defaults to an itk::StrainImageFilter. */
   itkSetObjectMacro( StrainImageFilter, StrainImageFilterType );
-  itkGetObjectMacro( StrainImageFilter, StrainImageFilterType );
+  itkGetConstObjectMacro( StrainImageFilter, StrainImageFilterType );
 
   /** Set/Get the maxmimum absolute strain allowed.  If any of strain components are below
    * the values in this tensor, the displacement is interpolated or extrapolated

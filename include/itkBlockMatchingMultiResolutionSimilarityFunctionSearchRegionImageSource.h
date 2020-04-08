@@ -222,7 +222,7 @@ public:
    * displacements after regularization.  Defaults to a
    * MaximumPixelDisplacementCalcultor. */
   itkSetObjectMacro( DisplacementCalculator, DisplacementCalculatorSuperclass );
-  itkGetObjectMacro( DisplacementCalculator, DisplacementCalculatorSuperclass );
+  itkGetConstObjectMacro( DisplacementCalculator, DisplacementCalculatorSuperclass );
 
   /** Set the interpolator function.  The default is
    * itk::LinearInterpolateImageFunction<InputImageType, TInterpolatorPrecisionType>. Some

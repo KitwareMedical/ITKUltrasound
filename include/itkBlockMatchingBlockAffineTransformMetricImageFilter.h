@@ -97,11 +97,11 @@ public:
   /** Set/Get the Internal MetricImageFilter that actually generates the metric
    * image. */
   itkSetObjectMacro( MetricImageFilter, Superclass );
-  itkGetObjectMacro( MetricImageFilter, Superclass );
+  itkGetConstObjectMacro( MetricImageFilter, Superclass );
 
   /** Set/Get the strain image used to modify the fixed image block. */
   itkSetObjectMacro( StrainImage, StrainImageType );
-  itkGetObjectMacro( StrainImage, StrainImageType );
+  itkGetConstObjectMacro( StrainImage, StrainImageType );
 
 protected:
   BlockAffineTransformMetricImageFilter();

@@ -160,7 +160,7 @@ public:
       }
 
     itkSetObjectMacro( Interpolator, InterpolatorType );
-    itkGetObjectMacro( Interpolator, InterpolatorType );
+    itkGetConstObjectMacro( Interpolator, InterpolatorType );
 
     typename InterpolatorType::Pointer m_Interpolator;
 

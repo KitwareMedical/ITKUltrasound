@@ -66,14 +66,14 @@ public:
   using RegularizerPointer = typename RegularizerType::Pointer;
 
   itkSetObjectMacro( Level0ToNMinus1DisplacementCalculator, MetricImageToDisplacementCalculatorType );
-  itkGetObjectMacro( Level0ToNMinus1DisplacementCalculator, MetricImageToDisplacementCalculatorType );
+  itkGetConstObjectMacro( Level0ToNMinus1DisplacementCalculator, MetricImageToDisplacementCalculatorType );
 
   itkSetObjectMacro( LevelNDisplacementCalculator, MetricImageToDisplacementCalculatorType );
-  itkGetObjectMacro( LevelNDisplacementCalculator, MetricImageToDisplacementCalculatorType );
+  itkGetConstObjectMacro( LevelNDisplacementCalculator, MetricImageToDisplacementCalculatorType );
 
   /** This is only used if it is set. */
   itkSetObjectMacro( Regularizer, RegularizerType );
-  itkGetObjectMacro( Regularizer, RegularizerType );
+  itkGetConstObjectMacro( Regularizer, RegularizerType );
 
   itkSetMacro( Level0ToNMinus1RegularizerIterations, unsigned int );
   itkGetConstMacro( Level0ToNMinus1RegularizerIterations, unsigned int );
