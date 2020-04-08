@@ -58,11 +58,11 @@ class ITK_TEMPLATE_EXPORT MetricImageFilter :
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(MetricImageFilter);
 
-  /** Standard class typedefs. */
-  typedef MetricImageFilter                               Self;
-  typedef ImageToImageFilter< TFixedImage, TMetricImage > Superclass;
-  typedef SmartPointer<Self>                              Pointer;
-  typedef SmartPointer<const Self>                        ConstPointer;
+  /** Standard class type alias. */
+  using Self = MetricImageFilter;
+  using Superclass = ImageToImageFilter< TFixedImage, TMetricImage >;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(MetricImageFilter, ImageToImageFilter);
@@ -72,20 +72,20 @@ public:
                       TFixedImage::ImageDimension);
 
   /**  Type of the Fixed image. */
-  typedef          TFixedImage                FixedImageType;
-  typedef typename FixedImageType::RegionType FixedImageRegionType;
+  using FixedImageType = TFixedImage;
+  using FixedImageRegionType = typename FixedImageType::RegionType;
 
   /**  Type of the Moving image. */
-  typedef          TMovingImage                MovingImageType;
-  typedef typename MovingImageType::RegionType MovingImageRegionType;
+  using MovingImageType = TMovingImage;
+  using MovingImageRegionType = typename MovingImageType::RegionType;
 
   /** Type of the Metric image. */
-  typedef          TMetricImage                 MetricImageType;
-  typedef typename MetricImageType::SpacingType MetricImageSpacingType;
-  typedef typename MetricImageType::RegionType  MetricImageRegionType;
+  using MetricImageType = TMetricImage;
+  using MetricImageSpacingType = typename MetricImageType::SpacingType;
+  using MetricImageRegionType = typename MetricImageType::RegionType;
 
   /** Type of the block radius. */
-  typedef typename FixedImageType::SizeType RadiusType;
+  using RadiusType = typename FixedImageType::SizeType;
 
   /** Set the fixed image. */
   void SetFixedImage( FixedImageType * fixedImage );

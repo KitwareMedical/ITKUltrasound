@@ -53,68 +53,64 @@ class ITK_TEMPLATE_EXPORT MultiResolutionThresholdBoundingBoxSearchRegionImageSo
   public MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 {
 public:
-  /** Standard class typedefs. */
-  typedef MultiResolutionThresholdBoundingBoxSearchRegionImageSource    Self;
-  typedef MultiResolutionSearchRegionImageSource< TFixedImage,
-          TMovingImage, TDisplacementImage >                            Superclass;
-  typedef MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
-    DisplacementCalculatorSuperclass;
+  /** Standard class type alias. */
+  using Self = MultiResolutionThresholdBoundingBoxSearchRegionImageSource;
+  using Superclass = MultiResolutionSearchRegionImageSource< TFixedImage,
+          TMovingImage, TDisplacementImage >;
+  using DisplacementCalculatorSuperclass = MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >;
 
-  typedef SmartPointer< Self >           Pointer;
-  typedef SmartPointer< const Self >     ConstPointer;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, TMovingImage::ImageDimension);
 
   /** Type of the fixed image. */
-  typedef TFixedImage                         FixedImageType;
-  typedef typename FixedImageType::RegionType FixedRegionType;
+  using FixedImageType = TFixedImage;
+  using FixedRegionType = typename FixedImageType::RegionType;
 
   /** Type of the radius used to characterized the fixed image block. */
-  typedef typename FixedImageType::SizeType RadiusType;
+  using RadiusType = typename FixedImageType::SizeType;
 
   /** Type of the moving image. */
-  typedef TMovingImage                         MovingImageType;
-  typedef typename MovingImageType::RegionType MovingRegionType;
+  using MovingImageType = TMovingImage;
+  using MovingRegionType = typename MovingImageType::RegionType;
 
   /** Type of the search region image. */
-  typedef typename Superclass::OutputImageType OutputImageType;
-  typedef typename OutputImageType::RegionType OutputRegionType;
+  using OutputImageType = typename Superclass::OutputImageType;
+  using OutputRegionType = typename OutputImageType::RegionType;
 
-  typedef Image< typename itk::Vector< typename RadiusType::SizeValueType, ImageDimension >, ImageDimension >
-    SearchRegionRadiusImageType;
+  using SearchRegionRadiusImageType = Image< typename itk::Vector< typename RadiusType::SizeValueType, ImageDimension >, ImageDimension >;
   typedef typename SearchRegionRadiusImageType::Pointer
     SearchRegionRadiusImagePointer;
 
   /** Type of the filter used to resample the search region images. */
-  typedef VectorResampleIdentityNeumannImageFilter< SearchRegionRadiusImageType, SearchRegionRadiusImageType >
-    SearchRegionRadiusResamplerType;
+  using SearchRegionRadiusResamplerType = VectorResampleIdentityNeumannImageFilter< SearchRegionRadiusImageType, SearchRegionRadiusImageType >;
   typedef typename SearchRegionRadiusResamplerType::Pointer
     SearchRegionRadiusResamplerPointer;
 
-  /** ScheduleType typedef support. */
-  typedef typename Superclass::PyramidScheduleType  PyramidScheduleType;
+  /** ScheduleType type alias support. */
+  using PyramidScheduleType = typename Superclass::PyramidScheduleType;
 
   /** Type of the threshold. */
-  typedef typename TMetricImage::PixelType ThresholdType;
-  typedef Array< ThresholdType >           ThresholdScheduleType;
+  using ThresholdType = typename TMetricImage::PixelType;
+  using ThresholdScheduleType = Array< ThresholdType >;
 
-  /** OverlapScheduleType typedef support. */
-  typedef typename Superclass::OverlapScheduleType  OverlapScheduleType;
+  /** OverlapScheduleType type alias support. */
+  using OverlapScheduleType = typename Superclass::OverlapScheduleType;
 
   /** Type of the displacement image from the previous level. */
-  typedef TDisplacementImage DisplacementImageType;
+  using DisplacementImageType = TDisplacementImage;
 
   /** Type of the filter used to resample the deformations. */
-  typedef VectorResampleIdentityNeumannImageFilter< DisplacementImageType, DisplacementImageType >
-    DisplacementResamplerType;
+  using DisplacementResamplerType = VectorResampleIdentityNeumannImageFilter< DisplacementImageType, DisplacementImageType >;
   typedef typename DisplacementResamplerType::Pointer
     DisplacementResamplerPointer;
 
   /** Types inherited from the DisplacementCalculator superclass. */
-  typedef typename DisplacementCalculatorSuperclass::MetricImageType MetricImageType;
-  typedef typename DisplacementCalculatorSuperclass::PointType       PointType;
-  typedef typename DisplacementCalculatorSuperclass::IndexType       IndexType;
+  using MetricImageType = typename DisplacementCalculatorSuperclass::MetricImageType;
+  using PointType = typename DisplacementCalculatorSuperclass::PointType;
+  using IndexType = typename DisplacementCalculatorSuperclass::IndexType;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( MultiResolutionThresholdBoundingBoxSearchRegionImageSource,

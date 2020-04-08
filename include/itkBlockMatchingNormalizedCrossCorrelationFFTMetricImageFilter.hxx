@@ -153,8 +153,8 @@ NormalizedCrossCorrelationFFTMetricImageFilter< TFixedImage,
 
   m_CropFilter->UpdateLargestPossibleRegion();
 
-  typedef ImageRegionConstIterator< MetricImageType > ConstIteratorType;
-  typedef ImageRegionIterator< MetricImageType >      IteratorType;
+  using ConstIteratorType = ImageRegionConstIterator< MetricImageType >;
+  using IteratorType = ImageRegionIterator< MetricImageType >;
 
   ConstIteratorType denomIt( denom, this->m_MovingImageRegion );
 

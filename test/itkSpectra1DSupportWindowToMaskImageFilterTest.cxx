@@ -26,9 +26,9 @@
 int itkSpectra1DSupportWindowToMaskImageFilterTest( int argc, char* argv[] )
 {
   const unsigned int Dimension = 2;
-  typedef short                              PixelType;
-  typedef itk::Image< PixelType, Dimension > ImageType;
-  typedef ImageType::IndexType               IndexType;
+  using PixelType = short;
+  using ImageType = itk::Image< PixelType, Dimension >;
+  using IndexType = ImageType::IndexType;
 
   if( argc < 4 )
     {
@@ -43,12 +43,12 @@ int itkSpectra1DSupportWindowToMaskImageFilterTest( int argc, char* argv[] )
   windowIndex[0] = atoi( argv[3] );
   windowIndex[1] = atoi( argv[4] );
 
-  typedef itk::ImageFileReader< ImageType > ReaderType;
+  using ReaderType = itk::ImageFileReader< ImageType >;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
 
   // Want RF to be along direction 0
-  typedef itk::PermuteAxesImageFilter< ImageType > PermuteAxesFilterType;
+  using PermuteAxesFilterType = itk::PermuteAxesImageFilter< ImageType >;
   PermuteAxesFilterType::Pointer permuteAxesFilter = PermuteAxesFilterType::New();
   PermuteAxesFilterType::PermuteOrderArrayType permuteOrder;
   permuteOrder[0] = 1;
@@ -72,18 +72,18 @@ int itkSpectra1DSupportWindowToMaskImageFilterTest( int argc, char* argv[] )
   sideLines->Allocate();
   sideLines->FillBuffer( 5 );
 
-  typedef itk::Spectra1DSupportWindowImageFilter< ImageType > SpectraSupportWindowFilterType;
+  using SpectraSupportWindowFilterType = itk::Spectra1DSupportWindowImageFilter< ImageType >;
   SpectraSupportWindowFilterType::Pointer spectraSupportWindowFilter = SpectraSupportWindowFilterType::New();
   spectraSupportWindowFilter->SetInput( sideLines );
 
-  typedef SpectraSupportWindowFilterType::OutputImageType                                       SupportWindowImageType;
-  typedef itk::Image< unsigned char, Dimension >                                                MaskImageType;
-  typedef itk::Spectra1DSupportWindowToMaskImageFilter< SupportWindowImageType, MaskImageType > SpectraSupportWindowMaskFilterType;
+  using SupportWindowImageType = SpectraSupportWindowFilterType::OutputImageType;
+  using MaskImageType = itk::Image< unsigned char, Dimension >;
+  using SpectraSupportWindowMaskFilterType = itk::Spectra1DSupportWindowToMaskImageFilter< SupportWindowImageType, MaskImageType >;
   SpectraSupportWindowMaskFilterType::Pointer spectraSupportWindowMaskFilter = SpectraSupportWindowMaskFilterType::New();
   spectraSupportWindowMaskFilter->SetInput( spectraSupportWindowFilter->GetOutput() );
   spectraSupportWindowMaskFilter->SetMaskIndex( windowIndex );
 
-  typedef itk::ImageFileWriter< MaskImageType > WriterType;
+  using WriterType = itk::ImageFileWriter< MaskImageType >;
   WriterType::Pointer writer = WriterType::New();
   writer->SetInput( spectraSupportWindowMaskFilter->GetOutput() );
   writer->SetFileName( outputImageFileName );

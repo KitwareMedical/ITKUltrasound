@@ -65,14 +65,13 @@ UnaryFunctorImageFilter<TInputImage,TOutputImage,
   typename TOutputImage::PixelType>   >
 {
 public:
-  /** Standard class typedefs. */
-  typedef ComplexConjugateImageFilter    Self;
-  typedef UnaryFunctorImageFilter< TInputImage,TOutputImage,
+  /** Standard class type alias. */
+  using Self = ComplexConjugateImageFilter;
+  using Superclass = UnaryFunctorImageFilter< TInputImage,TOutputImage,
     Function::ComplexConjugate< typename TInputImage::PixelType,
-                                typename TOutputImage::PixelType> >
-                                         Superclass;
-  typedef SmartPointer<Self>             Pointer;
-  typedef SmartPointer<const Self>       ConstPointer;
+                                typename TOutputImage::PixelType> >;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -81,9 +80,9 @@ public:
   itkTypeMacro(ComplexConjugateImageFilter,
                UnaryFunctorImageFilter);
 
-  typedef typename TInputImage::PixelType                     InputPixelType;
-  typedef typename TOutputImage::PixelType                    OutputPixelType;
-  typedef typename NumericTraits< InputPixelType >::ValueType InputPixelValueType;
+  using InputPixelType = typename TInputImage::PixelType;
+  using OutputPixelType = typename TOutputImage::PixelType;
+  using InputPixelValueType = typename NumericTraits< InputPixelType >::ValueType;
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   /** Begin concept checking */

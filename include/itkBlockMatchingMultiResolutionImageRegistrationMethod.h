@@ -59,40 +59,40 @@ public:
   itkStaticConstMacro(ImageDimension, unsigned int, TDisplacementImage::ImageDimension);
 
   /** Type of the fixed image. */
-  typedef TFixedImage                         FixedImageType;
-  typedef typename FixedImageType::RegionType FixedRegionType;
-  typedef typename FixedImageType::Pointer    FixedImagePointer;
+  using FixedImageType = TFixedImage;
+  using FixedRegionType = typename FixedImageType::RegionType;
+  using FixedImagePointer = typename FixedImageType::Pointer;
 
   /** Type of the radius used to characterized the fixed image block. */
-  typedef typename FixedImageType::SizeType RadiusType;
+  using RadiusType = typename FixedImageType::SizeType;
 
   /** Type of the moving image. */
-  typedef TMovingImage                         MovingImageType;
-  typedef typename MovingImageType::RegionType MovingRegionType;
-  typedef typename MovingImageType::Pointer    MovingImagePointer;
+  using MovingImageType = TMovingImage;
+  using MovingRegionType = typename MovingImageType::RegionType;
+  using MovingImagePointer = typename MovingImageType::Pointer;
 
   /** Type of the metric image. */
-  typedef TMetricImage  MetricImageType;
+  using MetricImageType = TMetricImage;
 
   /** Type of the displacement image. */
-  typedef TDisplacementImage DisplacementImageType;
+  using DisplacementImageType = TDisplacementImage;
 
-  typedef typename DisplacementImageType::RegionType RegionType;
-  typedef typename RegionType::IndexType             IndexType;
-  typedef typename RegionType::SizeType              SizeType;
+  using RegionType = typename DisplacementImageType::RegionType;
+  using IndexType = typename RegionType::IndexType;
+  using SizeType = typename RegionType::SizeType;
 
-  typedef typename DisplacementImageType::SpacingType   SpacingType;
-  typedef typename DisplacementImageType::DirectionType DirectionType;
-  typedef typename DisplacementImageType::PointType     OriginType;
+  using SpacingType = typename DisplacementImageType::SpacingType;
+  using DirectionType = typename DisplacementImageType::DirectionType;
+  using OriginType = typename DisplacementImageType::PointType;
 
   /** Type of the search region image. */
-  typedef Image< typename MovingImageType::RegionType, ImageDimension > SearchRegionImageType;
+  using SearchRegionImageType = Image< typename MovingImageType::RegionType, ImageDimension >;
 
-  /** Standard class typedefs. */
-  typedef MultiResolutionImageRegistrationMethod  Self;
-  typedef ImageSource< TDisplacementImage >       Superclass;
-  typedef SmartPointer< Self >                    Pointer;
-  typedef SmartPointer< const Self >              ConstPointer;
+  /** Standard class type alias. */
+  using Self = MultiResolutionImageRegistrationMethod;
+  using Superclass = ImageSource< TDisplacementImage >;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -101,33 +101,31 @@ public:
   itkTypeMacro(MultiResolutionImageRegistrationMethod, ImageSource);
 
   /** Type of the Fixed image multiresolution pyramid. */
-  typedef MultiResolutionPyramidImageFilter< FixedImageType,
-                                             FixedImageType >
-                                                   FixedImagePyramidType;
-  typedef typename FixedImagePyramidType::Pointer  FixedImagePyramidPointer;
+  using FixedImagePyramidType = MultiResolutionPyramidImageFilter< FixedImageType,
+                                             FixedImageType >;
+  using FixedImagePyramidPointer = typename FixedImagePyramidType::Pointer;
 
   /** Type of pyramid schedule type */
-  typedef typename FixedImagePyramidType::ScheduleType ScheduleType;
+  using ScheduleType = typename FixedImagePyramidType::ScheduleType;
 
   /** Type of the moving image multiresolution pyramid. */
-  typedef MultiResolutionPyramidImageFilter< MovingImageType,
-                                             MovingImageType >
-                                                   MovingImagePyramidType;
-  typedef typename MovingImagePyramidType::Pointer MovingImagePyramidPointer;
+  using MovingImagePyramidType = MultiResolutionPyramidImageFilter< MovingImageType,
+                                             MovingImageType >;
+  using MovingImagePyramidPointer = typename MovingImagePyramidType::Pointer;
 
   /** Type of the registration method used at every level. */
-  typedef typename BlockMatching::ImageRegistrationMethod< TFixedImage, TMovingImage,
-          TMetricImage, TDisplacementImage, TCoordRep > ImageRegistrationMethodType;
-  typedef typename ImageRegistrationMethodType::Pointer ImageRegistrationMethodPointer;
+  using ImageRegistrationMethodType = typename BlockMatching::ImageRegistrationMethod< TFixedImage, TMovingImage,
+          TMetricImage, TDisplacementImage, TCoordRep >;
+  using ImageRegistrationMethodPointer = typename ImageRegistrationMethodType::Pointer;
 
   /** Type of the class to calculate the fixed image matching kernel block
    * radius at every level. */
-  typedef MultiResolutionBlockRadiusCalculator< TFixedImage > BlockRadiusCalculatorType;
-  typedef typename BlockRadiusCalculatorType::Pointer         BlockRadiusCalculatorPointer;
+  using BlockRadiusCalculatorType = MultiResolutionBlockRadiusCalculator< TFixedImage >;
+  using BlockRadiusCalculatorPointer = typename BlockRadiusCalculatorType::Pointer;
 
-  typedef typename BlockMatching::MultiResolutionSearchRegionImageSource< TFixedImage,
-          TMovingImage, TDisplacementImage > SearchRegionImageSourceType;
-  typedef typename SearchRegionImageSourceType::Pointer SearchRegionImageSourcePointer;
+  using SearchRegionImageSourceType = typename BlockMatching::MultiResolutionSearchRegionImageSource< TFixedImage,
+          TMovingImage, TDisplacementImage >;
+  using SearchRegionImageSourcePointer = typename SearchRegionImageSourceType::Pointer;
 
   /** Method to stop the registration after registering a level. */
   void StopRegistration();

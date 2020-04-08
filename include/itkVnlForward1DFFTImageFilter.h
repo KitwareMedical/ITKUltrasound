@@ -37,15 +37,15 @@ class ITK_TEMPLATE_EXPORT VnlForward1DFFTImageFilter : public Forward1DFFTImageF
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(VnlForward1DFFTImageFilter);
 
-  /** Standard class typedefs. */
-  typedef VnlForward1DFFTImageFilter                           Self;
-  typedef Forward1DFFTImageFilter< TInputImage, TOutputImage > Superclass;
-  typedef SmartPointer< Self >                                 Pointer;
-  typedef SmartPointer< const Self >                           ConstPointer;
+  /** Standard class type alias. */
+  using Self = VnlForward1DFFTImageFilter;
+  using Superclass = Forward1DFFTImageFilter< TInputImage, TOutputImage >;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
-  typedef typename Superclass::InputImageType                  InputImageType;
-  typedef typename Superclass::OutputImageType                 OutputImageType;
-  typedef typename OutputImageType::RegionType                 OutputImageRegionType;
+  using InputImageType = typename Superclass::InputImageType;
+  using OutputImageType = typename Superclass::OutputImageType;
+  using OutputImageRegionType = typename OutputImageType::RegionType;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );

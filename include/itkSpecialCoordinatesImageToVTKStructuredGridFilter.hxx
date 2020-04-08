@@ -155,8 +155,8 @@ SpecialCoordinatesImageToVTKStructuredGridFilter< TInputImage >
 
 
   vtkDataArray * pointDataArray;
-  typedef typename InputImageType::PixelType           PixelType;
-  typedef typename PixelTraits< PixelType >::ValueType ScalarType;
+  using PixelType = typename InputImageType::PixelType;
+  using ScalarType = typename PixelTraits< PixelType >::ValueType;
   const unsigned int components = inputImage->GetNumberOfComponentsPerPixel();
   const SizeValueType tuples = region.GetNumberOfPixels();
   if ( typeid( ScalarType ) == typeid( double ) )

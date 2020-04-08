@@ -96,7 +96,7 @@ TimeGainCompensationImageFilter< TInputImage, TOutputImage >
   double gainEnd = gain( 1, 1 );
   SizeValueType gainSegment = 1;
 
-  typedef Array< double > LineGainType;
+  using LineGainType = Array< double >;
   const SizeValueType lineGainSize = outputRegionForThread.GetSize()[0];
   const typename InputImageType::RegionType & inputRegion = inputImage->GetLargestPossibleRegion();
   const IndexValueType imageStartIndex = inputRegion.GetIndex()[0];
@@ -137,10 +137,10 @@ TimeGainCompensationImageFilter< TInputImage, TOutputImage >
     ++indexOffset;
     }
 
-  typedef ImageScanlineConstIterator< InputImageType > InputIteratorType;
+  using InputIteratorType = ImageScanlineConstIterator< InputImageType >;
   InputIteratorType inputIt( inputImage, outputRegionForThread );
 
-  typedef ImageScanlineIterator< OutputImageType > OutputIteratorType;
+  using OutputIteratorType = ImageScanlineIterator< OutputImageType >;
   OutputIteratorType outputIt( outputImage, outputRegionForThread );
 
   for( inputIt.GoToBegin(), outputIt.GoToBegin();

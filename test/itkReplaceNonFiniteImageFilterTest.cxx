@@ -35,9 +35,9 @@ int itkReplaceNonFiniteImageFilterTest( int argc, char * argv [] )
   const char * outputImageFileName = argv[1];
 
   const unsigned int Dimension = 2;
-  typedef float PixelType;
+  using PixelType = float;
 
-  typedef itk::Image< PixelType, Dimension > ImageType;
+  using ImageType = itk::Image< PixelType, Dimension >;
 
   ImageType::RegionType region;
   ImageType::SizeType size;
@@ -57,11 +57,11 @@ int itkReplaceNonFiniteImageFilterTest( int argc, char * argv [] )
   index.Fill( 5 );
   image->SetPixel( index, std::numeric_limits< PixelType >::quiet_NaN() );
 
-  typedef itk::ReplaceNonFiniteImageFilter< ImageType > FilterType;
+  using FilterType = itk::ReplaceNonFiniteImageFilter< ImageType >;
   FilterType::Pointer filter = FilterType::New();
   filter->SetInput( image );
 
-  typedef itk::ImageFileWriter< ImageType > WriterType;
+  using WriterType = itk::ImageFileWriter< ImageType >;
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFileName );
   writer->SetInput( filter->GetOutput() );

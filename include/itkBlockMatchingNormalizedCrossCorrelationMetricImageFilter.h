@@ -50,11 +50,11 @@ class ITK_TEMPLATE_EXPORT NormalizedCrossCorrelationMetricImageFilter :
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(NormalizedCrossCorrelationMetricImageFilter);
 
-  /** Standard class typedefs. */
-  typedef NormalizedCrossCorrelationMetricImageFilter                  Self;
-  typedef MetricImageFilter< TFixedImage, TMovingImage, TMetricImage > Superclass;
-  typedef SmartPointer<Self>                                           Pointer;
-  typedef SmartPointer<const Self>                                     ConstPointer;
+  /** Standard class type alias. */
+  using Self = NormalizedCrossCorrelationMetricImageFilter;
+  using Superclass = MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(NormalizedCrossCorrelationMetricImageFilter, MetricImageFilter);
@@ -63,18 +63,18 @@ public:
   itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
 
   /** Type of the fixed image. */
-  typedef typename Superclass::FixedImageType   FixedImageType;
-  typedef typename FixedImageType::ConstPointer FixedImageConstPointerType;
+  using FixedImageType = typename Superclass::FixedImageType;
+  using FixedImageConstPointerType = typename FixedImageType::ConstPointer;
 
   /** Type of the moving image. */
-  typedef typename Superclass::MovingImageType   MovingImageType;
-  typedef typename MovingImageType::RegionType   MovingImageRegionType;
-  typedef typename MovingImageType::ConstPointer MovingImageConstPointerType;
+  using MovingImageType = typename Superclass::MovingImageType;
+  using MovingImageRegionType = typename MovingImageType::RegionType;
+  using MovingImageConstPointerType = typename MovingImageType::ConstPointer;
 
   /** Type of the metric image. */
-  typedef typename Superclass::MetricImageType MetricImageType;
-  typedef typename MetricImageType::Pointer    MetricImagePointerType;
-  typedef typename MetricImageType::PixelType  MetricImagePixelType;
+  using MetricImageType = typename Superclass::MetricImageType;
+  using MetricImagePointerType = typename MetricImageType::Pointer;
+  using MetricImagePixelType = typename MetricImageType::PixelType;
 
 protected:
   NormalizedCrossCorrelationMetricImageFilter();
@@ -98,14 +98,14 @@ protected:
    * an image of standard deviations (times sqrt(N-1)) for each block neighborhood. */
   virtual void GenerateHelperImages();
 
-  typedef BoxMeanImageFilter< MovingImageType, MetricImageType >               BoxMeanFilterType;
-  typedef BoxSigmaSqrtNMinusOneImageFilter< MovingImageType, MetricImageType > BoxPseudoSigmaFilterType;
+  using BoxMeanFilterType = BoxMeanImageFilter< MovingImageType, MetricImageType >;
+  using BoxPseudoSigmaFilterType = BoxSigmaSqrtNMinusOneImageFilter< MovingImageType, MetricImageType >;
 
   typename BoxMeanFilterType::Pointer        m_BoxMeanFilter;
   typename BoxPseudoSigmaFilterType::Pointer m_BoxPseudoSigmaFilter;
 
 private:
-  typedef ConstantBoundaryCondition< MetricImageType > BoundaryConditionType;
+  using BoundaryConditionType = ConstantBoundaryCondition< MetricImageType >;
   BoundaryConditionType m_BoundaryCondition;
 };
 

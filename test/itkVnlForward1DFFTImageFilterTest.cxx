@@ -36,29 +36,29 @@ int itkVnlForward1DFFTImageFilterTest( int argc, char* argv[] )
     return EXIT_FAILURE;
     }
 
-  typedef double PixelType;
+  using PixelType = double;
   const unsigned int Dimension = 2;
 
-  typedef itk::Image< PixelType, Dimension >                                            ImageType;
-  typedef itk::Image< std::complex< PixelType >, Dimension >                            ComplexImageType;
+  using ImageType = itk::Image< PixelType, Dimension >;
+  using ComplexImageType = itk::Image< std::complex< PixelType >, Dimension >;
 
-  typedef itk::ImageFileReader< ImageType >                                             ReaderType;
+  using ReaderType = itk::ImageFileReader< ImageType >;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( argv[1] );
 
-  typedef itk::VnlForward1DFFTImageFilter< ImageType, ComplexImageType > FFTType;
+  using FFTType = itk::VnlForward1DFFTImageFilter< ImageType, ComplexImageType >;
   FFTType::Pointer    fft    = FFTType::New();
   fft->SetInput( reader->GetOutput() );
 
-  typedef itk::ComplexToRealImageFilter< ComplexImageType, ImageType >                  RealFilterType;
+  using RealFilterType = itk::ComplexToRealImageFilter< ComplexImageType, ImageType >;
   RealFilterType::Pointer realFilter = RealFilterType::New();
   realFilter->SetInput( fft->GetOutput() );
 
-  typedef itk::ComplexToImaginaryImageFilter< ComplexImageType, ImageType >             ImaginaryFilterType;
+  using ImaginaryFilterType = itk::ComplexToImaginaryImageFilter< ComplexImageType, ImageType >;
   ImaginaryFilterType::Pointer imaginaryFilter = ImaginaryFilterType::New();
   imaginaryFilter->SetInput( fft->GetOutput() );
 
-  typedef itk::ImageFileWriter< ImageType >                                             WriterType;
+  using WriterType = itk::ImageFileWriter< ImageType >;
   WriterType::Pointer writer = WriterType::New();
 
   try

@@ -39,15 +39,15 @@ class ITK_TEMPLATE_EXPORT FFTWInverse1DFFTImageFilter:
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(FFTWInverse1DFFTImageFilter);
 
-  typedef FFTWInverse1DFFTImageFilter                          Self;
-  typedef Inverse1DFFTImageFilter< TInputImage, TOutputImage > Superclass;
-  typedef SmartPointer< Self >                                 Pointer;
-  typedef SmartPointer< const Self >                           ConstPointer;
+  using Self = FFTWInverse1DFFTImageFilter;
+  using Superclass = Inverse1DFFTImageFilter< TInputImage, TOutputImage >;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
-  /** Standard class typedefs.*/
-  typedef typename Superclass::InputImageType  InputImageType;
-  typedef typename Superclass::OutputImageType OutputImageType;
-  typedef typename OutputImageType::RegionType OutputImageRegionType;
+  /** Standard class type alias.*/
+  using InputImageType = typename Superclass::InputImageType;
+  using OutputImageType = typename Superclass::OutputImageType;
+  using OutputImageRegionType = typename OutputImageType::RegionType;
 
   /**
    * the proxy type is a wrapper for the fftw API
@@ -56,9 +56,9 @@ public:
    * is trying to use double if only the float FFTW1D version is
    * configured in, or float if only double is configured.
    */
-  typedef typename fftw::ComplexToComplexProxy< typename TOutputImage::PixelType > FFTW1DProxyType;
-  typedef typename std::vector< typename FFTW1DProxyType::PlanType >               PlanArrayType;
-  typedef typename std::vector< typename FFTW1DProxyType::ComplexType* >           PlanBufferPointerType;
+  using FFTW1DProxyType = typename fftw::ComplexToComplexProxy< typename TOutputImage::PixelType >;
+  using PlanArrayType = typename std::vector< typename FFTW1DProxyType::PlanType >;
+  using PlanBufferPointerType = typename std::vector< typename FFTW1DProxyType::ComplexType* >;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

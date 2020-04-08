@@ -51,13 +51,13 @@ int itkScanConvertPhasedArray3DSpecialCoordinatesImageTest( int argc, char* argv
   const char * outputImageFile = argv[2];
 
   const unsigned int Dimension = 3;
-  typedef unsigned char                                          PixelType;
-  typedef itk::PhasedArray3DSpecialCoordinatesImage< PixelType > InputImageType;
-  typedef itk::Image< PixelType, Dimension >                     OutputImageType;
-  typedef double                                                 CoordRepType;
+  using PixelType = unsigned char;
+  using InputImageType = itk::PhasedArray3DSpecialCoordinatesImage< PixelType >;
+  using OutputImageType = itk::Image< PixelType, Dimension >;
+  using CoordRepType = double;
 
 
-  typedef itk::ImageFileReader< InputImageType > ReaderType;
+  using ReaderType = itk::ImageFileReader< InputImageType >;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFile );
 
@@ -91,7 +91,7 @@ int itkScanConvertPhasedArray3DSpecialCoordinatesImageTest( int argc, char* argv
   inputImage->Print( std::cout );
 
 
-  typedef itk::ResampleImageFilter< InputImageType, OutputImageType > ResamplerType;
+  using ResamplerType = itk::ResampleImageFilter< InputImageType, OutputImageType >;
   ResamplerType::Pointer resampler = ResamplerType::New();
   resampler->SetInput( inputImage );
 
@@ -113,7 +113,7 @@ int itkScanConvertPhasedArray3DSpecialCoordinatesImageTest( int argc, char* argv
   origin[2] = 0.0;
   resampler->SetOutputOrigin( origin );
 
-  typedef itk::ImageFileWriter< OutputImageType > WriterType;
+  using WriterType = itk::ImageFileWriter< OutputImageType >;
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFile );
   writer->SetInput( resampler->GetOutput() );

@@ -36,26 +36,25 @@ int itkBlockMatchingMultiResolutionImageRegistrationMethodTest( int argc, char* 
     }
 
   const unsigned int Dimension = 2;
-  typedef signed short                            InputPixelType;
-  typedef itk::Image< InputPixelType, Dimension > InputImageType;
-  typedef InputImageType::SizeType                RadiusType;
+  using InputPixelType = signed short;
+  using InputImageType = itk::Image< InputPixelType, Dimension >;
+  using RadiusType = InputImageType::SizeType;
 
-  typedef double                                   MetricPixelType;
-  typedef itk::Image< MetricPixelType, Dimension > MetricImageType;
+  using MetricPixelType = double;
+  using MetricImageType = itk::Image< MetricPixelType, Dimension >;
 
-  typedef itk::Vector< MetricPixelType, Dimension > VectorType;
-  typedef itk::Image< VectorType, Dimension >       DisplacementImageType;
+  using VectorType = itk::Vector< MetricPixelType, Dimension >;
+  using DisplacementImageType = itk::Image< VectorType, Dimension >;
 
-  typedef double CoordRepType;
+  using CoordRepType = double;
 
-  typedef itk::ImageFileReader< InputImageType > ReaderType;
+  using ReaderType = itk::ImageFileReader< InputImageType >;
   ReaderType::Pointer fixedReader = ReaderType::New();
   fixedReader->SetFileName( argv[1] );
   ReaderType::Pointer movingReader = ReaderType::New();
   movingReader->SetFileName( argv[2] );
 
-  typedef itk::BlockMatching::MultiResolutionFixedBlockRadiusCalculator< InputImageType >
-    BlockRadiusCalculatorType;
+  using BlockRadiusCalculatorType = itk::BlockMatching::MultiResolutionFixedBlockRadiusCalculator< InputImageType >;
   BlockRadiusCalculatorType::Pointer blockRadiusCalculator = BlockRadiusCalculatorType::New();
   RadiusType blockRadius;
   blockRadius[0] = 12;
@@ -63,8 +62,8 @@ int itkBlockMatchingMultiResolutionImageRegistrationMethodTest( int argc, char* 
   blockRadiusCalculator->SetRadius( blockRadius );
 
 
-  typedef itk::BlockMatching::MultiResolutionFixedSearchRegionImageSource< InputImageType, InputImageType,
-          DisplacementImageType > SearchRegionImageSourceType;
+  using SearchRegionImageSourceType = itk::BlockMatching::MultiResolutionFixedSearchRegionImageSource< InputImageType, InputImageType,
+          DisplacementImageType >;
   SearchRegionImageSourceType::Pointer searchRegionSource = SearchRegionImageSourceType::New();
   SearchRegionImageSourceType::PyramidScheduleType pyramidSchedule( 3, Dimension );
   pyramidSchedule( 0, 0 ) = 3;
@@ -80,16 +79,15 @@ int itkBlockMatchingMultiResolutionImageRegistrationMethodTest( int argc, char* 
   searchRegionSource->SetSearchRegionRadiusSchedule( searchRadius );
   searchRegionSource->SetOverlapSchedule( 1.0 );
 
-  typedef itk::BlockMatching::NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< InputImageType, InputImageType, MetricImageType > MetricImageFilterType;
+  using MetricImageFilterType = itk::BlockMatching::NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< InputImageType, InputImageType, MetricImageType >;
   MetricImageFilterType::Pointer metricImageFilter = MetricImageFilterType::New();
 
-  typedef itk::BlockMatching::ImageRegistrationMethod< InputImageType, InputImageType,
-          MetricImageType, DisplacementImageType, CoordRepType >
-            LevelRegistrationMethodType;
+  using LevelRegistrationMethodType = itk::BlockMatching::ImageRegistrationMethod< InputImageType, InputImageType,
+          MetricImageType, DisplacementImageType, CoordRepType >;
   LevelRegistrationMethodType::Pointer levelRegistrationMethod = LevelRegistrationMethodType::New();
   levelRegistrationMethod->SetMetricImageFilter( metricImageFilter );
 
-  typedef itk::BlockMatching::MultiResolutionImageRegistrationMethod< InputImageType, InputImageType, MetricImageType, DisplacementImageType, CoordRepType > RegistrationMethodType;
+  using RegistrationMethodType = itk::BlockMatching::MultiResolutionImageRegistrationMethod< InputImageType, InputImageType, MetricImageType, DisplacementImageType, CoordRepType >;
   RegistrationMethodType::Pointer multiResRegistrationMethod = RegistrationMethodType::New();
   multiResRegistrationMethod->SetFixedImage( fixedReader->GetOutput() );
   multiResRegistrationMethod->SetMovingImage( movingReader->GetOutput() );
@@ -98,7 +96,7 @@ int itkBlockMatchingMultiResolutionImageRegistrationMethodTest( int argc, char* 
   multiResRegistrationMethod->SetSchedules( pyramidSchedule, pyramidSchedule );
   multiResRegistrationMethod->SetImageRegistrationMethod( levelRegistrationMethod );
 
-  typedef itk::ImageFileWriter< DisplacementImageType > WriterType;
+  using WriterType = itk::ImageFileWriter< DisplacementImageType >;
   WriterType::Pointer displacementWriter = WriterType::New();
   displacementWriter->SetFileName( argv[3] );
   displacementWriter->SetInput( multiResRegistrationMethod->GetOutput() );

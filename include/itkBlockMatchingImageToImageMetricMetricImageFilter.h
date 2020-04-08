@@ -41,11 +41,11 @@ class ITK_TEMPLATE_EXPORT ImageToImageMetricMetricImageFilter :
   public MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 {
 public:
-  /** Standard class typedefs. */
-  typedef ImageToImageMetricMetricImageFilter                          Self;
-  typedef MetricImageFilter< TFixedImage, TMovingImage, TMetricImage > Superclass;
-  typedef SmartPointer<Self>                                           Pointer;
-  typedef SmartPointer<const Self>                                     ConstPointer;
+  /** Standard class type alias. */
+  using Self = ImageToImageMetricMetricImageFilter;
+  using Superclass = MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -58,14 +58,14 @@ public:
                       Superclass::ImageDimension);
 
   /** Type of the Moving image. */
-  typedef typename Superclass::MovingImageType  MovingImageType;
-  typedef typename MovingImageType::SpacingType MovingImageSpacingType;
-  typedef typename MovingImageType::RegionType  MovingImageRegionType;
+  using MovingImageType = typename Superclass::MovingImageType;
+  using MovingImageSpacingType = typename MovingImageType::SpacingType;
+  using MovingImageRegionType = typename MovingImageType::RegionType;
 
   /** Type of the Metric image. */
-  typedef typename Superclass::MetricImageType  MetricImageType;
-  typedef typename MetricImageType::SpacingType MetricImageSpacingType;
-  typedef typename MetricImageType::RegionType  MetricImageRegionType;
+  using MetricImageType = typename Superclass::MetricImageType;
+  using MetricImageSpacingType = typename MetricImageType::SpacingType;
+  using MetricImageRegionType = typename MetricImageType::RegionType;
 
   /** Set the spacing in the output metric image.  This is optional.  If not
    * set, the spacing in the moving image will be used. */

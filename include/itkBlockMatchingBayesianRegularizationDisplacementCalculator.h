@@ -65,11 +65,11 @@ class ITK_TEMPLATE_EXPORT BayesianRegularizationDisplacementCalculator:
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(BayesianRegularizationDisplacementCalculator);
 
-  /** Standard class typedefs. */
-  typedef BayesianRegularizationDisplacementCalculator                            Self;
-  typedef MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage > Superclass;
-  typedef SmartPointer< Self >                                                    Pointer;
-  typedef SmartPointer< const Self >                                              ConstPointer;
+  /** Standard class type alias. */
+  using Self = BayesianRegularizationDisplacementCalculator;
+  using Superclass = MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -81,35 +81,31 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro( BayesianRegularizationDisplacementCalculator, MetricImageToDisplacementCalculator );
 
-  typedef typename Superclass::MetricImageType        MetricImageType;
-  typedef typename Superclass::MetricImagePointerType MetricImagePointerType;
+  using MetricImageType = typename Superclass::MetricImageType;
+  using MetricImagePointerType = typename Superclass::MetricImagePointerType;
   typedef typename MetricImageType::ConstPointer
     MetricImageConstPointerType;
 
-  typedef typename MetricImageType::PixelType   PixelType;
-  typedef typename MetricImageType::SpacingType SpacingType;
-  typedef typename MetricImageType::SizeType    SizeType;
-  typedef typename MetricImageType::RegionType  RegionType;
-  typedef typename itk::ImageRegionIterator< MetricImageType >
-    MetricImageIteratorType;
-  typedef typename itk::ImageRegionConstIterator< MetricImageType >
-    MetricImageConstIteratorType;
+  using PixelType = typename MetricImageType::PixelType;
+  using SpacingType = typename MetricImageType::SpacingType;
+  using SizeType = typename MetricImageType::SizeType;
+  using RegionType = typename MetricImageType::RegionType;
+  using MetricImageIteratorType = typename itk::ImageRegionIterator< MetricImageType >;
+  using MetricImageConstIteratorType = typename itk::ImageRegionConstIterator< MetricImageType >;
 
-  typedef typename Superclass::IndexType IndexType;
+  using IndexType = typename Superclass::IndexType;
 
-  typedef typename Superclass::CenterPointsImageType CenterPointsImageType;
+  using CenterPointsImageType = typename Superclass::CenterPointsImageType;
 
-  typedef typename Superclass::MetricImageImageType  MetricImageImageType;
+  using MetricImageImageType = typename Superclass::MetricImageImageType;
   typedef typename Superclass::MetricImageImagePointerType
     MetricImageImagePointerType;
-  typedef typename itk::ImageRegionIterator< MetricImageImageType >
-    MetricImageImageIteratorType;
-  typedef NeighborhoodIterator< MetricImageImageType >
-    MetricImageImageNeighborhoodIteratorType;
+  using MetricImageImageIteratorType = typename itk::ImageRegionIterator< MetricImageImageType >;
+  using MetricImageImageNeighborhoodIteratorType = NeighborhoodIterator< MetricImageImageType >;
 
-  typedef typename Superclass::DisplacementImageType DisplacementImageType;
-  typedef typename Superclass::PointType             PointType;
-  typedef typename PointType::VectorType             VectorType;
+  using DisplacementImageType = typename Superclass::DisplacementImageType;
+  using PointType = typename Superclass::PointType;
+  using VectorType = typename PointType::VectorType;
 
   void Compute() override;
 
@@ -202,17 +198,15 @@ protected:
 
   MetricImageImagePointerType m_PriorPr;
 
-  typedef typename itk::ConstantImagePointerBoundaryCondition <
-    MetricImageImageType > ImageImageBoundaryConditionType;
+  using ImageImageBoundaryConditionType = typename itk::ConstantImagePointerBoundaryCondition <
+    MetricImageImageType >;
   ImageImageBoundaryConditionType m_ImageImageBoundaryCondition;
 
-  typedef MetricImageType GaussianKernelType;
-  typedef typename std::vector< typename GaussianKernelType::Pointer >
-    GaussianKernelArrayType;
+  using GaussianKernelType = MetricImageType;
+  using GaussianKernelArrayType = typename std::vector< typename GaussianKernelType::Pointer >;
   GaussianKernelArrayType m_GaussianKernels;
-  typedef typename GaussianKernelType::SizeType GaussianKernelRadiusType;
-  typedef typename std::vector< GaussianKernelRadiusType >
-    GaussianKernelRadiusArrayType;
+  using GaussianKernelRadiusType = typename GaussianKernelType::SizeType;
+  using GaussianKernelRadiusArrayType = typename std::vector< GaussianKernelRadiusType >;
   GaussianKernelRadiusArrayType m_GaussianKernelRadii;
 
   SpacingType m_StrainSigma;
@@ -220,8 +214,8 @@ protected:
 
   unsigned int m_CurrentIteration;
 
-  typedef ZeroFluxNeumannPadImageFilter< MetricImageType,
-        MetricImageType > PadFilterType;
+  using PadFilterType = ZeroFluxNeumannPadImageFilter< MetricImageType,
+        MetricImageType >;
 
   /** We shift the minimum value of the metric image so 0 corresponds to
    * the theoretical lower bound. */

@@ -49,11 +49,11 @@ class ITK_TEMPLATE_EXPORT BlockAffineTransformMetricImageFilter :
   public MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >
 {
 public:
-  /** Standard class typedefs. */
-  typedef BlockAffineTransformMetricImageFilter                        Self;
-  typedef MetricImageFilter< TFixedImage, TMovingImage, TMetricImage > Superclass;
-  typedef SmartPointer<Self>                                           Pointer;
-  typedef SmartPointer<const Self>                                     ConstPointer;
+  /** Standard class type alias. */
+  using Self = BlockAffineTransformMetricImageFilter;
+  using Superclass = MetricImageFilter< TFixedImage, TMovingImage, TMetricImage >;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(BlockAffineTransformMetricImageFilter, MetricImageFilter);
@@ -65,34 +65,34 @@ public:
                       Superclass::ImageDimension);
 
   /** Type of the fixed image. */
-  typedef typename Superclass::FixedImageType   FixedImageType;
-  typedef typename FixedImageType::ConstPointer FixedImageConstPointerType;
+  using FixedImageType = typename Superclass::FixedImageType;
+  using FixedImageConstPointerType = typename FixedImageType::ConstPointer;
 
   /** Type of the moving image. */
-  typedef typename Superclass::MovingImageType   MovingImageType;
-  typedef typename MovingImageType::RegionType   MovingImageRegionType;
-  typedef typename MovingImageType::ConstPointer MovingImageConstPointerType;
+  using MovingImageType = typename Superclass::MovingImageType;
+  using MovingImageRegionType = typename MovingImageType::RegionType;
+  using MovingImageConstPointerType = typename MovingImageType::ConstPointer;
 
   /** Type of the metric image. */
-  typedef typename Superclass::MetricImageType       MetricImageType;
-  typedef typename MetricImageType::Pointer          MetricImagePointerType;
-  typedef typename MetricImageType::PixelType        MetricImagePixelType;
-  typedef typename Superclass::MetricImageRegionType MetricImageRegionType;
+  using MetricImageType = typename Superclass::MetricImageType;
+  using MetricImagePointerType = typename MetricImageType::Pointer;
+  using MetricImagePixelType = typename MetricImageType::PixelType;
+  using MetricImageRegionType = typename Superclass::MetricImageRegionType;
 
   /** Type of the strain image. */
-  typedef Image< SymmetricSecondRankTensor< TStrainValueType, ImageDimension >, ImageDimension > StrainImageType;
-  typedef typename StrainImageType::Pointer                                                      StrainImagePointerType;
-  typedef LinearInterpolateImageFunction< StrainImageType, double >                              StrainInterpolatorType;
+  using StrainImageType = Image< SymmetricSecondRankTensor< TStrainValueType, ImageDimension >, ImageDimension >;
+  using StrainImagePointerType = typename StrainImageType::Pointer;
+  using StrainInterpolatorType = LinearInterpolateImageFunction< StrainImageType, double >;
 
   /** Type of the transform. */
-  typedef AffineTransform< MetricImagePixelType, ImageDimension > TransformType;
+  using TransformType = AffineTransform< MetricImagePixelType, ImageDimension >;
 
   /** Type of the interpolator. */
   itkStaticConstMacro(SincWindowRadius, unsigned int, 4);
-  typedef Function::LanczosWindowFunction< SincWindowRadius > SincWindowType;
-  typedef ZeroFluxNeumannBoundaryCondition< FixedImageType >  SincWindowBoundaryConditionType;
-  typedef WindowedSincInterpolateImageFunction< FixedImageType, SincWindowRadius, SincWindowType,
-                                                SincWindowBoundaryConditionType, double > InterpolatorType;
+  using SincWindowType = Function::LanczosWindowFunction< SincWindowRadius >;
+  using SincWindowBoundaryConditionType = ZeroFluxNeumannBoundaryCondition< FixedImageType >;
+  using InterpolatorType = WindowedSincInterpolateImageFunction< FixedImageType, SincWindowRadius, SincWindowType,
+                                                SincWindowBoundaryConditionType, double >;
 
   /** Set/Get the Internal MetricImageFilter that actually generates the metric
    * image. */

@@ -61,38 +61,37 @@ class ITK_TEMPLATE_EXPORT MetricImageToDisplacementCalculator :
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(MetricImageToDisplacementCalculator);
 
-  /** Standard class typedefs. */
-  typedef MetricImageToDisplacementCalculator Self;
-  typedef Object                              Superclass;
-  typedef SmartPointer<Self>                  Pointer;
-  typedef SmartPointer<const Self>            ConstPointer;
+  /** Standard class type alias. */
+  using Self = MetricImageToDisplacementCalculator;
+  using Superclass = Object;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( MetricImageToDisplacementCalculator, Object );
 
   /** Type of the metric image (input pixels). */
-  typedef TMetricImage                        MetricImageType;
-  typedef typename MetricImageType::Pointer   MetricImagePointerType;
-  typedef typename MetricImageType::IndexType IndexType;
+  using MetricImageType = TMetricImage;
+  using MetricImagePointerType = typename MetricImageType::Pointer;
+  using IndexType = typename MetricImageType::IndexType;
 
   /** Type of the displacement image (output). */
-  typedef TDisplacementImage                         DisplacementImageType;
-  typedef typename DisplacementImageType::Pointer    DisplacementImagePointerType;
-  typedef typename DisplacementImageType::RegionType RegionType;
-  typedef typename DisplacementImageType::PointType  PointType;
+  using DisplacementImageType = TDisplacementImage;
+  using DisplacementImagePointerType = typename DisplacementImageType::Pointer;
+  using RegionType = typename DisplacementImageType::RegionType;
+  using PointType = typename DisplacementImageType::PointType;
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int,
                       TDisplacementImage::ImageDimension);
 
   /** Type of an image of center points of the fixed image blocks. */
-  typedef itk::Image<PointType, ImageDimension>   CenterPointsImageType;
-  typedef typename CenterPointsImageType::Pointer CenterPointsImagePointerType;
+  using CenterPointsImageType = itk::Image<PointType, ImageDimension>;
+  using CenterPointsImagePointerType = typename CenterPointsImageType::Pointer;
 
   /** Type of the metric image image. */
-  typedef itk::Image<MetricImagePointerType, ImageDimension>
-                                                 MetricImageImageType;
-  typedef typename MetricImageImageType::Pointer MetricImageImagePointerType;
+  using MetricImageImageType = itk::Image<MetricImagePointerType, ImageDimension>;
+  using MetricImageImagePointerType = typename MetricImageImageType::Pointer;
 
   /** Ensure all the metric images are stored in the class's MetricImageImage.
    * */
@@ -142,7 +141,7 @@ public:
   virtual void ModifyEnlargeOutputRequestedRegion( DataObject* data ) {}
 
 protected:
-  typedef ImageDuplicator<MetricImageType> MetricImageDuplicatorType;
+  using MetricImageDuplicatorType = ImageDuplicator<MetricImageType>;
   MetricImageToDisplacementCalculator();
 
   CenterPointsImagePointerType m_CenterPointsImage;

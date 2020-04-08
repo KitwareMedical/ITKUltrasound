@@ -62,38 +62,38 @@ public:
                       TDisplacementImage::ImageDimension);
 
   /** Type of the fixed image. */
-  typedef TFixedImage                         FixedImageType;
-  typedef typename FixedImageType::RegionType FixedRegionType;
+  using FixedImageType = TFixedImage;
+  using FixedRegionType = typename FixedImageType::RegionType;
 
   /** Type of the radius used to characterized the fixed image block. */
-  typedef typename FixedImageType::SizeType RadiusType;
+  using RadiusType = typename FixedImageType::SizeType;
 
   /** Type of the moving image. */
-  typedef TMovingImage                         MovingImageType;
-  typedef typename MovingImageType::RegionType MovingRegionType;
+  using MovingImageType = TMovingImage;
+  using MovingRegionType = typename MovingImageType::RegionType;
 
   /** Type of the metric image. */
-  typedef TMetricImage  MetricImageType;
+  using MetricImageType = TMetricImage;
 
   /** Type of the displacement image. */
-  typedef TDisplacementImage ImageType;
+  using ImageType = TDisplacementImage;
 
-  typedef typename ImageType::RegionType RegionType;
-  typedef typename RegionType::IndexType IndexType;
-  typedef typename RegionType::SizeType  SizeType;
+  using RegionType = typename ImageType::RegionType;
+  using IndexType = typename RegionType::IndexType;
+  using SizeType = typename RegionType::SizeType;
 
-  typedef typename ImageType::SpacingType   SpacingType;
-  typedef typename ImageType::DirectionType DirectionType;
-  typedef typename ImageType::PointType     OriginType;
+  using SpacingType = typename ImageType::SpacingType;
+  using DirectionType = typename ImageType::DirectionType;
+  using OriginType = typename ImageType::PointType;
 
   /** Type of the search region image. */
-  typedef Image< typename MovingImageType::RegionType, ImageDimension > SearchRegionImageType;
+  using SearchRegionImageType = Image< typename MovingImageType::RegionType, ImageDimension >;
 
-  /** Standard class typedefs. */
-  typedef ImageRegistrationMethod                                         Self;
-  typedef ImageToImageFilter< SearchRegionImageType, TDisplacementImage > Superclass;
-  typedef SmartPointer< Self >                                            Pointer;
-  typedef SmartPointer< const Self >                                      ConstPointer;
+  /** Standard class type alias. */
+  using Self = ImageRegistrationMethod;
+  using Superclass = ImageToImageFilter< SearchRegionImageType, TDisplacementImage >;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -103,15 +103,13 @@ public:
 
   /** Type of the point use for determing the location in the fixed image of a
    * block's center. */
-  typedef typename itk::Point< TCoordRep, ImageDimension > CoordRepType;
+  using CoordRepType = typename itk::Point< TCoordRep, ImageDimension >;
 
   /** Type of the MetricImageFilter. */
-  typedef MetricImageFilter< FixedImageType, MovingImageType, MetricImageType >
-    MetricImageFilterType;
+  using MetricImageFilterType = MetricImageFilter< FixedImageType, MovingImageType, MetricImageType >;
 
   /** Type of the MetricImageToDisplacementCalculator. */
-  typedef MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
-    MetricImageToDisplacementCalculatorType;
+  using MetricImageToDisplacementCalculatorType = MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >;
 
   /** Set the fixed image. */
   void SetFixedImage( FixedImageType * fixedImage );

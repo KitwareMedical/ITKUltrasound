@@ -38,11 +38,11 @@ class ITK_TEMPLATE_EXPORT SpecialCoordinatesImageToVTKStructuredGridFilter: publ
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(SpecialCoordinatesImageToVTKStructuredGridFilter);
 
-  /** Standard class typedefs. */
-  typedef SpecialCoordinatesImageToVTKStructuredGridFilter Self;
-  typedef ProcessObject                                    Superclass;
-  typedef SmartPointer<Self>                               Pointer;
-  typedef SmartPointer<const Self>                         ConstPointer;
+  /** Standard class type alias. */
+  using Self = SpecialCoordinatesImageToVTKStructuredGridFilter;
+  using Superclass = ProcessObject;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -50,10 +50,10 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro(SpecialCoordinatesImageToVTKStructuredGridFilter, ProcessObject);
 
-  typedef TInputImage InputImageType;
+  using InputImageType = TInputImage;
 
-  typedef vtkSmartPointer< vtkStructuredGrid >                   StructuredGridPointerType;
-  typedef SimpleDataObjectDecorator< StructuredGridPointerType > DecoratedStructuredGridPointerType;
+  using StructuredGridPointerType = vtkSmartPointer< vtkStructuredGrid >;
+  using DecoratedStructuredGridPointerType = SimpleDataObjectDecorator< StructuredGridPointerType >;
 
   itkStaticConstMacro(ImageDimension, unsigned int, InputImageType::ImageDimension);
 
@@ -70,7 +70,7 @@ protected:
   virtual ~SpecialCoordinatesImageToVTKStructuredGridFilter();
 
   /** Make a DataObject of the correct type to be used as the specified output. */
-  typedef ProcessObject::DataObjectPointerArraySizeType DataObjectPointerArraySizeType;
+  using DataObjectPointerArraySizeType = ProcessObject::DataObjectPointerArraySizeType;
   using Superclass::MakeOutput;
   virtual DataObjectPointer MakeOutput( DataObjectPointerArraySizeType ) override;
 

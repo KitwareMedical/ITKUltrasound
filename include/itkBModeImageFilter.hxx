@@ -73,10 +73,10 @@ BModeImageFilter< TInputImage, TOutputImage, TComplexImage >
   OutputImageType * outputPtr = this->GetOutput();
 
   // we need to compute the input requested region (size and start index)
-  typedef const typename OutputImageType::SizeType& OutputSizeType;
+  using OutputSizeType = const typename OutputImageType::SizeType&;
   OutputSizeType outputRequestedRegionSize =
     outputPtr->GetRequestedRegion().GetSize();
-  typedef const typename OutputImageType::IndexType& OutputIndexType;
+  using OutputIndexType = const typename OutputImageType::IndexType&;
   OutputIndexType outputRequestedRegionStartIndex =
     outputPtr->GetRequestedRegion().GetIndex();
 
@@ -110,12 +110,12 @@ BModeImageFilter< TInputImage, TOutputImage, TComplexImage >
 
   // we need to enlarge the region in the fft direction to the
   // largest possible in that direction
-  typedef const typename OutputImageType::SizeType& ConstOutputSizeType;
+  using ConstOutputSizeType = const typename OutputImageType::SizeType&;
   ConstOutputSizeType requestedSize =
     outputPtr->GetRequestedRegion().GetSize();
   ConstOutputSizeType outputLargeSize =
     outputPtr->GetLargestPossibleRegion().GetSize();
-  typedef const typename OutputImageType::IndexType& ConstOutputIndexType;
+  using ConstOutputIndexType = const typename OutputImageType::IndexType&;
   ConstOutputIndexType requestedIndex =
     outputPtr->GetRequestedRegion().GetIndex();
   ConstOutputIndexType outputLargeIndex =

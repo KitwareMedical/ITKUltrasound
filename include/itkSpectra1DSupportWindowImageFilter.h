@@ -48,19 +48,19 @@ public:
 
   itkStaticConstMacro( ImageDimension, unsigned int, TInputImage::ImageDimension );
 
-  typedef TInputImage                              InputImageType;
-  typedef typename InputImageType::IndexType       IndexType;
+  using InputImageType = TInputImage;
+  using IndexType = typename InputImageType::IndexType;
 
-  typedef std::list< IndexType >                   OutputPixelType;
-  typedef Image< OutputPixelType, ImageDimension > OutputImageType;
+  using OutputPixelType = std::list< IndexType >;
+  using OutputImageType = Image< OutputPixelType, ImageDimension >;
 
-  typedef unsigned int                             FFT1DSizeType;
+  using FFT1DSizeType = unsigned int;
 
-  /** Standard class typedefs. */
-  typedef Spectra1DSupportWindowImageFilter                     Self;
-  typedef ImageToImageFilter< InputImageType, OutputImageType > Superclass;
-  typedef SmartPointer< Self >                                  Pointer;
-  typedef SmartPointer< const Self >                            ConstPointer;
+  /** Standard class type alias. */
+  using Self = Spectra1DSupportWindowImageFilter;
+  using Superclass = ImageToImageFilter< InputImageType, OutputImageType >;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   itkTypeMacro( Spectra1DSupportWindowImageFilter, ImageToImageFilter );
   itkNewMacro( Self );
@@ -78,7 +78,7 @@ protected:
   Spectra1DSupportWindowImageFilter();
   virtual ~Spectra1DSupportWindowImageFilter() {};
 
-  typedef typename OutputImageType::RegionType OutputImageRegionType;
+  using OutputImageRegionType = typename OutputImageType::RegionType;
 
   void GenerateOutputInformation() override;
 

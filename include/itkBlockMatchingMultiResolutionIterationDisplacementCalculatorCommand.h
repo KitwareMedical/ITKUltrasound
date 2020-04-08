@@ -40,9 +40,9 @@ class MultiResolutionIterationDisplacementCalculatorCommand :
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionIterationDisplacementCalculatorCommand);
 
-  typedef MultiResolutionIterationDisplacementCalculatorCommand   Self;
-  typedef MultiResolutionIterationCommand<TMultiResolutionMethod> Superclass;
-  typedef SmartPointer<Self>                                      Pointer;
+  using Self = MultiResolutionIterationDisplacementCalculatorCommand;
+  using Superclass = MultiResolutionIterationCommand<TMultiResolutionMethod>;
+  using Pointer = SmartPointer<Self>;
 
   itkNewMacro( Self );
 
@@ -53,18 +53,17 @@ public:
 
   void Execute(const itk::Object * object, const itk::EventObject & event) override;
 
-  typedef TMultiResolutionMethod                                MultiResolutionMethod;
-  typedef typename MultiResolutionMethod::MetricImageType       MetricImageType;
-  typedef typename MultiResolutionMethod::DisplacementImageType DisplacementImageType;
+  using MultiResolutionMethod = TMultiResolutionMethod;
+  using MetricImageType = typename MultiResolutionMethod::MetricImageType;
+  using DisplacementImageType = typename MultiResolutionMethod::DisplacementImageType;
 
-  typedef typename MultiResolutionMethod::ImageRegistrationMethodType ImageRegistrationMethodType;
+  using ImageRegistrationMethodType = typename MultiResolutionMethod::ImageRegistrationMethodType;
   typedef typename ImageRegistrationMethodType::MetricImageToDisplacementCalculatorType
     MetricImageToDisplacementCalculatorType;
-  typedef typename MetricImageToDisplacementCalculatorType::Pointer MetricImageToDisplacementCalculatorPointer;
+  using MetricImageToDisplacementCalculatorPointer = typename MetricImageToDisplacementCalculatorType::Pointer;
 
-  typedef BayesianRegularizationDisplacementCalculator< MetricImageType, DisplacementImageType >
-                                            RegularizerType;
-  typedef typename RegularizerType::Pointer RegularizerPointer;
+  using RegularizerType = BayesianRegularizationDisplacementCalculator< MetricImageType, DisplacementImageType >;
+  using RegularizerPointer = typename RegularizerType::Pointer;
 
   itkSetObjectMacro( Level0ToNMinus1DisplacementCalculator, MetricImageToDisplacementCalculatorType );
   itkGetObjectMacro( Level0ToNMinus1DisplacementCalculator, MetricImageToDisplacementCalculatorType );

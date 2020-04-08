@@ -38,15 +38,15 @@ class ITK_TEMPLATE_EXPORT Inverse1DFFTImageFilter:
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(Inverse1DFFTImageFilter);
 
-  /** Standard class typedefs. */
-  typedef TInputImage                          InputImageType;
-  typedef TOutputImage                         OutputImageType;
-  typedef typename OutputImageType::RegionType OutputImageRegionType;
+  /** Standard class type alias. */
+  using InputImageType = TInputImage;
+  using OutputImageType = TOutputImage;
+  using OutputImageRegionType = typename OutputImageType::RegionType;
 
-  typedef Inverse1DFFTImageFilter                               Self;
-  typedef ImageToImageFilter< InputImageType, OutputImageType > Superclass;
-  typedef SmartPointer< Self >                                  Pointer;
-  typedef SmartPointer< const Self >                            ConstPointer;
+  using Self = Inverse1DFFTImageFilter;
+  using Superclass = ImageToImageFilter< InputImageType, OutputImageType >;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   itkStaticConstMacro(ImageDimension, unsigned int, InputImageType::ImageDimension );
 

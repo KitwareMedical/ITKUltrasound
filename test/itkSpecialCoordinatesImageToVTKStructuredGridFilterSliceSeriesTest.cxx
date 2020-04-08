@@ -43,14 +43,14 @@ int itkSpecialCoordinatesImageToVTKStructuredGridFilterSliceSeriesTest( int argc
   itk::HDF5UltrasoundImageIOFactory::RegisterOneFactory();
 
   const unsigned int Dimension = 3;
-  typedef unsigned char PixelType;
-  typedef double        ParametersValueType;
+  using PixelType = unsigned char;
+  using ParametersValueType = double;
 
-  typedef itk::Image< PixelType, Dimension - 1 >                                                         SliceImageType;
-  typedef itk::Euler3DTransform< ParametersValueType >                                                   TransformType;
-  typedef itk::SliceSeriesSpecialCoordinatesImage< SliceImageType, TransformType, PixelType, Dimension > SpecialCoordinatesImageType;
+  using SliceImageType = itk::Image< PixelType, Dimension - 1 >;
+  using TransformType = itk::Euler3DTransform< ParametersValueType >;
+  using SpecialCoordinatesImageType = itk::SliceSeriesSpecialCoordinatesImage< SliceImageType, TransformType, PixelType, Dimension >;
 
-  typedef itk::UltrasoundImageFileReader< SpecialCoordinatesImageType > ReaderType;
+  using ReaderType = itk::UltrasoundImageFileReader< SpecialCoordinatesImageType >;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
   try
@@ -63,7 +63,7 @@ int itkSpecialCoordinatesImageToVTKStructuredGridFilterSliceSeriesTest( int argc
     return EXIT_FAILURE;
     }
 
-  typedef itk::SpecialCoordinatesImageToVTKStructuredGridFilter< SpecialCoordinatesImageType > ConversionFilterType;
+  using ConversionFilterType = itk::SpecialCoordinatesImageToVTKStructuredGridFilter< SpecialCoordinatesImageType >;
   ConversionFilterType::Pointer conversionFilter = ConversionFilterType::New();
 
   conversionFilter->SetInput( reader->GetOutput() );

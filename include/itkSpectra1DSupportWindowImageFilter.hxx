@@ -70,7 +70,7 @@ Spectra1DSupportWindowImageFilter< TInputImage >
   const InputImageType * input = this->GetInput();
 
   const typename InputImageType::RegionType & inputLargestRegion = input->GetLargestPossibleRegion();
-  typedef typename OutputImageType::IndexType IndexType;
+  using IndexType = typename OutputImageType::IndexType;
   const IndexType largestIndexStart = inputLargestRegion.GetIndex();
   IndexType largestIndexStop = largestIndexStart + inputLargestRegion.GetSize();
   for( unsigned int dim = 0; dim < ImageDimension; ++dim )
@@ -78,9 +78,9 @@ Spectra1DSupportWindowImageFilter< TInputImage >
     largestIndexStop[dim] -= 1;
     }
 
-  typedef ImageLinearConstIteratorWithIndex< InputImageType > InputIteratorType;
+  using InputIteratorType = ImageLinearConstIteratorWithIndex< InputImageType >;
   InputIteratorType inputIt( input, outputRegionForThread );
-  typedef ImageScanlineIterator< OutputImageType > OutputIteratorType;
+  using OutputIteratorType = ImageScanlineIterator< OutputImageType >;
   OutputIteratorType outputIt( output, outputRegionForThread );
   const FFT1DSizeType fftSize = this->GetFFT1DSize();
   const SizeValueType sampleStep = this->GetStep();

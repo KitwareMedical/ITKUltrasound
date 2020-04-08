@@ -147,9 +147,9 @@ ImageRegistrationMethod< TFixedImage, TMovingImage,
   ImageType * output = this->GetOutput();
 
   RegionType requestedRegion = output->GetRequestedRegion();
-  typedef ImageRegionIteratorWithIndex< ImageType > IteratorType;
+  using IteratorType = ImageRegionIteratorWithIndex< ImageType >;
   IteratorType it( output, requestedRegion );
-  typedef ImageRegionConstIterator< SearchRegionImageType > SearchRegionImageIteratorType;
+  using SearchRegionImageIteratorType = ImageRegionConstIterator< SearchRegionImageType >;
   SearchRegionImageIteratorType searchIt( input, requestedRegion );
 
   // The fixed image region is the kernel block size, and its size is constant.

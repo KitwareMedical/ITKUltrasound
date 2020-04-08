@@ -40,11 +40,11 @@ class FrequencyDomain1DFilterFunction:
 {
 public:
 
-  /** Standard class typedefs. */
-  typedef FrequencyDomain1DFilterFunction      Self;
-  typedef Object                               Superclass;
-  typedef SmartPointer< Self >                 Pointer;
-  typedef SmartPointer< const Self >           ConstPointer;
+  /** Standard class type alias. */
+  using Self = FrequencyDomain1DFilterFunction;
+  using Superclass = Object;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   itkTypeMacro( FrequencyDomain1DFilterFunction, Object);
   itkNewMacro( Self );

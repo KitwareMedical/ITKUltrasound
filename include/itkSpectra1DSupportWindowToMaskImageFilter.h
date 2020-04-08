@@ -36,17 +36,17 @@ class ITK_TEMPLATE_EXPORT Spectra1DSupportWindowToMaskImageFilter:
 public:
   itkStaticConstMacro( ImageDimension, unsigned int, TInputImage::ImageDimension );
 
-  typedef TInputImage  InputImageType;
-  typedef TOutputImage OutputImageType;
+  using InputImageType = TInputImage;
+  using OutputImageType = TOutputImage;
 
-  typedef typename InputImageType::IndexType  IndexType;
-  typedef typename OutputImageType::PixelType OutputPixelType;
+  using IndexType = typename InputImageType::IndexType;
+  using OutputPixelType = typename OutputImageType::PixelType;
 
-  /** Standard class typedefs. */
-  typedef Spectra1DSupportWindowToMaskImageFilter               Self;
-  typedef ImageToImageFilter< InputImageType, OutputImageType > Superclass;
-  typedef SmartPointer< Self >                                  Pointer;
-  typedef SmartPointer< const Self >                            ConstPointer;
+  /** Standard class type alias. */
+  using Self = Spectra1DSupportWindowToMaskImageFilter;
+  using Superclass = ImageToImageFilter< InputImageType, OutputImageType >;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   itkTypeMacro( Spectra1DSupportWindowToMaskImageFilter, ImageToImageFilter );
   itkNewMacro( Self );

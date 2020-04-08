@@ -34,25 +34,25 @@ int itkBlockMatchingImageRegistrationMethodTest( int argc, char* argv[] )
     }
 
   const unsigned int Dimension = 2;
-  typedef signed short                            InputPixelType;
-  typedef itk::Image< InputPixelType, Dimension > InputImageType;
-  typedef InputImageType::SizeType                RadiusType;
+  using InputPixelType = signed short;
+  using InputImageType = itk::Image< InputPixelType, Dimension >;
+  using RadiusType = InputImageType::SizeType;
 
-  typedef double                                   MetricPixelType;
-  typedef itk::Image< MetricPixelType, Dimension > MetricImageType;
+  using MetricPixelType = double;
+  using MetricImageType = itk::Image< MetricPixelType, Dimension >;
 
-  typedef itk::Vector< MetricPixelType, Dimension > VectorType;
-  typedef itk::Image< VectorType, Dimension >       DisplacementImageType;
+  using VectorType = itk::Vector< MetricPixelType, Dimension >;
+  using DisplacementImageType = itk::Image< VectorType, Dimension >;
 
-  typedef double CoordRepType;
+  using CoordRepType = double;
 
-  typedef itk::ImageFileReader< InputImageType > ReaderType;
+  using ReaderType = itk::ImageFileReader< InputImageType >;
   ReaderType::Pointer fixedReader = ReaderType::New();
   fixedReader->SetFileName( argv[1] );
   ReaderType::Pointer movingReader = ReaderType::New();
   movingReader->SetFileName( argv[2] );
 
-  typedef itk::BlockMatching::SearchRegionImageInitializer< InputImageType, InputImageType > SearchRegionInitializerType;
+  using SearchRegionInitializerType = itk::BlockMatching::SearchRegionImageInitializer< InputImageType, InputImageType >;
   SearchRegionInitializerType::Pointer searchRegions = SearchRegionInitializerType::New();
   searchRegions->SetFixedImage( fixedReader->GetOutput() );
   searchRegions->SetMovingImage( movingReader->GetOutput() );
@@ -65,19 +65,19 @@ int itkBlockMatchingImageRegistrationMethodTest( int argc, char* argv[] )
   searchRegions->SetFixedBlockRadius( blockRadius );
   searchRegions->SetSearchRegionRadius( searchRadius );
 
-  typedef itk::BlockMatching::ImageRegistrationMethod< InputImageType, InputImageType, MetricImageType, DisplacementImageType, CoordRepType > RegistrationMethodType;
+  using RegistrationMethodType = itk::BlockMatching::ImageRegistrationMethod< InputImageType, InputImageType, MetricImageType, DisplacementImageType, CoordRepType >;
   RegistrationMethodType::Pointer registrationMethod = RegistrationMethodType::New();
   registrationMethod->SetFixedImage( fixedReader->GetOutput() );
   registrationMethod->SetMovingImage( movingReader->GetOutput() );
   registrationMethod->SetInput( searchRegions->GetOutput() );
   registrationMethod->SetRadius( blockRadius );
 
-  typedef itk::BlockMatching::NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< InputImageType, InputImageType, MetricImageType > MetricImageFilterType;
+  using MetricImageFilterType = itk::BlockMatching::NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< InputImageType, InputImageType, MetricImageType >;
   MetricImageFilterType::Pointer metricImageFilter = MetricImageFilterType::New();
 
   registrationMethod->SetMetricImageFilter( metricImageFilter );
 
-  typedef itk::ImageFileWriter< DisplacementImageType > WriterType;
+  using WriterType = itk::ImageFileWriter< DisplacementImageType >;
   WriterType::Pointer displacementWriter = WriterType::New();
   displacementWriter->SetFileName( argv[3] );
   displacementWriter->SetInput( registrationMethod->GetOutput() );

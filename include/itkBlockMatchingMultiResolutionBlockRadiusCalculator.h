@@ -41,11 +41,11 @@ class ITK_TEMPLATE_EXPORT MultiResolutionBlockRadiusCalculator :
   public Object
 {
 public:
-  /** Standard class typedefs. */
-  typedef MultiResolutionBlockRadiusCalculator Self;
-  typedef Object                               Superclass;
-  typedef SmartPointer< Self >                 Pointer;
-  typedef SmartPointer< const Self >           ConstPointer;
+  /** Standard class type alias. */
+  using Self = MultiResolutionBlockRadiusCalculator;
+  using Superclass = Object;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( MultiResolutionBlockRadiusCalculator, Object );
@@ -54,12 +54,12 @@ public:
   itkStaticConstMacro( ImageDimension, unsigned int, TFixedImage::ImageDimension );
 
   /** Type of the fixed image type. */
-  typedef TFixedImage                            FixedImageType;
-  typedef typename FixedImageType::ConstPointer  FixedImageConstPointer;
-  typedef typename FixedImageType::SizeType      RadiusType;
+  using FixedImageType = TFixedImage;
+  using FixedImageConstPointer = typename FixedImageType::ConstPointer;
+  using RadiusType = typename FixedImageType::SizeType;
 
-  /** ScheduleType typedef support. */
-  typedef Array2D<unsigned int>  ScheduleType;
+  /** ScheduleType type alias support. */
+  using ScheduleType = Array2D<unsigned int>;
 
   /** SetPyramidSchedule() gets called with the pyramid schedule after the pyramid has
    * been generated.  This information is the available for child classes if

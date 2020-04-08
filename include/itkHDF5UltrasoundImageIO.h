@@ -57,10 +57,10 @@ class Ultrasound_EXPORT HDF5UltrasoundImageIO: public StreamingImageIOBase
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(HDF5UltrasoundImageIO);
 
-  /** Standard class typedefs. */
-  typedef HDF5UltrasoundImageIO Self;
-  typedef StreamingImageIOBase  Superclass;
-  typedef SmartPointer< Self >  Pointer;
+  /** Standard class type alias. */
+  using Self = HDF5UltrasoundImageIO;
+  using Superclass = StreamingImageIOBase;
+  using Pointer = SmartPointer< Self >;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

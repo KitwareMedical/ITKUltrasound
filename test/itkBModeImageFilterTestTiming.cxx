@@ -37,11 +37,11 @@ int itkBModeImageFilterTestTiming( int argc, char* argv[] )
   const char * inputImageFileName = argv[1];
   const char * outputImageFileName = argv[2];
 
-  typedef float PixelType;
+  using PixelType = float;
   const unsigned int Dimension = 3;
-  typedef itk::Image< PixelType, Dimension > ImageType;
+  using ImageType = itk::Image< PixelType, Dimension >;
 
-  typedef itk::ImageFileReader< ImageType > ReaderType;
+  using ReaderType = itk::ImageFileReader< ImageType >;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
   try
@@ -56,11 +56,11 @@ int itkBModeImageFilterTestTiming( int argc, char* argv[] )
   ImageType::Pointer input = reader->GetOutput();
   input->DisconnectPipeline();
 
-  typedef itk::BModeImageFilter< ImageType, ImageType > BModeFilterType;
+  using BModeFilterType = itk::BModeImageFilter< ImageType, ImageType >;
   BModeFilterType::Pointer bMode = BModeFilterType::New();
   bMode->SetInput( input );
 
-  typedef itk::IntensityWindowingImageFilter< ImageType, ImageType > WindowingType;
+  using WindowingType = itk::IntensityWindowingImageFilter< ImageType, ImageType >;
   WindowingType::Pointer window  = WindowingType::New();
   window->SetInput( bMode->GetOutput() );
 
@@ -81,7 +81,7 @@ int itkBModeImageFilterTestTiming( int argc, char* argv[] )
 
   std::cout << "Frame rate achieved over " << clock.GetNumberOfStarts() << " runs was " << frame_rate << " fp" << clock.GetUnit() << "." << std::endl;
 
-  typedef itk::ImageFileWriter< ImageType > WriterType;
+  using WriterType = itk::ImageFileWriter< ImageType >;
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFileName );
   writer->SetInput( window->GetOutput() );

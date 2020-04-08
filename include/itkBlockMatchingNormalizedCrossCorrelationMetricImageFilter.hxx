@@ -185,7 +185,7 @@ NormalizedCrossCorrelationMetricImageFilter< TFixedImage, TMovingImage, TMetricI
   if( movingImageRegionIsSmall )
     {
     MetricImagePixelType movingMean = NumericTraits< MetricImagePixelType >::Zero;
-    typedef ImageRegionConstIterator< MovingImageType > movingImageIteratorType;
+    using movingImageIteratorType = ImageRegionConstIterator< MovingImageType >;
     movingImageIteratorType movingIt( movingPtr, movingRequestedRegion );
     for( movingIt.GoToBegin(); !movingIt.IsAtEnd(); ++movingIt )
       {
@@ -209,7 +209,7 @@ NormalizedCrossCorrelationMetricImageFilter< TFixedImage, TMovingImage, TMetricI
     }
 
   MetricImagePixelType fixedMean = NumericTraits< MetricImagePixelType >::Zero;
-  typedef ImageRegionConstIterator< FixedImageType > FixedImageIteratorType;
+  using FixedImageIteratorType = ImageRegionConstIterator< FixedImageType >;
   FixedImageIteratorType fixedIt( fixedPtr, this->m_FixedImageRegion );
   for( fixedIt.GoToBegin(); !fixedIt.IsAtEnd(); ++fixedIt )
     {
@@ -267,9 +267,9 @@ NormalizedCrossCorrelationMetricImageFilter< TFixedImage, TMovingImage, TMetricI
   fixedKernelOperator.SetImageKernel( fixedMinusMeanSquared );
   fixedKernelOperator.CreateToRadius( this->m_FixedRadius );
   NeighborhoodInnerProduct< MetricImageType > innerProduct;
-  typedef ConstNeighborhoodIterator< MetricImageType > NeighborhoodIteratorType;
-  typedef typename NeighborhoodAlgorithm::
-    ImageBoundaryFacesCalculator< MovingImageType > FaceCalculatorType;
+  using NeighborhoodIteratorType = ConstNeighborhoodIterator< MetricImageType >;
+  using FaceCalculatorType = typename NeighborhoodAlgorithm::
+    ImageBoundaryFacesCalculator< MovingImageType >;
   FaceCalculatorType faceCalculator;
   typename FaceCalculatorType::FaceListType faceList = faceCalculator(
     movingPtr, this->m_MovingImageRegion, this->m_MovingRadius );

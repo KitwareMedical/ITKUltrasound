@@ -49,12 +49,12 @@ class ITK_TEMPLATE_EXPORT NormalizedCrossCorrelationFFTMetricImageFilter :
                                                       TMovingImage, TMetricImage >
 {
 public:
-  /** Standard class typedefs. */
-  typedef NormalizedCrossCorrelationFFTMetricImageFilter Self;
-  typedef NormalizedCrossCorrelationMetricImageFilter< TFixedImage,
-                                                       TMovingImage, TMetricImage > Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  /** Standard class type alias. */
+  using Self = NormalizedCrossCorrelationFFTMetricImageFilter;
+  using Superclass = NormalizedCrossCorrelationMetricImageFilter< TFixedImage,
+                                                       TMovingImage, TMetricImage >;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -67,19 +67,19 @@ public:
   itkStaticConstMacro(ImageDimension, unsigned int, TFixedImage::ImageDimension);
 
   /** Type of the fixed image. */
-  typedef typename Superclass::FixedImageType   FixedImageType;
-  typedef typename FixedImageType::ConstPointer FixedImageConstPointerType;
+  using FixedImageType = typename Superclass::FixedImageType;
+  using FixedImageConstPointerType = typename FixedImageType::ConstPointer;
 
   /** Type of the moving image. */
-  typedef typename Superclass::MovingImageType   MovingImageType;
-  typedef typename MovingImageType::ConstPointer MovingImageConstPointerType;
+  using MovingImageType = typename Superclass::MovingImageType;
+  using MovingImageConstPointerType = typename MovingImageType::ConstPointer;
 
   /** Type of the metric image. */
-  typedef typename Superclass::MetricImageType   MetricImageType;
-  typedef typename MetricImageType::Pointer      MetricImagePointerType;
-  typedef typename MetricImageType::ConstPointer MetricImageConstPointerType;
-  typedef typename MetricImageType::RegionType   MetricImageRegionType;
-  typedef typename MetricImageType::PixelType    MetricImagePixelType;
+  using MetricImageType = typename Superclass::MetricImageType;
+  using MetricImagePointerType = typename MetricImageType::Pointer;
+  using MetricImageConstPointerType = typename MetricImageType::ConstPointer;
+  using MetricImageRegionType = typename MetricImageType::RegionType;
+  using MetricImagePixelType = typename MetricImageType::PixelType;
 
   /**
    * Set/Get the greatest prime factor allowed on the size of the padded image.
@@ -99,14 +99,14 @@ protected:
 
   virtual void GenerateData() override;
 
-  typedef ConstantPadImageFilter< MetricImageType, MetricImageType >                  PadFilterType;
-  typedef FFTShiftImageFilter< MetricImageType, MetricImageType >                     FFTShiftFilterType;
-  typedef RealToHalfHermitianForwardFFTImageFilter< MetricImageType >                 FFTFilterType;
-  typedef typename FFTFilterType::OutputImageType                                     ComplexImageType;
-  typedef HalfHermitianToRealInverseFFTImageFilter< ComplexImageType >                IFFTFilterType;
-  typedef ComplexConjugateImageFilter< ComplexImageType, ComplexImageType >           ComplexConjugateFilterType;
-  typedef MultiplyImageFilter< ComplexImageType, ComplexImageType, ComplexImageType > MultiplyFilterType;
-  typedef RegionFromReferenceImageFilter< MetricImageType, MetricImageType >          CropFilterType;
+  using PadFilterType = ConstantPadImageFilter< MetricImageType, MetricImageType >;
+  using FFTShiftFilterType = FFTShiftImageFilter< MetricImageType, MetricImageType >;
+  using FFTFilterType = RealToHalfHermitianForwardFFTImageFilter< MetricImageType >;
+  using ComplexImageType = typename FFTFilterType::OutputImageType;
+  using IFFTFilterType = HalfHermitianToRealInverseFFTImageFilter< ComplexImageType >;
+  using ComplexConjugateFilterType = ComplexConjugateImageFilter< ComplexImageType, ComplexImageType >;
+  using MultiplyFilterType = MultiplyImageFilter< ComplexImageType, ComplexImageType, ComplexImageType >;
+  using CropFilterType = RegionFromReferenceImageFilter< MetricImageType, MetricImageType >;
 
   typename PadFilterType::Pointer              m_KernelPadFilter;
   typename PadFilterType::Pointer              m_MovingPadFilter;

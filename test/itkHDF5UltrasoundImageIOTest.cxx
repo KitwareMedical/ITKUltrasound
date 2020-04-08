@@ -64,21 +64,21 @@ itkHDF5UltrasoundImageIOTest( int argc, char * argv [] )
   std::cout << "SliceType: " << sliceType << std::endl;
   ITK_TEST_EXPECT_EQUAL( sliceType, "Image" );
 
-  typedef itk::Array< double > SliceSpacingType;
+  using SliceSpacingType = itk::Array< double >;
   SliceSpacingType sliceSpacing( 2 );
   itk::ExposeMetaData< SliceSpacingType >( metaDataDict, "SliceSpacing", sliceSpacing );
   std::cout << "SliceSpacing: [ " << sliceSpacing[0] << ", " << sliceSpacing[1] << " ]" << std::endl;
   ITK_TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceSpacing[0], 0.1925 ) );
   ITK_TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceSpacing[1], 0.167811, 10, 1e-6 ) );
 
-  typedef itk::Array< double > SliceOriginType;
+  using SliceOriginType = itk::Array< double >;
   SliceOriginType sliceOrigin( 2 );
   itk::ExposeMetaData< SliceOriginType >( metaDataDict, "SliceOrigin", sliceOrigin );
   std::cout << "SliceOrigin: [ " << sliceOrigin[0] << ", " << sliceOrigin[1] << " ]" << std::endl;
   ITK_TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceOrigin[0], 0.0 ) );
   ITK_TEST_EXPECT_TRUE( itk::Math::FloatAlmostEqual( sliceOrigin[1], -27.2693, 10, 1e-3 ) );
 
-  typedef itk::Array< double > ElevationalSliceAnglesType;
+  using ElevationalSliceAnglesType = itk::Array< double >;
   ElevationalSliceAnglesType elevationalSliceAngles( imageIO->GetDimensions( 2 ) );
   itk::ExposeMetaData< ElevationalSliceAnglesType >( metaDataDict, "ElevationalSliceAngles", elevationalSliceAngles );
   std::cout << "ElevationalSliceAngles: [ " << elevationalSliceAngles[0] << ", " << elevationalSliceAngles[1] << ", " << elevationalSliceAngles[2] << " ..." << std::endl;

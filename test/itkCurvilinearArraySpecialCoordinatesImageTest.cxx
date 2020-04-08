@@ -39,12 +39,12 @@ int itkCurvilinearArraySpecialCoordinatesImageTest( int argc, char * argv[] )
   const char * outputImageFileName = argv[2];
 
   const unsigned int Dimension = 3;
-  typedef unsigned char PixelType;
+  using PixelType = unsigned char;
 
-  typedef itk::Image< PixelType, Dimension >                                   ImageType;
-  typedef itk::CurvilinearArraySpecialCoordinatesImage< PixelType, Dimension > SpecialCoordinatesImageType;
+  using ImageType = itk::Image< PixelType, Dimension >;
+  using SpecialCoordinatesImageType = itk::CurvilinearArraySpecialCoordinatesImage< PixelType, Dimension >;
 
-  typedef itk::ImageFileReader < SpecialCoordinatesImageType > ReaderType;
+  using ReaderType = itk::ImageFileReader < SpecialCoordinatesImageType >;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
   ITK_TRY_EXPECT_NO_EXCEPTION( reader->Update() );
@@ -62,7 +62,7 @@ int itkCurvilinearArraySpecialCoordinatesImageTest( int argc, char * argv[] )
 
   curvilinearArrayImage->Print( std::cout );
 
-  typedef itk::ContinuousIndex< double, Dimension > ContinuousIndexType;
+  using ContinuousIndexType = itk::ContinuousIndex< double, Dimension >;
   ContinuousIndexType continuousIndex;
   continuousIndex[0] = 0.0;
   continuousIndex[1] = 0.0;
@@ -86,7 +86,7 @@ int itkCurvilinearArraySpecialCoordinatesImageTest( int argc, char * argv[] )
   std::cout << "Transformed continuous index: " << continuousTransformedIndex << std::endl;
   std::cout << std::endl;
 
-  typedef itk::ResampleImageFilter< SpecialCoordinatesImageType, ImageType > ResamplerType;
+  using ResamplerType = itk::ResampleImageFilter< SpecialCoordinatesImageType, ImageType >;
   ResamplerType::Pointer resampler = ResamplerType::New();
   resampler->SetInput( reader->GetOutput() );
   SpecialCoordinatesImageType::SizeType outputSize = reader->GetOutput()->GetLargestPossibleRegion().GetSize();
@@ -102,11 +102,11 @@ int itkCurvilinearArraySpecialCoordinatesImageTest( int argc, char * argv[] )
   outputOrigin[2] = reader->GetOutput()->GetOrigin()[2];
   resampler->SetOutputOrigin( outputOrigin );
 
-  typedef itk::WindowedSincInterpolateImageFunction< SpecialCoordinatesImageType, 3 > WindowedSincInterpolatorType;
+  using WindowedSincInterpolatorType = itk::WindowedSincInterpolateImageFunction< SpecialCoordinatesImageType, 3 >;
   WindowedSincInterpolatorType::Pointer sincInterpolator = WindowedSincInterpolatorType::New();
   sincInterpolator->SetInputImage( curvilinearArrayImage );
 
-  typedef itk::ImageFileWriter< ImageType > WriterType;
+  using WriterType = itk::ImageFileWriter< ImageType >;
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFileName );
   writer->SetInput( resampler->GetOutput() );

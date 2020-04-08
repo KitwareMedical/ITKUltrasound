@@ -27,12 +27,12 @@ class ButterworthBandpass1DFilterFunction:
   public FrequencyDomain1DFilterFunction
 {
 public:
-  /** Standard class typedefs. */
+  /** Standard class type alias. */
 
-  typedef ButterworthBandpass1DFilterFunction    Self;
-  typedef FrequencyDomain1DFilterFunction        Superclass;
-  typedef SmartPointer< Self >                   Pointer;
-  typedef SmartPointer< const Self >             ConstPointer;
+  using Self = ButterworthBandpass1DFilterFunction;
+  using Superclass = FrequencyDomain1DFilterFunction;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   itkTypeMacro( ButterworthBandpass1DFilterFunction, FrequencyDomain1DFilterFunction);
   itkNewMacro( Self );

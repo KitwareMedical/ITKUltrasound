@@ -187,7 +187,7 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
   OutputImageType * output = this->GetOutput();
   const SupportWindowImageType * supportWindowImage = this->GetSupportWindowImage();
 
-  typedef ImageLinearIteratorWithIndex< OutputImageType > OutputIteratorType;
+  using OutputIteratorType = ImageLinearIteratorWithIndex< OutputImageType >;
   OutputIteratorType outputIt( output, outputRegionForThread );
   outputIt.SetDirection( 1 );
 
@@ -197,7 +197,7 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
 
   SpectraLinesContainerType spectraLines;
 
-  typedef ImageLinearConstIteratorWithIndex< SupportWindowImageType > SupportWindowIteratorType;
+  using SupportWindowIteratorType = ImageLinearConstIteratorWithIndex< SupportWindowImageType >;
   SupportWindowIteratorType supportWindowIt( supportWindowImage, outputRegionForThread );
   supportWindowIt.SetDirection( 1 );
 
@@ -289,10 +289,10 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
   const OutputImageType * referenceSpectra = this->GetReferenceSpectraImage();
   if( referenceSpectra != nullptr )
     {
-    typedef ImageScanlineConstIterator< OutputImageType > ReferenceSpectraIteratorType;
+    using ReferenceSpectraIteratorType = ImageScanlineConstIterator< OutputImageType >;
     ReferenceSpectraIteratorType referenceSpectraIt( referenceSpectra, outputRegionForThread );
 
-    typedef ImageScanlineIterator< OutputImageType >      PopulatedOutputIteratorType;
+    using PopulatedOutputIteratorType = ImageScanlineIterator< OutputImageType >;
     PopulatedOutputIteratorType populatedOutputIt( output, outputRegionForThread );
 
     const unsigned int numberOfComponents = referenceSpectra->GetNumberOfComponentsPerPixel();
@@ -305,7 +305,7 @@ Spectra1DImageFilter< TInputImage, TSupportWindowImage, TOutputImage >
       {
       while( !populatedOutputIt.IsAtEndOfLine() )
         {
-        typedef typename OutputImageType::PixelType PixelType;
+        using PixelType = typename OutputImageType::PixelType;
         PixelType outputPixel = populatedOutputIt.Get();
         const PixelType referencePixel = referenceSpectraIt.Get();
         for( unsigned int component = 0; component < numberOfComponents; ++component )

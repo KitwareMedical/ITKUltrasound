@@ -54,16 +54,16 @@ VnlComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
     output->GetRequestedRegion(),
     [this, input, output, direction, vectorSize]( const typename OutputImageType::RegionType & lambdaRegion )
     {
-    typedef ImageLinearConstIteratorWithIndex< InputImageType >  InputIteratorType;
-    typedef ImageLinearIteratorWithIndex< OutputImageType >      OutputIteratorType;
+    using InputIteratorType = ImageLinearConstIteratorWithIndex< InputImageType >;
+    using OutputIteratorType = ImageLinearIteratorWithIndex< OutputImageType >;
     InputIteratorType inputIt( input, lambdaRegion );
     OutputIteratorType outputIt( output, lambdaRegion );
 
     inputIt.SetDirection( direction );
     outputIt.SetDirection( direction );
 
-    typedef typename TInputImage::PixelType PixelType;
-    typedef vnl_vector< PixelType >         VNLVectorType;
+    using PixelType = typename TInputImage::PixelType;
+    using VNLVectorType = vnl_vector< PixelType >;
     VNLVectorType inputBuffer( vectorSize );
     typename VNLVectorType::iterator inputBufferIt  = inputBuffer.begin();
       // fft is done in-place

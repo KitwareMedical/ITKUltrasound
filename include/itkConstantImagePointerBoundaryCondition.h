@@ -63,16 +63,16 @@ class ITK_TEMPLATE_EXPORT ConstantImagePointerBoundaryCondition
   : public ImageBoundaryCondition< TImage >
 {
 public:
-  /** Self & superclass typedefs */
-  typedef ConstantImagePointerBoundaryCondition Self;
-  typedef ImageBoundaryCondition<TImage>        Superclass;
+  /** Self & superclass type alias */
+  using Self = ConstantImagePointerBoundaryCondition;
+  using Superclass = ImageBoundaryCondition<TImage>;
 
   /** Extract information from the image type */
-  typedef typename Superclass::PixelType        PixelType;
-  typedef typename Superclass::PixelPointerType PixelPointerType;
-  typedef typename Superclass::IndexType        IndexType;
-  typedef typename Superclass::OffsetType       OffsetType;
-  typedef typename Superclass::NeighborhoodType NeighborhoodType;
+  using PixelType = typename Superclass::PixelType;
+  using PixelPointerType = typename Superclass::PixelPointerType;
+  using IndexType = typename Superclass::IndexType;
+  using OffsetType = typename Superclass::OffsetType;
+  using NeighborhoodType = typename Superclass::NeighborhoodType;
 
   typedef typename Superclass::NeighborhoodAccessorFunctorType
                                  NeighborhoodAccessorFunctorType;

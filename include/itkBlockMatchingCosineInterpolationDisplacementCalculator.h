@@ -40,11 +40,11 @@ class ITK_TEMPLATE_EXPORT CosineInterpolationDisplacementCalculator:
   public MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
 {
 public:
-  /** Standard class typedefs. */
-  typedef CosineInterpolationDisplacementCalculator                               Self;
-  typedef MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage > Superclass;
-  typedef SmartPointer< Self >                                                    Pointer;
-  typedef SmartPointer< const Self >                                              ConstPointer;
+  /** Standard class type alias. */
+  using Self = CosineInterpolationDisplacementCalculator;
+  using Superclass = MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int,
@@ -56,12 +56,12 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro( CosineInterpolationDisplacementCalculator, MetricImageToDisplacementCalculator );
 
-  typedef typename Superclass::MetricImageType        MetricImageType;
-  typedef typename Superclass::MetricImagePointerType MetricImagePointerType;
-  typedef typename MetricImageType::PixelType         PixelType;
-  typedef typename MetricImageType::SpacingType       SpacingType;
-  typedef typename Superclass::PointType              PointType;
-  typedef typename Superclass::IndexType              IndexType;
+  using MetricImageType = typename Superclass::MetricImageType;
+  using MetricImagePointerType = typename Superclass::MetricImagePointerType;
+  using PixelType = typename MetricImageType::PixelType;
+  using SpacingType = typename MetricImageType::SpacingType;
+  using PointType = typename Superclass::PointType;
+  using IndexType = typename Superclass::IndexType;
 
   virtual void SetMetricImagePixel( const PointType & point, const IndexType& index, MetricImageType* image );
 

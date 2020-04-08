@@ -371,17 +371,17 @@ HDF5UltrasoundImageIO
     this->SetNumberOfDimensions( 3 );
 
     const std::string axialPixelLocationsDataSet( "/axial" );
-    typedef std::vector< double > AxialPixelLocationsType;
+    using AxialPixelLocationsType = std::vector< double >;
     AxialPixelLocationsType axialPixelLocations = this->ReadVector< double >( axialPixelLocationsDataSet );
     this->SetDimensions( 0, axialPixelLocations.size() );
 
     const std::string lateralPixelLocationsDataSet( "/lat" );
-    typedef std::vector< double > LateralPixelLocationsType;
+    using LateralPixelLocationsType = std::vector< double >;
     LateralPixelLocationsType lateralPixelLocations = this->ReadVector< double >( lateralPixelLocationsDataSet );
     this->SetDimensions( 1, lateralPixelLocations.size() );
 
     const std::string elevationalSliceAngleDataSet( "/eleAngle" );
-    typedef std::vector< double > ElevationalSliceAngleType;
+    using ElevationalSliceAngleType = std::vector< double >;
     ElevationalSliceAngleType elevationalSliceAngles = this->ReadVector< double >( elevationalSliceAngleDataSet );
     const size_t angles = elevationalSliceAngles.size();
     for( size_t ii = 0; ii < angles; ++ii )
@@ -404,19 +404,19 @@ HDF5UltrasoundImageIO
 
     EncapsulateMetaData< std::string >( metaDataDict, "SliceType", "Image" );
 
-    typedef Array< double > SliceSpacingType;
+    using SliceSpacingType = Array< double >;
     SliceSpacingType sliceSpacing( 2 );
     sliceSpacing[0] = ( axialPixelLocations[axialPixelLocations.size() - 1] - axialPixelLocations[0] ) / ( axialPixelLocations.size() - 1 );
     sliceSpacing[1] = ( lateralPixelLocations[lateralPixelLocations.size() - 1] - lateralPixelLocations[0] ) / ( lateralPixelLocations.size() - 1 );
     EncapsulateMetaData< SliceSpacingType >( metaDataDict, "SliceSpacing", sliceSpacing );
 
-    typedef Array< double > SliceOriginType;
+    using SliceOriginType = Array< double >;
     SliceOriginType sliceOrigin( 2 );
     sliceOrigin[0] = axialPixelLocations[0];
     sliceOrigin[1] = lateralPixelLocations[1];
     EncapsulateMetaData< SliceOriginType >( metaDataDict, "SliceOrigin", sliceOrigin );
 
-    typedef Array< double > ElevationalSliceAnglesMetaDataType;
+    using ElevationalSliceAnglesMetaDataType = Array< double >;
     ElevationalSliceAnglesMetaDataType elevationalSliceAnglesMetaData( &(elevationalSliceAngles[0]), elevationalSliceAngles.size() );
     EncapsulateMetaData< ElevationalSliceAnglesMetaDataType >( metaDataDict, "ElevationalSliceAngles", elevationalSliceAnglesMetaData );
     }

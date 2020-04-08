@@ -97,7 +97,7 @@ MultiResolutionFixedSearchRegionImageSource< TFixedImage, TMovingImage, TDisplac
     return;
     }
 
-  typedef typename MovingImageType::IndexType IndexType;
+  using IndexType = typename MovingImageType::IndexType;
 
   OutputRegionType                    region;
   OutputRegionType                    movingLargestRegion = this->m_MovingImage->GetLargestPossibleRegion();

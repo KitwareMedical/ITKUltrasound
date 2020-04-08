@@ -64,11 +64,11 @@ public:
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, TDisplacementImage::ImageDimension);
 
-  /** Standard class typedefs. */
-  typedef StrainWindowDisplacementCalculator                                    Self;
-  typedef MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage> Superclass;
-  typedef SmartPointer<Self>                                                    Pointer;
-  typedef SmartPointer<const Self>                                              ConstPointer;
+  /** Standard class type alias. */
+  using Self = StrainWindowDisplacementCalculator;
+  using Superclass = MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -76,24 +76,23 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro( StrainWindowDisplacementCalculator, MetricImageToDisplacementCalculator );
 
-  typedef typename Superclass::DisplacementImageType DisplacementImageType;
-  typedef typename DisplacementImageType::RegionType RegionType;
+  using DisplacementImageType = typename Superclass::DisplacementImageType;
+  using RegionType = typename DisplacementImageType::RegionType;
 
-  typedef ImageToImageFilter<DisplacementImageType,
-                                  Image<SymmetricSecondRankTensor<TStrainValueType, ImageDimension>, ImageDimension> >
-  StrainImageFilterType;
-  typedef typename StrainImageFilterType::OutputImagePixelType StrainTensorType;
-  typedef typename StrainImageFilterType::OutputImageType      StrainImageType;
+  using StrainImageFilterType = ImageToImageFilter<DisplacementImageType,
+                                  Image<SymmetricSecondRankTensor<TStrainValueType, ImageDimension>, ImageDimension> >;
+  using StrainTensorType = typename StrainImageFilterType::OutputImagePixelType;
+  using StrainImageType = typename StrainImageFilterType::OutputImageType;
 
   /** @todo: Should this filter define ModifyGenerateInputRequestedRegion and ModifyEnlargeOutputRequestedRegion
    * so the LargestPossibleRegion is defined?  Behavior might not be as good on
    * the edges of the image, but then streaming is not possible.  Maybe it
    * should be optional? */
 
-  typedef typename Superclass::PointType       PointType;
-  typedef typename Superclass::IndexType       IndexType;
-  typedef typename Superclass::MetricImageType MetricImageType;
-  typedef typename MetricImageType::PixelType  MetricPixelType;
+  using PointType = typename Superclass::PointType;
+  using IndexType = typename Superclass::IndexType;
+  using MetricImageType = typename Superclass::MetricImageType;
+  using MetricPixelType = typename MetricImageType::PixelType;
 
   void SetDisplacementImage( DisplacementImageType* image ) override
     {
@@ -162,19 +161,19 @@ protected:
   unsigned int m_CurrentIteration;
   unsigned int m_MaximumIterations;
 
-  typedef Image<bool, ImageDimension> MaskType;
+  using MaskType = Image<bool, ImageDimension>;
   typename MaskType::Pointer m_Mask;
 
-  typedef NthElementImageAdaptor< StrainImageType, MetricPixelType > NthElementAdaptorType;
+  using NthElementAdaptorType = NthElementImageAdaptor< StrainImageType, MetricPixelType >;
   typename NthElementAdaptorType::Pointer                            m_NthElementAdaptor;
 
-  typedef AbsImageFilter< NthElementAdaptorType, MetricImageType > AbsFilterType;
+  using AbsFilterType = AbsImageFilter< NthElementAdaptorType, MetricImageType >;
   typename AbsFilterType::Pointer                                  m_AbsFilter;
 
   // There are cases where you will get a large negative pixel, followed by a
   // normal pixel, followed by a large positive strain pixel, for instance.
   // This filter helps address that problem.
-  typedef BoxMeanImageFilter< MetricImageType, MetricImageType > BoxMeanImageFilterType;
+  using BoxMeanImageFilterType = BoxMeanImageFilter< MetricImageType, MetricImageType >;
   typename BoxMeanImageFilterType::Pointer                       m_BoxMeanFilter;
 
 private:

@@ -37,9 +37,9 @@ class Ultrasound_EXPORT TextProgressBarCommand:
   public Command
 {
 public:
-  typedef TextProgressBarCommand Self;
-  typedef Command                Superclass;
-  typedef SmartPointer< Self >   Pointer;
+  using Self = TextProgressBarCommand;
+  using Superclass = Command;
+  using Pointer = SmartPointer< Self >;
 
   itkNewMacro( Self );
 

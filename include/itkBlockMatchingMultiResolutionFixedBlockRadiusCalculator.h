@@ -43,11 +43,11 @@ class ITK_TEMPLATE_EXPORT MultiResolutionFixedBlockRadiusCalculator :
   public  MultiResolutionBlockRadiusCalculator< TFixedImage >
 {
 public:
-  /** Standard class typedefs. */
-  typedef MultiResolutionFixedBlockRadiusCalculator           Self;
-  typedef MultiResolutionBlockRadiusCalculator< TFixedImage > Superclass;
-  typedef SmartPointer< Self >                                Pointer;
-  typedef SmartPointer< const Self >                          ConstPointer;
+  /** Standard class type alias. */
+  using Self = MultiResolutionFixedBlockRadiusCalculator;
+  using Superclass = MultiResolutionBlockRadiusCalculator< TFixedImage >;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   /** Run-time type information ( and related methods ). */
   itkTypeMacro( MultiResolutionFixedBlockRadiusCalculator, MultiResolutionBlockRadiusCalculator );
@@ -60,8 +60,8 @@ public:
                       Superclass::ImageDimension );
 
   /** Type of the fixed image. */
-  typedef typename Superclass::FixedImageType  FixedImageType;
-  typedef typename Superclass::RadiusType      RadiusType;
+  using FixedImageType = typename Superclass::FixedImageType;
+  using RadiusType = typename Superclass::RadiusType;
 
   /** Set the radius used for all pyramid levels. */
   void SetRadius( const RadiusType& radius )

@@ -231,7 +231,7 @@ DisplacementPipeline< TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImage
     }
 
   // Filter out peak hopping.
-  typedef typename StrainWindowDisplacementCalculatorType::StrainTensorType StrainTensorType;
+  using StrainTensorType = typename StrainWindowDisplacementCalculatorType::StrainTensorType;
   StrainTensorType maxStrain;
   maxStrain.Fill( m_MaximumAbsStrainAllowed );
   m_StrainWindower->SetMaximumAbsStrain( maxStrain );

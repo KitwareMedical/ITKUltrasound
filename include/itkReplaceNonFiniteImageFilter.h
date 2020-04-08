@@ -34,8 +34,8 @@ template< typename TInput, typename TOutput >
 class ReplaceNonFinite
 {
 public:
-  typedef TInput  InputType;
-  typedef TOutput OutputType;
+  using InputType = TInput;
+  using OutputType = TOutput;
 
   ReplaceNonFinite(): m_ReplacementValue( NumericTraits< OutputType >::ZeroValue() ) {}
   ~ReplaceNonFinite() {}
@@ -86,14 +86,14 @@ class ReplaceNonFiniteImageFilter:
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(ReplaceNonFiniteImageFilter);
 
-  /** Standard class typedefs. */
-  typedef ReplaceNonFiniteImageFilter Self;
-  typedef UnaryFunctorImageFilter< TInputImage, TOutputImage,
+  /** Standard class type alias. */
+  using Self = ReplaceNonFiniteImageFilter;
+  using Superclass = UnaryFunctorImageFilter< TInputImage, TOutputImage,
                                    Functor::ReplaceNonFinite< typename TInputImage::PixelType,
-                                                  typename TOutputImage::PixelType > >  Superclass;
+                                                  typename TOutputImage::PixelType > >;
 
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

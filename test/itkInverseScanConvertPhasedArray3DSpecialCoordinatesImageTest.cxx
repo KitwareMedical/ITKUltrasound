@@ -34,15 +34,15 @@ int itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest( int argc, cha
   const char * outputImageFile = argv[1];
 
   const unsigned int Dimension = 3;
-  typedef float                                                  RealPixelType;
-  typedef unsigned char                                          PixelType;
-  typedef itk::Image< RealPixelType, Dimension >                 RealImageType;
-  typedef itk::Image< PixelType, Dimension >                     InputImageType;
-  typedef itk::PhasedArray3DSpecialCoordinatesImage< PixelType > OutputImageType;
-  typedef double                                                 CoordRepType;
+  using RealPixelType = float;
+  using PixelType = unsigned char;
+  using RealImageType = itk::Image< RealPixelType, Dimension >;
+  using InputImageType = itk::Image< PixelType, Dimension >;
+  using OutputImageType = itk::PhasedArray3DSpecialCoordinatesImage< PixelType >;
+  using CoordRepType = double;
 
 
-  typedef itk::GaborImageSource< RealImageType > SourceType;
+  using SourceType = itk::GaborImageSource< RealImageType >;
   SourceType::Pointer source = SourceType::New();
 
   SourceType::ArrayType sigma;
@@ -77,7 +77,7 @@ int itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest( int argc, cha
 
   source->SetCalculateImaginaryPart( true );
 
-  typedef itk::RescaleIntensityImageFilter< RealImageType, InputImageType > RescalerType;
+  using RescalerType = itk::RescaleIntensityImageFilter< RealImageType, InputImageType >;
   RescalerType::Pointer rescaler = RescalerType::New();
   rescaler->SetInput( source->GetOutput() );
 
@@ -93,7 +93,7 @@ int itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest( int argc, cha
   InputImageType::Pointer gaborInput = rescaler->GetOutput();
   gaborInput->DisconnectPipeline();
 
-  typedef itk::ResampleImageFilter< InputImageType, OutputImageType > ResamplerType;
+  using ResamplerType = itk::ResampleImageFilter< InputImageType, OutputImageType >;
   ResamplerType::Pointer resampler = ResamplerType::New();
   resampler->SetInput( gaborInput );
 
@@ -135,7 +135,7 @@ int itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest( int argc, cha
   phasedArraySampledData->Print( std::cout );
   phasedArraySampledData->GetMetaDataDictionary().Print( std::cout );
 
-  typedef itk::ImageFileWriter< OutputImageType > WriterType;
+  using WriterType = itk::ImageFileWriter< OutputImageType >;
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFile );
   writer->SetInput( phasedArraySampledData );

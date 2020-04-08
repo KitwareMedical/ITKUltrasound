@@ -47,16 +47,16 @@ class ITK_TEMPLATE_EXPORT StrainWindowBlockAffineTransformCommand :
   public Command
 {
 public:
-  typedef StrainWindowBlockAffineTransformCommand Self;
-  typedef Command                                 Superclass;
-  typedef SmartPointer< Self >                    Pointer;
+  using Self = StrainWindowBlockAffineTransformCommand;
+  using Superclass = Command;
+  using Pointer = SmartPointer< Self >;
 
   itkNewMacro( Self );
 
-  typedef TStrainWindowDisplacemenCalculator StrainWindowDisplacementCalculatorType;
+  using StrainWindowDisplacementCalculatorType = TStrainWindowDisplacemenCalculator;
 
-  typedef TBlockAffineTransformMetricImageFilter BlockAffineTransformMetricImageFilterType;
-  typedef TStrainImageFilter                     StrainImageFilterType;
+  using BlockAffineTransformMetricImageFilterType = TBlockAffineTransformMetricImageFilter;
+  using StrainImageFilterType = TStrainImageFilter;
 
   void Execute(itk::Object *caller, const itk::EventObject & event) override
     {
@@ -76,12 +76,11 @@ public:
 protected:
   StrainWindowBlockAffineTransformCommand();
 
-  typedef LinearLeastSquaresGradientImageFilter< typename StrainWindowDisplacementCalculatorType::MetricImageType,
+  using LeastSquaresFilterType = LinearLeastSquaresGradientImageFilter< typename StrainWindowDisplacementCalculatorType::MetricImageType,
           typename StrainWindowDisplacementCalculatorType::MetricPixelType,
-          typename StrainWindowDisplacementCalculatorType::MetricPixelType >
-    LeastSquaresFilterType;
+          typename StrainWindowDisplacementCalculatorType::MetricPixelType >;
 
-  typedef typename BlockAffineTransformMetricImageFilterType::Pointer BlockAffineTransformMetricImageFilterPointer;
+  using BlockAffineTransformMetricImageFilterPointer = typename BlockAffineTransformMetricImageFilterType::Pointer;
 
   BlockAffineTransformMetricImageFilterPointer m_BlockAffineTransformMetricImageFilter;
 

@@ -101,8 +101,8 @@ TFixedImage, TMovingImage, TMetricImage, TDisplacementImage >
     itkExceptionMacro( << "Threshold has not been set." );
     }
 
-  typedef typename MetricImageType::RegionType MetricRegionType;
-  typedef typename MetricRegionType::IndexType MetricIndexType;
+  using MetricRegionType = typename MetricImageType::RegionType;
+  using MetricIndexType = typename MetricRegionType::IndexType;
 
   // Lower and upper indices of the bounding box above the threshold.
   MetricIndexType upperIndex = metricImage->GetBufferedRegion().GetIndex();
@@ -111,7 +111,7 @@ TFixedImage, TMovingImage, TMetricImage, TDisplacementImage >
   for( i = 0; i < ImageDimension; ++i )
     lowerIndex[i] = upperIndex[i] + metricImage->GetBufferedRegion().GetSize()[i];
 
-  typedef itk::ImageLinearConstIteratorWithIndex< MetricImageType > IteratorType;
+  using IteratorType = itk::ImageLinearConstIteratorWithIndex< MetricImageType >;
   IteratorType it( metricImage, metricImage->GetBufferedRegion() );
   for( i = 0; i < ImageDimension; ++i )
     {

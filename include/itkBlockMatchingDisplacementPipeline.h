@@ -71,25 +71,25 @@ public:
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, VImageDimension);
 
-  typedef TFixedPixel                              FixedPixelType;
-  typedef Image< TFixedPixel, ImageDimension >     FixedImageType;
-  typedef typename FixedImageType::SizeType        RadiusType;
+  using FixedPixelType = TFixedPixel;
+  using FixedImageType = Image< TFixedPixel, ImageDimension >;
+  using RadiusType = typename FixedImageType::SizeType;
 
-  typedef TMovingPixel                             MovingPixelType;
-  typedef Image< MovingPixelType, ImageDimension > MovingImageType;
+  using MovingPixelType = TMovingPixel;
+  using MovingImageType = Image< MovingPixelType, ImageDimension >;
 
-  typedef TMetricPixel                             MetricPixelType;
-  typedef Image< MetricPixelType, ImageDimension > MetricImageType;
+  using MetricPixelType = TMetricPixel;
+  using MetricImageType = Image< MetricPixelType, ImageDimension >;
 
-  typedef Vector<MetricPixelType, ImageDimension > VectorType;
-  typedef Image<VectorType, ImageDimension >       DisplacementImageType;
-  typedef DisplacementImageType                    OutputImageType;
+  using VectorType = Vector<MetricPixelType, ImageDimension >;
+  using DisplacementImageType = Image<VectorType, ImageDimension >;
+  using OutputImageType = DisplacementImageType;
 
-  /** Standard class typedefs. */
-  typedef DisplacementPipeline                                        Self;
-  typedef ImageToImageFilter< FixedImageType, DisplacementImageType > Superclass;
-  typedef SmartPointer< Self >                                        Pointer;
-  typedef SmartPointer< const Self >                                  ConstPointer;
+  /** Standard class type alias. */
+  using Self = DisplacementPipeline;
+  using Superclass = ImageToImageFilter< FixedImageType, DisplacementImageType >;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( DisplacementPipeline, ImageToImageFilter );
@@ -97,97 +97,89 @@ public:
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
 
-  typedef TCoordRep CoordRepType;
+  using CoordRepType = TCoordRep;
 
-  typedef ResampleImageFilter< FixedImageType, FixedImageType, CoordRepType >   FixedResamplerType;
-  typedef ResampleImageFilter< MovingImageType, MovingImageType, CoordRepType > MovingResamplerType;
+  using FixedResamplerType = ResampleImageFilter< FixedImageType, FixedImageType, CoordRepType >;
+  using MovingResamplerType = ResampleImageFilter< MovingImageType, MovingImageType, CoordRepType >;
 
   const static unsigned int RESAMPLE_RADIUS = 4;
-  typedef Function::WelchWindowFunction< RESAMPLE_RADIUS >    ResampleWindowType;
-  typedef ZeroFluxNeumannBoundaryCondition< FixedImageType >  FixedBoundaryConditionType;
-  typedef WindowedSincInterpolateImageFunction< FixedImageType,
+  using ResampleWindowType = Function::WelchWindowFunction< RESAMPLE_RADIUS >;
+  using FixedBoundaryConditionType = ZeroFluxNeumannBoundaryCondition< FixedImageType >;
+  using FixedResamplerInterpolatorType = WindowedSincInterpolateImageFunction< FixedImageType,
                                                     RESAMPLE_RADIUS, ResampleWindowType, FixedBoundaryConditionType,
-                                                    CoordRepType> FixedResamplerInterpolatorType;
-  typedef ZeroFluxNeumannBoundaryCondition< MovingImageType >  MovingBoundaryConditionType;
-  typedef WindowedSincInterpolateImageFunction< MovingImageType,
+                                                    CoordRepType>;
+  using MovingBoundaryConditionType = ZeroFluxNeumannBoundaryCondition< MovingImageType >;
+  using MovingResamplerInterpolatorType = WindowedSincInterpolateImageFunction< MovingImageType,
                                                     RESAMPLE_RADIUS, ResampleWindowType, MovingBoundaryConditionType,
-                                                    CoordRepType> MovingResamplerInterpolatorType;
+                                                    CoordRepType>;
 
   /** The block radius calculator. */
-  typedef BlockMatching::MultiResolutionMinMaxBlockRadiusCalculator< FixedImageType >
-    BlockRadiusCalculatorType;
+  using BlockRadiusCalculatorType = BlockMatching::MultiResolutionMinMaxBlockRadiusCalculator< FixedImageType >;
 
   /** The search region image source. */
-  typedef BlockMatching::MultiResolutionMinMaxSearchRegionImageSource< FixedImageType,
-          MovingImageType, DisplacementImageType > SearchRegionImageSourceType;
+  using SearchRegionImageSourceType = BlockMatching::MultiResolutionMinMaxSearchRegionImageSource< FixedImageType,
+          MovingImageType, DisplacementImageType >;
 
   /** The registration method. */
-  typedef BlockMatching::ImageRegistrationMethod<FixedImageType,
+  using LevelRegistrationMethodType = BlockMatching::ImageRegistrationMethod<FixedImageType,
                                                       MovingImageType, MetricImageType, DisplacementImageType,
-                                                      CoordRepType>
-    LevelRegistrationMethodType;
+                                                      CoordRepType>;
 
   /** Interpolation classes. */
-  typedef BlockMatching::ParabolicInterpolationDisplacementCalculator<
+  using ParabolicInterpolatorType = BlockMatching::ParabolicInterpolationDisplacementCalculator<
     MetricImageType,
-    DisplacementImageType> ParabolicInterpolatorType;
-  typedef BlockMatching::MaximumPixelDisplacementCalculator<MetricImageType,
-                                                                 DisplacementImageType>
-  MaximumPixelDisplacementCalculatorType;
-  typedef BlockMatching::OptimizingInterpolationDisplacementCalculator<MetricImageType,
-                                                                            DisplacementImageType> FinalInterpolatorType;
+    DisplacementImageType>;
+  using MaximumPixelDisplacementCalculatorType = BlockMatching::MaximumPixelDisplacementCalculator<MetricImageType,
+                                                                 DisplacementImageType>;
+  using FinalInterpolatorType = BlockMatching::OptimizingInterpolationDisplacementCalculator<MetricImageType,
+                                                                            DisplacementImageType>;
   const static unsigned int OPTIMIZING_INTERPOLATOR_RADIUS = 4;
-  typedef Function::WelchWindowFunction< OPTIMIZING_INTERPOLATOR_RADIUS >  WindowType;
-  typedef ZeroFluxNeumannBoundaryCondition< MetricImageType >              ResampleBoundaryConditionType;
-  typedef WindowedSincInterpolateImageFunction<MetricImageType,
+  using WindowType = Function::WelchWindowFunction< OPTIMIZING_INTERPOLATOR_RADIUS >;
+  using ResampleBoundaryConditionType = ZeroFluxNeumannBoundaryCondition< MetricImageType >;
+  using SubsampleInterpolatorType = WindowedSincInterpolateImageFunction<MetricImageType,
                                                     OPTIMIZING_INTERPOLATOR_RADIUS, WindowType, ResampleBoundaryConditionType,
-                                                    CoordRepType> SubsampleInterpolatorType;
-  typedef AmoebaOptimizer SubsampleOptimizerType;
+                                                    CoordRepType>;
+  using SubsampleOptimizerType = AmoebaOptimizer;
 
   /** Filter out peak hopping. */
-  typedef BlockMatching::StrainWindowDisplacementCalculator<MetricImageType, DisplacementImageType, MetricPixelType >
-    StrainWindowDisplacementCalculatorType;
-  typedef StrainImageFilter<DisplacementImageType, MetricPixelType, MetricPixelType>
-  StrainWindowStrainFilterType;
-  typedef HigherOrderAccurateGradientImageFilter<MetricImageType, MetricPixelType, MetricPixelType>
-  HigherOrderAccurateGradientFilterType;
-  typedef LinearLeastSquaresGradientImageFilter< MetricImageType, MetricPixelType, MetricPixelType >
-    LinearLeastSquaresGradientFilterType;
+  using StrainWindowDisplacementCalculatorType = BlockMatching::StrainWindowDisplacementCalculator<MetricImageType, DisplacementImageType, MetricPixelType >;
+  using StrainWindowStrainFilterType = StrainImageFilter<DisplacementImageType, MetricPixelType, MetricPixelType>;
+  using HigherOrderAccurateGradientFilterType = HigherOrderAccurateGradientImageFilter<MetricImageType, MetricPixelType, MetricPixelType>;
+  using LinearLeastSquaresGradientFilterType = LinearLeastSquaresGradientImageFilter< MetricImageType, MetricPixelType, MetricPixelType >;
 
   /** The image similarity metric. */
-  typedef BlockMatching::NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter<
-    FixedImageType, MovingImageType, MetricImageType> MetricImageFilterType;
+  using MetricImageFilterType = BlockMatching::NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter<
+    FixedImageType, MovingImageType, MetricImageType>;
 
   /** Scale the fixed block by the strain at higher levels. */
-  typedef BlockMatching::BlockAffineTransformMetricImageFilter< FixedImageType,
-          MovingImageType, MetricImageType, MetricPixelType > BlockTransformMetricImageFilterType;
-  typedef BlockMatching::StrainWindowBlockAffineTransformCommand< StrainWindowDisplacementCalculatorType,
-          BlockTransformMetricImageFilterType, StrainWindowStrainFilterType > BlockTransformCommandType;
+  using BlockTransformMetricImageFilterType = BlockMatching::BlockAffineTransformMetricImageFilter< FixedImageType,
+          MovingImageType, MetricImageType, MetricPixelType >;
+  using BlockTransformCommandType = BlockMatching::StrainWindowBlockAffineTransformCommand< StrainWindowDisplacementCalculatorType,
+          BlockTransformMetricImageFilterType, StrainWindowStrainFilterType >;
 
   /** Perform regularization. */
-  typedef BlockMatching::BayesianRegularizationDisplacementCalculator<
-    MetricImageType, DisplacementImageType> DisplacmentRegularizerType;
+  using DisplacmentRegularizerType = BlockMatching::BayesianRegularizationDisplacementCalculator<
+    MetricImageType, DisplacementImageType>;
 
   /** Multi-resolution registration method. */
-  typedef BlockMatching::MultiResolutionImageRegistrationMethod< FixedImageType, MovingImageType, MetricImageType,
+  using RegistrationMethodType = BlockMatching::MultiResolutionImageRegistrationMethod< FixedImageType, MovingImageType, MetricImageType,
                                                                      DisplacementImageType,
-                                                                     CoordRepType> RegistrationMethodType;
+                                                                     CoordRepType>;
 
   /** Set the displacement calculator and regularizer iterations at every level. */
-  typedef BlockMatching::MultiResolutionIterationDisplacementCalculatorCommand<RegistrationMethodType>
-    DisplacementCalculatorCommandType;
+  using DisplacementCalculatorCommandType = BlockMatching::MultiResolutionIterationDisplacementCalculatorCommand<RegistrationMethodType>;
 
   /** Calculate strains. */
-  typedef StrainImageFilter<DisplacementImageType, MetricPixelType, MetricPixelType> StrainFilterType;
-  typedef typename StrainFilterType::OutputImageType                                 TensorImageType;
+  using StrainFilterType = StrainImageFilter<DisplacementImageType, MetricPixelType, MetricPixelType>;
+  using TensorImageType = typename StrainFilterType::OutputImageType;
 
-  typedef FixedArray< double, ImageDimension > UpsamplingRatioType;
+  using UpsamplingRatioType = FixedArray< double, ImageDimension >;
 
-  typedef FixedArray< SizeValueType, ImageDimension > BlockRadiusType;
+  using BlockRadiusType = FixedArray< SizeValueType, ImageDimension >;
 
-  typedef typename SearchRegionImageSourceType::FactorType SearchRegionFactorType;
+  using SearchRegionFactorType = typename SearchRegionImageSourceType::FactorType;
 
-  typedef typename MetricImageType::SpacingType RegularizationStrainSigmaType;
+  using RegularizationStrainSigmaType = typename MetricImageType::SpacingType;
 
   /** Set the fixed image. */
   void SetFixedImage( FixedImageType * fixed )

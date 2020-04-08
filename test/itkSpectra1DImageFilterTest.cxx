@@ -38,10 +38,10 @@ int itkSpectra1DImageFilterTest( int argc, char* argv[] )
   const char * outputImageFileName = argv[3];
 
   const unsigned int Dimension = 2;
-  typedef short                              PixelType;
-  typedef itk::Image< PixelType, Dimension > ImageType;
+  using PixelType = short;
+  using ImageType = itk::Image< PixelType, Dimension >;
 
-  typedef itk::ImageFileReader< ImageType > ReaderType;
+  using ReaderType = itk::ImageFileReader< ImageType >;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
   ITK_TRY_EXPECT_NO_EXCEPTION( reader->UpdateLargestPossibleRegion() );
@@ -53,24 +53,24 @@ int itkSpectra1DImageFilterTest( int argc, char* argv[] )
   sideLines->Allocate();
   sideLines->FillBuffer( 5 );
 
-  typedef itk::Spectra1DSupportWindowImageFilter< ImageType > SpectraSupportWindowFilterType;
+  using SpectraSupportWindowFilterType = itk::Spectra1DSupportWindowImageFilter< ImageType >;
   SpectraSupportWindowFilterType::Pointer spectraSupportWindowFilter = SpectraSupportWindowFilterType::New();
   spectraSupportWindowFilter->SetInput( sideLines );
   spectraSupportWindowFilter->SetFFT1DSize( 128 );
   spectraSupportWindowFilter->SetStep( 16 );
   ITK_TRY_EXPECT_NO_EXCEPTION( spectraSupportWindowFilter->UpdateLargestPossibleRegion() );
 
-  typedef SpectraSupportWindowFilterType::OutputImageType     SupportWindowImageType;
+  using SupportWindowImageType = SpectraSupportWindowFilterType::OutputImageType;
   SupportWindowImageType * supportWindowImage = spectraSupportWindowFilter->GetOutput();
 
-  typedef float                                               SpectraComponentType;
-  typedef itk::VectorImage< SpectraComponentType, Dimension > SpectraImageType;
+  using SpectraComponentType = float;
+  using SpectraImageType = itk::VectorImage< SpectraComponentType, Dimension >;
 
-  typedef itk::ImageFileReader< SpectraImageType > ReferenceSpectraReaderType;
+  using ReferenceSpectraReaderType = itk::ImageFileReader< SpectraImageType >;
   ReferenceSpectraReaderType::Pointer referenceSpectraReader = ReferenceSpectraReaderType::New();
   referenceSpectraReader->SetFileName( referenceSpectraImageFileName );
   ITK_TRY_EXPECT_NO_EXCEPTION( referenceSpectraReader->UpdateLargestPossibleRegion() );
-  typedef SpectraImageType::PixelType SpectraPixelType;
+  using SpectraPixelType = SpectraImageType::PixelType;
   SpectraImageType::IndexType referenceIndex;
   referenceIndex.Fill( 0 );
   const SpectraPixelType referenceSpectra = referenceSpectraReader->GetOutput()->GetPixel( referenceIndex );
@@ -81,14 +81,14 @@ int itkSpectra1DImageFilterTest( int argc, char* argv[] )
   referenceSpectraImage->Allocate();
   referenceSpectraImage->FillBuffer( referenceSpectra );
 
-  typedef itk::Spectra1DImageFilter< ImageType, SupportWindowImageType, SpectraImageType > SpectraFilterType;
+  using SpectraFilterType = itk::Spectra1DImageFilter< ImageType, SupportWindowImageType, SpectraImageType >;
   SpectraFilterType::Pointer spectraFilter = SpectraFilterType::New();
   spectraFilter->SetInput( rfImage );
   spectraFilter->SetSupportWindowImage( spectraSupportWindowFilter->GetOutput() );
   spectraFilter->SetReferenceSpectraImage( referenceSpectraImage );
   ITK_TRY_EXPECT_NO_EXCEPTION( spectraFilter->UpdateLargestPossibleRegion() );
 
-  typedef itk::ImageFileWriter< SpectraImageType > WriterType;
+  using WriterType = itk::ImageFileWriter< SpectraImageType >;
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFileName );
   ITK_TRY_EXPECT_NO_EXCEPTION( writer->SetInput( spectraFilter->GetOutput() ) );

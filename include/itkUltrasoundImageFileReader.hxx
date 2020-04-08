@@ -50,7 +50,7 @@ template< typename TImage >
 class UltrasoundImageFileReaderDispatch
 {
 public:
-  typedef TImage ImageType;
+  using ImageType = TImage;
   static void ExtractMetaData( TImage * image ) {};
 };
 
@@ -59,7 +59,7 @@ template< typename TPixel, unsigned int VDimension >
 class UltrasoundImageFileReaderDispatch< itk::CurvilinearArraySpecialCoordinatesImage< TPixel, VDimension > >
 {
 public:
-  typedef itk::CurvilinearArraySpecialCoordinatesImage< TPixel, VDimension > ImageType;
+  using ImageType = itk::CurvilinearArraySpecialCoordinatesImage< TPixel, VDimension >;
   static void ExtractMetaData( ImageType * image )
   {
     const itk::MetaDataDictionary & dictionary = image->GetMetaDataDictionary();
@@ -86,12 +86,12 @@ public:
   static const unsigned int Dimension = VDimension;
   static const unsigned int SliceDimension = VDimension -1;
 
-  typedef TPixel                                                                   PixelType;
-  typedef TParametersValue                                                         ParametersValueType;
-  typedef itk::Image< PixelType, SliceDimension >                                  SliceImageType;
-  typedef itk::Euler3DTransform< ParametersValueType >                             TransformType;
-  typedef itk::SliceSeriesSpecialCoordinatesImage< SliceImageType, TransformType,
-    PixelType, Dimension > ImageType;
+  using PixelType = TPixel;
+  using ParametersValueType = TParametersValue;
+  using SliceImageType = itk::Image< PixelType, SliceDimension >;
+  using TransformType = itk::Euler3DTransform< ParametersValueType >;
+  using ImageType = itk::SliceSeriesSpecialCoordinatesImage< SliceImageType, TransformType,
+    PixelType, Dimension >;
   static void ExtractMetaData( ImageType * image )
   {
     const itk::MetaDataDictionary & dictionary = image->GetMetaDataDictionary();
@@ -114,7 +114,7 @@ public:
 
     if( dictionary.HasKey( "SliceSpacing" ) )
       {
-      typedef itk::Array< double > SliceSpacingArrayType;
+      using SliceSpacingArrayType = itk::Array< double >;
       SliceSpacingArrayType sliceSpacingArray( SliceDimension );
       itk::ExposeMetaData< SliceSpacingArrayType >( dictionary, "SliceSpacing", sliceSpacingArray );
       typename SliceImageType::SpacingType sliceSpacing;
@@ -127,7 +127,7 @@ public:
 
     if( dictionary.HasKey( "SliceOrigin" ) )
       {
-      typedef itk::Array< double > SliceOriginArrayType;
+      using SliceOriginArrayType = itk::Array< double >;
       SliceOriginArrayType sliceOriginArray( SliceDimension );
       itk::ExposeMetaData< SliceOriginArrayType >( dictionary, "SliceOrigin", sliceOriginArray );
       typename SliceImageType::PointType sliceOrigin;
@@ -142,7 +142,7 @@ public:
 
     if( dictionary.HasKey( "ElevationalSliceAngles" ) )
       {
-      typedef itk::Array< double > ElevationalSliceAnglesType;
+      using ElevationalSliceAnglesType = itk::Array< double >;
       const typename ImageType::RegionType & largestRegion = image->GetLargestPossibleRegion();
       const typename ImageType::SizeType & largestSize = largestRegion.GetSize();
       const itk::SizeValueType angles = largestSize[SliceDimension];

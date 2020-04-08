@@ -85,14 +85,14 @@ NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< TFixedImage, TM
   typename MovingImageType::IndexType movingRegionIndex = this->m_MovingImageRegion.GetIndex();
 
   // The types of our iterators.
-  typedef ImageRegionIterator< MetricImageType > MetricIteratorType;
+  using MetricIteratorType = ImageRegionIterator< MetricImageType >;
   MetricImageRegionType metricRegion;
   typename MovingImageType::IndexType fitIndex;
-  typedef ImageRegionConstIterator< MetricImageType >  MetricConstIteratorType;
-  typedef ConstantBoundaryCondition< MetricImageType > BoundaryConditionType;
+  using MetricConstIteratorType = ImageRegionConstIterator< MetricImageType >;
+  using BoundaryConditionType = ConstantBoundaryCondition< MetricImageType >;
   BoundaryConditionType boundaryCondition;
   boundaryCondition.SetConstant( NumericTraits< MetricImagePixelType >::Zero );
-  typedef ConstNeighborhoodIterator< MetricImageType > NeighborhoodIteratorType;
+  using NeighborhoodIteratorType = ConstNeighborhoodIterator< MetricImageType >;
 
   ImageKernelOperator< typename MetricImageType::PixelType, ImageDimension > fixedKernelOperator;
   // in case the radius was truncated we need to truncate the fixedMinusMean
@@ -110,8 +110,8 @@ NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< TFixedImage, TM
   fixedKernelOperator.CreateToRadius( radius );
   NeighborhoodInnerProduct< MetricImageType > innerProduct;
 
-  typedef typename NeighborhoodAlgorithm::
-  ImageBoundaryFacesCalculator< MovingImageType > FaceCalculatorType;
+  using FaceCalculatorType = typename NeighborhoodAlgorithm::
+  ImageBoundaryFacesCalculator< MovingImageType >;
   FaceCalculatorType                        faceCalculator;
   typename FaceCalculatorType::FaceListType faceList = faceCalculator(
       movingPtr, this->m_MovingImageRegion, radius );

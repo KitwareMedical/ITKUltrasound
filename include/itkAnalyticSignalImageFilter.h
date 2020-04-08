@@ -59,22 +59,22 @@ class ITK_TEMPLATE_EXPORT AnalyticSignalImageFilter:
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(AnalyticSignalImageFilter);
 
-  /** Standard class typedefs. */
-  typedef TInputImage                                         InputImageType;
-  typedef TOutputImage                                        OutputImageType;
-  typedef typename OutputImageType::RegionType                OutputImageRegionType;
+  /** Standard class type alias. */
+  using InputImageType = TInputImage;
+  using OutputImageType = TOutputImage;
+  using OutputImageRegionType = typename OutputImageType::RegionType;
 
   itkStaticConstMacro(ImageDimension, unsigned int, InputImageType::ImageDimension);
 
-  typedef AnalyticSignalImageFilter                             Self;
-  typedef ImageToImageFilter< InputImageType, OutputImageType > Superclass;
-  typedef SmartPointer< Self >                                  Pointer;
-  typedef SmartPointer< const Self >                            ConstPointer;
+  using Self = AnalyticSignalImageFilter;
+  using Superclass = ImageToImageFilter< InputImageType, OutputImageType >;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   itkTypeMacro( AnalyticSignalImageFilter, ImageToImageFilter );
   itkNewMacro( Self );
 
-  typedef FrequencyDomain1DImageFilter< OutputImageType, OutputImageType > FrequencyFilterType;
+  using FrequencyFilterType = FrequencyDomain1DImageFilter< OutputImageType, OutputImageType >;
 
   /** Get the direction in which the filter is to be applied. */
   virtual unsigned int GetDirection() const
@@ -119,10 +119,10 @@ protected:
 
   void GenerateData() override;
 
-  typedef Forward1DFFTImageFilter< InputImageType, OutputImageType > FFTRealToComplexType;
+  using FFTRealToComplexType = Forward1DFFTImageFilter< InputImageType, OutputImageType >;
   typename FFTRealToComplexType::Pointer                             m_FFTRealToComplexFilter;
 
-  typedef ComplexToComplex1DFFTImageFilter< OutputImageType, OutputImageType > FFTComplexToComplexType;
+  using FFTComplexToComplexType = ComplexToComplex1DFFTImageFilter< OutputImageType, OutputImageType >;
   typename FFTComplexToComplexType::Pointer                                    m_FFTComplexToComplexFilter;
 
 private:

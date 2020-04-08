@@ -53,18 +53,18 @@ public:
 
   itkStaticConstMacro( ImageDimension, unsigned int, TInputImage::ImageDimension );
 
-  typedef TInputImage                              InputImageType;
-  typedef TSupportWindowImage                      SupportWindowImageType;
-  typedef TOutputImage                             OutputImageType;
+  using InputImageType = TInputImage;
+  using SupportWindowImageType = TSupportWindowImage;
+  using OutputImageType = TOutputImage;
 
   typedef typename DefaultConvertPixelTraits< typename OutputImageType::PixelType >::ComponentType
     ScalarType;
 
-  /** Standard class typedefs. */
-  typedef Spectra1DImageFilter                                  Self;
-  typedef ImageToImageFilter< InputImageType, OutputImageType > Superclass;
-  typedef SmartPointer< Self >                                  Pointer;
-  typedef SmartPointer< const Self >                            ConstPointer;
+  /** Standard class type alias. */
+  using Self = Spectra1DImageFilter;
+  using Superclass = ImageToImageFilter< InputImageType, OutputImageType >;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   itkTypeMacro( Spectra1DImageFilter, ImageToImageFilter );
   itkNewMacro( Self );
@@ -83,7 +83,7 @@ protected:
   Spectra1DImageFilter();
   virtual ~Spectra1DImageFilter() {};
 
-  typedef typename OutputImageType::RegionType OutputImageRegionType;
+  using OutputImageRegionType = typename OutputImageType::RegionType;
 
   void GenerateOutputInformation() override;
   void BeforeThreadedGenerateData() override;
@@ -91,20 +91,20 @@ protected:
   void VerifyInputInformation() const override;
 
 private:
-  typedef std::complex< ScalarType >                 ComplexType;
-  typedef vnl_vector< ComplexType >                  ComplexVectorType;
-  typedef std::vector< ScalarType >                  SpectraVectorType;
-  typedef typename InputImageType::IndexType         IndexType;
-  typedef std::pair< IndexType, SpectraVectorType >  SpectraLineType;
-  typedef std::list< SpectraLineType >               SpectraLinesContainerType;
-  typedef typename SupportWindowImageType::PixelType SupportWindowType;
-  typedef ImageRegionConstIterator< InputImageType > InputImageIteratorType;
-  typedef vnl_fft_1d< ScalarType >                   FFT1DType;
+  using ComplexType = std::complex< ScalarType >;
+  using ComplexVectorType = vnl_vector< ComplexType >;
+  using SpectraVectorType = std::vector< ScalarType >;
+  using IndexType = typename InputImageType::IndexType;
+  using SpectraLineType = std::pair< IndexType, SpectraVectorType >;
+  using SpectraLinesContainerType = std::list< SpectraLineType >;
+  using SupportWindowType = typename SupportWindowImageType::PixelType;
+  using InputImageIteratorType = ImageRegionConstIterator< InputImageType >;
+  using FFT1DType = vnl_fft_1d< ScalarType >;
 
-  typedef Spectra1DSupportWindowImageFilter< InputImageType >     Spectra1DSupportWindowFilterType;
-  typedef typename Spectra1DSupportWindowFilterType::FFT1DSizeType FFT1DSizeType;
+  using Spectra1DSupportWindowFilterType = Spectra1DSupportWindowImageFilter< InputImageType >;
+  using FFT1DSizeType = typename Spectra1DSupportWindowFilterType::FFT1DSizeType;
 
-  typedef itksys::hash_map< FFT1DSizeType, SpectraVectorType > LineWindowMapType;
+  using LineWindowMapType = itksys::hash_map< FFT1DSizeType, SpectraVectorType >;
 
   struct PerThreadData
     {
@@ -113,7 +113,7 @@ private:
     typename InputImageType::SizeType LineImageRegionSize;
     LineWindowMapType                 LineWindowMap;
     };
-  typedef std::vector< PerThreadData > PerThreadDataContainerType;
+  using PerThreadDataContainerType = std::vector< PerThreadData >;
   PerThreadDataContainerType m_PerThreadDataContainer;
 
   typename OutputImageType::Pointer m_ReferenceSpectraImage;

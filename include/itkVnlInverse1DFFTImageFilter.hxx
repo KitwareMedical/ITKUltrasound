@@ -54,15 +54,15 @@ VnlInverse1DFFTImageFilter< TInputImage, TOutputImage >
     output->GetRequestedRegion(),
     [this, input, output, direction, vectorSize]( const typename OutputImageType::RegionType & lambdaRegion )
     {
-    typedef ImageLinearConstIteratorWithIndex< InputImageType >  InputIteratorType;
-    typedef ImageLinearIteratorWithIndex< OutputImageType >      OutputIteratorType;
+    using InputIteratorType = ImageLinearConstIteratorWithIndex< InputImageType >;
+    using OutputIteratorType = ImageLinearIteratorWithIndex< OutputImageType >;
     InputIteratorType inputIt( input, lambdaRegion );
     OutputIteratorType outputIt( output, lambdaRegion );
 
     inputIt.SetDirection( direction );
     outputIt.SetDirection( direction );
 
-    typedef typename TOutputImage::PixelType OutputPixelType;
+    using OutputPixelType = typename TOutputImage::PixelType;
     vnl_vector< std::complex< OutputPixelType > > inputBuffer( vectorSize );
     typename vnl_vector< std::complex< OutputPixelType > >::iterator inputBufferIt = inputBuffer.begin();
       // fft is done in-place

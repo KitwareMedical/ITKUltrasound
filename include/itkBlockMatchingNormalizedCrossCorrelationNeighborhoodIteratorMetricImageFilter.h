@@ -41,11 +41,11 @@ class ITK_TEMPLATE_EXPORT NormalizedCrossCorrelationNeighborhoodIteratorMetricIm
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter);
 
-  /** Standard class typedefs. */
-  typedef NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter                        Self;
-  typedef NormalizedCrossCorrelationMetricImageFilter< TFixedImage, TMovingImage, TMetricImage > Superclass;
-  typedef SmartPointer<Self>                                                                     Pointer;
-  typedef SmartPointer<const Self>                                                               ConstPointer;
+  /** Standard class type alias. */
+  using Self = NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter;
+  using Superclass = NormalizedCrossCorrelationMetricImageFilter< TFixedImage, TMovingImage, TMetricImage >;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -58,15 +58,15 @@ public:
   itkStaticConstMacro(ImageDimension, unsigned int, TFixedImage::ImageDimension);
 
   /** Type of the fixed image. */
-  typedef typename Superclass::FixedImageType   FixedImageType;
+  using FixedImageType = typename Superclass::FixedImageType;
 
   /** Type of the moving image. */
-  typedef typename Superclass::MovingImageType   MovingImageType;
+  using MovingImageType = typename Superclass::MovingImageType;
 
   /** Type of the metric image. */
-  typedef typename Superclass::MetricImageType   MetricImageType;
-  typedef typename MetricImageType::RegionType   MetricImageRegionType;
-  typedef typename MetricImageType::PixelType    MetricImagePixelType;
+  using MetricImageType = typename Superclass::MetricImageType;
+  using MetricImageRegionType = typename MetricImageType::RegionType;
+  using MetricImagePixelType = typename MetricImageType::PixelType;
 
 protected:
   NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter(){}

@@ -38,14 +38,14 @@ int itkHDF5BModeUltrasoundImageFileReaderTest( int argc, char * argv [] )
   itk::HDF5UltrasoundImageIOFactory::RegisterOneFactory();
 
   const unsigned int Dimension = 3;
-  typedef unsigned char PixelType;
-  typedef double        ParametersValueType;
+  using PixelType = unsigned char;
+  using ParametersValueType = double;
 
-  typedef itk::Image< PixelType, Dimension - 1 >                                                         SliceImageType;
-  typedef itk::Euler3DTransform< ParametersValueType >                                                   TransformType;
-  typedef itk::SliceSeriesSpecialCoordinatesImage< SliceImageType, TransformType, PixelType, Dimension > SpecialCoordinatesImageType;
+  using SliceImageType = itk::Image< PixelType, Dimension - 1 >;
+  using TransformType = itk::Euler3DTransform< ParametersValueType >;
+  using SpecialCoordinatesImageType = itk::SliceSeriesSpecialCoordinatesImage< SliceImageType, TransformType, PixelType, Dimension >;
 
-  typedef itk::UltrasoundImageFileReader< SpecialCoordinatesImageType > ReaderType;
+  using ReaderType = itk::UltrasoundImageFileReader< SpecialCoordinatesImageType >;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
   ITK_TRY_EXPECT_NO_EXCEPTION( reader->Update() );

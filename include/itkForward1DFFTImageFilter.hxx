@@ -104,10 +104,10 @@ Forward1DFFTImageFilter< TInputImage, TOutputImage >
   OutputImageType * output = this->GetOutput();
 
   // we need to compute the input requested region (size and start index)
-  typedef const typename OutputImageType::SizeType& OutputSizeType;
+  using OutputSizeType = const typename OutputImageType::SizeType&;
   OutputSizeType outputRequestedRegionSize =
     output->GetRequestedRegion().GetSize();
-  typedef const typename OutputImageType::IndexType& OutputIndexType;
+  using OutputIndexType = const typename OutputImageType::IndexType&;
   OutputIndexType outputRequestedRegionStartIndex =
     output->GetRequestedRegion().GetIndex();
 
@@ -141,12 +141,12 @@ Forward1DFFTImageFilter < TInputImage, TOutputImage >
 
   // we need to enlarge the region in the fft direction to the
   // largest possible in that direction
-  typedef const typename OutputImageType::SizeType& ConstOutputSizeType;
+  using ConstOutputSizeType = const typename OutputImageType::SizeType&;
   ConstOutputSizeType requestedSize =
     output->GetRequestedRegion().GetSize();
   ConstOutputSizeType outputLargeSize =
     output->GetLargestPossibleRegion().GetSize();
-  typedef const typename OutputImageType::IndexType& ConstOutputIndexType;
+  using ConstOutputIndexType = const typename OutputImageType::IndexType&;
   ConstOutputIndexType requestedIndex =
     output->GetRequestedRegion().GetIndex();
   ConstOutputIndexType outputLargeIndex =

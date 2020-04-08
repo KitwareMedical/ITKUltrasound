@@ -36,17 +36,17 @@ int itkVnlComplexToComplex1DFFTImageFilterTest( int argc, char* argv[] )
     return EXIT_FAILURE;
     }
 
-  typedef double PixelType;
+  using PixelType = double;
   const unsigned int Dimension = 2;
 
-  typedef itk::Image< PixelType, Dimension >                                             ImageType;
-  typedef itk::Image< std::complex< PixelType >, Dimension >                             ComplexImageType;
+  using ImageType = itk::Image< PixelType, Dimension >;
+  using ComplexImageType = itk::Image< std::complex< PixelType >, Dimension >;
 
-  typedef itk::ImageFileReader< ImageType >                                              ReaderType;
-  typedef itk::VnlComplexToComplex1DFFTImageFilter< ComplexImageType, ComplexImageType > FFTType;
-  typedef itk::ComposeImageFilter< ImageType, ComplexImageType >                         JoinFilterType;
-  typedef itk::ComplexToRealImageFilter< ComplexImageType, ImageType >                   ToRealFilterType;
-  typedef itk::ImageFileWriter< ImageType >                                              WriterType;
+  using ReaderType = itk::ImageFileReader< ImageType >;
+  using FFTType = itk::VnlComplexToComplex1DFFTImageFilter< ComplexImageType, ComplexImageType >;
+  using JoinFilterType = itk::ComposeImageFilter< ImageType, ComplexImageType >;
+  using ToRealFilterType = itk::ComplexToRealImageFilter< ComplexImageType, ImageType >;
+  using WriterType = itk::ImageFileWriter< ImageType >;
 
   ReaderType::Pointer readerReal = ReaderType::New();
   ReaderType::Pointer readerImag = ReaderType::New();

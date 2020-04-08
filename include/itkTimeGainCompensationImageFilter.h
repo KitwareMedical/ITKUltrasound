@@ -41,20 +41,20 @@ class ITK_TEMPLATE_EXPORT TimeGainCompensationImageFilter:
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(TimeGainCompensationImageFilter);
 
-  /** Standard class typedefs. */
-  typedef TInputImage                                           InputImageType;
-  typedef TOutputImage                                          OutputImageType;
+  /** Standard class type alias. */
+  using InputImageType = TInputImage;
+  using OutputImageType = TOutputImage;
 
-  typedef TimeGainCompensationImageFilter                       Self;
-  typedef ImageToImageFilter< InputImageType, OutputImageType > Superclass;
+  using Self = TimeGainCompensationImageFilter;
+  using Superclass = ImageToImageFilter< InputImageType, OutputImageType >;
 
-  typedef SmartPointer< Self >                                  Pointer;
-  typedef SmartPointer< const Self >                            ConstPointer;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   itkTypeMacro( TimeGainCompensationImageFilter, ImageToImageFilter );
   itkNewMacro( Self );
 
-  typedef Array2D< double > GainType;
+  using GainType = Array2D< double >;
 
   /** Set/Get the gain.  The first column specifies the depth. The second
    * column specifies the gain. */
@@ -62,7 +62,7 @@ public:
   itkGetConstReferenceMacro( Gain, GainType );
 
 protected:
-  typedef typename OutputImageType::RegionType                  OutputImageRegionType;
+  using OutputImageRegionType = typename OutputImageType::RegionType;
 
   TimeGainCompensationImageFilter();
   virtual ~TimeGainCompensationImageFilter() {}

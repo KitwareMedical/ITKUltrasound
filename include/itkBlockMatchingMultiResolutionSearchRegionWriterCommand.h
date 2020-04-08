@@ -40,9 +40,9 @@ class MultiResolutionSearchRegionWriterCommand :
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionSearchRegionWriterCommand);
 
-  typedef MultiResolutionSearchRegionWriterCommand                Self;
-  typedef MultiResolutionIterationCommand<TMultiResolutionMethod> Superclass;
-  typedef SmartPointer<Self>                                      Pointer;
+  using Self = MultiResolutionSearchRegionWriterCommand;
+  using Superclass = MultiResolutionIterationCommand<TMultiResolutionMethod>;
+  using Pointer = SmartPointer<Self>;
 
   itkNewMacro( Self );
 
@@ -53,16 +53,16 @@ public:
 
   void Execute(const itk::Object * object, const itk::EventObject & event) override;
 
-  typedef TMultiResolutionMethod MultiResolutionMethodType;
+  using MultiResolutionMethodType = TMultiResolutionMethod;
 
-  typedef typename MultiResolutionMethodType::SearchRegionImageSourceType SearchRegionImageSourceType;
-  typedef typename SearchRegionImageSourceType::OutputImageType           SearchRegionImageType;
-  typedef typename SearchRegionImageType::PixelType                       SearchRegionType;
+  using SearchRegionImageSourceType = typename MultiResolutionMethodType::SearchRegionImageSourceType;
+  using SearchRegionImageType = typename SearchRegionImageSourceType::OutputImageType;
+  using SearchRegionType = typename SearchRegionImageType::PixelType;
 
-  typedef Image< unsigned short, 2 > SearchRegionImageComponentType;
-  typedef SearchRegionImageComponentType::Pointer SearchRegionImageComponentPointer;
+  using SearchRegionImageComponentType = Image< unsigned short, 2 >;
+  using SearchRegionImageComponentPointer = SearchRegionImageComponentType::Pointer;
 
-  typedef ImageFileWriter< SearchRegionImageComponentType > SearchRegionComponentWriterType;
+  using SearchRegionComponentWriterType = ImageFileWriter< SearchRegionImageComponentType >;
 
   itkSetStringMacro( OutputFilePrefix );
   itkGetConstMacro( OutputFilePrefix, std::string );

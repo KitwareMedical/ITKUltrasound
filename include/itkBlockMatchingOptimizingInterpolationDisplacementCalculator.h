@@ -49,11 +49,11 @@ class ITK_TEMPLATE_EXPORT OptimizingInterpolationDisplacementCalculator:
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(OptimizingInterpolationDisplacementCalculator);
 
-  /** Standard class typedefs. */
-  typedef OptimizingInterpolationDisplacementCalculator                           Self;
-  typedef MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage > Superclass;
-  typedef SmartPointer< Self >                                                    Pointer;
-  typedef SmartPointer< const Self >                                              ConstPointer;
+  /** Standard class type alias. */
+  using Self = OptimizingInterpolationDisplacementCalculator;
+  using Superclass = MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
@@ -64,21 +64,20 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro( OptimizingInterpolationDisplacementCalculator, MetricImageToDisplacementCalculator );
 
-  typedef typename Superclass::MetricImageType        MetricImageType;
-  typedef typename Superclass::MetricImagePointerType MetricImagePointerType;
-  typedef typename MetricImageType::PixelType         PixelType;
-  typedef typename MetricImageType::SpacingType       SpacingType;
-  typedef typename Superclass::PointType              PointType;
-  typedef typename Superclass::IndexType              IndexType;
+  using MetricImageType = typename Superclass::MetricImageType;
+  using MetricImagePointerType = typename Superclass::MetricImagePointerType;
+  using PixelType = typename MetricImageType::PixelType;
+  using SpacingType = typename MetricImageType::SpacingType;
+  using PointType = typename Superclass::PointType;
+  using IndexType = typename Superclass::IndexType;
 
   /** Type of the interpolator. */
-  typedef typename itk::InterpolateImageFunction< MetricImageType, TCoordRep >
-    InterpolatorType;
+  using InterpolatorType = typename itk::InterpolateImageFunction< MetricImageType, TCoordRep >;
   typedef typename InterpolatorType::ContinuousIndexType
     ContinuousIndexType;
 
   /** Type of the optimizer. */
-  typedef SingleValuedNonLinearOptimizer OptimizerType;
+  using OptimizerType = SingleValuedNonLinearOptimizer;
 
   void SetMetricImagePixel( const PointType & point, const IndexType& index, MetricImageType* image ) override;
 
@@ -110,32 +109,32 @@ public:
     }
   itkGetConstObjectMacro( Optimizer, OptimizerType );
 
-  typedef typename OptimizerType::CostFunctionType CostFunctionType;
+  using CostFunctionType = typename OptimizerType::CostFunctionType;
 
   /** Makes the interpolator into a cost function. */
   class OptimizingInterpolationCostFunction : public CostFunctionType
   {
   public:
-    typedef OptimizingInterpolationCostFunction Self;
-    typedef CostFunctionType                    Superclass;
+    using Self = OptimizingInterpolationCostFunction;
+    using Superclass = CostFunctionType;
 
-    typedef SmartPointer< Self >                Pointer;
+    using Pointer = SmartPointer< Self >;
 
     itkTypeMacro( OptimizingInterpolationCostFunction, SingleValuedCostFunction );
 
     itkNewMacro( Self );
 
-    /**  MeasureType typedef.
+    /**  MeasureType type alias.
      *  It defines a type used to return the cost function value. */
-    typedef Superclass::MeasureType    MeasureType;
+    using MeasureType = Superclass::MeasureType;
 
-    /**  ParametersType typedef.
+    /**  ParametersType type alias.
      *  It defines a position in the optimization search space. */
-    typedef Superclass::ParametersType ParametersType;
+    using ParametersType = Superclass::ParametersType;
 
-    /** DerivativeType typedef.
+    /** DerivativeType type alias.
      *  It defines a type used to return the cost function derivative.  */
-    typedef Superclass::DerivativeType DerivativeType;
+    using DerivativeType = Superclass::DerivativeType;
 
     /** This method returns the value of the cost function corresponding
       * to the specified parameters.    */

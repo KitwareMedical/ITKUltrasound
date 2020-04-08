@@ -41,11 +41,11 @@ class ITK_TEMPLATE_EXPORT MultiResolutionMinMaxBlockRadiusCalculator :
   public MultiResolutionBlockRadiusCalculator< TFixedImage >
 {
 public:
-  /** Standard class typedefs. */
-  typedef MultiResolutionMinMaxBlockRadiusCalculator          Self;
-  typedef MultiResolutionBlockRadiusCalculator< TFixedImage > Superclass;
-  typedef SmartPointer< Self >                                Pointer;
-  typedef SmartPointer< const Self >                          ConstPointer;
+  /** Standard class type alias. */
+  using Self = MultiResolutionMinMaxBlockRadiusCalculator;
+  using Superclass = MultiResolutionBlockRadiusCalculator< TFixedImage >;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   /** Run-time type information ( and related methods ). */
   itkTypeMacro( MultiResolutionMinMaxBlockRadiusCalculator, MultiResolutionBlockRadiusCalculator );
@@ -57,8 +57,8 @@ public:
   itkStaticConstMacro( ImageDimension, unsigned int, Superclass::ImageDimension );
 
   /** Type of the fixed image. */
-  typedef typename Superclass::FixedImageType FixedImageType;
-  typedef typename Superclass::RadiusType     RadiusType;
+  using FixedImageType = typename Superclass::FixedImageType;
+  using RadiusType = typename Superclass::RadiusType;
 
   /** Set the radius used for at the bottom level. */
   virtual void SetMinRadius( const RadiusType& radius )

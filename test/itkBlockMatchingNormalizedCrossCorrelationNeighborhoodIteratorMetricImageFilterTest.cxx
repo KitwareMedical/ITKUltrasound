@@ -31,15 +31,15 @@ int itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFil
     }
 
   const unsigned int Dimension = 2;
-  typedef signed short                            InputPixelType;
-  typedef itk::Image< InputPixelType, Dimension > InputImageType;
+  using InputPixelType = signed short;
+  using InputImageType = itk::Image< InputPixelType, Dimension >;
 
-  typedef double                                   MetricPixelType;
-  typedef itk::Image< MetricPixelType, Dimension > MetricImageType;
+  using MetricPixelType = double;
+  using MetricImageType = itk::Image< MetricPixelType, Dimension >;
 
-  typedef itk::ImageFileReader< InputImageType > ReaderType;
-  typedef itk::BlockMatching::NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< InputImageType, InputImageType, MetricImageType >  FilterType;
-  typedef itk::ImageFileWriter< MetricImageType >  WriteType;
+  using ReaderType = itk::ImageFileReader< InputImageType >;
+  using FilterType = itk::BlockMatching::NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< InputImageType, InputImageType, MetricImageType >;
+  using WriteType = itk::ImageFileWriter< MetricImageType >;
 
   ReaderType::Pointer readerFixed  = ReaderType::New();
   ReaderType::Pointer readerMoving = ReaderType::New();
@@ -51,7 +51,7 @@ int itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFil
 
   filter->SetFixedImage( readerFixed->GetOutput() );
   filter->SetMovingImage( readerMoving->GetOutput() );
-  typedef MetricImageType::RegionType RegionType;
+  using RegionType = MetricImageType::RegionType;
   RegionType fixedRegion;
   RegionType::SizeType fixedSize;
   fixedSize[0] = 31;

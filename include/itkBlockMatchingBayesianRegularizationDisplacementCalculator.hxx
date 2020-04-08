@@ -97,10 +97,8 @@ void
 BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
 ::AllocatePriorPrImage()
 {
-  typedef typename itk::ImageRegionIterator< MetricImageImageType >
-    PrIteratorType;
-  typedef typename itk::ImageRegionConstIterator< MetricImageImageType >
-    PrConstIteratorType;
+  using PrIteratorType = typename itk::ImageRegionIterator< MetricImageImageType >;
+  using PrConstIteratorType = typename itk::ImageRegionConstIterator< MetricImageImageType >;
   MetricImagePointerType imagePr;
   m_PriorPr = MetricImageImageType::New();
   m_PriorPr->CopyInformation( this->m_MetricImageImage );
@@ -304,7 +302,7 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
   RegionType priorRegion;
   priorRegion.SetIndex( index );
   priorRegion.SetSize( postRegion.GetSize() );
-  typedef NeighborhoodIterator< MetricImageType > NeighborhoodIteratorType;
+  using NeighborhoodIteratorType = NeighborhoodIterator< MetricImageType >;
   NeighborhoodIteratorType priorIt( m_GaussianKernelRadii[direction],
                                     paddedPrior, priorRegion );
 
@@ -365,8 +363,8 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
   typename  MetricImageImageType::SizeType regRadius;
   regRadius.Fill( 1 );
 
-  typedef typename NeighborhoodAlgorithm::
-    ImageBoundaryFacesCalculator< MetricImageImageType > FaceCalculatorType;
+  using FaceCalculatorType = typename NeighborhoodAlgorithm::
+    ImageBoundaryFacesCalculator< MetricImageImageType >;
   FaceCalculatorType faceCalculator;
   typename FaceCalculatorType::FaceListType faceList = faceCalculator(
     this->m_MetricImageImage,
@@ -500,7 +498,7 @@ BayesianRegularizationDisplacementCalculator< TMetricImage, TDisplacementImage >
     region );
   MetricImagePointerType image;
   // We add eps so we don't take the log of zero, and having a probability of
-  // 0.0 is ... pessimistic ;-)
+  // 0.0 is ... pessimistic;-)
   const PixelType lowerBound = this->m_MetricLowerBound +
     NumericTraits< PixelType >::epsilon();
   for( imageImageIt.GoToBegin(); !imageImageIt.IsAtEnd(); ++imageImageIt )

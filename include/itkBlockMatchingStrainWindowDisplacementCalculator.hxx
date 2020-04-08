@@ -44,8 +44,7 @@ StrainWindowDisplacementCalculator<TMetricImage, TDisplacementImage, TStrainValu
 {
   this->m_CacheMetricImage = true;
 
-  typedef itk::StrainImageFilter<TDisplacementImage, TStrainValueType, TStrainValueType>
-  itkStrainImageFilterType;
+  using itkStrainImageFilterType = itk::StrainImageFilter<TDisplacementImage, TStrainValueType, TStrainValueType>;
 
   // Sensible default.
   m_StrainImageFilter = itkStrainImageFilterType::New().GetPointer();
@@ -135,24 +134,23 @@ StrainWindowDisplacementCalculator<TMetricImage, TDisplacementImage, TStrainValu
 ::ReplaceDisplacements( const RegionType & region )
 {
   // The lines in every direction that need extrapolation.
-  typedef std::set<long> NeedsExtrapolationSetType;
+  using NeedsExtrapolationSetType = std::set<long>;
   NeedsExtrapolationSetType::const_iterator setIt;
-  typedef itk::FixedArray<NeedsExtrapolationSetType, ImageDimension> NeedsExtrapolationType;
+  using NeedsExtrapolationType = itk::FixedArray<NeedsExtrapolationSetType, ImageDimension>;
   NeedsExtrapolationType needsExtrapolation;
   IndexType              needsExtrapolationIndex;
 
-  typedef itk::ImageLinearIteratorWithIndex< DisplacementImageType > DisplacementIteratorType;
+  using DisplacementIteratorType = itk::ImageLinearIteratorWithIndex< DisplacementImageType >;
   DisplacementIteratorType dispIt( this->m_DisplacementImage,
                                    region );
 
-  typedef itk::ImageLinearConstIteratorWithIndex< DisplacementImageType >
-    DisplacementConstIteratorType;
+  using DisplacementConstIteratorType = itk::ImageLinearConstIteratorWithIndex< DisplacementImageType >;
   DisplacementConstIteratorType extrapolationDispIt( this->m_DisplacementImage,
     region );
-  typedef itk::ImageLinearConstIteratorWithIndex< MaskType > MaskIteratorType;
+  using MaskIteratorType = itk::ImageLinearConstIteratorWithIndex< MaskType >;
   MaskIteratorType maskIt( this->m_Mask, region );
   TStrainValueType normalStrain;
-  typedef typename DisplacementImageType::PixelType DisplacementVectorType;
+  using DisplacementVectorType = typename DisplacementImageType::PixelType;
   DisplacementVectorType            displacementStart;
   DisplacementVectorType            displacementEnd;
   double                            spacing;

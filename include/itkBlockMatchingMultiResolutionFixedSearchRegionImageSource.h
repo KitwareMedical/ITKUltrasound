@@ -45,46 +45,46 @@ class ITK_TEMPLATE_EXPORT MultiResolutionFixedSearchRegionImageSource :
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionFixedSearchRegionImageSource);
 
-  /** Standard class typedefs. */
-  typedef MultiResolutionFixedSearchRegionImageSource    Self;
-  typedef MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >             Superclass;
-  typedef SmartPointer< Self >                           Pointer;
-  typedef SmartPointer< const Self >                     ConstPointer;
+  /** Standard class type alias. */
+  using Self = MultiResolutionFixedSearchRegionImageSource;
+  using Superclass = MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, TMovingImage::ImageDimension);
 
   /** Type of the fixed image. */
-  typedef TFixedImage                         FixedImageType;
-  typedef typename FixedImageType::RegionType FixedRegionType;
+  using FixedImageType = TFixedImage;
+  using FixedRegionType = typename FixedImageType::RegionType;
 
   /** Type of the radius used to characterized the fixed image block. */
-  typedef typename FixedImageType::SizeType RadiusType;
+  using RadiusType = typename FixedImageType::SizeType;
 
   /** Type of the moving image. */
-  typedef TMovingImage                         MovingImageType;
-  typedef typename MovingImageType::RegionType MovingRegionType;
+  using MovingImageType = TMovingImage;
+  using MovingRegionType = typename MovingImageType::RegionType;
 
   /** Type of the search region image. */
-  typedef Image< typename MovingImageType::RegionType, ImageDimension > OutputImageType;
-  typedef typename OutputImageType::RegionType                          OutputRegionType;
+  using OutputImageType = Image< typename MovingImageType::RegionType, ImageDimension >;
+  using OutputRegionType = typename OutputImageType::RegionType;
 
-  /** ScheduleType typedef support. */
-  typedef typename Superclass::PyramidScheduleType PyramidScheduleType;
+  /** ScheduleType type alias support. */
+  using PyramidScheduleType = typename Superclass::PyramidScheduleType;
 
   /** Type of the radius schedule. */
-  typedef PyramidScheduleType RadiusScheduleType;
+  using RadiusScheduleType = PyramidScheduleType;
 
-  /** OverlapScheduleType typedef support. */
-  typedef typename Superclass::OverlapScheduleType OverlapScheduleType;
+  /** OverlapScheduleType type alias support. */
+  using OverlapScheduleType = typename Superclass::OverlapScheduleType;
 
   /** Type of the displacement image from the previous level. */
-  typedef typename Superclass::DisplacementImageType    DisplacementImageType;
-  typedef typename Superclass::DisplacementImagePointer DisplacementImagePointer;
+  using DisplacementImageType = typename Superclass::DisplacementImageType;
+  using DisplacementImagePointer = typename Superclass::DisplacementImagePointer;
 
   /** Type of the filter used to resample the deformations. */
-  typedef typename Superclass::DisplacementResamplerType DisplacementResamplerType;
-  typedef typename DisplacementResamplerType::Pointer    DisplacementResamplerPointer;
+  using DisplacementResamplerType = typename Superclass::DisplacementResamplerType;
+  using DisplacementResamplerPointer = typename DisplacementResamplerType::Pointer;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( MultiResolutionFixedSearchRegionImageSource, MultiResolutionSearchRegionImageSource );

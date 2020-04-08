@@ -44,23 +44,23 @@ int itkSliceSeriesSpecialCoordinatesImageTest( int argc, char * argv[] )
   const unsigned int Dimension = 3;
   const unsigned int SliceDimension = Dimension - 1;
 
-  typedef unsigned char PixelType;
-  typedef double        ParametersValueType;
+  using PixelType = unsigned char;
+  using ParametersValueType = double;
 
-  typedef itk::Image< PixelType, Dimension >                                        ImageType;
-  typedef itk::CurvilinearArraySpecialCoordinatesImage< PixelType, SliceDimension > SliceImageType;
-  typedef itk::Euler3DTransform< ParametersValueType >                              TransformType;
-  typedef itk::SliceSeriesSpecialCoordinatesImage< SliceImageType, TransformType >  SliceSeriesImageType;
+  using ImageType = itk::Image< PixelType, Dimension >;
+  using SliceImageType = itk::CurvilinearArraySpecialCoordinatesImage< PixelType, SliceDimension >;
+  using TransformType = itk::Euler3DTransform< ParametersValueType >;
+  using SliceSeriesImageType = itk::SliceSeriesSpecialCoordinatesImage< SliceImageType, TransformType >;
 
 
-  typedef itk::UltrasoundImageFileReader < SliceImageType > SliceReaderType;
+  using SliceReaderType = itk::UltrasoundImageFileReader < SliceImageType >;
   SliceReaderType::Pointer sliceReader = SliceReaderType::New();
   sliceReader->SetFileName( inputImageFileName );
   ITK_TRY_EXPECT_NO_EXCEPTION( sliceReader->Update() );
   SliceImageType::Pointer sliceImage = sliceReader->GetOutput();
   sliceImage->Print( std::cout );
 
-  typedef itk::ImageFileReader< SliceSeriesImageType > ReaderType;
+  using ReaderType = itk::ImageFileReader< SliceSeriesImageType >;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
   ITK_TRY_EXPECT_NO_EXCEPTION( reader->Update() );
@@ -95,7 +95,7 @@ int itkSliceSeriesSpecialCoordinatesImageTest( int argc, char * argv[] )
   std::cout << "Transformed index: " << transformedIndex << std::endl;
   std::cout << std::endl;
 
-  typedef itk::ContinuousIndex< double, Dimension > ContinuousIndexType;
+  using ContinuousIndexType = itk::ContinuousIndex< double, Dimension >;
   ContinuousIndexType continuousIndex;
   continuousIndex[0] = 1000.5;
   continuousIndex[1] = 150.5;
@@ -140,7 +140,7 @@ int itkSliceSeriesSpecialCoordinatesImageTest( int argc, char * argv[] )
 
   ImageType::SizeType inputSize = image->GetLargestPossibleRegion().GetSize();
 
-  typedef itk::ResampleImageFilter< SliceSeriesImageType, ImageType > ResamplerType;
+  using ResamplerType = itk::ResampleImageFilter< SliceSeriesImageType, ImageType >;
   ResamplerType::Pointer resampler = ResamplerType::New();
   resampler->SetInput( image );
   resampler->SetDefaultPixelValue( 33 );
@@ -207,11 +207,11 @@ int itkSliceSeriesSpecialCoordinatesImageTest( int argc, char * argv[] )
   resampler->SetOutputSpacing( outputSpacing );
   std::cout << "Output spacing: " << outputSpacing << std::endl;
 
-  typedef itk::WindowedSincInterpolateImageFunction< SliceSeriesImageType, 3 > WindowedSincInterpolatorType;
+  using WindowedSincInterpolatorType = itk::WindowedSincInterpolateImageFunction< SliceSeriesImageType, 3 >;
   WindowedSincInterpolatorType::Pointer sincInterpolator = WindowedSincInterpolatorType::New();
   sincInterpolator->SetInputImage( image );
 
-  typedef itk::ImageFileWriter< ImageType > WriterType;
+  using WriterType = itk::ImageFileWriter< ImageType >;
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFileName );
   writer->SetInput( resampler->GetOutput() );

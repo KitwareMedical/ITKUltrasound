@@ -36,27 +36,27 @@ int itkBlockMatchingBayesianRegularizationDisplacementCalculatorTest( int argc, 
     }
 
   const unsigned int Dimension = 2;
-  typedef signed short                            InputPixelType;
-  typedef itk::Image< InputPixelType, Dimension > InputImageType;
-  typedef InputImageType::SizeType                RadiusType;
+  using InputPixelType = signed short;
+  using InputImageType = itk::Image< InputPixelType, Dimension >;
+  using RadiusType = InputImageType::SizeType;
 
-  typedef double                                   MetricPixelType;
-  typedef itk::Image< MetricPixelType, Dimension > MetricImageType;
+  using MetricPixelType = double;
+  using MetricImageType = itk::Image< MetricPixelType, Dimension >;
 
-  typedef itk::Vector< MetricPixelType, Dimension > VectorType;
-  typedef itk::Image< VectorType, Dimension >       DisplacementImageType;
+  using VectorType = itk::Vector< MetricPixelType, Dimension >;
+  using DisplacementImageType = itk::Image< VectorType, Dimension >;
 
-  typedef double CoordRepType;
+  using CoordRepType = double;
 
   // Input file readers.
-  typedef itk::ImageFileReader< InputImageType > ReaderType;
+  using ReaderType = itk::ImageFileReader< InputImageType >;
   ReaderType::Pointer fixedReader = ReaderType::New();
   fixedReader->SetFileName( argv[1] );
   ReaderType::Pointer movingReader = ReaderType::New();
   movingReader->SetFileName( argv[2] );
 
   // Make the search region image.
-  typedef itk::BlockMatching::SearchRegionImageInitializer< InputImageType, InputImageType > SearchRegionInitializerType;
+  using SearchRegionInitializerType = itk::BlockMatching::SearchRegionImageInitializer< InputImageType, InputImageType >;
   SearchRegionInitializerType::Pointer searchRegions = SearchRegionInitializerType::New();
   searchRegions->SetFixedImage( fixedReader->GetOutput() );
   searchRegions->SetMovingImage( movingReader->GetOutput() );
@@ -72,7 +72,7 @@ int itkBlockMatchingBayesianRegularizationDisplacementCalculatorTest( int argc, 
   searchRegions->SetOverlap( 3.0 );
 
   // The image registration method.
-  typedef itk::BlockMatching::ImageRegistrationMethod< InputImageType, InputImageType, MetricImageType, DisplacementImageType, CoordRepType > RegistrationMethodType;
+  using RegistrationMethodType = itk::BlockMatching::ImageRegistrationMethod< InputImageType, InputImageType, MetricImageType, DisplacementImageType, CoordRepType >;
   RegistrationMethodType::Pointer registrationMethod = RegistrationMethodType::New();
   registrationMethod->SetFixedImage( fixedReader->GetOutput() );
   registrationMethod->SetMovingImage( movingReader->GetOutput() );
@@ -80,14 +80,14 @@ int itkBlockMatchingBayesianRegularizationDisplacementCalculatorTest( int argc, 
   registrationMethod->SetRadius( blockRadius );
 
   // Our similarity metric.
-  typedef itk::BlockMatching::NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< InputImageType, InputImageType, MetricImageType > MetricImageFilterType;
+  using MetricImageFilterType = itk::BlockMatching::NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter< InputImageType, InputImageType, MetricImageType >;
   MetricImageFilterType::Pointer metricImageFilter = MetricImageFilterType::New();
 
   registrationMethod->SetMetricImageFilter( metricImageFilter );
 
   // Perform regularization.
-  typedef itk::BlockMatching::BayesianRegularizationDisplacementCalculator<
-    MetricImageType, DisplacementImageType > DisplacmentRegularizerType;
+  using DisplacmentRegularizerType = itk::BlockMatching::BayesianRegularizationDisplacementCalculator<
+    MetricImageType, DisplacementImageType >;
   DisplacmentRegularizerType::Pointer regularizer = DisplacmentRegularizerType::New();
   regularizer->SetMetricLowerBound( -1.0 );
   MetricImageType::SpacingType strainSigma;
@@ -98,12 +98,12 @@ int itkBlockMatchingBayesianRegularizationDisplacementCalculatorTest( int argc, 
   registrationMethod->SetMetricImageToDisplacementCalculator( regularizer );
 
   // Break the displacement vector image into components.
-  typedef itk::SplitComponentsImageFilter< DisplacementImageType,
-          MetricImageType > TensorComponentsFilterType;
+  using TensorComponentsFilterType = itk::SplitComponentsImageFilter< DisplacementImageType,
+          MetricImageType >;
   TensorComponentsFilterType::Pointer componentsFilter = TensorComponentsFilterType::New();
   componentsFilter->SetInput( registrationMethod->GetOutput() );
 
-  typedef itk::ImageFileWriter< MetricImageType > WriterType;
+  using WriterType = itk::ImageFileWriter< MetricImageType >;
   WriterType::Pointer displacementWriter = WriterType::New();
   try
     {

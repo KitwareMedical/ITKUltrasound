@@ -125,7 +125,7 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
   InputImageConstPointer inputPtr=this->GetInput();
 
   // Create an iterator that will walk the output region for this thread.
-  typedef ImageRegionIteratorWithIndex<TOutputImage> OutputIterator;
+  using OutputIterator = ImageRegionIteratorWithIndex<TOutputImage>;
 
   OutputIterator outIt(outputPtr, outputRegionForThread);
 
@@ -134,12 +134,12 @@ VectorResampleIdentityNeumannImageFilter<TInputImage,TOutputImage,TInterpolatorP
   PointType outputPoint;         // Coordinates of current output pixel
   PointType inputPoint;          // Coordinates of current input pixel
 
-  typedef ContinuousIndex<TInterpolatorPrecisionType, ImageDimension> ContinuousIndexType;
+  using ContinuousIndexType = ContinuousIndex<TInterpolatorPrecisionType, ImageDimension>;
   ContinuousIndexType inputIndex;
 
   const unsigned int numberOfComponents = PixelType::GetNumberOfComponents();
 
-  typedef typename InterpolatorType::OutputType OutputType;
+  using OutputType = typename InterpolatorType::OutputType;
 
   // Cached for determining the closest index when outside the input.
   IndexType startIndex = inputPtr->GetBufferedRegion().GetIndex();

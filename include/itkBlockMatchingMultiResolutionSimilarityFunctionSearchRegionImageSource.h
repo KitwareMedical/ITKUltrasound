@@ -69,77 +69,75 @@ class ITK_TEMPLATE_EXPORT MultiResolutionSimilarityFunctionSearchRegionImageSour
   public MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>
 {
 public:
-  /** Standard class typedefs. */
-  typedef MultiResolutionSimilarityFunctionSearchRegionImageSource Self;
-  typedef MultiResolutionSearchRegionImageSource<TFixedImage,
+  /** Standard class type alias. */
+  using Self = MultiResolutionSimilarityFunctionSearchRegionImageSource;
+  using Superclass = MultiResolutionSearchRegionImageSource<TFixedImage,
                                                  TMovingImage,
-                                                 TDisplacementImage>                            Superclass;
-  typedef MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>
-  DisplacementCalculatorSuperclass;
+                                                 TDisplacementImage>;
+  using DisplacementCalculatorSuperclass = MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>;
 
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, TMovingImage::ImageDimension);
 
   /** Type of the fixed image. */
-  typedef TFixedImage                         FixedImageType;
-  typedef typename FixedImageType::RegionType FixedRegionType;
+  using FixedImageType = TFixedImage;
+  using FixedRegionType = typename FixedImageType::RegionType;
 
   /** Type of the radius used to characterized the fixed image block. */
-  typedef typename FixedImageType::SizeType RadiusType;
+  using RadiusType = typename FixedImageType::SizeType;
 
   /** Type of the moving image. */
-  typedef TMovingImage                         MovingImageType;
-  typedef typename MovingImageType::RegionType MovingRegionType;
+  using MovingImageType = TMovingImage;
+  using MovingRegionType = typename MovingImageType::RegionType;
 
   /** Type of the metric image. */
-  typedef TMetricImage MetricImageType;
+  using MetricImageType = TMetricImage;
 
   /** Type of the image of metric images. */
-  typedef typename DisplacementCalculatorSuperclass::MetricImageImageType  MetricImageImageType;
-  typedef typename DisplacementCalculatorSuperclass::CenterPointsImageType CenterPointsImageType;
+  using MetricImageImageType = typename DisplacementCalculatorSuperclass::MetricImageImageType;
+  using CenterPointsImageType = typename DisplacementCalculatorSuperclass::CenterPointsImageType;
 
-  /** Interpolator typedef. */
-  typedef InterpolateImageFunction<MetricImageType, TInterpolatorPrecisionType> InterpolatorType;
-  typedef typename InterpolatorType::Pointer                                    InterpolatorPointerType;
+  /** Interpolator type alias. */
+  using InterpolatorType = InterpolateImageFunction<MetricImageType, TInterpolatorPrecisionType>;
+  using InterpolatorPointerType = typename InterpolatorType::Pointer;
 
   /** Type of the search region image. */
   typedef typename Superclass::OutputImageType
   OutputImageType;
   typedef typename OutputImageType::RegionType
   OutputRegionType;
-  typedef Image<typename itk::Vector<typename RadiusType::SizeValueType,
-                                     ImageDimension>, ImageDimension> SearchRegionRadiusImageType;
+  using SearchRegionRadiusImageType = Image<typename itk::Vector<typename RadiusType::SizeValueType,
+                                     ImageDimension>, ImageDimension>;
   typedef typename SearchRegionRadiusImageType::Pointer
   SearchRegionRadiusImagePointer;
-  typedef VectorResampleIdentityNeumannImageFilter<SearchRegionRadiusImageType,
-                                                   SearchRegionRadiusImageType>
-  SearchRegionRadiusResamplerType;
+  using SearchRegionRadiusResamplerType = VectorResampleIdentityNeumannImageFilter<SearchRegionRadiusImageType,
+                                                   SearchRegionRadiusImageType>;
 
-  /** ScheduleType typedef support. */
-  typedef typename Superclass::PyramidScheduleType PyramidScheduleType;
+  /** ScheduleType type alias support. */
+  using PyramidScheduleType = typename Superclass::PyramidScheduleType;
 
-  /** OverlapScheduleType typedef support. */
-  typedef typename Superclass::OverlapScheduleType OverlapScheduleType;
+  /** OverlapScheduleType type alias support. */
+  using OverlapScheduleType = typename Superclass::OverlapScheduleType;
 
   /** Type of the displacement image from the previous level. */
-  typedef TDisplacementImage DisplacementImageType;
+  using DisplacementImageType = TDisplacementImage;
 
   /** Type of the function object used to calculate the search region size. */
-  typedef TFunctor FunctorType;
+  using FunctorType = TFunctor;
 
   /** Type of the filter used to resample the deformations. */
-  typedef typename Superclass::DisplacementResamplerType DisplacementResamplerType;
-  typedef typename DisplacementResamplerType::Pointer    DisplacementResamplerPointer;
+  using DisplacementResamplerType = typename Superclass::DisplacementResamplerType;
+  using DisplacementResamplerPointer = typename DisplacementResamplerType::Pointer;
 
   /** Types inherited from the DisplacementCalculator superclass. */
-  typedef typename DisplacementCalculatorSuperclass::PointType PointType;
-  typedef typename DisplacementCalculatorSuperclass::IndexType IndexType;
+  using PointType = typename DisplacementCalculatorSuperclass::PointType;
+  using IndexType = typename DisplacementCalculatorSuperclass::IndexType;
 
   /** Type of the minimum search region radius factor. */
-  typedef FixedArray< double, ImageDimension > RadiusFactorType;
+  using RadiusFactorType = FixedArray< double, ImageDimension >;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( MultiResolutionSimilarityFunctionSearchRegionImageSource,

@@ -40,21 +40,21 @@ int itkTimeGainCompensationImageFilterTest( int argc, char * argv[] )
   const char * outputImageFileName = argv[2];
 
   const unsigned int Dimension = 2;
-  typedef signed short                                                                IntegerPixelType;
-  typedef itk::CurvilinearArraySpecialCoordinatesImage< IntegerPixelType, Dimension > IntegerImageType;
-  typedef float                                                                       RealPixelType;
-  typedef itk::CurvilinearArraySpecialCoordinatesImage< RealPixelType, Dimension >    RealImageType;
-  typedef itk::Image< RealPixelType, Dimension >                                      ScanConvertedImageType;
+  using IntegerPixelType = signed short;
+  using IntegerImageType = itk::CurvilinearArraySpecialCoordinatesImage< IntegerPixelType, Dimension >;
+  using RealPixelType = float;
+  using RealImageType = itk::CurvilinearArraySpecialCoordinatesImage< RealPixelType, Dimension >;
+  using ScanConvertedImageType = itk::Image< RealPixelType, Dimension >;
 
-  typedef itk::ImageFileReader< IntegerImageType > ReaderType;
+  using ReaderType = itk::ImageFileReader< IntegerImageType >;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
 
-  typedef itk::TimeGainCompensationImageFilter< IntegerImageType > TGCFilterType;
+  using TGCFilterType = itk::TimeGainCompensationImageFilter< IntegerImageType >;
   TGCFilterType::Pointer tgcFilter = TGCFilterType::New();
   tgcFilter->SetInput( reader->GetOutput() );
 
-  typedef TGCFilterType::GainType GainType;
+  using GainType = TGCFilterType::GainType;
 
   GainType gain = tgcFilter->GetGain();
   ITK_TEST_SET_GET_VALUE( 1.0, gain(0, 1) );
@@ -84,11 +84,11 @@ int itkTimeGainCompensationImageFilterTest( int argc, char * argv[] )
   gain( 2, 0 ) = 2000.0;
   tgcFilter->SetGain( gain );
 
-  typedef itk::CastImageFilter< IntegerImageType, RealImageType > CasterType;
+  using CasterType = itk::CastImageFilter< IntegerImageType, RealImageType >;
   CasterType::Pointer caster = CasterType::New();
   caster->SetInput( tgcFilter->GetOutput() );
 
-  typedef itk::BModeImageFilter< RealImageType, RealImageType > BModeFilterType;
+  using BModeFilterType = itk::BModeImageFilter< RealImageType, RealImageType >;
   BModeFilterType::Pointer bmodeFilter = BModeFilterType::New();
   bmodeFilter->SetInput( caster->GetOutput() );
 
@@ -107,7 +107,7 @@ int itkTimeGainCompensationImageFilterTest( int argc, char * argv[] )
   curvilinearArrayImage->SetFirstSampleDistance( radiusStart );
   curvilinearArrayImage->SetRadiusSampleSize( (radiusStop - radiusStart) / (inputSize[0] -1) );
 
-  typedef itk::ResampleImageFilter< RealImageType, ScanConvertedImageType > ResamplerType;
+  using ResamplerType = itk::ResampleImageFilter< RealImageType, ScanConvertedImageType >;
   ResamplerType::Pointer resampler = ResamplerType::New();
   resampler->SetInput( curvilinearArrayImage );
   RealImageType::SizeType outputSize;
@@ -122,12 +122,12 @@ int itkTimeGainCompensationImageFilterTest( int argc, char * argv[] )
   outputOrigin[1] = radiusStart * std::cos( vnl_math::pi / 4.0 );
   resampler->SetOutputOrigin( outputOrigin );
 
-  typedef itk::Image< unsigned char, Dimension > OutputImageType;
-  typedef itk::RescaleIntensityImageFilter< ScanConvertedImageType, OutputImageType > RescalerType;
+  using OutputImageType = itk::Image< unsigned char, Dimension >;
+  using RescalerType = itk::RescaleIntensityImageFilter< ScanConvertedImageType, OutputImageType >;
   RescalerType::Pointer rescaler = RescalerType::New();
   rescaler->SetInput( resampler->GetOutput() );
 
-  typedef itk::ImageFileWriter< OutputImageType > WriterType;
+  using WriterType = itk::ImageFileWriter< OutputImageType >;
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFileName );
   writer->SetInput( rescaler->GetOutput() );

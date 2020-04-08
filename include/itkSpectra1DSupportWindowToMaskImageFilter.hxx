@@ -45,11 +45,11 @@ Spectra1DSupportWindowToMaskImageFilter< TInputImage, TOutputImage >
   this->AllocateOutputs();
 
   const InputImageType * input = this->GetInput();
-  typedef typename InputImageType::PixelType InputPixelType;
+  using InputPixelType = typename InputImageType::PixelType;
   const InputPixelType & inputPixel = input->GetPixel( this->GetMaskIndex() );
 
-  typedef Spectra1DSupportWindowImageFilter< OutputImageType > Spectra1DSupportWindowFilterType;
-  typedef typename Spectra1DSupportWindowFilterType::FFT1DSizeType FFT1DSizeType;
+  using Spectra1DSupportWindowFilterType = Spectra1DSupportWindowImageFilter< OutputImageType >;
+  using FFT1DSizeType = typename Spectra1DSupportWindowFilterType::FFT1DSizeType;
 
   const MetaDataDictionary & dict = input->GetMetaDataDictionary();
   FFT1DSizeType fft1DSize = 32;

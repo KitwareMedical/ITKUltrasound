@@ -49,25 +49,25 @@ public:
   itkStaticConstMacro(ImageDimension, unsigned int, TMovingImage::ImageDimension);
 
   /** Type of the fixed image. */
-  typedef TFixedImage                         FixedImageType;
-  typedef typename FixedImageType::RegionType FixedRegionType;
+  using FixedImageType = TFixedImage;
+  using FixedRegionType = typename FixedImageType::RegionType;
 
   /** Type of the radius used to characterized the fixed image block. */
-  typedef typename FixedImageType::SizeType RadiusType;
+  using RadiusType = typename FixedImageType::SizeType;
 
   /** Type of the moving image. */
-  typedef TMovingImage                         MovingImageType;
-  typedef typename MovingImageType::RegionType MovingRegionType;
+  using MovingImageType = TMovingImage;
+  using MovingRegionType = typename MovingImageType::RegionType;
 
   /** Type of the search region image. */
-  typedef Image< typename MovingImageType::RegionType, ImageDimension > OutputImageType;
-  typedef typename OutputImageType::RegionType                          OutputRegionType;
+  using OutputImageType = Image< typename MovingImageType::RegionType, ImageDimension >;
+  using OutputRegionType = typename OutputImageType::RegionType;
 
-  /** Standard class typedefs. */
-  typedef SearchRegionImageInitializer              Self;
-  typedef ImageSource< OutputImageType >            Superclass;
-  typedef SmartPointer< Self >                      Pointer;
-  typedef SmartPointer< const Self >                ConstPointer;
+  /** Standard class type alias. */
+  using Self = SearchRegionImageInitializer;
+  using Superclass = ImageSource< OutputImageType >;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   /** New macro for creation of through a Smart Pointer. */
   itkNewMacro( Self );

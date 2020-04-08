@@ -44,12 +44,12 @@ class ITK_TEMPLATE_EXPORT MultiResolutionMinMaxSearchRegionImageSource :
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionMinMaxSearchRegionImageSource);
 
-  /** Standard class typedefs. */
-  typedef MultiResolutionMinMaxSearchRegionImageSource   Self;
-  typedef MultiResolutionSearchRegionImageSource< TFixedImage,
-          TMovingImage, TDisplacementImage >             Superclass;
-  typedef SmartPointer< Self >                           Pointer;
-  typedef SmartPointer< const Self >                     ConstPointer;
+  /** Standard class type alias. */
+  using Self = MultiResolutionMinMaxSearchRegionImageSource;
+  using Superclass = MultiResolutionSearchRegionImageSource< TFixedImage,
+          TMovingImage, TDisplacementImage >;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( MultiResolutionMinMaxSearchRegionImageSource, MultiResolutionSearchRegionImageSource );
@@ -61,28 +61,28 @@ public:
   itkStaticConstMacro(ImageDimension, unsigned int, TMovingImage::ImageDimension);
 
   /** Type of the fixed image. */
-  typedef typename Superclass::FixedImageType  FixedImageType;
-  typedef typename Superclass::FixedRegionType FixedRegionType;
+  using FixedImageType = typename Superclass::FixedImageType;
+  using FixedRegionType = typename Superclass::FixedRegionType;
 
   /** Type of the radius used to characterized the fixed image block. */
-  typedef typename Superclass::RadiusType RadiusType;
+  using RadiusType = typename Superclass::RadiusType;
 
   /** Type of the moving image. */
-  typedef typename Superclass::MovingImageType  MovingImageType;
-  typedef typename Superclass::MovingRegionType MovingRegionType;
+  using MovingImageType = typename Superclass::MovingImageType;
+  using MovingRegionType = typename Superclass::MovingRegionType;
 
   /** Type of the search region image. */
-  typedef typename Superclass::OutputImageType  OutputImageType;
-  typedef typename Superclass::OutputRegionType OutputRegionType;
+  using OutputImageType = typename Superclass::OutputImageType;
+  using OutputRegionType = typename Superclass::OutputRegionType;
 
   /** Type of the displacement image. */
-  typedef typename Superclass::DisplacementImageType DisplacementImageType;
+  using DisplacementImageType = typename Superclass::DisplacementImageType;
 
-  /** ScheduleType typedef support. */
-  typedef typename Superclass::PyramidScheduleType PyramidScheduleType;
+  /** ScheduleType type alias support. */
+  using PyramidScheduleType = typename Superclass::PyramidScheduleType;
 
   /** Type of the search region to block radius ratio. */
-  typedef FixedArray< double, ImageDimension > FactorType;
+  using FactorType = FixedArray< double, ImageDimension >;
 
   /** Set the ration of the search region radius to the matching block radius at
    * the bottom level. */

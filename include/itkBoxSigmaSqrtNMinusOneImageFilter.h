@@ -34,21 +34,20 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
                           const typename TOutputImage::RegionType & outputRegion,
                           const typename TInputImage::SizeType & Radius)
 {
-  // typedefs
-  typedef TInputImage                                         InputImageType;
-  typedef typename TInputImage::RegionType                    RegionType;
-  typedef typename TInputImage::SizeType                      SizeType;
-  typedef typename TInputImage::IndexType                     IndexType;
-  typedef typename TInputImage::OffsetType                    OffsetType;
-  typedef typename TInputImage::OffsetValueType               OffsetValueType;
-  typedef TOutputImage                                        OutputImageType;
-  typedef typename TOutputImage::PixelType                    OutputPixelType;
-  typedef typename TInputImage::PixelType                     InputPixelType;
+  // type alias
+  using InputImageType = TInputImage;
+  using RegionType = typename TInputImage::RegionType;
+  using SizeType = typename TInputImage::SizeType;
+  using IndexType = typename TInputImage::IndexType;
+  using OffsetType = typename TInputImage::OffsetType;
+  using OffsetValueType = typename TInputImage::OffsetValueType;
+  using OutputImageType = TOutputImage;
+  using OutputPixelType = typename TOutputImage::PixelType;
+  using InputPixelType = typename TInputImage::PixelType;
    // use the face generator for speed
-  typedef typename NeighborhoodAlgorithm::ImageBoundaryFacesCalculator<InputImageType>
-                                                              FaceCalculatorType;
-  typedef typename FaceCalculatorType::FaceListType           FaceListType;
-  typedef typename FaceCalculatorType::FaceListType::iterator FaceListTypeIt;
+  using FaceCalculatorType = typename NeighborhoodAlgorithm::ImageBoundaryFacesCalculator<InputImageType>;
+  using FaceListType = typename FaceCalculatorType::FaceListType;
+  using FaceListTypeIt = typename FaceCalculatorType::FaceListType::iterator;
   FaceCalculatorType faceCalculator;
 
   FaceListType faceList;
@@ -68,7 +67,7 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
     RegionLimit[i] = inputRegion.GetSize()[i] + RegionStart[i] - 1;
     }
 
-  typedef typename NumericTraits<OutputPixelType>::RealType AccPixType;
+  using AccPixType = typename NumericTraits<OutputPixelType>::RealType;
   // get a set of offsets to corners for a unit hypercube in this image
   std::vector<OffsetType> UnitCorners = CornerOffsets<TInputImage>(accImage);
   std::vector<OffsetType> RealCorners;
@@ -110,10 +109,10 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
         pixelscount *= (AccPixType)(2*Radius[i] + 1);
         }
 
-      typedef ImageRegionIterator<OutputImageType>     OutputIteratorType;
-      typedef ImageRegionConstIterator<InputImageType> InputIteratorType;
+      using OutputIteratorType = ImageRegionIterator<OutputImageType>;
+      using InputIteratorType = ImageRegionConstIterator<InputImageType>;
 
-      typedef std::vector<InputIteratorType> CornerItVecType;
+      using CornerItVecType = std::vector<InputIteratorType>;
       CornerItVecType CornerItVec;
       // set up the iterators for each corner
       for (unsigned int k = 0; k < RealCorners.size(); ++k)
@@ -147,7 +146,7 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage * accImage,
     else
       {
       // now we need to deal with the border regions
-      typedef ImageRegionIteratorWithIndex<OutputImageType> OutputIteratorType;
+      using OutputIteratorType = ImageRegionIteratorWithIndex<OutputImageType>;
       OutputIteratorType oIt(outputImage, *fit);
       // now do the work
       for (oIt.GoToBegin(); !oIt.IsAtEnd(); ++oIt)
@@ -232,11 +231,11 @@ class ITK_TEMPLATE_EXPORT BoxSigmaSqrtNMinusOneImageFilter :
     public BoxImageFilter<TInputImage, TOutputImage>
 {
 public:
-  /** Standard class typedefs. */
-  typedef BoxSigmaSqrtNMinusOneImageFilter           Self;
-  typedef BoxImageFilter<TInputImage, TOutputImage>  Superclass;
-  typedef SmartPointer<Self>                         Pointer;
-  typedef SmartPointer<const Self>                   ConstPointer;
+  /** Standard class type alias. */
+  using Self = BoxSigmaSqrtNMinusOneImageFilter;
+  using Superclass = BoxImageFilter<TInputImage, TOutputImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Standard New method. */
   itkNewMacro(Self);
@@ -244,18 +243,18 @@ public:
   /** Runtime information support. */
   itkTypeMacro(BoxSigmaSqrtNMinusOneImageFilter, BoxImageFilter);
 
-  /** Image related typedefs. */
-  typedef TInputImage                                InputImageType;
-  typedef TOutputImage                               OutputImageType;
-  typedef typename TInputImage::RegionType           RegionType;
-  typedef typename TInputImage::SizeType             SizeType;
-  typedef typename TInputImage::IndexType            IndexType;
-  typedef typename TInputImage::PixelType            PixelType;
-  typedef typename TInputImage::OffsetType           OffsetType;
-  typedef typename Superclass::OutputImageRegionType OutputImageRegionType;
-  typedef typename TOutputImage::PixelType           OutputPixelType;
+  /** Image related type alias. */
+  using InputImageType = TInputImage;
+  using OutputImageType = TOutputImage;
+  using RegionType = typename TInputImage::RegionType;
+  using SizeType = typename TInputImage::SizeType;
+  using IndexType = typename TInputImage::IndexType;
+  using PixelType = typename TInputImage::PixelType;
+  using OffsetType = typename TInputImage::OffsetType;
+  using OutputImageRegionType = typename Superclass::OutputImageRegionType;
+  using OutputPixelType = typename TOutputImage::PixelType;
 
-  /** Image related typedefs. */
+  /** Image related type alias. */
   itkStaticConstMacro(OutputImageDimension, unsigned int,
                       TOutputImage::ImageDimension);
   itkStaticConstMacro(InputImageDimension, unsigned int,

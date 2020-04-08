@@ -38,11 +38,11 @@ class Ultrasound_EXPORT HDF5UltrasoundImageIOFactory: public ObjectFactoryBase
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(HDF5UltrasoundImageIOFactory);
 
-  /** Standard class typedefs. */
-  typedef HDF5UltrasoundImageIOFactory Self;
-  typedef ObjectFactoryBase            Superclass;
-  typedef SmartPointer< Self >         Pointer;
-  typedef SmartPointer< const Self >   ConstPointer;
+  /** Standard class type alias. */
+  using Self = HDF5UltrasoundImageIOFactory;
+  using Superclass = ObjectFactoryBase;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   /** Class methods used to interface with the registered factories. */
   virtual const char * GetITKSourceVersion() const override;

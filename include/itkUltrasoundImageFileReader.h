@@ -49,11 +49,11 @@ class ITK_TEMPLATE_EXPORT UltrasoundImageFileReader :
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(UltrasoundImageFileReader);
 
-  /** Standard class typedefs.   */
-  typedef UltrasoundImageFileReader       Self;
-  typedef ImageFileReader< TOutputImage > Superclass;
-  typedef SmartPointer< Self >            Pointer;
-  typedef SmartPointer< const Self >      ConstPointer;
+  /** Standard class type alias.   */
+  using Self = UltrasoundImageFileReader;
+  using Superclass = ImageFileReader< TOutputImage >;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -61,8 +61,8 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro(UltrasoundImageFileReader, ImageFileReader);
 
-  typedef TOutputImage                              OutputImageType;
-  typedef typename Superclass::OutputImagePixelType OutputImagePixelType;
+  using OutputImageType = TOutputImage;
+  using OutputImagePixelType = typename Superclass::OutputImagePixelType;
 
   itkStaticConstMacro(ImageDimension, unsigned int, OutputImageType::ImageDimension);
 
