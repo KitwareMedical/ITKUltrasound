@@ -36,6 +36,8 @@ namespace itk
 class Ultrasound_EXPORT HDF5UltrasoundImageIOFactory: public ObjectFactoryBase
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(HDF5UltrasoundImageIOFactory);
+
   /** Standard class typedefs. */
   typedef HDF5UltrasoundImageIOFactory Self;
   typedef ObjectFactoryBase            Superclass;
@@ -65,10 +67,6 @@ protected:
   HDF5UltrasoundImageIOFactory();
   ~HDF5UltrasoundImageIOFactory();
   virtual void PrintSelf(std::ostream & os, Indent indent) const override;
-
-private:
-  HDF5UltrasoundImageIOFactory(const Self &) ITK_DELETED_FUNCTION;
-  void operator=(const Self &) ITK_DELETED_FUNCTION;
 };
 } // end namespace itk
 

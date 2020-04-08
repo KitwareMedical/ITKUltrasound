@@ -36,6 +36,8 @@ template< typename TInputImage >
 class ITK_TEMPLATE_EXPORT SpecialCoordinatesImageToVTKStructuredGridFilter: public ProcessObject
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(SpecialCoordinatesImageToVTKStructuredGridFilter);
+
   /** Standard class typedefs. */
   typedef SpecialCoordinatesImageToVTKStructuredGridFilter Self;
   typedef ProcessObject                                    Superclass;
@@ -75,9 +77,6 @@ protected:
   virtual void GenerateData() override;
 
 private:
-  SpecialCoordinatesImageToVTKStructuredGridFilter(const Self &) ITK_DELETED_FUNCTION;
-  void operator=(const Self&) ITK_DELETED_FUNCTION;
-
   vtkSmartPointer< vtkStructuredGrid > m_StructuredGrid;
 };
 

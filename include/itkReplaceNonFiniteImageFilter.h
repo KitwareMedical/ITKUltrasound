@@ -84,6 +84,8 @@ class ReplaceNonFiniteImageFilter:
     Functor::ReplaceNonFinite< typename TInputImage::PixelType, typename TOutputImage::PixelType > >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(ReplaceNonFiniteImageFilter);
+
   /** Standard class typedefs. */
   typedef ReplaceNonFiniteImageFilter Self;
   typedef UnaryFunctorImageFilter< TInputImage, TOutputImage,
@@ -102,10 +104,6 @@ public:
 protected:
   ReplaceNonFiniteImageFilter() {}
   virtual ~ReplaceNonFiniteImageFilter() {}
-
-private:
-  ReplaceNonFiniteImageFilter(const Self &) ITK_DELETED_FUNCTION;
-  void operator=(const Self &) ITK_DELETED_FUNCTION;
 };
 
 } // end namespace itk

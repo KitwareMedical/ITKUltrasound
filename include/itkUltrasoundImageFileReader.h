@@ -47,6 +47,8 @@ class ITK_TEMPLATE_EXPORT UltrasoundImageFileReader :
   public ImageFileReader< TOutputImage >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(UltrasoundImageFileReader);
+
   /** Standard class typedefs.   */
   typedef UltrasoundImageFileReader       Self;
   typedef ImageFileReader< TOutputImage > Superclass;
@@ -71,10 +73,6 @@ protected:
   /** Prepare the allocation of the output image during the first back
    * propagation of the pipeline. */
   virtual void GenerateOutputInformation() override;
-
-private:
-  UltrasoundImageFileReader( const Self& ) ITK_DELETED_FUNCTION;
-  void operator=( const Self& ) ITK_DELETED_FUNCTION;
 };
 
 } // end namespace itk

@@ -36,6 +36,8 @@ class ITK_TEMPLATE_EXPORT VnlInverse1DFFTImageFilter:
   public Inverse1DFFTImageFilter< TInputImage, TOutputImage >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(VnlInverse1DFFTImageFilter);
+
   /** Standard class typedefs. */
   typedef VnlInverse1DFFTImageFilter                           Self;
   typedef Inverse1DFFTImageFilter< TInputImage, TOutputImage > Superclass;
@@ -57,10 +59,6 @@ protected:
 
   VnlInverse1DFFTImageFilter() { }
   virtual ~VnlInverse1DFFTImageFilter() { }
-
-private:
-  VnlInverse1DFFTImageFilter(const Self&) ITK_DELETED_FUNCTION;
-  void operator=(const Self&) ITK_DELETED_FUNCTION;
 };
 
 } // end namespace itk

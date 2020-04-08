@@ -38,6 +38,8 @@ class ITK_TEMPLATE_EXPORT FFTWForward1DFFTImageFilter :
     public Forward1DFFTImageFilter< TInputImage, TOutputImage >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(FFTWForward1DFFTImageFilter);
+
   typedef FFTWForward1DFFTImageFilter                          Self;
   typedef Forward1DFFTImageFilter< TInputImage, TOutputImage > Superclass;
   typedef SmartPointer< Self >                                 Pointer;
@@ -79,9 +81,6 @@ protected:
 
 
 private:
-  FFTWForward1DFFTImageFilter(const Self&) ITK_DELETED_FUNCTION;
-  void operator=(const Self&) ITK_DELETED_FUNCTION;
-
   ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;
 
   /** Destroy FFTW Plans and associated buffers. */

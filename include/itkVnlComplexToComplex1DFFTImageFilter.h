@@ -36,6 +36,8 @@ class ITK_TEMPLATE_EXPORT VnlComplexToComplex1DFFTImageFilter:
     public ComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(VnlComplexToComplex1DFFTImageFilter);
+
   /** Standard class typedefs. */
   typedef VnlComplexToComplex1DFFTImageFilter                           Self;
   typedef ComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage > Superclass;
@@ -59,10 +61,6 @@ protected:
   virtual ~VnlComplexToComplex1DFFTImageFilter() {}
 
   void GenerateData() override;
-
-private:
-  VnlComplexToComplex1DFFTImageFilter(const Self&) ITK_DELETED_FUNCTION;
-  void operator=(const Self&) ITK_DELETED_FUNCTION;
 };
 
 } // end namespace itk

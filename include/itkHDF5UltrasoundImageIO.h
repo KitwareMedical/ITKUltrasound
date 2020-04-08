@@ -55,6 +55,8 @@ class MetaDataDictionary;
 class Ultrasound_EXPORT HDF5UltrasoundImageIO: public StreamingImageIOBase
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(HDF5UltrasoundImageIO);
+
   /** Standard class typedefs. */
   typedef HDF5UltrasoundImageIO Self;
   typedef StreamingImageIOBase  Superclass;
@@ -87,9 +89,6 @@ protected:
   virtual void PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  HDF5UltrasoundImageIO(const Self &) ITK_DELETED_FUNCTION;
-  void operator=(const Self &) ITK_DELETED_FUNCTION;
-
   template <typename TScalar>
   std::vector<TScalar> ReadVector(const std::string &dataSetName);
 
