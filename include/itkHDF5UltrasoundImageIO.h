@@ -23,14 +23,13 @@
 // itk namespace first suppresses
 // kwstyle error for the H5 namespace below
 namespace itk
-{
-}
+{}
 namespace H5
 {
 class H5File;
 class DataSpace;
 class DataSet;
-}
+} // namespace H5
 
 #include "itkStreamingImageIOBase.h"
 
@@ -52,13 +51,15 @@ class MetaDataDictionary;
  *
  */
 
-class Ultrasound_EXPORT HDF5UltrasoundImageIO: public StreamingImageIOBase
+class Ultrasound_EXPORT HDF5UltrasoundImageIO : public StreamingImageIOBase
 {
 public:
-  /** Standard class typedefs. */
-  typedef HDF5UltrasoundImageIO Self;
-  typedef StreamingImageIOBase  Superclass;
-  typedef SmartPointer< Self >  Pointer;
+  ITK_DISALLOW_COPY_AND_ASSIGN(HDF5UltrasoundImageIO);
+
+  /** Standard class type alias. */
+  using Self = HDF5UltrasoundImageIO;
+  using Superclass = StreamingImageIOBase;
+  using Pointer = SmartPointer<Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -66,39 +67,46 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro(HDF5UltrasoundImageIO, StreamingImageIOBase);
 
-  virtual bool CanReadFile(const char * fileNameToRead) override;
+  virtual bool
+  CanReadFile(const char * fileNameToRead) override;
 
-  virtual void ReadImageInformation() override;
+  virtual void
+  ReadImageInformation() override;
 
-  virtual void Read(void *buffer) override;
+  virtual void
+  Read(void * buffer) override;
 
-  virtual bool CanWriteFile(const char * fileNameToWrite) override;
+  virtual bool
+  CanWriteFile(const char * fileNameToWrite) override;
 
-  virtual void WriteImageInformation() override;
+  virtual void
+  WriteImageInformation() override;
 
-  virtual void Write(const void *buffer) override;
+  virtual void
+  Write(const void * buffer) override;
 
 protected:
   HDF5UltrasoundImageIO();
   ~HDF5UltrasoundImageIO();
 
-  virtual SizeType GetHeaderSize() const override;
+  virtual SizeType
+  GetHeaderSize() const override;
 
-  virtual void PrintSelf(std::ostream & os, Indent indent) const override;
+  virtual void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  HDF5UltrasoundImageIO(const Self &) ITK_DELETED_FUNCTION;
-  void operator=(const Self &) ITK_DELETED_FUNCTION;
-
   template <typename TScalar>
-  std::vector<TScalar> ReadVector(const std::string &dataSetName);
+  std::vector<TScalar>
+  ReadVector(const std::string & dataSetName);
 
-  void SetupStreaming(H5::DataSpace *imageSpace,
-                      H5::DataSpace *slabSpace);
+  void
+  SetupStreaming(H5::DataSpace * imageSpace, H5::DataSpace * slabSpace);
 
-  void CloseH5File();
+  void
+  CloseH5File();
 
-  H5::H5File  * m_H5File;
+  H5::H5File *  m_H5File;
   H5::DataSet * m_VoxelDataSet;
 };
 } // end namespace itk

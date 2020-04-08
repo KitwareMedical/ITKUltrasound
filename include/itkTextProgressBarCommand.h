@@ -33,22 +33,23 @@ namespace itk
  *
  * \ingroup Ultrasound
  * */
-class Ultrasound_EXPORT TextProgressBarCommand:
-  public Command
+class Ultrasound_EXPORT TextProgressBarCommand : public Command
 {
 public:
-  typedef TextProgressBarCommand Self;
-  typedef Command                Superclass;
-  typedef SmartPointer< Self >   Pointer;
+  using Self = TextProgressBarCommand;
+  using Superclass = Command;
+  using Pointer = SmartPointer<Self>;
 
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
 protected:
   TextProgressBarCommand();
 
-  void Execute(itk::Object *caller, const itk::EventObject & event) override;
+  void
+  Execute(itk::Object * caller, const itk::EventObject & event) override;
 
-  void Execute(const itk::Object * object, const itk::EventObject & event) override;
+  void
+  Execute(const itk::Object * object, const itk::EventObject & event) override;
 
   std::string m_Progress;
 };

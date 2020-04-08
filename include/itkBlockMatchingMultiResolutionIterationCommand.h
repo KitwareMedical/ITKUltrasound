@@ -35,54 +35,54 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  * */
-template< typename TMultiResolutionMethod >
+template <typename TMultiResolutionMethod>
 class MultiResolutionIterationCommand : public Command
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionIterationCommand);
 
-  typedef MultiResolutionIterationCommand  Self;
-  typedef Command                          Superclass;
-  typedef SmartPointer< Self >             Pointer;
+  using Self = MultiResolutionIterationCommand;
+  using Superclass = Command;
+  using Pointer = SmartPointer<Self>;
 
-  void Execute(itk::Object *caller, const itk::EventObject & event) override
-    {
-    Execute( (const itk::Object *)caller, event);
-    }
+  void
+  Execute(itk::Object * caller, const itk::EventObject & event) override
+  {
+    Execute((const itk::Object *)caller, event);
+  }
 
-  void Execute(const itk::Object * object, const itk::EventObject & event) override;
+  void
+  Execute(const itk::Object * object, const itk::EventObject & event) override;
 
-  typedef TMultiResolutionMethod                      MultiResolutionMethodType;
+  using MultiResolutionMethodType = TMultiResolutionMethod;
 
-  void SetMultiResolutionMethod( MultiResolutionMethodType * method )
-    {
+  void
+  SetMultiResolutionMethod(MultiResolutionMethodType * method)
+  {
     m_MultiResolutionMethod = method;
-    }
+  }
 
-  typedef typename MultiResolutionMethodType::FixedImagePyramidType  FixedImagePyramidType;
-  typedef typename FixedImagePyramidType::ConstPointer                    FixedImagePyramidPointer;
-  typedef typename MultiResolutionMethodType::MovingImagePyramidType MovingImagePyramidType;
-  typedef typename MovingImagePyramidType::ConstPointer                   MovingImagePyramidPointer;
+  using FixedImagePyramidType = typename MultiResolutionMethodType::FixedImagePyramidType;
+  using FixedImagePyramidPointer = typename FixedImagePyramidType::ConstPointer;
+  using MovingImagePyramidType = typename MultiResolutionMethodType::MovingImagePyramidType;
+  using MovingImagePyramidPointer = typename MovingImagePyramidType::ConstPointer;
 
-  typedef typename MultiResolutionMethodType::BlockRadiusCalculatorType BlockRadiusCalculatorType;
-  typedef typename BlockRadiusCalculatorType::ConstPointer                   BlockRadiusCalculatorPointer;
+  using BlockRadiusCalculatorType = typename MultiResolutionMethodType::BlockRadiusCalculatorType;
+  using BlockRadiusCalculatorPointer = typename BlockRadiusCalculatorType::ConstPointer;
 
-  typedef typename MultiResolutionMethodType::SearchRegionImageSourceType SearchRegionImageSourceType;
-  typedef typename SearchRegionImageSourceType::ConstPointer                   SearchRegionImageSourcePointer;
+  using SearchRegionImageSourceType = typename MultiResolutionMethodType::SearchRegionImageSourceType;
+  using SearchRegionImageSourcePointer = typename SearchRegionImageSourceType::ConstPointer;
 
 protected:
-  MultiResolutionIterationCommand()
-    {
-    m_MultiResolutionMethod = nullptr;
-    }
-  virtual ~MultiResolutionIterationCommand() {};
+  MultiResolutionIterationCommand() { m_MultiResolutionMethod = nullptr; }
+  virtual ~MultiResolutionIterationCommand(){};
 
   typename MultiResolutionMethodType::Pointer m_MultiResolutionMethod;
 
-  FixedImagePyramidPointer       m_FixedImagePyramid;
-  MovingImagePyramidPointer      m_MovingImagePyramid;
+  FixedImagePyramidPointer  m_FixedImagePyramid;
+  MovingImagePyramidPointer m_MovingImagePyramid;
 
-  BlockRadiusCalculatorPointer   m_BlockRadiusCalculator;
+  BlockRadiusCalculatorPointer m_BlockRadiusCalculator;
 
   SearchRegionImageSourcePointer m_SearchRegionImageSource;
 

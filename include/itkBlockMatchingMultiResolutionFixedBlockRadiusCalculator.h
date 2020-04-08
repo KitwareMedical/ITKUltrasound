@@ -38,55 +38,56 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  * */
-template< class TFixedImage >
-class ITK_TEMPLATE_EXPORT MultiResolutionFixedBlockRadiusCalculator :
-  public  MultiResolutionBlockRadiusCalculator< TFixedImage >
+template <class TFixedImage>
+class ITK_TEMPLATE_EXPORT MultiResolutionFixedBlockRadiusCalculator
+  : public MultiResolutionBlockRadiusCalculator<TFixedImage>
 {
 public:
-  /** Standard class typedefs. */
-  typedef MultiResolutionFixedBlockRadiusCalculator           Self;
-  typedef MultiResolutionBlockRadiusCalculator< TFixedImage > Superclass;
-  typedef SmartPointer< Self >                                Pointer;
-  typedef SmartPointer< const Self >                          ConstPointer;
+  /** Standard class type alias. */
+  using Self = MultiResolutionFixedBlockRadiusCalculator;
+  using Superclass = MultiResolutionBlockRadiusCalculator<TFixedImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information ( and related methods ). */
-  itkTypeMacro( MultiResolutionFixedBlockRadiusCalculator, MultiResolutionBlockRadiusCalculator );
+  itkTypeMacro(MultiResolutionFixedBlockRadiusCalculator, MultiResolutionBlockRadiusCalculator);
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro( ImageDimension, unsigned int,
-                      Superclass::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
 
   /** Type of the fixed image. */
-  typedef typename Superclass::FixedImageType  FixedImageType;
-  typedef typename Superclass::RadiusType      RadiusType;
+  using FixedImageType = typename Superclass::FixedImageType;
+  using RadiusType = typename Superclass::RadiusType;
 
   /** Set the radius used for all pyramid levels. */
-  void SetRadius( const RadiusType& radius )
-    { m_Radius = radius; }
-  itkGetConstReferenceMacro( Radius, RadiusType );
+  void
+  SetRadius(const RadiusType & radius)
+  {
+    m_Radius = radius;
+  }
+  itkGetConstReferenceMacro(Radius, RadiusType);
 
-  const RadiusType& Compute( unsigned long level ) override
-    {
+  const RadiusType &
+  Compute(unsigned long level) override
+  {
     return m_Radius;
-    }
+  }
 
 protected:
-  MultiResolutionFixedBlockRadiusCalculator()
-   {
-   m_Radius.Fill( 1 );
-   }
+  MultiResolutionFixedBlockRadiusCalculator() { m_Radius.Fill(1); }
 
   RadiusType m_Radius;
 
 private:
-  MultiResolutionFixedBlockRadiusCalculator( const Self& );
-  void operator=( const Self& );
+  MultiResolutionFixedBlockRadiusCalculator(const Self &);
+  void
+  operator=(const Self &);
 };
 
-} // end namespace itk
-} // end namespace BlockMatching
+} // namespace BlockMatching
+} // namespace itk
 
 #endif

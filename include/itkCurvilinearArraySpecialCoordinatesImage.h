@@ -84,17 +84,16 @@ namespace itk
  *
  * \ingroup ImageObjects
  */
-template< typename TPixel, unsigned int VDimension >
-class ITK_TEMPLATE_EXPORT CurvilinearArraySpecialCoordinatesImage:
-  public SpecialCoordinatesImage< TPixel, VDimension >
+template <typename TPixel, unsigned int VDimension>
+class ITK_TEMPLATE_EXPORT CurvilinearArraySpecialCoordinatesImage : public SpecialCoordinatesImage<TPixel, VDimension>
 {
 public:
-  /** Standard class typedefs */
-  typedef CurvilinearArraySpecialCoordinatesImage       Self;
-  typedef SpecialCoordinatesImage< TPixel, VDimension > Superclass;
-  typedef SmartPointer< Self >                          Pointer;
-  typedef SmartPointer< const Self >                    ConstPointer;
-  typedef WeakPointer< const Self >                     ConstWeakPointer;
+  /** Standard class type alias */
+  using Self = CurvilinearArraySpecialCoordinatesImage;
+  using Superclass = SpecialCoordinatesImage<TPixel, VDimension>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
+  using ConstWeakPointer = WeakPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -102,33 +101,33 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro(CurvilinearArraySpecialCoordinatesImage, SpecialCoordinatesImage);
 
-  /** Pixel typedef support. Used to declare pixel type in filters
+  /** Pixel type alias support. Used to declare pixel type in filters
    * or other operations. */
-  typedef TPixel PixelType;
+  using PixelType = TPixel;
 
   /** Typedef alias for PixelType */
-  typedef TPixel ValueType;
+  using ValueType = TPixel;
 
   /** Internal Pixel representation. Used to maintain a uniform API
    * with Image Adaptors and allow to keep a particular internal
    * representation of data while showing a different external
    * representation. */
-  typedef TPixel InternalPixelType;
+  using InternalPixelType = TPixel;
 
-  typedef typename Superclass::IOPixelType IOPixelType;
+  using IOPixelType = typename Superclass::IOPixelType;
 
   /** Accessor type that convert data between internal and external
    *  representations.  */
-  typedef DefaultPixelAccessor< PixelType > AccessorType;
+  using AccessorType = DefaultPixelAccessor<PixelType>;
 
   /** Accessor functor to choose between accessors: DefaultPixelAccessor for
    * the Image, and DefaultVectorPixelAccessor for the vector image. The
    * functor provides a generic API between the two accessors. */
-  typedef DefaultPixelAccessorFunctor< Self > AccessorFunctorType;
+  using AccessorFunctorType = DefaultPixelAccessorFunctor<Self>;
 
   /** Typedef for the functor used to access a neighborhood of pixel
    * pointers. */
-  typedef NeighborhoodAccessorFunctor< Self > NeighborhoodAccessorFunctorType;
+  using NeighborhoodAccessorFunctorType = NeighborhoodAccessorFunctor<Self>;
 
   /** Dimension of the image.  This constant is used by functions that are
    * templated over image type (as opposed to being templated over pixel type
@@ -136,42 +135,42 @@ public:
    * the image. */
   itkStaticConstMacro(ImageDimension, unsigned int, VDimension);
 
-  /** Index typedef support. An index is used to access pixel values. */
-  typedef typename Superclass::IndexType      IndexType;
-  typedef typename Superclass::IndexValueType IndexValueType;
+  /** Index type alias support. An index is used to access pixel values. */
+  using IndexType = typename Superclass::IndexType;
+  using IndexValueType = typename Superclass::IndexValueType;
 
-  /** Offset typedef support. An offset is used to access pixel values. */
-  typedef typename Superclass::OffsetType    OffsetType;
+  /** Offset type alias support. An offset is used to access pixel values. */
+  using OffsetType = typename Superclass::OffsetType;
 
-  /** Size typedef support. A size is used to define region bounds. */
-  typedef typename Superclass::SizeType      SizeType;
-  typedef typename Superclass::SizeValueType SizeValueType;
+  /** Size type alias support. A size is used to define region bounds. */
+  using SizeType = typename Superclass::SizeType;
+  using SizeValueType = typename Superclass::SizeValueType;
 
   /** Container used to store pixels in the image. */
-  typedef ImportImageContainer< SizeValueType, PixelType > PixelContainer;
+  using PixelContainer = ImportImageContainer<SizeValueType, PixelType>;
 
-  /** Region typedef support. A region is used to specify a subset of
+  /** Region type alias support. A region is used to specify a subset of
    *  an image.
    */
-  typedef typename Superclass::RegionType RegionType;
+  using RegionType = typename Superclass::RegionType;
 
-  /** Spacing typedef support.  Spacing holds the "fake" size of a
+  /** Spacing type alias support.  Spacing holds the "fake" size of a
    *  pixel, making each pixel look like a 1 unit hyper-cube to filters
    *  that were designed for normal images and that therefore use
    *  m_Spacing.  The spacing is the geometric distance between image
    *  samples.
    */
-  typedef typename Superclass::SpacingType SpacingType;
+  using SpacingType = typename Superclass::SpacingType;
 
-  /** Origin typedef support.  The origin is the "fake" geometric
+  /** Origin type alias support.  The origin is the "fake" geometric
    *  coordinates of the index (0,0).  Also for use w/ filters designed
    *  for normal images.
    */
-  typedef typename Superclass::PointType PointType;
+  using PointType = typename Superclass::PointType;
 
   /** A pointer to the pixel container. */
-  typedef typename PixelContainer::Pointer      PixelContainerPointer;
-  typedef typename PixelContainer::ConstPointer PixelContainerConstPointer;
+  using PixelContainerPointer = typename PixelContainer::Pointer;
+  using PixelContainerConstPointer = typename PixelContainer::ConstPointer;
 
   /** Graft the data and information from one image to another. This
    * is a convenience method to setup a second image with all the meta
@@ -183,43 +182,42 @@ public:
    * simply calls CopyInformation() and copies the region ivars.
    * The implementation here refers to the superclass' implementation
    * and then copies over the pixel container. */
-  virtual void Graft(const DataObject *data) override;
+  virtual void
+  Graft(const DataObject * data) override;
 
   /** \brief Get the continuous index from a physical point
    *
    * Returns true if the resulting index is within the image, false otherwise.
    * \sa Transform */
-  template< typename TCoordRep, typename TIndexRep >
-  bool TransformPhysicalPointToContinuousIndex(
-    const Point< TCoordRep, VDimension > & point,
-    ContinuousIndex< TIndexRep, VDimension > & index) const
+  template <typename TCoordRep, typename TIndexRep>
+  bool
+  TransformPhysicalPointToContinuousIndex(const Point<TCoordRep, VDimension> &     point,
+                                          ContinuousIndex<TIndexRep, VDimension> & index) const
   {
     const RegionType & region = this->GetLargestPossibleRegion();
-    const double maxLateral = region.GetSize(1) - 1;
+    const double       maxLateral = region.GetSize(1) - 1;
 
     // Convert Cartesian coordinates into angular coordinates
     TCoordRep lateral = Math::pi_over_2;
-    if( point[1] != 0.0 )
-      {
+    if (point[1] != 0.0)
+    {
       lateral = std::atan(point[0] / point[1]);
-      }
-    const TCoordRep radius  = std::sqrt(point[0] * point[0] + point[1] * point[1] );
+    }
+    const TCoordRep radius = std::sqrt(point[0] * point[0] + point[1] * point[1]);
 
     // Convert the "proper" angular coordinates into index format
-    index[0] = static_cast< TCoordRep >( ( ( radius - m_FirstSampleDistance )
-                                           / m_RadiusSampleSize ) );
-    index[1] = static_cast< TCoordRep >( ( lateral / m_LateralAngularSeparation )
-                                         + ( maxLateral / 2.0 ) );
-    Vector< SpacePrecisionType, VDimension > cvector;
-    for ( unsigned int kk = 0; kk < VDimension; ++kk )
-      {
+    index[0] = static_cast<TCoordRep>(((radius - m_FirstSampleDistance) / m_RadiusSampleSize));
+    index[1] = static_cast<TCoordRep>((lateral / m_LateralAngularSeparation) + (maxLateral / 2.0));
+    Vector<SpacePrecisionType, VDimension> cvector;
+    for (unsigned int kk = 0; kk < VDimension; ++kk)
+    {
       cvector[kk] = point[kk] - this->m_Origin[kk];
-      }
+    }
     cvector = this->m_PhysicalPointToIndex * cvector;
-    for ( unsigned int ii = 2; ii < VDimension; ++ii )
-      {
-      index[ii] = static_cast< TIndexRep >( cvector[ii] );
-      }
+    for (unsigned int ii = 2; ii < VDimension; ++ii)
+    {
+      index[ii] = static_cast<TIndexRep>(cvector[ii]);
+    }
 
     // Now, check to see if the index is within allowed bounds
     const bool isInside = region.IsInside(index);
@@ -231,36 +229,33 @@ public:
    * Floating point index results are truncated to integers.
    * Returns true if the resulting index is within the image, false otherwise
    * \sa Transform */
-  template< typename TCoordRep >
-  bool TransformPhysicalPointToIndex(
-    const Point< TCoordRep, VDimension > & point,
-    IndexType & index) const
+  template <typename TCoordRep>
+  bool
+  TransformPhysicalPointToIndex(const Point<TCoordRep, VDimension> & point, IndexType & index) const
   {
     const RegionType & region = this->GetLargestPossibleRegion();
-    const double maxLateral = region.GetSize(1) - 1;
+    const double       maxLateral = region.GetSize(1) - 1;
 
     // Convert Cartesian coordinates into angular coordinates
     TCoordRep lateral = Math::pi_over_2;
-    if( point[1] != 0.0 )
-      {
+    if (point[1] != 0.0)
+    {
       lateral = std::atan(point[0] / point[1]);
-      }
-    const TCoordRep radius  = std::sqrt(point[0] * point[0] + point[1] * point[1] );
+    }
+    const TCoordRep radius = std::sqrt(point[0] * point[0] + point[1] * point[1]);
 
     // Convert the "proper" angular coordinates into index format
-    index[0] = static_cast< IndexValueType >( ( ( radius - m_FirstSampleDistance )
-                                           / m_RadiusSampleSize ) );
-    index[1] = static_cast< IndexValueType >( ( lateral / m_LateralAngularSeparation )
-                                         + ( maxLateral / 2.0 ) );
-    for ( unsigned int ii = 2; ii < VDimension; ++ii )
+    index[0] = static_cast<IndexValueType>(((radius - m_FirstSampleDistance) / m_RadiusSampleSize));
+    index[1] = static_cast<IndexValueType>((lateral / m_LateralAngularSeparation) + (maxLateral / 2.0));
+    for (unsigned int ii = 2; ii < VDimension; ++ii)
+    {
+      TCoordRep sum = NumericTraits<TCoordRep>::ZeroValue();
+      for (unsigned int jj = 0; jj < VDimension; ++jj)
       {
-      TCoordRep sum = NumericTraits< TCoordRep >::ZeroValue();
-      for ( unsigned int jj = 0; jj < VDimension; ++jj )
-        {
-        sum += this->m_PhysicalPointToIndex[ii][jj] * ( point[jj] - this->m_Origin[jj] );
-        }
-      index[ii] = Math::RoundHalfIntegerUp< IndexValueType >(sum);
+        sum += this->m_PhysicalPointToIndex[ii][jj] * (point[jj] - this->m_Origin[jj]);
       }
+      index[ii] = Math::RoundHalfIntegerUp<IndexValueType>(sum);
+    }
 
     // Now, check to see if the index is within allowed bounds
     const bool isInside = region.IsInside(index);
@@ -272,30 +267,30 @@ public:
    * the origin and spacing information comes from)
    * from a continuous index (in the index space)
    * \sa Transform */
-  template< typename TCoordRep, typename TIndexRep >
-  void TransformContinuousIndexToPhysicalPoint(
-    const ContinuousIndex< TIndexRep, VDimension > & index,
-    Point< TCoordRep, VDimension > & point) const
+  template <typename TCoordRep, typename TIndexRep>
+  void
+  TransformContinuousIndexToPhysicalPoint(const ContinuousIndex<TIndexRep, VDimension> & index,
+                                          Point<TCoordRep, VDimension> &                 point) const
   {
     const RegionType & region = this->GetLargestPossibleRegion();
-    const double maxLateral = region.GetSize(1) - 1;
+    const double       maxLateral = region.GetSize(1) - 1;
 
     // Convert the index into proper angular coordinates
-    const TCoordRep radius  = ( index[0] * m_RadiusSampleSize ) + m_FirstSampleDistance;
-    const TCoordRep lateral = ( index[1] - ( maxLateral / 2.0 ) ) * m_LateralAngularSeparation;
+    const TCoordRep radius = (index[0] * m_RadiusSampleSize) + m_FirstSampleDistance;
+    const TCoordRep lateral = (index[1] - (maxLateral / 2.0)) * m_LateralAngularSeparation;
 
     // Convert the angular coordinates into Cartesian coordinates
-    point[0] = static_cast< TCoordRep >( radius * std::sin(lateral) );
-    point[1] = static_cast< TCoordRep >( radius * std::cos(lateral) );
-    for ( unsigned int rr = 2; rr < VDimension; ++rr )
+    point[0] = static_cast<TCoordRep>(radius * std::sin(lateral));
+    point[1] = static_cast<TCoordRep>(radius * std::cos(lateral));
+    for (unsigned int rr = 2; rr < VDimension; ++rr)
+    {
+      TCoordRep sum = NumericTraits<TCoordRep>::ZeroValue();
+      for (unsigned int cc = 0; cc < VDimension; ++cc)
       {
-      TCoordRep sum = NumericTraits< TCoordRep >::ZeroValue();
-      for ( unsigned int cc = 0; cc < VDimension; ++cc )
-        {
         sum += this->m_IndexToPhysicalPoint(rr, cc) * index[cc];
-        }
-      point[rr] = sum + this->m_Origin[rr];
       }
+      point[rr] = sum + this->m_Origin[rr];
+    }
   }
 
   /** Get a physical point (in the space which
@@ -303,29 +298,28 @@ public:
    * from a discrete index (in the index space)
    *
    * \sa Transform */
-  template< typename TCoordRep >
-  void TransformIndexToPhysicalPoint(
-    const IndexType & index,
-    Point< TCoordRep, VDimension > & point) const
+  template <typename TCoordRep>
+  void
+  TransformIndexToPhysicalPoint(const IndexType & index, Point<TCoordRep, VDimension> & point) const
   {
     const RegionType & region = this->GetLargestPossibleRegion();
-    const double maxLateral = region.GetSize(1) - 1;
+    const double       maxLateral = region.GetSize(1) - 1;
 
     // Convert the index into proper angular coordinates
-    const TCoordRep radius  = ( index[0] * m_RadiusSampleSize ) + m_FirstSampleDistance;
-    const TCoordRep lateral = ( index[1] - ( maxLateral / 2.0 ) ) * m_LateralAngularSeparation;
+    const TCoordRep radius = (index[0] * m_RadiusSampleSize) + m_FirstSampleDistance;
+    const TCoordRep lateral = (index[1] - (maxLateral / 2.0)) * m_LateralAngularSeparation;
 
     // Convert the angular coordinates into Cartesian coordinates
-    point[0] = static_cast< TCoordRep >( radius * std::sin(lateral) );
-    point[1] = static_cast< TCoordRep >( radius * std::cos(lateral) );
-    for ( unsigned int ii = 2; ii < VDimension; ++ii )
-      {
+    point[0] = static_cast<TCoordRep>(radius * std::sin(lateral));
+    point[1] = static_cast<TCoordRep>(radius * std::cos(lateral));
+    for (unsigned int ii = 2; ii < VDimension; ++ii)
+    {
       point[ii] = this->m_Origin[ii];
-      for ( unsigned int jj = 0; jj < VDimension; ++jj )
-        {
+      for (unsigned int jj = 0; jj < VDimension; ++jj)
+      {
         point[ii] += this->m_IndexToPhysicalPoint[ii][jj] * index[jj];
-        }
       }
+    }
   }
 
   /** Set/Get the number of radians between each lateral unit.   */
@@ -340,59 +334,74 @@ public:
   itkSetMacro(FirstSampleDistance, double);
   itkGetConstMacro(FirstSampleDistance, double);
 
-  template< typename TCoordRep >
-  void TransformLocalVectorToPhysicalVector(
-    FixedArray< TCoordRep, VDimension > & ) const
-    {}
+  template <typename TCoordRep>
+  void
+  TransformLocalVectorToPhysicalVector(FixedArray<TCoordRep, VDimension> &) const
+  {}
 
-  template< typename TCoordRep >
-  void TransformPhysicalVectorToLocalVector(
-    const FixedArray< TCoordRep, VDimension > & ,
-    FixedArray< TCoordRep, VDimension > & ) const
-    {}
+  template <typename TCoordRep>
+  void
+  TransformPhysicalVectorToLocalVector(const FixedArray<TCoordRep, VDimension> &,
+                                       FixedArray<TCoordRep, VDimension> &) const
+  {}
 
   /** Return the Pixel Accessor object */
-  AccessorType GetPixelAccessor(void)
-  { return AccessorType(); }
+  AccessorType
+  GetPixelAccessor(void)
+  {
+    return AccessorType();
+  }
 
   /** Return the Pixel Accesor object */
-  const AccessorType GetPixelAccessor(void) const
-  { return AccessorType(); }
+  const AccessorType
+  GetPixelAccessor(void) const
+  {
+    return AccessorType();
+  }
 
   /** Return the NeighborhoodAccessor functor */
-  NeighborhoodAccessorFunctorType GetNeighborhoodAccessor()
-  { return NeighborhoodAccessorFunctorType(); }
+  NeighborhoodAccessorFunctorType
+  GetNeighborhoodAccessor()
+  {
+    return NeighborhoodAccessorFunctorType();
+  }
 
   /** Return the NeighborhoodAccessor functor */
-  const NeighborhoodAccessorFunctorType GetNeighborhoodAccessor() const
-  { return NeighborhoodAccessorFunctorType(); }
+  const NeighborhoodAccessorFunctorType
+  GetNeighborhoodAccessor() const
+  {
+    return NeighborhoodAccessorFunctorType();
+  }
 
-  virtual void CopyInformation( const DataObject * data ) override;
+  virtual void
+  CopyInformation(const DataObject * data) override;
 
 protected:
   CurvilinearArraySpecialCoordinatesImage()
-    {
+  {
     m_RadiusSampleSize = 1;
-    m_LateralAngularSeparation   =  1 * ( 2.0 * vnl_math::pi / 360.0 ); // 1
-                                                                        // degree
+    m_LateralAngularSeparation = 1 * (2.0 * vnl_math::pi / 360.0); // 1
+                                                                   // degree
     m_FirstSampleDistance = 0;
-    }
+  }
 
   virtual ~CurvilinearArraySpecialCoordinatesImage() {}
-  virtual void PrintSelf(std::ostream & os, Indent indent) const override;
+  virtual void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
   CurvilinearArraySpecialCoordinatesImage(const Self &); // purposely not implemented
-  void operator=(const Self &);                          // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
-  double m_LateralAngularSeparation;    // in radians
+  double m_LateralAngularSeparation; // in radians
   double m_RadiusSampleSize;
   double m_FirstSampleDistance;
 };
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkCurvilinearArraySpecialCoordinatesImage.hxx"
+#  include "itkCurvilinearArraySpecialCoordinatesImage.hxx"
 #endif
 
 #endif

@@ -38,44 +38,44 @@ namespace itk
  * \ingroup FourierTransform
  * \ingroup Ultrasound
  */
-template< typename TInputImage, typename TOutputImage=TInputImage >
-class ITK_TEMPLATE_EXPORT ComplexToComplex1DFFTImageFilter:
-  public ImageToImageFilter< TInputImage, TOutputImage >
+template <typename TInputImage, typename TOutputImage = TInputImage>
+class ITK_TEMPLATE_EXPORT ComplexToComplex1DFFTImageFilter : public ImageToImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(ComplexToComplex1DFFTImageFilter);
 
-  /** Standard class typedefs. */
-  typedef TInputImage                          InputImageType;
-  typedef TOutputImage                         OutputImageType;
-  typedef typename OutputImageType::RegionType OutputImageRegionType;
+  /** Standard class type alias. */
+  using InputImageType = TInputImage;
+  using OutputImageType = TOutputImage;
+  using OutputImageRegionType = typename OutputImageType::RegionType;
 
-  typedef ComplexToComplex1DFFTImageFilter                      Self;
-  typedef ImageToImageFilter< InputImageType, OutputImageType > Superclass;
-  typedef SmartPointer< Self >                                  Pointer;
-  typedef SmartPointer< const Self >                            ConstPointer;
+  using Self = ComplexToComplex1DFFTImageFilter;
+  using Superclass = ImageToImageFilter<InputImageType, OutputImageType>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
-  itkStaticConstMacro(ImageDimension, unsigned int, InputImageType::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, InputImageType::ImageDimension);
 
-  itkTypeMacro( ComplexToComplex1DFFTImageFilter, ImageToImageFilter );
+  itkTypeMacro(ComplexToComplex1DFFTImageFilter, ImageToImageFilter);
 
   /** Customized object creation methods that support configuration-based
-    * selection of FFT implementation.
-    *
-    * Default implementation is VnlFFT1D.
-    */
-  static Pointer New();
+   * selection of FFT implementation.
+   *
+   * Default implementation is VnlFFT1D.
+   */
+  static Pointer
+  New();
 
   /** Transform direction. */
-  typedef enum { DIRECT = 1, INVERSE } TransformDirectionType;
+  using TransformDirectionType = enum { DIRECT = 1, INVERSE };
 
   /** Set/Get the direction in which the transform will be applied.
    * By selecting DIRECT, this filter will perform a direct (forward) Fourier
    * Transform.
    * By selecting INVERSE, this filter will perform an inverse Fourier
    * Transform. */
-  itkSetMacro( TransformDirection, TransformDirectionType );
-  itkGetConstMacro( TransformDirection, TransformDirectionType );
+  itkSetMacro(TransformDirection, TransformDirectionType);
+  itkGetConstMacro(TransformDirection, TransformDirectionType);
 
   /** Get the direction in which the filter is to be applied. */
   itkGetMacro(Direction, unsigned int);
@@ -87,10 +87,13 @@ protected:
   ComplexToComplex1DFFTImageFilter();
   virtual ~ComplexToComplex1DFFTImageFilter() {}
 
-  void PrintSelf(std::ostream& os, Indent indent) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
-  void GenerateInputRequestedRegion() override;
-  void EnlargeOutputRequestedRegion(DataObject *output) override;
+  void
+  GenerateInputRequestedRegion() override;
+  void
+  EnlargeOutputRequestedRegion(DataObject * output) override;
 
   /** Direction in which the filter is to be applied
    * this should be in the range [0,ImageDimension-1]. */
@@ -101,18 +104,18 @@ protected:
 
 private:
 };
-}
+} // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#ifndef itkVnlComplexToComplex1DFFTImageFilter_h
-#ifndef itkVnlComplexToComplex1DFFTImageFilter_hxx
-#ifndef itkFFTWComplexToComplex1DFFTImageFilter_h
-#ifndef itkFFTWComplexToComplex1DFFTImageFilter_hxx
-#include "itkComplexToComplex1DFFTImageFilter.hxx"
-#endif
-#endif
-#endif
-#endif
+#  ifndef itkVnlComplexToComplex1DFFTImageFilter_h
+#    ifndef itkVnlComplexToComplex1DFFTImageFilter_hxx
+#      ifndef itkFFTWComplexToComplex1DFFTImageFilter_h
+#        ifndef itkFFTWComplexToComplex1DFFTImageFilter_hxx
+#          include "itkComplexToComplex1DFFTImageFilter.hxx"
+#        endif
+#      endif
+#    endif
+#  endif
 #endif
 
 #endif // itkComplexToComplex1DFFTImageFilter_h

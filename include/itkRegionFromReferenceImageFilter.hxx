@@ -25,52 +25,47 @@ namespace itk
 
 template <typename TInputImage, typename TOutputImage>
 void
-RegionFromReferenceImageFilter<TInputImage, TOutputImage>
-::VerifyInputInformation() const
-{
-}
+RegionFromReferenceImageFilter<TInputImage, TOutputImage>::VerifyInputInformation() const
+{}
 
 
 template <typename TInputImage, typename TOutputImage>
 void
-RegionFromReferenceImageFilter<TInputImage, TOutputImage>
-::GenerateOutputInformation()
+RegionFromReferenceImageFilter<TInputImage, TOutputImage>::GenerateOutputInformation()
 {
-  if( !this->GetInput() || !this->GetReferenceImage() )
-    {
+  if (!this->GetInput() || !this->GetReferenceImage())
+  {
     return;
-    }
+  }
 
   // Superclass::Superclass::GenerateOutputInformation();
-  this->SetExtractionRegion( this->GetReferenceImage()->GetLargestPossibleRegion() );
+  this->SetExtractionRegion(this->GetReferenceImage()->GetLargestPossibleRegion());
   Superclass::GenerateOutputInformation();
 }
 
 
 template <typename TInputImage, typename TOutputImage>
 void
-RegionFromReferenceImageFilter<TInputImage,TOutputImage>
-::SetReferenceImage ( const ReferenceImageType *image )
+RegionFromReferenceImageFilter<TInputImage, TOutputImage>::SetReferenceImage(const ReferenceImageType * image)
 {
   itkDebugMacro("setting input ReferenceImage to " << image);
-  if( image != static_cast<const ReferenceImageType *>(this->GetInput( 1 )) )
-    {
-    this->ProcessObject::SetNthInput(1, const_cast< ReferenceImageType *>( image ) );
+  if (image != static_cast<const ReferenceImageType *>(this->GetInput(1)))
+  {
+    this->ProcessObject::SetNthInput(1, const_cast<ReferenceImageType *>(image));
     this->Modified();
-    }
+  }
 }
 
 
 template <typename TInputImage, typename TOutputImage>
-const typename RegionFromReferenceImageFilter<TInputImage,TOutputImage>::ReferenceImageType *
-RegionFromReferenceImageFilter<TInputImage,TOutputImage>
-::GetReferenceImage() const
+const typename RegionFromReferenceImageFilter<TInputImage, TOutputImage>::ReferenceImageType *
+RegionFromReferenceImageFilter<TInputImage, TOutputImage>::GetReferenceImage() const
 {
-  Self * surrogate = const_cast< Self * >( this );
+  Self * surrogate = const_cast<Self *>(this);
 
   const DataObject * input = surrogate->ProcessObject::GetInput(1);
 
-  const ReferenceImageType * referenceImage = static_cast<const ReferenceImageType *>( input );
+  const ReferenceImageType * referenceImage = static_cast<const ReferenceImageType *>(input);
 
   return referenceImage;
 }

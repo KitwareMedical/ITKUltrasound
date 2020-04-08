@@ -25,57 +25,58 @@
 #include "itkForward1DFFTImageFilter.h"
 #include "itkInverse1DFFTImageFilter.h"
 
-int itkFFT1DImageFilterTest( int argc, char* argv[] )
+int
+itkFFT1DImageFilterTest(int argc, char * argv[])
 {
-  if( argc < 3 )
-    {
+  if (argc < 3)
+  {
     std::cerr << "Usage: " << argv[0];
     std::cerr << " inputImage outputImage";
     std::cerr << std::endl;
     return EXIT_FAILURE;
-    }
+  }
   const char * inputImage = argv[1];
   const char * outputImage = argv[2];
 
-  typedef double PixelType;
+  using PixelType = double;
   const unsigned int Dimension = 2;
   const unsigned int direction = 1;
 
-  typedef itk::Image< PixelType, Dimension >                 ImageType;
-  typedef itk::Image< std::complex< PixelType >, Dimension > ComplexImageType;
+  using ImageType = itk::Image<PixelType, Dimension>;
+  using ComplexImageType = itk::Image<std::complex<PixelType>, Dimension>;
 
-  typedef itk::ImageFileReader< ImageType > ReaderType;
+  using ReaderType = itk::ImageFileReader<ImageType>;
   ReaderType::Pointer reader = ReaderType::New();
-  reader->SetFileName( inputImage );
+  reader->SetFileName(inputImage);
 
-  typedef itk::Forward1DFFTImageFilter< ImageType, ComplexImageType > FFTForwardType;
+  using FFTForwardType = itk::Forward1DFFTImageFilter<ImageType, ComplexImageType>;
   FFTForwardType::Pointer fftForward = FFTForwardType::New();
-  fftForward->SetInput( reader->GetOutput() );
-  fftForward->SetDirection( direction );
+  fftForward->SetInput(reader->GetOutput());
+  fftForward->SetDirection(direction);
 
-  typedef itk::Inverse1DFFTImageFilter< ComplexImageType, ImageType > FFTInverseType;
+  using FFTInverseType = itk::Inverse1DFFTImageFilter<ComplexImageType, ImageType>;
   FFTInverseType::Pointer fftInverse = FFTInverseType::New();
-  fftInverse->SetInput( fftForward->GetOutput() );
-  fftInverse->SetDirection( direction );
+  fftInverse->SetInput(fftForward->GetOutput());
+  fftInverse->SetDirection(direction);
 
-  typedef itk::ImageFileWriter< ImageType > WriterType;
+  using WriterType = itk::ImageFileWriter<ImageType>;
   WriterType::Pointer writer = WriterType::New();
-  writer->SetInput( fftInverse->GetOutput() );
-  writer->SetFileName( outputImage );
+  writer->SetInput(fftInverse->GetOutput());
+  writer->SetFileName(outputImage);
 
   try
-    {
+  {
     writer->Update();
-    }
-  catch( itk::ExceptionObject & excep )
-    {
+  }
+  catch (itk::ExceptionObject & excep)
+  {
     std::cerr << "Exception caught !" << std::endl;
     std::cerr << excep << std::endl;
     return EXIT_FAILURE;
-    }
+  }
 
-  fftForward.Print( std::cout );
-  fftInverse.Print( std::cout );
+  fftForward.Print(std::cout);
+  fftInverse.Print(std::cout);
 
   return EXIT_SUCCESS;
 }

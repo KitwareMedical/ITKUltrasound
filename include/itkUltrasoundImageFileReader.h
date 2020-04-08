@@ -23,7 +23,7 @@
 #include "itkCurvilinearArraySpecialCoordinatesImage.h"
 
 #ifdef ITK_HAS_GCC_PRAGMA_DIAG_PUSHPOP
-  ITK_GCC_PRAGMA_DIAG_PUSH()
+ITK_GCC_PRAGMA_DIAG_PUSH()
 #endif
 ITK_GCC_PRAGMA_DIAG(ignored "-Wattributes")
 namespace itk
@@ -42,16 +42,17 @@ namespace itk
  * \sa CurvilinearArraySpecialCoordinatesImage
  *
  */
-template < typename TOutputImage >
-class ITK_TEMPLATE_EXPORT UltrasoundImageFileReader :
-  public ImageFileReader< TOutputImage >
+template <typename TOutputImage>
+class ITK_TEMPLATE_EXPORT UltrasoundImageFileReader : public ImageFileReader<TOutputImage>
 {
 public:
-  /** Standard class typedefs.   */
-  typedef UltrasoundImageFileReader       Self;
-  typedef ImageFileReader< TOutputImage > Superclass;
-  typedef SmartPointer< Self >            Pointer;
-  typedef SmartPointer< const Self >      ConstPointer;
+  ITK_DISALLOW_COPY_AND_ASSIGN(UltrasoundImageFileReader);
+
+  /** Standard class type alias.   */
+  using Self = UltrasoundImageFileReader;
+  using Superclass = ImageFileReader<TOutputImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -59,8 +60,8 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro(UltrasoundImageFileReader, ImageFileReader);
 
-  typedef TOutputImage                              OutputImageType;
-  typedef typename Superclass::OutputImagePixelType OutputImagePixelType;
+  using OutputImageType = TOutputImage;
+  using OutputImagePixelType = typename Superclass::OutputImagePixelType;
 
   itkStaticConstMacro(ImageDimension, unsigned int, OutputImageType::ImageDimension);
 
@@ -70,23 +71,20 @@ protected:
 
   /** Prepare the allocation of the output image during the first back
    * propagation of the pipeline. */
-  virtual void GenerateOutputInformation() override;
-
-private:
-  UltrasoundImageFileReader( const Self& ) ITK_DELETED_FUNCTION;
-  void operator=( const Self& ) ITK_DELETED_FUNCTION;
+  virtual void
+  GenerateOutputInformation() override;
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkUltrasoundImageFileReader.hxx"
+#  include "itkUltrasoundImageFileReader.hxx"
 #endif
 
 #ifdef ITK_HAS_GCC_PRAGMA_DIAG_PUSHPOP
-  ITK_GCC_PRAGMA_DIAG_POP()
+ITK_GCC_PRAGMA_DIAG_POP()
 #else
-  ITK_GCC_PRAGMA_DIAG(warning "-Wattributes")
+ITK_GCC_PRAGMA_DIAG(warning "-Wattributes")
 #endif
 
 #endif // itkUltrasoundImageFileReader_h

@@ -25,144 +25,135 @@
 namespace itk
 {
 
-HDF5UltrasoundImageIO
-::HDF5UltrasoundImageIO() : m_H5File(nullptr),
-                            m_VoxelDataSet(nullptr)
-{
-}
+HDF5UltrasoundImageIO ::HDF5UltrasoundImageIO()
+  : m_H5File(nullptr)
+  , m_VoxelDataSet(nullptr)
+{}
 
 
-HDF5UltrasoundImageIO
-::~HDF5UltrasoundImageIO()
+HDF5UltrasoundImageIO ::~HDF5UltrasoundImageIO()
 {
-  if(this->m_VoxelDataSet != nullptr)
-    {
+  if (this->m_VoxelDataSet != nullptr)
+  {
     m_VoxelDataSet->close();
     delete m_VoxelDataSet;
-    }
+  }
   this->CloseH5File();
 }
 
 namespace
 {
 template <typename TScalar>
-H5::PredType GetType()
+H5::PredType
+GetType()
 {
   itkGenericExceptionMacro(<< "Type not handled "
-                           << "in HDF5 File: "
-                           << typeid(TScalar).name());
-
+                           << "in HDF5 File: " << typeid(TScalar).name());
 }
-#define GetH5TypeSpecialize(CXXType,H5Type) \
-  template <>                             \
-  H5::PredType GetType<CXXType>()         \
-  {                                       \
-    return H5Type;                        \
+#define GetH5TypeSpecialize(CXXType, H5Type)                                                                           \
+  template <>                                                                                                          \
+  H5::PredType GetType<CXXType>()                                                                                      \
+  {                                                                                                                    \
+    return H5Type;                                                                                                     \
   }
 
-GetH5TypeSpecialize(float,                  H5::PredType::NATIVE_FLOAT)
-GetH5TypeSpecialize(double,                 H5::PredType::NATIVE_DOUBLE)
+GetH5TypeSpecialize(float, H5::PredType::NATIVE_FLOAT) GetH5TypeSpecialize(double, H5::PredType::NATIVE_DOUBLE)
 
-GetH5TypeSpecialize(char,                   H5::PredType::NATIVE_CHAR)
-GetH5TypeSpecialize(unsigned char,          H5::PredType::NATIVE_UCHAR)
+  GetH5TypeSpecialize(char, H5::PredType::NATIVE_CHAR) GetH5TypeSpecialize(unsigned char, H5::PredType::NATIVE_UCHAR)
 
-GetH5TypeSpecialize(short int,              H5::PredType::NATIVE_SHORT)
-GetH5TypeSpecialize(short unsigned int,     H5::PredType::NATIVE_USHORT)
+    GetH5TypeSpecialize(short int, H5::PredType::NATIVE_SHORT)
+      GetH5TypeSpecialize(short unsigned int, H5::PredType::NATIVE_USHORT)
 
-GetH5TypeSpecialize(int,                    H5::PredType::NATIVE_INT)
-GetH5TypeSpecialize(unsigned int,           H5::PredType::NATIVE_UINT)
+        GetH5TypeSpecialize(int, H5::PredType::NATIVE_INT) GetH5TypeSpecialize(unsigned int, H5::PredType::NATIVE_UINT)
 
-GetH5TypeSpecialize(long int,               H5::PredType::NATIVE_LONG)
-GetH5TypeSpecialize(long unsigned int,      H5::PredType::NATIVE_ULONG)
+          GetH5TypeSpecialize(long int, H5::PredType::NATIVE_LONG)
+            GetH5TypeSpecialize(long unsigned int, H5::PredType::NATIVE_ULONG)
 
 #if defined(_MSC_VER) && defined(ITK_USE_64BITS_IDS) && ((ULLONG_MAX != ULONG_MAX) || (LLONG_MAX != LONG_MAX))
-GetH5TypeSpecialize(long long int,          H5::PredType::NATIVE_LLONG)
-GetH5TypeSpecialize(unsigned long long int, H5::PredType::NATIVE_ULLONG)
+              GetH5TypeSpecialize(long long int, H5::PredType::NATIVE_LLONG)
+                GetH5TypeSpecialize(unsigned long long int, H5::PredType::NATIVE_ULLONG)
 #endif
 
 /* The following types are not implmented.  This comment serves
  * to indicate that the full complement of possible H5::PredType
  * types are not implemented int the ITK IO reader/writer
  * GetH5TypeSpecialize(bool,              H5::PredType::NATIVE_HBOOL)
-*/
+ */
 
 #undef GetH5TypeSpecialize
 
-inline
-IOComponentEnum
-PredTypeToComponentType(const H5::DataType & type)
+                  inline IOComponentEnum PredTypeToComponentType(const H5::DataType & type)
 {
-  if(type ==  H5::PredType::NATIVE_UCHAR)
-    {
+  if (type == H5::PredType::NATIVE_UCHAR)
+  {
     return IOComponentEnum::UCHAR;
-    }
-  else if(type ==  H5::PredType::NATIVE_CHAR)
-    {
+  }
+  else if (type == H5::PredType::NATIVE_CHAR)
+  {
     return IOComponentEnum::CHAR;
-    }
-  else if(type ==  H5::PredType::NATIVE_USHORT)
-    {
+  }
+  else if (type == H5::PredType::NATIVE_USHORT)
+  {
     return IOComponentEnum::USHORT;
-    }
-  else if(type ==  H5::PredType::NATIVE_SHORT)
-    {
+  }
+  else if (type == H5::PredType::NATIVE_SHORT)
+  {
     return IOComponentEnum::SHORT;
-    }
-  else if(type ==  H5::PredType::NATIVE_UINT)
-    {
+  }
+  else if (type == H5::PredType::NATIVE_UINT)
+  {
     return IOComponentEnum::UINT;
-    }
-  else if(type ==  H5::PredType::NATIVE_INT)
-    {
+  }
+  else if (type == H5::PredType::NATIVE_INT)
+  {
     return IOComponentEnum::INT;
-    }
-  else if(type ==  H5::PredType::NATIVE_ULLONG)
-    {
+  }
+  else if (type == H5::PredType::NATIVE_ULLONG)
+  {
     return IOComponentEnum::ULONG;
-    }
-  else if(type ==  H5::PredType::NATIVE_LLONG)
-    {
+  }
+  else if (type == H5::PredType::NATIVE_LLONG)
+  {
     return IOComponentEnum::LONG;
-    }
-  else if(type ==  H5::PredType::NATIVE_FLOAT)
-    {
+  }
+  else if (type == H5::PredType::NATIVE_FLOAT)
+  {
     return IOComponentEnum::FLOAT;
-    }
-  else if(type ==  H5::PredType::NATIVE_DOUBLE)
-    {
+  }
+  else if (type == H5::PredType::NATIVE_DOUBLE)
+  {
     return IOComponentEnum::DOUBLE;
-    }
-  else if(type ==  H5::PredType::NATIVE_ULONG)
+  }
+  else if (type == H5::PredType::NATIVE_ULONG)
+  {
+    if (sizeof(unsigned int) == sizeof(unsigned long))
     {
-    if(sizeof(unsigned int) == sizeof(unsigned long))
-      {
       return IOComponentEnum::UINT;
-      }
-    else if(sizeof(unsigned int) == sizeof(unsigned long long))
-      {
-      return IOComponentEnum::ULONGLONG;
-      }
     }
-  else if(type ==  H5::PredType::NATIVE_LONG)
+    else if (sizeof(unsigned int) == sizeof(unsigned long long))
     {
-    if(sizeof(int) == sizeof(long))
-      {
-      return IOComponentEnum::INT;
-      }
-    else if(sizeof(int) == sizeof(long long))
-      {
-      return IOComponentEnum::LONGLONG;
-      }
+      return IOComponentEnum::ULONGLONG;
     }
-  itkGenericExceptionMacro(<< "unsupported data type "
-                           << type.fromClass());
+  }
+  else if (type == H5::PredType::NATIVE_LONG)
+  {
+    if (sizeof(int) == sizeof(long))
+    {
+      return IOComponentEnum::INT;
+    }
+    else if (sizeof(int) == sizeof(long long))
+    {
+      return IOComponentEnum::LONGLONG;
+    }
+  }
+  itkGenericExceptionMacro(<< "unsupported data type " << type.fromClass());
 }
 
 H5::PredType
 ComponentToPredType(IOComponentEnum cType)
 {
-  switch ( cType )
-    {
+  switch (cType)
+  {
     case IOComponentEnum::UCHAR:
       return H5::PredType::NATIVE_UCHAR;
     case IOComponentEnum::CHAR:
@@ -188,20 +179,18 @@ ComponentToPredType(IOComponentEnum cType)
     case IOComponentEnum::DOUBLE:
       return H5::PredType::NATIVE_DOUBLE;
     case IOComponentEnum::UNKNOWNCOMPONENTTYPE:
-      itkGenericExceptionMacro(<< "unsupported IOComponentType"
-                               << cType);
-    }
+      itkGenericExceptionMacro(<< "unsupported IOComponentType" << cType);
+  }
 
-    itkGenericExceptionMacro(<< "unsupported IOComponentType"
-                             << cType);
+  itkGenericExceptionMacro(<< "unsupported IOComponentType" << cType);
 }
 
 std::string
 ComponentToString(IOComponentEnum cType)
 {
   std::string rval;
-  switch ( cType )
-    {
+  switch (cType)
+  {
     case IOComponentEnum::UCHAR:
       rval = "UCHAR";
       break;
@@ -233,9 +222,8 @@ ComponentToString(IOComponentEnum cType)
       rval = "DOUBLE";
       break;
     default:
-      itkGenericExceptionMacro(<< "unsupported IOComponentType"
-                               << cType);
-    }
+      itkGenericExceptionMacro(<< "unsupported IOComponentType" << cType);
+  }
   return rval;
 }
 
@@ -246,9 +234,10 @@ ComponentToString(IOComponentEnum cType)
 ///\exception   none
 // Programmer   Kent Williams 2011
 //--------------------------------------------------------------------------
-static bool doesAttrExist(const H5::H5Object &object, const char * const name )
+static bool
+doesAttrExist(const H5::H5Object & object, const char * const name)
 {
-  return( H5Aexists(object.getId(), name) > 0 ? true : false );
+  return (H5Aexists(object.getId(), name) > 0 ? true : false);
 }
 
 } // end anonymous namespace
@@ -256,19 +245,18 @@ static bool doesAttrExist(const H5::H5Object &object, const char * const name )
 
 template <typename TScalar>
 std::vector<TScalar>
-HDF5UltrasoundImageIO
-::ReadVector(const std::string & dataSetName)
+HDF5UltrasoundImageIO ::ReadVector(const std::string & dataSetName)
 {
-  std::vector< TScalar > result;
-  H5::DataSet dataSet = this->m_H5File->openDataSet(dataSetName);
-  H5::DataSpace space = dataSet.getSpace();
+  std::vector<TScalar> result;
+  H5::DataSet          dataSet = this->m_H5File->openDataSet(dataSetName);
+  H5::DataSpace        space = dataSet.getSpace();
 
   std::vector<hsize_t> dim(space.getSimpleExtentNdims());
-  space.getSimpleExtentDims( &dim[0], nullptr );
-  result.resize( dim[0] );
+  space.getSimpleExtentDims(&dim[0], nullptr);
+  result.resize(dim[0]);
 
   H5::PredType vecType = GetType<TScalar>();
-  dataSet.read( &(result[0]), vecType );
+  dataSet.read(&(result[0]), vecType);
   dataSet.close();
   return result;
 }
@@ -278,45 +266,40 @@ HDF5UltrasoundImageIO
 // HDF5 Header.  Some code is redundant with ReadImageInformation
 // a StateMachine could provide a better implementation
 bool
-HDF5UltrasoundImageIO
-::CanReadFile(const char *fileNameToRead)
+HDF5UltrasoundImageIO ::CanReadFile(const char * fileNameToRead)
 {
-  //HDF5 is overly verbose in complaining that
+  // HDF5 is overly verbose in complaining that
   //     a file does not exist.
-  if ( !itksys::SystemTools::FileExists(fileNameToRead) )
-    {
+  if (!itksys::SystemTools::FileExists(fileNameToRead))
+  {
     return false;
-    }
+  }
 
-  //Do not read if it is a MINC file.
-  std::string filename(fileNameToRead);
+  // Do not read if it is a MINC file.
+  std::string            filename(fileNameToRead);
   std::string::size_type mncPos = filename.rfind(".mnc");
-  if ( (mncPos != std::string::npos)
-       && (mncPos == filename.length() - 4) )
-    {
+  if ((mncPos != std::string::npos) && (mncPos == filename.length() - 4))
+  {
     return false;
-    }
+  }
 
   mncPos = filename.rfind(".MNC");
-  if ( (mncPos != std::string::npos)
-       && (mncPos == filename.length() - 4) )
-    {
+  if ((mncPos != std::string::npos) && (mncPos == filename.length() - 4))
+  {
     return false;
-    }
+  }
 
   mncPos = filename.rfind(".mnc2");
-  if ( (mncPos != std::string::npos)
-       && (mncPos == filename.length() - 5) )
-    {
+  if ((mncPos != std::string::npos) && (mncPos == filename.length() - 5))
+  {
     return false;
-    }
+  }
 
   mncPos = filename.rfind(".MNC2");
-  if ( (mncPos != std::string::npos)
-       && (mncPos == filename.length() - 5) )
-    {
+  if ((mncPos != std::string::npos) && (mncPos == filename.length() - 5))
+  {
     return false;
-    }
+  }
 
 
   // call standard method to determine HDF-ness
@@ -325,76 +308,73 @@ HDF5UltrasoundImageIO
   // it throwing a wobbly here if the file doesn't exist
   // or has some other problem.
   try
-    {
+  {
     rval = H5::H5File::isHdf5(fileNameToRead);
-    }
-  catch(...)
-    {
+  }
+  catch (...)
+  {
     return false;
-    }
+  }
 
   this->CloseH5File();
-  this->m_H5File = new H5::H5File( fileNameToRead, H5F_ACC_RDONLY );
+  this->m_H5File = new H5::H5File(fileNameToRead, H5F_ACC_RDONLY);
   // Do not try to read this file if it is an ITK HDF5 Image file.
-  const herr_t status = H5Lexists( this->m_H5File->getId(), "/ITKImage", H5P_DEFAULT );
-  if( status == 1 )
-    {
+  const herr_t status = H5Lexists(this->m_H5File->getId(), "/ITKImage", H5P_DEFAULT);
+  if (status == 1)
+  {
     rval = false;
-    }
+  }
 
   return rval;
 }
 
 
 void
-HDF5UltrasoundImageIO
-::CloseH5File()
+HDF5UltrasoundImageIO ::CloseH5File()
 {
-  if(this->m_H5File != nullptr)
-    {
+  if (this->m_H5File != nullptr)
+  {
     this->m_H5File->close();
     delete this->m_H5File;
-    }
+  }
 }
 
 
 void
-HDF5UltrasoundImageIO
-::ReadImageInformation()
+HDF5UltrasoundImageIO ::ReadImageInformation()
 {
   try
-    {
+  {
     this->CloseH5File();
-    this->m_H5File = new H5::H5File(this->GetFileName(),
-                                    H5F_ACC_RDONLY);
+    this->m_H5File = new H5::H5File(this->GetFileName(), H5F_ACC_RDONLY);
 
-    this->SetNumberOfDimensions( 3 );
+    this->SetNumberOfDimensions(3);
 
-    const std::string axialPixelLocationsDataSet( "/axial" );
-    typedef std::vector< double > AxialPixelLocationsType;
-    AxialPixelLocationsType axialPixelLocations = this->ReadVector< double >( axialPixelLocationsDataSet );
-    this->SetDimensions( 0, axialPixelLocations.size() );
+    const std::string axialPixelLocationsDataSet("/axial");
+    using AxialPixelLocationsType = std::vector<double>;
+    AxialPixelLocationsType axialPixelLocations = this->ReadVector<double>(axialPixelLocationsDataSet);
+    this->SetDimensions(0, axialPixelLocations.size());
 
-    const std::string lateralPixelLocationsDataSet( "/lat" );
-    typedef std::vector< double > LateralPixelLocationsType;
-    LateralPixelLocationsType lateralPixelLocations = this->ReadVector< double >( lateralPixelLocationsDataSet );
-    this->SetDimensions( 1, lateralPixelLocations.size() );
+    const std::string lateralPixelLocationsDataSet("/lat");
+    using LateralPixelLocationsType = std::vector<double>;
+    LateralPixelLocationsType lateralPixelLocations = this->ReadVector<double>(lateralPixelLocationsDataSet);
+    this->SetDimensions(1, lateralPixelLocations.size());
 
-    const std::string elevationalSliceAngleDataSet( "/eleAngle" );
-    typedef std::vector< double > ElevationalSliceAngleType;
-    ElevationalSliceAngleType elevationalSliceAngles = this->ReadVector< double >( elevationalSliceAngleDataSet );
-    const size_t angles = elevationalSliceAngles.size();
-    for( size_t ii = 0; ii < angles; ++ii )
-      {
+    const std::string elevationalSliceAngleDataSet("/eleAngle");
+    using ElevationalSliceAngleType = std::vector<double>;
+    ElevationalSliceAngleType elevationalSliceAngles = this->ReadVector<double>(elevationalSliceAngleDataSet);
+    const size_t              angles = elevationalSliceAngles.size();
+    for (size_t ii = 0; ii < angles; ++ii)
+    {
       elevationalSliceAngles[ii] *= Math::pi_over_180;
-      }
-    this->SetDimensions( 2, angles );
+    }
+    this->SetDimensions(2, angles);
 
     // set the ComponentType
-    const std::string pixelDataName( "/bimg" );
-    const H5::DataSet pixelDataSet = this->m_H5File->openDataSet( pixelDataName );
+    const std::string  pixelDataName("/bimg");
+    const H5::DataSet  pixelDataSet = this->m_H5File->openDataSet(pixelDataName);
     const H5::DataType pixelDataType = pixelDataSet.getDataType();
-    this->SetComponentType( PredTypeToComponentType( pixelDataType ) );
+    this->SetComponentType(PredTypeToComponentType(pixelDataType));
 
 
     // Read out metadata
@@ -402,53 +382,56 @@ HDF5UltrasoundImageIO
     // It is necessary to clear dict if ImageIO object is re-used
     metaDataDict.Clear();
 
-    EncapsulateMetaData< std::string >( metaDataDict, "SliceType", "Image" );
+    EncapsulateMetaData<std::string>(metaDataDict, "SliceType", "Image");
 
-    typedef Array< double > SliceSpacingType;
-    SliceSpacingType sliceSpacing( 2 );
-    sliceSpacing[0] = ( axialPixelLocations[axialPixelLocations.size() - 1] - axialPixelLocations[0] ) / ( axialPixelLocations.size() - 1 );
-    sliceSpacing[1] = ( lateralPixelLocations[lateralPixelLocations.size() - 1] - lateralPixelLocations[0] ) / ( lateralPixelLocations.size() - 1 );
-    EncapsulateMetaData< SliceSpacingType >( metaDataDict, "SliceSpacing", sliceSpacing );
+    using SliceSpacingType = Array<double>;
+    SliceSpacingType sliceSpacing(2);
+    sliceSpacing[0] =
+      (axialPixelLocations[axialPixelLocations.size() - 1] - axialPixelLocations[0]) / (axialPixelLocations.size() - 1);
+    sliceSpacing[1] = (lateralPixelLocations[lateralPixelLocations.size() - 1] - lateralPixelLocations[0]) /
+                      (lateralPixelLocations.size() - 1);
+    EncapsulateMetaData<SliceSpacingType>(metaDataDict, "SliceSpacing", sliceSpacing);
 
-    typedef Array< double > SliceOriginType;
-    SliceOriginType sliceOrigin( 2 );
+    using SliceOriginType = Array<double>;
+    SliceOriginType sliceOrigin(2);
     sliceOrigin[0] = axialPixelLocations[0];
     sliceOrigin[1] = lateralPixelLocations[1];
-    EncapsulateMetaData< SliceOriginType >( metaDataDict, "SliceOrigin", sliceOrigin );
+    EncapsulateMetaData<SliceOriginType>(metaDataDict, "SliceOrigin", sliceOrigin);
 
-    typedef Array< double > ElevationalSliceAnglesMetaDataType;
-    ElevationalSliceAnglesMetaDataType elevationalSliceAnglesMetaData( &(elevationalSliceAngles[0]), elevationalSliceAngles.size() );
-    EncapsulateMetaData< ElevationalSliceAnglesMetaDataType >( metaDataDict, "ElevationalSliceAngles", elevationalSliceAnglesMetaData );
-    }
+    using ElevationalSliceAnglesMetaDataType = Array<double>;
+    ElevationalSliceAnglesMetaDataType elevationalSliceAnglesMetaData(&(elevationalSliceAngles[0]),
+                                                                      elevationalSliceAngles.size());
+    EncapsulateMetaData<ElevationalSliceAnglesMetaDataType>(
+      metaDataDict, "ElevationalSliceAngles", elevationalSliceAnglesMetaData);
+  }
   // catch failure caused by the H5File operations
-  catch( H5::AttributeIException & error )
-    {
+  catch (H5::AttributeIException & error)
+  {
     itkExceptionMacro(<< error.getCDetailMsg());
-    }
-  catch( H5::FileIException & error )
-    {
+  }
+  catch (H5::FileIException & error)
+  {
     itkExceptionMacro(<< error.getCDetailMsg());
-    }
+  }
   // catch failure caused by the DataSet operations
-  catch( H5::DataSetIException & error )
-    {
+  catch (H5::DataSetIException & error)
+  {
     itkExceptionMacro(<< error.getCDetailMsg());
-    }
+  }
   // catch failure caused by the DataSpace operations
-  catch( H5::DataSpaceIException & error )
-    {
+  catch (H5::DataSpaceIException & error)
+  {
     itkExceptionMacro(<< error.getCDetailMsg());
-    }
+  }
   // catch failure caused by the DataSpace operations
-  catch( H5::DataTypeIException & error )
-    {
+  catch (H5::DataTypeIException & error)
+  {
     itkExceptionMacro(<< error.getCDetailMsg());
-    }
+  }
 }
 
 void
-HDF5UltrasoundImageIO
-::SetupStreaming(H5::DataSpace *imageSpace, H5::DataSpace *slabSpace)
+HDF5UltrasoundImageIO ::SetupStreaming(H5::DataSpace * imageSpace, H5::DataSpace * slabSpace)
 {
   const ImageIORegion            regionToRead = this->GetIORegion();
   const ImageIORegion::SizeType  size = regionToRead.GetSize();
@@ -456,97 +439,90 @@ HDF5UltrasoundImageIO
   //
   const int numComponents = this->GetNumberOfComponents();
 
-  const int HDFDim(this->GetNumberOfDimensions() +
-                   (numComponents > 1 ? 1 : 0));
+  const int HDFDim(this->GetNumberOfDimensions() + (numComponents > 1 ? 1 : 0));
 
-  hsize_t *offset = new hsize_t[HDFDim];
-  hsize_t *HDFSize = new hsize_t[HDFDim];
+  hsize_t * offset = new hsize_t[HDFDim];
+  hsize_t * HDFSize = new hsize_t[HDFDim];
   const int limit = regionToRead.GetImageDimension();
   //
   // fastest moving dimension is intra-voxel
   // index
   int i = 0;
-  if(numComponents > 1)
-    {
+  if (numComponents > 1)
+  {
     offset[HDFDim - 1] = 0;
     HDFSize[HDFDim - 1] = numComponents;
     ++i;
-    }
+  }
 
   // HDF5 dimensions listed slowest moving first, ITK are fastest
   // moving first.
-  for(int j = 0; j < limit && i < HDFDim; ++i, ++j )
-    {
-      offset[HDFDim - i - 1] = start[j];
-      HDFSize[HDFDim - i - 1] = size[j];
-    }
+  for (int j = 0; j < limit && i < HDFDim; ++i, ++j)
+  {
+    offset[HDFDim - i - 1] = start[j];
+    HDFSize[HDFDim - i - 1] = size[j];
+  }
 
-  while ( i < HDFDim )
-    {
+  while (i < HDFDim)
+  {
     offset[HDFDim - i - 1] = 0;
     HDFSize[HDFDim - i - 1] = 1;
     ++i;
-    }
+  }
 
-  slabSpace->setExtentSimple(HDFDim,HDFSize);
-  imageSpace->selectHyperslab(H5S_SELECT_SET,HDFSize,offset);
+  slabSpace->setExtentSimple(HDFDim, HDFSize);
+  imageSpace->selectHyperslab(H5S_SELECT_SET, HDFSize, offset);
   delete[] HDFSize;
   delete[] offset;
 }
 
 void
-HDF5UltrasoundImageIO
-::Read(void *buffer)
+HDF5UltrasoundImageIO ::Read(void * buffer)
 {
   ImageIORegion            regionToRead = this->GetIORegion();
   ImageIORegion::SizeType  size = regionToRead.GetSize();
   ImageIORegion::IndexType start = regionToRead.GetIndex();
 
-  std::string pixelDataName( "/bimg" );
-  H5::DataSet pixelDataSet = this->m_H5File->openDataSet( pixelDataName );
-  H5::DataType voxelType = pixelDataSet.getDataType();
+  std::string   pixelDataName("/bimg");
+  H5::DataSet   pixelDataSet = this->m_H5File->openDataSet(pixelDataName);
+  H5::DataType  voxelType = pixelDataSet.getDataType();
   H5::DataSpace imageSpace = pixelDataSet.getSpace();
 
   H5::DataSpace dataSpace;
-  this->SetupStreaming( &imageSpace, &dataSpace );
-  pixelDataSet.read( buffer, voxelType, dataSpace, imageSpace);
+  this->SetupStreaming(&imageSpace, &dataSpace);
+  pixelDataSet.read(buffer, voxelType, dataSpace, imageSpace);
 }
 
 
 bool
-HDF5UltrasoundImageIO
-::CanWriteFile(const char *FileNameToWrite)
+HDF5UltrasoundImageIO ::CanWriteFile(const char * FileNameToWrite)
 {
   return false;
 }
 
 
 void
-HDF5UltrasoundImageIO
-::WriteImageInformation()
+HDF5UltrasoundImageIO ::WriteImageInformation()
 {
   return;
 }
 
 void
-HDF5UltrasoundImageIO
-::Write(const void *buffer)
+HDF5UltrasoundImageIO ::Write(const void * buffer)
 {
   return;
 }
 
 
 ImageIOBase::SizeType
-HDF5UltrasoundImageIO
-::GetHeaderSize() const
+HDF5UltrasoundImageIO ::GetHeaderSize() const
 {
   return 0;
 }
 
 
 void
-HDF5UltrasoundImageIO
-::PrintSelf(std::ostream & os, Indent indent) const
+HDF5UltrasoundImageIO ::PrintSelf(std::ostream & os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);
   // just prints out the pointer value.

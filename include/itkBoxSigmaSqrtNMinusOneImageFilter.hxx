@@ -28,70 +28,67 @@
 #include "itkShapedNeighborhoodIterator.h"
 #include "itkBoxUtilities.h"
 
-namespace itk {
-
-
-template<class TInputImage, class TOutputImage>
-BoxSigmaSqrtNMinusOneImageFilter<TInputImage, TOutputImage>
-::BoxSigmaSqrtNMinusOneImageFilter()
+namespace itk
 {
-}
 
 
-template<class TInputImage, class TOutputImage>
+template <class TInputImage, class TOutputImage>
+BoxSigmaSqrtNMinusOneImageFilter<TInputImage, TOutputImage>::BoxSigmaSqrtNMinusOneImageFilter()
+{}
+
+
+template <class TInputImage, class TOutputImage>
 void
 BoxSigmaSqrtNMinusOneImageFilter<TInputImage, TOutputImage>
 #if ITK_VERSION_MAJOR < 5
-::ThreadedGenerateData(const OutputImageRegionType& outputRegionForThread, ThreadIdType threadId)
+  ::ThreadedGenerateData(const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId)
 #else
-::DynamicThreadedGenerateData(const OutputImageRegionType& outputRegionForThread)
+  ::DynamicThreadedGenerateData(const OutputImageRegionType & outputRegionForThread)
 #endif
 {
 
   // Accumulate type is too small
-  typedef typename itk::NumericTraits<PixelType>::RealType             AccValueType;
-  typedef typename itk::Vector<AccValueType, 2>                        AccPixType;
-  typedef typename itk::Image<AccPixType, TInputImage::ImageDimension> AccumImageType;
+  using AccValueType = typename itk::NumericTraits<PixelType>::RealType;
+  using AccPixType = typename itk::Vector<AccValueType, 2>;
+  using AccumImageType = typename itk::Image<AccPixType, TInputImage::ImageDimension>;
 
   typename TInputImage::SizeType internalRadius;
-  for( unsigned int i = 0; i < TInputImage::ImageDimension; ++i )
-    {
+  for (unsigned int i = 0; i < TInputImage::ImageDimension; ++i)
+  {
     internalRadius[i] = this->GetRadius()[i] + 1;
-    }
+  }
 
 
-  const InputImageType* inputImage = this->GetInput();
-  OutputImageType *outputImage = this->GetOutput();
-  RegionType accumRegion = outputRegionForThread;
+  const InputImageType * inputImage = this->GetInput();
+  OutputImageType *      outputImage = this->GetOutput();
+  RegionType             accumRegion = outputRegionForThread;
   accumRegion.PadByRadius(internalRadius);
   accumRegion.Crop(inputImage->GetRequestedRegion());
 
 #if ITK_VERSION_MAJOR < 5 || defined(ITKV4_COMPATIBILITY)
   // Dummy reporter for compatibility
-  ProgressReporter progress(this, 1, 2*accumRegion.GetNumberOfPixels());
+  ProgressReporter progress(this, 1, 2 * accumRegion.GetNumberOfPixels());
 #endif
 
   typename AccumImageType::Pointer accImage = AccumImageType::New();
   accImage->SetRegions(accumRegion);
   accImage->Allocate();
 
-  BoxSquareAccumulateFunction< TInputImage, AccumImageType >(inputImage,
-    accImage.GetPointer(),
-    accumRegion,
-    accumRegion
+  BoxSquareAccumulateFunction<TInputImage, AccumImageType>(inputImage,
+                                                           accImage.GetPointer(),
+                                                           accumRegion,
+                                                           accumRegion
 #if ITK_VERSION_MAJOR < 5 || defined(ITKV4_COMPATIBILITY)
-                                                       , progress);
+                                                           ,
+                                                           progress);
 #else
-                                                       );
+  );
 #endif
-  BoxSigmaSqrtNMinusOneCalculatorFunction<AccumImageType, TOutputImage>(accImage.GetPointer(),
-    outputImage,
-    accumRegion,
-    outputRegionForThread,
-    this->GetRadius());
+  BoxSigmaSqrtNMinusOneCalculatorFunction<AccumImageType, TOutputImage>(
+    accImage.GetPointer(), outputImage, accumRegion, outputRegionForThread, this->GetRadius());
 }
 
 
-}// end namespace itk
+} // end namespace itk
 
 #endif

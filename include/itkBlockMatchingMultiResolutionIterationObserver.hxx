@@ -28,113 +28,116 @@ namespace itk
 namespace BlockMatching
 {
 
-template< typename TMultiResolutionMethod >
-MultiResolutionIterationObserver< TMultiResolutionMethod >
-::MultiResolutionIterationObserver()
+template <typename TMultiResolutionMethod>
+MultiResolutionIterationObserver<TMultiResolutionMethod>::MultiResolutionIterationObserver()
 {
-  m_FixedImageWriter             = FixedImageWriterType::New();
-  m_MovingImageWriter            = MovingImageWriterType::New();
+  m_FixedImageWriter = FixedImageWriterType::New();
+  m_MovingImageWriter = MovingImageWriterType::New();
 
-  m_DisplacementWriter           = DisplacementWriterType::New();
+  m_DisplacementWriter = DisplacementWriterType::New();
   m_DisplacementComponentsFilter = DisplacementComponentsFilterType::New();
   m_DisplacementComponentsWriter = DisplacementComponentsWriterType::New();
 
-  m_StrainFilter                 = StrainFilterType::New();
-  m_StrainWriter                 = StrainWriterType::New();
-  m_StrainWriter->SetInput( m_StrainFilter->GetOutput() );
-  m_StrainComponentsFilter       = StrainComponentsFilterType::New();
-  m_StrainComponentsFilter->SetInput( m_StrainFilter->GetOutput() );
-  m_StrainComponentsWriter       = StrainComponentsWriterType::New();
+  m_StrainFilter = StrainFilterType::New();
+  m_StrainWriter = StrainWriterType::New();
+  m_StrainWriter->SetInput(m_StrainFilter->GetOutput());
+  m_StrainComponentsFilter = StrainComponentsFilterType::New();
+  m_StrainComponentsFilter->SetInput(m_StrainFilter->GetOutput());
+  m_StrainComponentsWriter = StrainComponentsWriterType::New();
 }
 
 
-template< typename TMultiResolutionMethod >
-MultiResolutionIterationObserver< TMultiResolutionMethod >
-::~MultiResolutionIterationObserver()
+template <typename TMultiResolutionMethod>
+MultiResolutionIterationObserver<TMultiResolutionMethod>::~MultiResolutionIterationObserver()
 {
-  if( m_CSVFile.is_open() )
-    {
+  if (m_CSVFile.is_open())
+  {
     m_CSVFile.flush();
     m_CSVFile.close();
-    }
+  }
 }
 
 
-template< typename TMultiResolutionMethod >
+template <typename TMultiResolutionMethod>
 void
-MultiResolutionIterationObserver< TMultiResolutionMethod >
-::Execute( itk::Object * object, const itk::EventObject & event )
+MultiResolutionIterationObserver<TMultiResolutionMethod>::Execute(itk::Object * object, const itk::EventObject & event)
 {
-  Superclass::Execute( object, event );
+  Superclass::Execute(object, event);
 
   const unsigned long level = this->m_MultiResolutionMethod->GetCurrentLevel();
   std::cout << "Current Level: " << level + 1;
-  std::cout << " / "             << this->m_MultiResolutionMethod->GetNumberOfLevels() << std::endl;
+  std::cout << " / " << this->m_MultiResolutionMethod->GetNumberOfLevels() << std::endl;
 
-  if( !m_CSVFile.is_open() )
-    {
-    m_CSVFile.open( ( m_OutputFilePrefix + "_BlockRadius.csv" ).c_str() );
-    if( !m_CSVFile.is_open() )
-      throw std::runtime_error( "Could not open multi-level status file." );
+  if (!m_CSVFile.is_open())
+  {
+    m_CSVFile.open((m_OutputFilePrefix + "_BlockRadius.csv").c_str());
+    if (!m_CSVFile.is_open())
+      throw std::runtime_error("Could not open multi-level status file.");
     m_CSVFile << "Level, Block Radius" << std::endl;
-    }
+  }
   m_CSVFile << level << ",  ";
-  m_CSVFile << const_cast< typename Superclass::BlockRadiusCalculatorType * >( this->m_BlockRadiusCalculator.GetPointer() )->Compute( level ) << std::endl;
+  m_CSVFile << const_cast<typename Superclass::BlockRadiusCalculatorType *>(this->m_BlockRadiusCalculator.GetPointer())
+                 ->Compute(level)
+            << std::endl;
 
   // Skip the base level where the multilevel pyramid filter is not used.
-  if( level < this->m_MultiResolutionMethod->GetNumberOfLevels() )
-    {
+  if (level < this->m_MultiResolutionMethod->GetNumberOfLevels())
+  {
     std::cout << "Writing fixed image..." << std::endl;
     std::ostringstream ostr;
     ostr << m_OutputFilePrefix << "_Level_" << level << "_FixedImage.mha";
-    this->m_FixedImageWriter->SetInput( const_cast< typename Superclass::FixedImagePyramidType * >( this->m_FixedImagePyramid.GetPointer() )->GetOutput( level ) );
-    this->m_FixedImageWriter->SetFileName( ostr.str() );
+    this->m_FixedImageWriter->SetInput(
+      const_cast<typename Superclass::FixedImagePyramidType *>(this->m_FixedImagePyramid.GetPointer())
+        ->GetOutput(level));
+    this->m_FixedImageWriter->SetFileName(ostr.str());
     this->m_FixedImageWriter->Update();
 
     std::cout << "Writing moving image..." << std::endl;
-    ostr.str( "" );
+    ostr.str("");
     ostr << m_OutputFilePrefix << "_Level_" << level << "_MovingImage.mha";
-    this->m_MovingImageWriter->SetInput( const_cast< typename Superclass::MovingImagePyramidType * >( this->m_MovingImagePyramid.GetPointer() )->GetOutput( level ) );
-    this->m_MovingImageWriter->SetFileName( ostr.str() );
+    this->m_MovingImageWriter->SetInput(
+      const_cast<typename Superclass::MovingImagePyramidType *>(this->m_MovingImagePyramid.GetPointer())
+        ->GetOutput(level));
+    this->m_MovingImageWriter->SetFileName(ostr.str());
     this->m_MovingImageWriter->Update();
 
-    if( level > 0 )
-      {
+    if (level > 0)
+    {
       std::cout << "Writing displacement image..." << std::endl;
-      ostr.str( "" );
+      ostr.str("");
       ostr << m_OutputFilePrefix << "_Level_" << level << "_PreviousDisplacements.mha";
-      m_DisplacementWriter->SetInput( this->m_SearchRegionImageSource->GetPreviousDisplacements() );
-      m_DisplacementWriter->SetFileName( ostr.str() );
+      m_DisplacementWriter->SetInput(this->m_SearchRegionImageSource->GetPreviousDisplacements());
+      m_DisplacementWriter->SetFileName(ostr.str());
       m_DisplacementWriter->Update();
-      m_DisplacementComponentsFilter->SetInput( this->m_SearchRegionImageSource->GetPreviousDisplacements() );
-      ostr.str( "" );
+      m_DisplacementComponentsFilter->SetInput(this->m_SearchRegionImageSource->GetPreviousDisplacements());
+      ostr.str("");
       ostr << m_OutputFilePrefix << "_Level_" << level << "_PreviousDisplacementComponent0.mha";
-      m_DisplacementComponentsWriter->SetFileName( ostr.str() );
-      m_DisplacementComponentsWriter->SetInput( m_DisplacementComponentsFilter->GetOutput( 0 ) );
+      m_DisplacementComponentsWriter->SetFileName(ostr.str());
+      m_DisplacementComponentsWriter->SetInput(m_DisplacementComponentsFilter->GetOutput(0));
       m_DisplacementComponentsWriter->Update();
-      ostr.str( "" );
+      ostr.str("");
       ostr << m_OutputFilePrefix << "_Level_" << level << "_PreviousDisplacementComponent1.mha";
-      m_DisplacementComponentsWriter->SetFileName( ostr.str() );
-      m_DisplacementComponentsWriter->SetInput( m_DisplacementComponentsFilter->GetOutput( 1 ) );
+      m_DisplacementComponentsWriter->SetFileName(ostr.str());
+      m_DisplacementComponentsWriter->SetInput(m_DisplacementComponentsFilter->GetOutput(1));
       m_DisplacementComponentsWriter->Update();
 
       std::cout << "Writing strain image..." << std::endl;
-      m_StrainFilter->SetInput( this->m_SearchRegionImageSource->GetPreviousDisplacements() );
-      ostr.str( "" );
+      m_StrainFilter->SetInput(this->m_SearchRegionImageSource->GetPreviousDisplacements());
+      ostr.str("");
       ostr << m_OutputFilePrefix << "_Level_" << level << "_PreviousStrains.mha";
-      m_StrainWriter->SetFileName( ostr.str() );
+      m_StrainWriter->SetFileName(ostr.str());
       m_StrainWriter->Update();
-      for( unsigned int i = 0; i < 3; i++ )
-        {
-        m_StrainComponentsWriter->SetInput( m_StrainComponentsFilter->GetOutput( i ) );
-        ostr.str( "" );
+      for (unsigned int i = 0; i < 3; i++)
+      {
+        m_StrainComponentsWriter->SetInput(m_StrainComponentsFilter->GetOutput(i));
+        ostr.str("");
         ostr << m_OutputFilePrefix << "_Level_" << level << "_PreviousStrainComponent";
         ostr << i << ".mha";
-        m_StrainComponentsWriter->SetFileName( ostr.str() );
+        m_StrainComponentsWriter->SetFileName(ostr.str());
         m_StrainComponentsWriter->Update();
-        }
       }
     }
+  }
 }
 
 } // end namespace BlockMatching

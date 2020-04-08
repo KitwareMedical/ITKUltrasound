@@ -33,20 +33,20 @@ namespace itk
  *
  * \ingroup Ultrasound
  */
-template< typename TInputImage, typename TOutputImage >
-class ITK_TEMPLATE_EXPORT FFTWComplexToComplex1DFFTImageFilter :
-    public ComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
+template <typename TInputImage, typename TOutputImage>
+class ITK_TEMPLATE_EXPORT FFTWComplexToComplex1DFFTImageFilter
+  : public ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>
 {
 public:
-  typedef FFTWComplexToComplex1DFFTImageFilter                             Self;
-  typedef ComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage > Superclass;
-  typedef SmartPointer< Self >                                          Pointer;
-  typedef SmartPointer< const Self >                                    ConstPointer;
+  using Self = FFTWComplexToComplex1DFFTImageFilter;
+  using Superclass = ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
-  /** Standard class typedefs.*/
-  typedef typename Superclass::InputImageType  InputImageType;
-  typedef typename Superclass::OutputImageType OutputImageType;
-  typedef typename OutputImageType::RegionType OutputImageRegionType;
+  /** Standard class type alias.*/
+  using InputImageType = typename Superclass::InputImageType;
+  using OutputImageType = typename Superclass::OutputImageType;
+  using OutputImageRegionType = typename OutputImageType::RegionType;
 
   /**
    * the proxy type is a wrapper for the fftw API
@@ -55,36 +55,41 @@ public:
    * is trying to use double if only the float FFTW1D version is
    * configured in, or float if only double is configured.
    */
-  typedef typename fftw::ComplexToComplexProxy< typename TInputImage::PixelType::value_type > FFTW1DProxyType;
-  typedef typename std::vector< typename FFTW1DProxyType::PlanType >     PlanArrayType;
-  typedef typename std::vector< typename FFTW1DProxyType::ComplexType* > PlanBufferPointerType;
+  using FFTW1DProxyType = typename fftw::ComplexToComplexProxy<typename TInputImage::PixelType::value_type>;
+  using PlanArrayType = typename std::vector<typename FFTW1DProxyType::PlanType>;
+  using PlanBufferPointerType = typename std::vector<typename FFTW1DProxyType::ComplexType *>;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( FFTWComplexToComplex1DFFTImageFilter, ComplexToComplex1DFFTImageFilter );
+  itkTypeMacro(FFTWComplexToComplex1DFFTImageFilter, ComplexToComplex1DFFTImageFilter);
 
 
 protected:
   FFTWComplexToComplex1DFFTImageFilter();
   virtual ~FFTWComplexToComplex1DFFTImageFilter();
 
-  void BeforeThreadedGenerateData() override;
-  void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) override;
+  void
+  BeforeThreadedGenerateData() override;
+  void
+  ThreadedGenerateData(const OutputImageRegionType &, ThreadIdType threadID) override;
 
   /** Override to return a splitter that does not split along the direction we
    *  are performing the transform. */
-  const ImageRegionSplitterBase* GetImageRegionSplitter() const override;
+  const ImageRegionSplitterBase *
+  GetImageRegionSplitter() const override;
 
 private:
-  FFTWComplexToComplex1DFFTImageFilter(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  FFTWComplexToComplex1DFFTImageFilter(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;
 
   /** Destroy FFTW Plans and associated buffers. */
-  void DestroyPlans();
+  void
+  DestroyPlans();
 
   bool                  m_PlanComputed;
   PlanArrayType         m_PlanArray;
@@ -96,7 +101,7 @@ private:
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkFFTWComplexToComplex1DFFTImageFilter.hxx"
+#  include "itkFFTWComplexToComplex1DFFTImageFilter.hxx"
 #endif
 
-#endif //itkFFTWComplexToComplex1DFFTImageFilter_h
+#endif // itkFFTWComplexToComplex1DFFTImageFilter_h

@@ -47,145 +47,149 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  * */
-template < class TFixedImage, class TMovingImage, class TMetricImage, class TDisplacementImage >
-class ITK_TEMPLATE_EXPORT MultiResolutionThresholdBoundingBoxSearchRegionImageSource:
-  public MultiResolutionSearchRegionImageSource< TFixedImage, TMovingImage, TDisplacementImage >,
-  public MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
+template <class TFixedImage, class TMovingImage, class TMetricImage, class TDisplacementImage>
+class ITK_TEMPLATE_EXPORT MultiResolutionThresholdBoundingBoxSearchRegionImageSource
+  : public MultiResolutionSearchRegionImageSource<TFixedImage, TMovingImage, TDisplacementImage>
+  , public MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>
 {
 public:
-  /** Standard class typedefs. */
-  typedef MultiResolutionThresholdBoundingBoxSearchRegionImageSource    Self;
-  typedef MultiResolutionSearchRegionImageSource< TFixedImage,
-          TMovingImage, TDisplacementImage >                            Superclass;
-  typedef MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
-    DisplacementCalculatorSuperclass;
+  /** Standard class type alias. */
+  using Self = MultiResolutionThresholdBoundingBoxSearchRegionImageSource;
+  using Superclass = MultiResolutionSearchRegionImageSource<TFixedImage, TMovingImage, TDisplacementImage>;
+  using DisplacementCalculatorSuperclass = MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>;
 
-  typedef SmartPointer< Self >           Pointer;
-  typedef SmartPointer< const Self >     ConstPointer;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, TMovingImage::ImageDimension);
 
   /** Type of the fixed image. */
-  typedef TFixedImage                         FixedImageType;
-  typedef typename FixedImageType::RegionType FixedRegionType;
+  using FixedImageType = TFixedImage;
+  using FixedRegionType = typename FixedImageType::RegionType;
 
   /** Type of the radius used to characterized the fixed image block. */
-  typedef typename FixedImageType::SizeType RadiusType;
+  using RadiusType = typename FixedImageType::SizeType;
 
   /** Type of the moving image. */
-  typedef TMovingImage                         MovingImageType;
-  typedef typename MovingImageType::RegionType MovingRegionType;
+  using MovingImageType = TMovingImage;
+  using MovingRegionType = typename MovingImageType::RegionType;
 
   /** Type of the search region image. */
-  typedef typename Superclass::OutputImageType OutputImageType;
-  typedef typename OutputImageType::RegionType OutputRegionType;
+  using OutputImageType = typename Superclass::OutputImageType;
+  using OutputRegionType = typename OutputImageType::RegionType;
 
-  typedef Image< typename itk::Vector< typename RadiusType::SizeValueType, ImageDimension >, ImageDimension >
-    SearchRegionRadiusImageType;
-  typedef typename SearchRegionRadiusImageType::Pointer
-    SearchRegionRadiusImagePointer;
+  using SearchRegionRadiusImageType =
+    Image<typename itk::Vector<typename RadiusType::SizeValueType, ImageDimension>, ImageDimension>;
+  typedef typename SearchRegionRadiusImageType::Pointer SearchRegionRadiusImagePointer;
 
   /** Type of the filter used to resample the search region images. */
-  typedef VectorResampleIdentityNeumannImageFilter< SearchRegionRadiusImageType, SearchRegionRadiusImageType >
-    SearchRegionRadiusResamplerType;
-  typedef typename SearchRegionRadiusResamplerType::Pointer
-    SearchRegionRadiusResamplerPointer;
+  using SearchRegionRadiusResamplerType =
+    VectorResampleIdentityNeumannImageFilter<SearchRegionRadiusImageType, SearchRegionRadiusImageType>;
+  typedef typename SearchRegionRadiusResamplerType::Pointer SearchRegionRadiusResamplerPointer;
 
-  /** ScheduleType typedef support. */
-  typedef typename Superclass::PyramidScheduleType  PyramidScheduleType;
+  /** ScheduleType type alias support. */
+  using PyramidScheduleType = typename Superclass::PyramidScheduleType;
 
   /** Type of the threshold. */
-  typedef typename TMetricImage::PixelType ThresholdType;
-  typedef Array< ThresholdType >           ThresholdScheduleType;
+  using ThresholdType = typename TMetricImage::PixelType;
+  using ThresholdScheduleType = Array<ThresholdType>;
 
-  /** OverlapScheduleType typedef support. */
-  typedef typename Superclass::OverlapScheduleType  OverlapScheduleType;
+  /** OverlapScheduleType type alias support. */
+  using OverlapScheduleType = typename Superclass::OverlapScheduleType;
 
   /** Type of the displacement image from the previous level. */
-  typedef TDisplacementImage DisplacementImageType;
+  using DisplacementImageType = TDisplacementImage;
 
   /** Type of the filter used to resample the deformations. */
-  typedef VectorResampleIdentityNeumannImageFilter< DisplacementImageType, DisplacementImageType >
-    DisplacementResamplerType;
-  typedef typename DisplacementResamplerType::Pointer
-    DisplacementResamplerPointer;
+  using DisplacementResamplerType =
+    VectorResampleIdentityNeumannImageFilter<DisplacementImageType, DisplacementImageType>;
+  typedef typename DisplacementResamplerType::Pointer DisplacementResamplerPointer;
 
   /** Types inherited from the DisplacementCalculator superclass. */
-  typedef typename DisplacementCalculatorSuperclass::MetricImageType MetricImageType;
-  typedef typename DisplacementCalculatorSuperclass::PointType       PointType;
-  typedef typename DisplacementCalculatorSuperclass::IndexType       IndexType;
+  using MetricImageType = typename DisplacementCalculatorSuperclass::MetricImageType;
+  using PointType = typename DisplacementCalculatorSuperclass::PointType;
+  using IndexType = typename DisplacementCalculatorSuperclass::IndexType;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MultiResolutionThresholdBoundingBoxSearchRegionImageSource,
-    MultiResolutionFixedSearchRegionImageSource );
+  itkTypeMacro(MultiResolutionThresholdBoundingBoxSearchRegionImageSource, MultiResolutionFixedSearchRegionImageSource);
 
   /** New macro for creation of through a Smart Pointer is not used because of
    * ambiguities with LightObject. */
-  static Pointer New(void)
+  static Pointer
+  New(void)
   {
     Pointer smartPtr = ObjectFactory<Self>::Create();
-    if(smartPtr.GetPointer() == nullptr)
-      {
+    if (smartPtr.GetPointer() == nullptr)
+    {
       smartPtr = new Self;
-      }
+    }
     smartPtr->UnRegister();
     return smartPtr;
   }
-  //virtual LightObject::Pointer CreateAnother(void) const
+  // virtual LightObject::Pointer CreateAnother(void) const
   //{
-    //LightObject::Pointer smartPtr;
-    //// @todo fix me -- itk::LightObject ambiguity somewhere in the following
-    //line
-    //smartPtr = Self::New().GetPointer();
-    //return smartPtr;
+  // LightObject::Pointer smartPtr;
+  //// @todo fix me -- itk::LightObject ambiguity somewhere in the following
+  // line
+  // smartPtr = Self::New().GetPointer();
+  // return smartPtr;
   //}
 
   /** Set/get the threshold schedule.  The search region size in the next level will be
    * interpolated from the size of the area above this threshold.  The threshold
    * is an Array that should have the same size as the number of pyramid levels less one.  */
-  virtual void SetThresholdSchedule( const ThresholdType threshold );
+  virtual void
+  SetThresholdSchedule(const ThresholdType threshold);
 
-  virtual void SetThresholdSchedule( const ThresholdScheduleType& schedule )
-    {
+  virtual void
+  SetThresholdSchedule(const ThresholdScheduleType & schedule)
+  {
     m_ThresholdSchedule = schedule;
     m_ThresholdScheduleSpecified = true;
     this->Modified();
-    }
+  }
 
-  itkGetConstReferenceMacro( ThresholdSchedule, ThresholdScheduleType );
+  itkGetConstReferenceMacro(ThresholdSchedule, ThresholdScheduleType);
 
   /** Set/Get the search region radius at the top, highest level ( level 0 ). */
-  virtual void SetTopLevelRadius( const RadiusType& radius )
-    {
+  virtual void
+  SetTopLevelRadius(const RadiusType & radius)
+  {
     m_TopLevelRadius = radius;
     m_TopLevelRadiusSpecified = true;
     this->Modified();
-    }
+  }
 
   /** Set/Get the minimum search region radius.  The search region radius is not
    * allowed to go smaller that the given value. */
-  virtual void SetMinimumSearchRegionRadius( const RadiusType& radius )
-    {
+  virtual void
+  SetMinimumSearchRegionRadius(const RadiusType & radius)
+  {
     m_MinimumSearchRegionRadius = radius;
     this->Modified();
-    }
+  }
   /** Set the radius to the given value in all directions. */
-  virtual void SetMinimumSearchRegionRadius( const unsigned int rad )
-    {
+  virtual void
+  SetMinimumSearchRegionRadius(const unsigned int rad)
+  {
     RadiusType radius;
-    radius.Fill( rad );
-    this->SetMinimumSearchRegionRadius( radius );
-    }
-  itkGetConstReferenceMacro( MinimumSearchRegionRadius, RadiusType );
+    radius.Fill(rad);
+    this->SetMinimumSearchRegionRadius(radius);
+  }
+  itkGetConstReferenceMacro(MinimumSearchRegionRadius, RadiusType);
 
   /** We allocate the previous search region image. */
-  virtual void SetDisplacementImage( DisplacementImageType * image );
+  virtual void
+  SetDisplacementImage(DisplacementImageType * image);
 
   /** Calculates the search region radius based on the metric image. */
-  virtual void SetMetricImagePixel( const PointType & point, const IndexType& index, MetricImageType * image ); 
+  virtual void
+  SetMetricImagePixel(const PointType & point, const IndexType & index, MetricImageType * image);
 
-  virtual void Compute() {
+  virtual void
+  Compute()
+  {
     // We do this here instead of SetMetricImagePixel so it only has to be done
     // once.
     this->m_DisplacementImage->Modified();
@@ -193,35 +197,40 @@ public:
 
   /** This is needed to avoid resolution ambiguities that occur with multiple
    * inheritance. */
-  virtual void Register() const
-    {
+  virtual void
+  Register() const
+  {
     Superclass::Register();
-    }
+  }
 
-  virtual void UnRegister() const
-    {
+  virtual void
+  UnRegister() const
+  {
     Superclass::UnRegister();
-    }
+  }
 
-  virtual void Modified() const
-    {
+  virtual void
+  Modified() const
+  {
     Superclass::Modified();
-    }
+  }
 
-  bool GetDebug() const
-    {
+  bool
+  GetDebug() const
+  {
     return Superclass::GetDebug();
-    }
+  }
 
-  itkGetConstObjectMacro( SearchRegionRadiusImage, SearchRegionRadiusImageType );
+  itkGetConstObjectMacro(SearchRegionRadiusImage, SearchRegionRadiusImageType);
 
 protected:
   MultiResolutionThresholdBoundingBoxSearchRegionImageSource();
 
-  virtual void BeforeThreadedGenerateData() override;
+  virtual void
+  BeforeThreadedGenerateData() override;
 
-  virtual void ThreadedGenerateData( const OutputRegionType& outputRegion,
-    ThreadIdType threadID ) override;
+  virtual void
+  ThreadedGenerateData(const OutputRegionType & outputRegion, ThreadIdType threadID) override;
 
   ThresholdScheduleType m_ThresholdSchedule;
   bool                  m_ThresholdScheduleSpecified;
@@ -237,15 +246,16 @@ protected:
   SearchRegionRadiusResamplerPointer m_SearchRegionRadiusResampler;
 
 private:
-  MultiResolutionThresholdBoundingBoxSearchRegionImageSource( const Self& );
-  void operator=( const Self& );
+  MultiResolutionThresholdBoundingBoxSearchRegionImageSource(const Self &);
+  void
+  operator=(const Self &);
 };
 
-} // end namespace itk
-} // end namespace BlockMatching
+} // namespace BlockMatching
+} // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingMultiResolutionThresholdBoundingBoxSearchRegionImageSource.hxx"
+#  include "itkBlockMatchingMultiResolutionThresholdBoundingBoxSearchRegionImageSource.hxx"
 #endif
 
 #endif

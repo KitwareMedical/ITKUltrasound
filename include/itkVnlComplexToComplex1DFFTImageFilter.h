@@ -31,44 +31,43 @@ namespace itk
  *
  * \ingroup Ultrasound
  */
-template< typename TInputImage, typename TOutputImage >
-class ITK_TEMPLATE_EXPORT VnlComplexToComplex1DFFTImageFilter:
-    public ComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
+template <typename TInputImage, typename TOutputImage>
+class ITK_TEMPLATE_EXPORT VnlComplexToComplex1DFFTImageFilter
+  : public ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>
 {
 public:
-  /** Standard class typedefs. */
-  typedef VnlComplexToComplex1DFFTImageFilter                           Self;
-  typedef ComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage > Superclass;
-  typedef SmartPointer< Self >                                          Pointer;
-  typedef SmartPointer< const Self >                                    ConstPointer;
+  ITK_DISALLOW_COPY_AND_ASSIGN(VnlComplexToComplex1DFFTImageFilter);
 
-  typedef typename Superclass::InputImageType                           InputImageType;
-  typedef typename Superclass::OutputImageType                          OutputImageType;
-  typedef typename OutputImageType::RegionType                          OutputImageRegionType;
+  /** Standard class type alias. */
+  using Self = VnlComplexToComplex1DFFTImageFilter;
+  using Superclass = ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
-  typedef typename Superclass::TransformDirectionType                   TransformDirectionType;
+  using InputImageType = typename Superclass::InputImageType;
+  using OutputImageType = typename Superclass::OutputImageType;
+  using OutputImageRegionType = typename OutputImageType::RegionType;
+
+  using TransformDirectionType = typename Superclass::TransformDirectionType;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( VnlComplexToComplex1DFFTImageFilter, ComplexToComplex1DFFTImageFilter );
+  itkTypeMacro(VnlComplexToComplex1DFFTImageFilter, ComplexToComplex1DFFTImageFilter);
 
 protected:
   VnlComplexToComplex1DFFTImageFilter() {}
   virtual ~VnlComplexToComplex1DFFTImageFilter() {}
 
-  void GenerateData() override;
-
-private:
-  VnlComplexToComplex1DFFTImageFilter(const Self&) ITK_DELETED_FUNCTION;
-  void operator=(const Self&) ITK_DELETED_FUNCTION;
+  void
+  GenerateData() override;
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkVnlComplexToComplex1DFFTImageFilter.hxx"
+#  include "itkVnlComplexToComplex1DFFTImageFilter.hxx"
 #endif
 
 #endif

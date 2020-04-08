@@ -33,62 +33,63 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  * */
-template< typename TMultiResolutionMethod >
-class MultiResolutionIterationDisplacementCalculatorCommand :
-  public MultiResolutionIterationCommand< TMultiResolutionMethod >
+template <typename TMultiResolutionMethod>
+class MultiResolutionIterationDisplacementCalculatorCommand
+  : public MultiResolutionIterationCommand<TMultiResolutionMethod>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionIterationDisplacementCalculatorCommand);
 
-  typedef MultiResolutionIterationDisplacementCalculatorCommand   Self;
-  typedef MultiResolutionIterationCommand<TMultiResolutionMethod> Superclass;
-  typedef SmartPointer<Self>                                      Pointer;
+  using Self = MultiResolutionIterationDisplacementCalculatorCommand;
+  using Superclass = MultiResolutionIterationCommand<TMultiResolutionMethod>;
+  using Pointer = SmartPointer<Self>;
 
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
-  void Execute(itk::Object *caller, const itk::EventObject & event) override
-    {
-    Execute( (const itk::Object *)caller, event);
-    }
+  void
+  Execute(itk::Object * caller, const itk::EventObject & event) override
+  {
+    Execute((const itk::Object *)caller, event);
+  }
 
-  void Execute(const itk::Object * object, const itk::EventObject & event) override;
+  void
+  Execute(const itk::Object * object, const itk::EventObject & event) override;
 
-  typedef TMultiResolutionMethod                                MultiResolutionMethod;
-  typedef typename MultiResolutionMethod::MetricImageType       MetricImageType;
-  typedef typename MultiResolutionMethod::DisplacementImageType DisplacementImageType;
+  using MultiResolutionMethod = TMultiResolutionMethod;
+  using MetricImageType = typename MultiResolutionMethod::MetricImageType;
+  using DisplacementImageType = typename MultiResolutionMethod::DisplacementImageType;
 
-  typedef typename MultiResolutionMethod::ImageRegistrationMethodType ImageRegistrationMethodType;
+  using ImageRegistrationMethodType = typename MultiResolutionMethod::ImageRegistrationMethodType;
   typedef typename ImageRegistrationMethodType::MetricImageToDisplacementCalculatorType
     MetricImageToDisplacementCalculatorType;
-  typedef typename MetricImageToDisplacementCalculatorType::Pointer MetricImageToDisplacementCalculatorPointer;
+  using MetricImageToDisplacementCalculatorPointer = typename MetricImageToDisplacementCalculatorType::Pointer;
 
-  typedef BayesianRegularizationDisplacementCalculator< MetricImageType, DisplacementImageType >
-                                            RegularizerType;
-  typedef typename RegularizerType::Pointer RegularizerPointer;
+  using RegularizerType = BayesianRegularizationDisplacementCalculator<MetricImageType, DisplacementImageType>;
+  using RegularizerPointer = typename RegularizerType::Pointer;
 
-  itkSetObjectMacro( Level0ToNMinus1DisplacementCalculator, MetricImageToDisplacementCalculatorType );
-  itkGetObjectMacro( Level0ToNMinus1DisplacementCalculator, MetricImageToDisplacementCalculatorType );
+  itkSetObjectMacro(Level0ToNMinus1DisplacementCalculator, MetricImageToDisplacementCalculatorType);
+  itkGetConstObjectMacro(Level0ToNMinus1DisplacementCalculator, MetricImageToDisplacementCalculatorType);
 
-  itkSetObjectMacro( LevelNDisplacementCalculator, MetricImageToDisplacementCalculatorType );
-  itkGetObjectMacro( LevelNDisplacementCalculator, MetricImageToDisplacementCalculatorType );
+  itkSetObjectMacro(LevelNDisplacementCalculator, MetricImageToDisplacementCalculatorType);
+  itkGetConstObjectMacro(LevelNDisplacementCalculator, MetricImageToDisplacementCalculatorType);
 
   /** This is only used if it is set. */
-  itkSetObjectMacro( Regularizer, RegularizerType );
-  itkGetObjectMacro( Regularizer, RegularizerType );
+  itkSetObjectMacro(Regularizer, RegularizerType);
+  itkGetConstObjectMacro(Regularizer, RegularizerType);
 
-  itkSetMacro( Level0ToNMinus1RegularizerIterations, unsigned int );
-  itkGetConstMacro( Level0ToNMinus1RegularizerIterations, unsigned int );
+  itkSetMacro(Level0ToNMinus1RegularizerIterations, unsigned int);
+  itkGetConstMacro(Level0ToNMinus1RegularizerIterations, unsigned int);
 
-  itkSetMacro( LevelNRegularizerIterations, unsigned int );
-  itkGetConstMacro( LevelNRegularizerIterations, unsigned int );
+  itkSetMacro(LevelNRegularizerIterations, unsigned int);
+  itkGetConstMacro(LevelNRegularizerIterations, unsigned int);
 
 protected:
-  MultiResolutionIterationDisplacementCalculatorCommand():
-    m_Level0ToNMinus1DisplacementCalculator( nullptr ),
-    m_LevelNDisplacementCalculator( nullptr ),
-    m_Regularizer( nullptr ),
-    m_Level0ToNMinus1RegularizerIterations( 2 ),
-    m_LevelNRegularizerIterations( 1 )
+  MultiResolutionIterationDisplacementCalculatorCommand()
+    : m_Level0ToNMinus1DisplacementCalculator(nullptr)
+    , m_LevelNDisplacementCalculator(nullptr)
+    , m_Regularizer(nullptr)
+    , m_Level0ToNMinus1RegularizerIterations(2)
+    , m_LevelNRegularizerIterations(1)
   {}
 
   MetricImageToDisplacementCalculatorPointer m_Level0ToNMinus1DisplacementCalculator;

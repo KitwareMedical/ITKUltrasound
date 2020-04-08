@@ -43,45 +43,46 @@ namespace BlockMatching
 template <typename TStrainWindowDisplacemenCalculator,
           typename TBlockAffineTransformMetricImageFilter,
           typename TStrainImageFilter>
-class ITK_TEMPLATE_EXPORT StrainWindowBlockAffineTransformCommand :
-  public Command
+class ITK_TEMPLATE_EXPORT StrainWindowBlockAffineTransformCommand : public Command
 {
 public:
-  typedef StrainWindowBlockAffineTransformCommand Self;
-  typedef Command                                 Superclass;
-  typedef SmartPointer< Self >                    Pointer;
+  using Self = StrainWindowBlockAffineTransformCommand;
+  using Superclass = Command;
+  using Pointer = SmartPointer<Self>;
 
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
-  typedef TStrainWindowDisplacemenCalculator StrainWindowDisplacementCalculatorType;
+  using StrainWindowDisplacementCalculatorType = TStrainWindowDisplacemenCalculator;
 
-  typedef TBlockAffineTransformMetricImageFilter BlockAffineTransformMetricImageFilterType;
-  typedef TStrainImageFilter                     StrainImageFilterType;
+  using BlockAffineTransformMetricImageFilterType = TBlockAffineTransformMetricImageFilter;
+  using StrainImageFilterType = TStrainImageFilter;
 
-  void Execute(itk::Object *caller, const itk::EventObject & event) override
-    {
-    Execute( (const itk::Object *)caller, event);
-    }
+  void
+  Execute(itk::Object * caller, const itk::EventObject & event) override
+  {
+    Execute((const itk::Object *)caller, event);
+  }
 
-  void Execute(const itk::Object * object, const itk::EventObject & event) override;
+  void
+  Execute(const itk::Object * object, const itk::EventObject & event) override;
 
-  itkSetObjectMacro( BlockAffineTransformMetricImageFilter, BlockAffineTransformMetricImageFilterType );
+  itkSetObjectMacro(BlockAffineTransformMetricImageFilter, BlockAffineTransformMetricImageFilterType);
 
   /** Use the strain windower strain?  Otherwise the least squares base strain
    * filter is use.  Defaults to true. \@todo figure out why if set to true it
    * performs worse or segfaults.  */
-  itkSetMacro( UseStrainWindowStrain, bool );
-  itkGetConstMacro( UseStrainWindowStrain, bool );
+  itkSetMacro(UseStrainWindowStrain, bool);
+  itkGetConstMacro(UseStrainWindowStrain, bool);
 
 protected:
   StrainWindowBlockAffineTransformCommand();
 
-  typedef LinearLeastSquaresGradientImageFilter< typename StrainWindowDisplacementCalculatorType::MetricImageType,
-          typename StrainWindowDisplacementCalculatorType::MetricPixelType,
-          typename StrainWindowDisplacementCalculatorType::MetricPixelType >
-    LeastSquaresFilterType;
+  using LeastSquaresFilterType =
+    LinearLeastSquaresGradientImageFilter<typename StrainWindowDisplacementCalculatorType::MetricImageType,
+                                          typename StrainWindowDisplacementCalculatorType::MetricPixelType,
+                                          typename StrainWindowDisplacementCalculatorType::MetricPixelType>;
 
-  typedef typename BlockAffineTransformMetricImageFilterType::Pointer BlockAffineTransformMetricImageFilterPointer;
+  using BlockAffineTransformMetricImageFilterPointer = typename BlockAffineTransformMetricImageFilterType::Pointer;
 
   BlockAffineTransformMetricImageFilterPointer m_BlockAffineTransformMetricImageFilter;
 
@@ -92,15 +93,16 @@ protected:
   bool m_UseStrainWindowStrain;
 
 private:
-  StrainWindowBlockAffineTransformCommand( const Self & );
-  void operator=( const Self & );
+  StrainWindowBlockAffineTransformCommand(const Self &);
+  void
+  operator=(const Self &);
 };
 
 } // end namespace BlockMatching
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingStrainWindowBlockAffineTransformCommand.hxx"
+#  include "itkBlockMatchingStrainWindowBlockAffineTransformCommand.hxx"
 #endif
 
 #endif

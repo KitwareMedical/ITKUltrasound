@@ -47,10 +47,12 @@ namespace BlockMatching
  * \ingroup RegistrationFilters
  * \ingroup Ultrasound
  * */
-template < typename TFixedImage, typename TMovingImage,
-  typename TMetricImage, typename TDisplacementImage, typename TCoordRep >
-class ITK_TEMPLATE_EXPORT MultiResolutionImageRegistrationMethod :
-  public ImageSource< TDisplacementImage >
+template <typename TFixedImage,
+          typename TMovingImage,
+          typename TMetricImage,
+          typename TDisplacementImage,
+          typename TCoordRep>
+class ITK_TEMPLATE_EXPORT MultiResolutionImageRegistrationMethod : public ImageSource<TDisplacementImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionImageRegistrationMethod);
@@ -59,40 +61,40 @@ public:
   itkStaticConstMacro(ImageDimension, unsigned int, TDisplacementImage::ImageDimension);
 
   /** Type of the fixed image. */
-  typedef TFixedImage                         FixedImageType;
-  typedef typename FixedImageType::RegionType FixedRegionType;
-  typedef typename FixedImageType::Pointer    FixedImagePointer;
+  using FixedImageType = TFixedImage;
+  using FixedRegionType = typename FixedImageType::RegionType;
+  using FixedImagePointer = typename FixedImageType::Pointer;
 
   /** Type of the radius used to characterized the fixed image block. */
-  typedef typename FixedImageType::SizeType RadiusType;
+  using RadiusType = typename FixedImageType::SizeType;
 
   /** Type of the moving image. */
-  typedef TMovingImage                         MovingImageType;
-  typedef typename MovingImageType::RegionType MovingRegionType;
-  typedef typename MovingImageType::Pointer    MovingImagePointer;
+  using MovingImageType = TMovingImage;
+  using MovingRegionType = typename MovingImageType::RegionType;
+  using MovingImagePointer = typename MovingImageType::Pointer;
 
   /** Type of the metric image. */
-  typedef TMetricImage  MetricImageType;
+  using MetricImageType = TMetricImage;
 
   /** Type of the displacement image. */
-  typedef TDisplacementImage DisplacementImageType;
+  using DisplacementImageType = TDisplacementImage;
 
-  typedef typename DisplacementImageType::RegionType RegionType;
-  typedef typename RegionType::IndexType             IndexType;
-  typedef typename RegionType::SizeType              SizeType;
+  using RegionType = typename DisplacementImageType::RegionType;
+  using IndexType = typename RegionType::IndexType;
+  using SizeType = typename RegionType::SizeType;
 
-  typedef typename DisplacementImageType::SpacingType   SpacingType;
-  typedef typename DisplacementImageType::DirectionType DirectionType;
-  typedef typename DisplacementImageType::PointType     OriginType;
+  using SpacingType = typename DisplacementImageType::SpacingType;
+  using DirectionType = typename DisplacementImageType::DirectionType;
+  using OriginType = typename DisplacementImageType::PointType;
 
   /** Type of the search region image. */
-  typedef Image< typename MovingImageType::RegionType, ImageDimension > SearchRegionImageType;
+  using SearchRegionImageType = Image<typename MovingImageType::RegionType, ImageDimension>;
 
-  /** Standard class typedefs. */
-  typedef MultiResolutionImageRegistrationMethod  Self;
-  typedef ImageSource< TDisplacementImage >       Superclass;
-  typedef SmartPointer< Self >                    Pointer;
-  typedef SmartPointer< const Self >              ConstPointer;
+  /** Standard class type alias. */
+  using Self = MultiResolutionImageRegistrationMethod;
+  using Superclass = ImageSource<TDisplacementImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -101,141 +103,147 @@ public:
   itkTypeMacro(MultiResolutionImageRegistrationMethod, ImageSource);
 
   /** Type of the Fixed image multiresolution pyramid. */
-  typedef MultiResolutionPyramidImageFilter< FixedImageType,
-                                             FixedImageType >
-                                                   FixedImagePyramidType;
-  typedef typename FixedImagePyramidType::Pointer  FixedImagePyramidPointer;
+  using FixedImagePyramidType = MultiResolutionPyramidImageFilter<FixedImageType, FixedImageType>;
+  using FixedImagePyramidPointer = typename FixedImagePyramidType::Pointer;
 
   /** Type of pyramid schedule type */
-  typedef typename FixedImagePyramidType::ScheduleType ScheduleType;
+  using ScheduleType = typename FixedImagePyramidType::ScheduleType;
 
   /** Type of the moving image multiresolution pyramid. */
-  typedef MultiResolutionPyramidImageFilter< MovingImageType,
-                                             MovingImageType >
-                                                   MovingImagePyramidType;
-  typedef typename MovingImagePyramidType::Pointer MovingImagePyramidPointer;
+  using MovingImagePyramidType = MultiResolutionPyramidImageFilter<MovingImageType, MovingImageType>;
+  using MovingImagePyramidPointer = typename MovingImagePyramidType::Pointer;
 
   /** Type of the registration method used at every level. */
-  typedef typename BlockMatching::ImageRegistrationMethod< TFixedImage, TMovingImage,
-          TMetricImage, TDisplacementImage, TCoordRep > ImageRegistrationMethodType;
-  typedef typename ImageRegistrationMethodType::Pointer ImageRegistrationMethodPointer;
+  using ImageRegistrationMethodType = typename BlockMatching::
+    ImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>;
+  using ImageRegistrationMethodPointer = typename ImageRegistrationMethodType::Pointer;
 
   /** Type of the class to calculate the fixed image matching kernel block
    * radius at every level. */
-  typedef MultiResolutionBlockRadiusCalculator< TFixedImage > BlockRadiusCalculatorType;
-  typedef typename BlockRadiusCalculatorType::Pointer         BlockRadiusCalculatorPointer;
+  using BlockRadiusCalculatorType = MultiResolutionBlockRadiusCalculator<TFixedImage>;
+  using BlockRadiusCalculatorPointer = typename BlockRadiusCalculatorType::Pointer;
 
-  typedef typename BlockMatching::MultiResolutionSearchRegionImageSource< TFixedImage,
-          TMovingImage, TDisplacementImage > SearchRegionImageSourceType;
-  typedef typename SearchRegionImageSourceType::Pointer SearchRegionImageSourcePointer;
+  using SearchRegionImageSourceType =
+    typename BlockMatching::MultiResolutionSearchRegionImageSource<TFixedImage, TMovingImage, TDisplacementImage>;
+  using SearchRegionImageSourcePointer = typename SearchRegionImageSourceType::Pointer;
 
   /** Method to stop the registration after registering a level. */
-  void StopRegistration();
+  void
+  StopRegistration();
 
   /** Set/Get the Fixed image. */
-  itkSetObjectMacro( FixedImage, FixedImageType );
-  itkGetConstObjectMacro( FixedImage, FixedImageType );
+  itkSetObjectMacro(FixedImage, FixedImageType);
+  itkGetConstObjectMacro(FixedImage, FixedImageType);
 
   /** Set/Get the Moving image. */
-  itkSetObjectMacro( MovingImage, MovingImageType );
-  itkGetConstObjectMacro( MovingImage, MovingImageType );
+  itkSetObjectMacro(MovingImage, MovingImageType);
+  itkGetConstObjectMacro(MovingImage, MovingImageType);
 
   /** Set/Get the Fixed image pyramid. */
-  itkSetObjectMacro( FixedImagePyramid, FixedImagePyramidType );
-  itkGetConstObjectMacro( FixedImagePyramid, FixedImagePyramidType );
+  itkSetObjectMacro(FixedImagePyramid, FixedImagePyramidType);
+  itkGetConstObjectMacro(FixedImagePyramid, FixedImagePyramidType);
 
   /** Set/Get the Moving image pyramid. */
-  itkSetObjectMacro( MovingImagePyramid, MovingImagePyramidType );
-  itkGetConstObjectMacro( MovingImagePyramid, MovingImagePyramidType );
+  itkSetObjectMacro(MovingImagePyramid, MovingImagePyramidType);
+  itkGetConstObjectMacro(MovingImagePyramid, MovingImagePyramidType);
 
   /** Set/Get the schedules . */
-  void SetSchedules( const ScheduleType & fixedSchedule,
-                    const ScheduleType & movingSchedule );
-  itkGetConstMacro( FixedImagePyramidSchedule, ScheduleType );
-  itkGetConstMacro( MovingImagePyramidSchedule, ScheduleType );
+  void
+  SetSchedules(const ScheduleType & fixedSchedule, const ScheduleType & movingSchedule);
+  itkGetConstMacro(FixedImagePyramidSchedule, ScheduleType);
+  itkGetConstMacro(MovingImagePyramidSchedule, ScheduleType);
 
   /** Set/Get the number of multi-resolution levels. */
-  void SetNumberOfLevels( unsigned long numberOfLevels );
-  itkGetConstMacro( NumberOfLevels, unsigned long );
+  void
+  SetNumberOfLevels(unsigned long numberOfLevels);
+  itkGetConstMacro(NumberOfLevels, unsigned long);
 
   /** Get the current resolution level being processed. */
-  itkGetConstMacro( CurrentLevel, unsigned long );
+  itkGetConstMacro(CurrentLevel, unsigned long);
 
   /** Method to return the latest modified time of this object or
    * any of its cached ivars */
-  ModifiedTimeType GetMTime() const override;
+  ModifiedTimeType
+  GetMTime() const override;
 
   /** BlockMatching::ImageRegistrationMethod used to register each image at
    * every level. */
-  itkSetObjectMacro( ImageRegistrationMethod, ImageRegistrationMethodType );
-  itkGetModifiableObjectMacro( ImageRegistrationMethod, ImageRegistrationMethodType );
+  itkSetObjectMacro(ImageRegistrationMethod, ImageRegistrationMethodType);
+  itkGetModifiableObjectMacro(ImageRegistrationMethod, ImageRegistrationMethodType);
 
   /** Set the object used to generate the block radii in the fixed image at
    * every level. */
-  itkSetObjectMacro( BlockRadiusCalculator, BlockRadiusCalculatorType );
-  itkGetConstObjectMacro( BlockRadiusCalculator, BlockRadiusCalculatorType );
+  itkSetObjectMacro(BlockRadiusCalculator, BlockRadiusCalculatorType);
+  itkGetConstObjectMacro(BlockRadiusCalculator, BlockRadiusCalculatorType);
 
   /** Set the object used to generate the search regions. */
-  itkSetObjectMacro( SearchRegionImageSource, SearchRegionImageSourceType );
-  itkGetConstObjectMacro( SearchRegionImageSource, SearchRegionImageSourceType );
+  itkSetObjectMacro(SearchRegionImageSource, SearchRegionImageSourceType);
+  itkGetConstObjectMacro(SearchRegionImageSource, SearchRegionImageSourceType);
 
 protected:
   MultiResolutionImageRegistrationMethod();
-  virtual ~MultiResolutionImageRegistrationMethod() {};
+  virtual ~MultiResolutionImageRegistrationMethod(){};
 
   /** The size and spacing of the search region image at the lowest level is
    * used to generate the information for the output image. */
-  void GenerateOutputInformation() override;
+  void
+  GenerateOutputInformation() override;
 
   /** Generates the entire displacement image. */
-  void EnlargeOutputRequestedRegion( DataObject* data ) override
-    {
-    TDisplacementImage* output = this->GetOutput( 0 );
+  void
+  EnlargeOutputRequestedRegion(DataObject * data) override
+  {
+    TDisplacementImage * output = this->GetOutput(0);
     output->SetRequestedRegionToLargestPossibleRegion();
-    }
+  }
 
   /** Method invoked by the pipeline in order to trigger the computation of
    * the registration. */
-  void GenerateData() override;
+  void
+  GenerateData() override;
 
   /** Initialize by setting the interconnects between the components.
       This method is executed at every level of the pyramid with the
       values corresponding to this resolution
    */
-  void Initialize();
+  void
+  Initialize();
 
   /** Create the image pyramids. */
-  void PreparePyramids();
+  void
+  PreparePyramids();
 
   /** Set up the fixed block radius calculator. */
-  void PrepareBlockRadiusCalculator();
+  void
+  PrepareBlockRadiusCalculator();
 
   /** Set up the search region image calculator. */
-  void PrepareSearchRegionImageSource();
+  void
+  PrepareSearchRegionImageSource();
 
   /** Set the current level to be processed */
-  itkSetMacro( CurrentLevel, unsigned long );
+  itkSetMacro(CurrentLevel, unsigned long);
 
-  FixedImagePointer                m_FixedImage;
-  MovingImagePointer               m_MovingImage;
+  FixedImagePointer  m_FixedImage;
+  MovingImagePointer m_MovingImage;
 
-  FixedImagePyramidPointer         m_FixedImagePyramid;
-  MovingImagePyramidPointer        m_MovingImagePyramid;
+  FixedImagePyramidPointer  m_FixedImagePyramid;
+  MovingImagePyramidPointer m_MovingImagePyramid;
 
-  unsigned long                    m_NumberOfLevels;
-  unsigned long                    m_CurrentLevel;
+  unsigned long m_NumberOfLevels;
+  unsigned long m_CurrentLevel;
 
-  bool                             m_Stop;
+  bool m_Stop;
 
-  ScheduleType                     m_FixedImagePyramidSchedule;
-  ScheduleType                     m_MovingImagePyramidSchedule;
+  ScheduleType m_FixedImagePyramidSchedule;
+  ScheduleType m_MovingImagePyramidSchedule;
 
-  bool                             m_ScheduleSpecified;
-  bool                             m_NumberOfLevelsSpecified;
+  bool m_ScheduleSpecified;
+  bool m_NumberOfLevelsSpecified;
 
-  ImageRegistrationMethodPointer   m_ImageRegistrationMethod;
-  BlockRadiusCalculatorPointer     m_BlockRadiusCalculator;
-  SearchRegionImageSourcePointer   m_SearchRegionImageSource;
+  ImageRegistrationMethodPointer m_ImageRegistrationMethod;
+  BlockRadiusCalculatorPointer   m_BlockRadiusCalculator;
+  SearchRegionImageSourcePointer m_SearchRegionImageSource;
 
 private:
 };
@@ -244,7 +252,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingMultiResolutionImageRegistrationMethod.hxx"
+#  include "itkBlockMatchingMultiResolutionImageRegistrationMethod.hxx"
 #endif
 
 #endif

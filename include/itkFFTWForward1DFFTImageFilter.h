@@ -33,20 +33,22 @@ namespace itk
  *
  * \ingroup Ultrasound
  */
-template< typename TInputImage, typename TOutputImage=Image< std::complex< typename TInputImage::PixelType >, TInputImage::ImageDimension > >
-class ITK_TEMPLATE_EXPORT FFTWForward1DFFTImageFilter :
-    public Forward1DFFTImageFilter< TInputImage, TOutputImage >
+template <typename TInputImage,
+          typename TOutputImage = Image<std::complex<typename TInputImage::PixelType>, TInputImage::ImageDimension>>
+class ITK_TEMPLATE_EXPORT FFTWForward1DFFTImageFilter : public Forward1DFFTImageFilter<TInputImage, TOutputImage>
 {
 public:
-  typedef FFTWForward1DFFTImageFilter                          Self;
-  typedef Forward1DFFTImageFilter< TInputImage, TOutputImage > Superclass;
-  typedef SmartPointer< Self >                                 Pointer;
-  typedef SmartPointer< const Self >                           ConstPointer;
+  ITK_DISALLOW_COPY_AND_ASSIGN(FFTWForward1DFFTImageFilter);
 
-  /** Standard class typedefs.*/
-  typedef typename Superclass::InputImageType  InputImageType;
-  typedef typename Superclass::OutputImageType OutputImageType;
-  typedef typename OutputImageType::RegionType OutputImageRegionType;
+  using Self = FFTWForward1DFFTImageFilter;
+  using Superclass = Forward1DFFTImageFilter<TInputImage, TOutputImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
+
+  /** Standard class type alias.*/
+  using InputImageType = typename Superclass::InputImageType;
+  using OutputImageType = typename Superclass::OutputImageType;
+  using OutputImageRegionType = typename OutputImageType::RegionType;
 
   /**
    * the proxy type is a wrapper for the fftw API
@@ -55,37 +57,38 @@ public:
    * is trying to use double if only the float FFTW1D version is
    * configured in, or float if only double is configured.
    */
-  typedef typename fftw::ComplexToComplexProxy< typename TInputImage::PixelType > FFTW1DProxyType;
-  typedef typename std::vector< typename FFTW1DProxyType::PlanType >              PlanArrayType;
-  typedef typename std::vector< typename FFTW1DProxyType::ComplexType* >          PlanBufferPointerType;
+  using FFTW1DProxyType = typename fftw::ComplexToComplexProxy<typename TInputImage::PixelType>;
+  using PlanArrayType = typename std::vector<typename FFTW1DProxyType::PlanType>;
+  using PlanBufferPointerType = typename std::vector<typename FFTW1DProxyType::ComplexType *>;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( FFTWForward1DFFTImageFilter, Forward1DFFTImageFilter );
+  itkTypeMacro(FFTWForward1DFFTImageFilter, Forward1DFFTImageFilter);
 
 
 protected:
   FFTWForward1DFFTImageFilter();
   virtual ~FFTWForward1DFFTImageFilter();
 
-  void BeforeThreadedGenerateData() override;
-  void ThreadedGenerateData( const OutputImageRegionType&, ThreadIdType threadID ) override;
+  void
+  BeforeThreadedGenerateData() override;
+  void
+  ThreadedGenerateData(const OutputImageRegionType &, ThreadIdType threadID) override;
 
   /** Override to return a splitter that does not split along the direction we
    *  are performing the transform. */
-  const ImageRegionSplitterBase* GetImageRegionSplitter() const override;
+  const ImageRegionSplitterBase *
+  GetImageRegionSplitter() const override;
 
 
 private:
-  FFTWForward1DFFTImageFilter(const Self&) ITK_DELETED_FUNCTION;
-  void operator=(const Self&) ITK_DELETED_FUNCTION;
-
   ImageRegionSplitterDirection::Pointer m_ImageRegionSplitter;
 
   /** Destroy FFTW Plans and associated buffers. */
-  void DestroyPlans();
+  void
+  DestroyPlans();
 
   bool                  m_PlanComputed;
   PlanArrayType         m_PlanArray;
@@ -97,7 +100,7 @@ private:
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkFFTWForward1DFFTImageFilter.hxx"
+#  include "itkFFTWForward1DFFTImageFilter.hxx"
 #endif
 
-#endif //itkFFTWForward1DFFTImageFilter_h
+#endif // itkFFTWForward1DFFTImageFilter_h

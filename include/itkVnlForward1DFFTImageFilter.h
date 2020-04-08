@@ -31,33 +31,35 @@ namespace itk
  *
  * \ingroup Ultrasound
  */
-template< typename TInputImage, typename TOutputImage=Image< std::complex< typename TInputImage::PixelType >, TInputImage::ImageDimension > >
-class ITK_TEMPLATE_EXPORT VnlForward1DFFTImageFilter : public Forward1DFFTImageFilter< TInputImage, TOutputImage >
+template <typename TInputImage,
+          typename TOutputImage = Image<std::complex<typename TInputImage::PixelType>, TInputImage::ImageDimension>>
+class ITK_TEMPLATE_EXPORT VnlForward1DFFTImageFilter : public Forward1DFFTImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(VnlForward1DFFTImageFilter);
 
-  /** Standard class typedefs. */
-  typedef VnlForward1DFFTImageFilter                           Self;
-  typedef Forward1DFFTImageFilter< TInputImage, TOutputImage > Superclass;
-  typedef SmartPointer< Self >                                 Pointer;
-  typedef SmartPointer< const Self >                           ConstPointer;
+  /** Standard class type alias. */
+  using Self = VnlForward1DFFTImageFilter;
+  using Superclass = Forward1DFFTImageFilter<TInputImage, TOutputImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
-  typedef typename Superclass::InputImageType                  InputImageType;
-  typedef typename Superclass::OutputImageType                 OutputImageType;
-  typedef typename OutputImageType::RegionType                 OutputImageRegionType;
+  using InputImageType = typename Superclass::InputImageType;
+  using OutputImageType = typename Superclass::OutputImageType;
+  using OutputImageRegionType = typename OutputImageType::RegionType;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( VnlForward1DFFTImageFilter, Forward1DFFTImageFilter );
+  itkTypeMacro(VnlForward1DFFTImageFilter, Forward1DFFTImageFilter);
 
 protected:
-  void GenerateData() override;
+  void
+  GenerateData() override;
 
-  VnlForward1DFFTImageFilter() { }
-  virtual ~VnlForward1DFFTImageFilter() { }
+  VnlForward1DFFTImageFilter() {}
+  virtual ~VnlForward1DFFTImageFilter() {}
 
 private:
 };
@@ -65,7 +67,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkVnlForward1DFFTImageFilter.hxx"
+#  include "itkVnlForward1DFFTImageFilter.hxx"
 #endif
 
 #endif

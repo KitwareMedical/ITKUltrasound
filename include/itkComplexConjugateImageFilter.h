@@ -34,61 +34,61 @@ namespace itk
  */
 namespace Function
 {
-template< class TInput, class TOutput>
+template <class TInput, class TOutput>
 class ComplexConjugate
 {
 public:
   ComplexConjugate() {}
   ~ComplexConjugate() {}
-  bool operator!=( const ComplexConjugate & ) const
-    {
+  bool
+  operator!=(const ComplexConjugate &) const
+  {
     return false;
-    }
-  bool operator==( const ComplexConjugate & other ) const
-    {
+  }
+  bool
+  operator==(const ComplexConjugate & other) const
+  {
     return !(*this != other);
-    }
-  inline TOutput operator()( const TInput & A ) const
-    {
-    return (TOutput)( std::conj( A ) );
-    }
+  }
+  inline TOutput
+  operator()(const TInput & A) const
+  {
+    return (TOutput)(std::conj(A));
+  }
 };
 } // end namespace Function
 
 
 template <class TInputImage, class TOutputImage>
-class ITK_TEMPLATE_EXPORT ComplexConjugateImageFilter :
-    public
-UnaryFunctorImageFilter<TInputImage,TOutputImage,
-                        Function::ComplexConjugate<
-  typename TInputImage::PixelType,
-  typename TOutputImage::PixelType>   >
+class ITK_TEMPLATE_EXPORT ComplexConjugateImageFilter
+  : public UnaryFunctorImageFilter<
+      TInputImage,
+      TOutputImage,
+      Function::ComplexConjugate<typename TInputImage::PixelType, typename TOutputImage::PixelType>>
 {
 public:
-  /** Standard class typedefs. */
-  typedef ComplexConjugateImageFilter    Self;
-  typedef UnaryFunctorImageFilter< TInputImage,TOutputImage,
-    Function::ComplexConjugate< typename TInputImage::PixelType,
-                                typename TOutputImage::PixelType> >
-                                         Superclass;
-  typedef SmartPointer<Self>             Pointer;
-  typedef SmartPointer<const Self>       ConstPointer;
+  /** Standard class type alias. */
+  using Self = ComplexConjugateImageFilter;
+  using Superclass = UnaryFunctorImageFilter<
+    TInputImage,
+    TOutputImage,
+    Function::ComplexConjugate<typename TInputImage::PixelType, typename TOutputImage::PixelType>>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
 
   /** Runtime information support. */
-  itkTypeMacro(ComplexConjugateImageFilter,
-               UnaryFunctorImageFilter);
+  itkTypeMacro(ComplexConjugateImageFilter, UnaryFunctorImageFilter);
 
-  typedef typename TInputImage::PixelType                     InputPixelType;
-  typedef typename TOutputImage::PixelType                    OutputPixelType;
-  typedef typename NumericTraits< InputPixelType >::ValueType InputPixelValueType;
+  using InputPixelType = typename TInputImage::PixelType;
+  using OutputPixelType = typename TOutputImage::PixelType;
+  using InputPixelValueType = typename NumericTraits<InputPixelType>::ValueType;
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   /** Begin concept checking */
-  itkConceptMacro(InputConvertibleToOutputCheck,
-    (Concept::Convertible<InputPixelValueType, OutputPixelType>));
+  itkConceptMacro(InputConvertibleToOutputCheck, (Concept::Convertible<InputPixelValueType, OutputPixelType>));
   /** End concept checking */
 #endif
 
@@ -97,9 +97,9 @@ protected:
   virtual ~ComplexConjugateImageFilter() {}
 
 private:
-  ComplexConjugateImageFilter(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
-
+  ComplexConjugateImageFilter(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk

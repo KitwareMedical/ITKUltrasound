@@ -27,66 +27,67 @@
 
 #include "itkAnalyticSignalImageFilter.h"
 
-int itkAnalyticSignalImageFilterTest( int argc, char* argv[] )
+int
+itkAnalyticSignalImageFilterTest(int argc, char * argv[])
 {
-  if( argc < 3 )
-    {
+  if (argc < 3)
+  {
     std::cerr << "Usage: " << argv[0];
     std::cerr << " inputImage outputImagePrefix";
     std::cerr << std::endl;
     return EXIT_FAILURE;
-    }
+  }
 
-  typedef float PixelType;
+  using PixelType = float;
   const unsigned int Dimension = 2;
 
-  typedef itk::Image< PixelType, Dimension >                 ImageType;
-  typedef itk::Image< std::complex< PixelType >, Dimension > ComplexImageType;
+  using ImageType = itk::Image<PixelType, Dimension>;
+  using ComplexImageType = itk::Image<std::complex<PixelType>, Dimension>;
 
-  typedef itk::ImageFileReader< ImageType >                                 ReaderType;
-  typedef itk::ConstantPadImageFilter< ImageType, ImageType >               PadType;
-  typedef itk::AnalyticSignalImageFilter< ImageType, ComplexImageType >     AnalyticType;
-  typedef itk::ComplexToRealImageFilter< ComplexImageType, ImageType >      RealFilterType;
-  typedef itk::ComplexToImaginaryImageFilter< ComplexImageType, ImageType > ImaginaryFilterType;
-  typedef itk::ImageFileWriter< ImageType >                                 WriterType;
+  using ReaderType = itk::ImageFileReader<ImageType>;
+  using PadType = itk::ConstantPadImageFilter<ImageType, ImageType>;
+  using AnalyticType = itk::AnalyticSignalImageFilter<ImageType, ComplexImageType>;
+  using RealFilterType = itk::ComplexToRealImageFilter<ComplexImageType, ImageType>;
+  using ImaginaryFilterType = itk::ComplexToImaginaryImageFilter<ComplexImageType, ImageType>;
+  using WriterType = itk::ImageFileWriter<ImageType>;
 
-  ReaderType::Pointer reader = ReaderType::New();
-  PadType::Pointer    pad    = PadType::New();
-  AnalyticType::Pointer analytic     = AnalyticType::New();
-  RealFilterType::Pointer realFilter = RealFilterType::New();
+  ReaderType::Pointer          reader = ReaderType::New();
+  PadType::Pointer             pad = PadType::New();
+  AnalyticType::Pointer        analytic = AnalyticType::New();
+  RealFilterType::Pointer      realFilter = RealFilterType::New();
   ImaginaryFilterType::Pointer imaginaryFilter = ImaginaryFilterType::New();
-  WriterType::Pointer writer = WriterType::New();
+  WriterType::Pointer          writer = WriterType::New();
 
-  reader->SetFileName( argv[1] );
-  pad->SetInput( reader->GetOutput() );
+  reader->SetFileName(argv[1]);
+  pad->SetInput(reader->GetOutput());
   ImageType::SizeType padSize;
   padSize[0] = 0;
   padSize[1] = 28;
-  pad->SetPadUpperBound( padSize );
-  pad->SetConstant( 0. );
-  analytic->SetInput( pad->GetOutput() );
-  analytic->SetDirection( 1 );
-  realFilter->SetInput( analytic->GetOutput() );
-  imaginaryFilter->SetInput( analytic->GetOutput() );
+  pad->SetPadUpperBound(padSize);
+  pad->SetConstant(0.);
+  analytic->SetInput(pad->GetOutput());
+  analytic->SetDirection(1);
+  realFilter->SetInput(analytic->GetOutput());
+  imaginaryFilter->SetInput(analytic->GetOutput());
 
   try
-    {
-    writer->SetInput( realFilter->GetOutput() );
-    writer->SetFileName( std::string( argv[2] ) + "Real.mha" );
+  {
+    writer->SetInput(realFilter->GetOutput());
+    writer->SetFileName(std::string(argv[2]) + "Real.mha");
     writer->Update();
 
-    writer->SetInput( imaginaryFilter->GetOutput() );
-    writer->SetFileName( std::string( argv[2] ) + "Imaginary.mha" );
+    writer->SetInput(imaginaryFilter->GetOutput());
+    writer->SetFileName(std::string(argv[2]) + "Imaginary.mha");
     writer->Update();
-    }
-  catch( itk::ExceptionObject & excep )
-    {
+  }
+  catch (itk::ExceptionObject & excep)
+  {
     std::cerr << "Exception caught !" << std::endl;
     std::cerr << excep << std::endl;
     return EXIT_FAILURE;
-    }
+  }
 
-  analytic.Print( std::cout );
+  analytic.Print(std::cout);
 
   return EXIT_SUCCESS;
 }

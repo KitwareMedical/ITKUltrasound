@@ -27,47 +27,45 @@
 namespace itk
 {
 
-template< typename TInputImage, typename TOutputImage >
-Spectra1DSupportWindowToMaskImageFilter< TInputImage, TOutputImage >
-::Spectra1DSupportWindowToMaskImageFilter():
-  m_BackgroundValue( NumericTraits< OutputPixelType >::ZeroValue() ),
-  m_ForegroundValue( NumericTraits< OutputPixelType >::max() )
+template <typename TInputImage, typename TOutputImage>
+Spectra1DSupportWindowToMaskImageFilter<TInputImage, TOutputImage>::Spectra1DSupportWindowToMaskImageFilter()
+  : m_BackgroundValue(NumericTraits<OutputPixelType>::ZeroValue())
+  , m_ForegroundValue(NumericTraits<OutputPixelType>::max())
 {
-  m_MaskIndex.Fill( 0 );
+  m_MaskIndex.Fill(0);
 }
 
 
-template< typename TInputImage, typename TOutputImage >
+template <typename TInputImage, typename TOutputImage>
 void
-Spectra1DSupportWindowToMaskImageFilter< TInputImage, TOutputImage >
-::GenerateData()
+Spectra1DSupportWindowToMaskImageFilter<TInputImage, TOutputImage>::GenerateData()
 {
   this->AllocateOutputs();
 
   const InputImageType * input = this->GetInput();
-  typedef typename InputImageType::PixelType InputPixelType;
-  const InputPixelType & inputPixel = input->GetPixel( this->GetMaskIndex() );
+  using InputPixelType = typename InputImageType::PixelType;
+  const InputPixelType & inputPixel = input->GetPixel(this->GetMaskIndex());
 
-  typedef Spectra1DSupportWindowImageFilter< OutputImageType > Spectra1DSupportWindowFilterType;
-  typedef typename Spectra1DSupportWindowFilterType::FFT1DSizeType FFT1DSizeType;
+  using Spectra1DSupportWindowFilterType = Spectra1DSupportWindowImageFilter<OutputImageType>;
+  using FFT1DSizeType = typename Spectra1DSupportWindowFilterType::FFT1DSizeType;
 
   const MetaDataDictionary & dict = input->GetMetaDataDictionary();
-  FFT1DSizeType fft1DSize = 32;
-  ExposeMetaData< FFT1DSizeType >( dict, "FFT1DSize", fft1DSize );
+  FFT1DSizeType              fft1DSize = 32;
+  ExposeMetaData<FFT1DSizeType>(dict, "FFT1DSize", fft1DSize);
 
   OutputImageType * output = this->GetOutput();
-  output->FillBuffer( this->GetBackgroundValue() );
+  output->FillBuffer(this->GetBackgroundValue());
 
-  for( typename InputPixelType::const_iterator lineIt = inputPixel.begin(); lineIt != inputPixel.end(); ++lineIt )
-    {
+  for (typename InputPixelType::const_iterator lineIt = inputPixel.begin(); lineIt != inputPixel.end(); ++lineIt)
+  {
     const IndexType startIndex = *lineIt;
-    IndexType index = startIndex;
-    for( FFT1DSizeType sampleIndex = 0; sampleIndex < fft1DSize; ++sampleIndex )
-      {
+    IndexType       index = startIndex;
+    for (FFT1DSizeType sampleIndex = 0; sampleIndex < fft1DSize; ++sampleIndex)
+    {
       index[0] = startIndex[0] + sampleIndex;
-      output->SetPixel( index, this->GetForegroundValue() );
-      }
+      output->SetPixel(index, this->GetForegroundValue());
     }
+  }
 }
 
 } // end namespace itk

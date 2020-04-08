@@ -54,51 +54,48 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  * */
-template< typename TMetricImage, typename TDisplacementImage >
-class ITK_TEMPLATE_EXPORT MetricImageToDisplacementCalculator :
-  public Object
+template <typename TMetricImage, typename TDisplacementImage>
+class ITK_TEMPLATE_EXPORT MetricImageToDisplacementCalculator : public Object
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(MetricImageToDisplacementCalculator);
 
-  /** Standard class typedefs. */
-  typedef MetricImageToDisplacementCalculator Self;
-  typedef Object                              Superclass;
-  typedef SmartPointer<Self>                  Pointer;
-  typedef SmartPointer<const Self>            ConstPointer;
+  /** Standard class type alias. */
+  using Self = MetricImageToDisplacementCalculator;
+  using Superclass = Object;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MetricImageToDisplacementCalculator, Object );
+  itkTypeMacro(MetricImageToDisplacementCalculator, Object);
 
   /** Type of the metric image (input pixels). */
-  typedef TMetricImage                        MetricImageType;
-  typedef typename MetricImageType::Pointer   MetricImagePointerType;
-  typedef typename MetricImageType::IndexType IndexType;
+  using MetricImageType = TMetricImage;
+  using MetricImagePointerType = typename MetricImageType::Pointer;
+  using IndexType = typename MetricImageType::IndexType;
 
   /** Type of the displacement image (output). */
-  typedef TDisplacementImage                         DisplacementImageType;
-  typedef typename DisplacementImageType::Pointer    DisplacementImagePointerType;
-  typedef typename DisplacementImageType::RegionType RegionType;
-  typedef typename DisplacementImageType::PointType  PointType;
+  using DisplacementImageType = TDisplacementImage;
+  using DisplacementImagePointerType = typename DisplacementImageType::Pointer;
+  using RegionType = typename DisplacementImageType::RegionType;
+  using PointType = typename DisplacementImageType::PointType;
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int,
-                      TDisplacementImage::ImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, TDisplacementImage::ImageDimension);
 
   /** Type of an image of center points of the fixed image blocks. */
-  typedef itk::Image<PointType, ImageDimension>   CenterPointsImageType;
-  typedef typename CenterPointsImageType::Pointer CenterPointsImagePointerType;
+  using CenterPointsImageType = itk::Image<PointType, ImageDimension>;
+  using CenterPointsImagePointerType = typename CenterPointsImageType::Pointer;
 
   /** Type of the metric image image. */
-  typedef itk::Image<MetricImagePointerType, ImageDimension>
-                                                 MetricImageImageType;
-  typedef typename MetricImageImageType::Pointer MetricImageImagePointerType;
+  using MetricImageImageType = itk::Image<MetricImagePointerType, ImageDimension>;
+  using MetricImageImagePointerType = typename MetricImageImageType::Pointer;
 
   /** Ensure all the metric images are stored in the class's MetricImageImage.
    * */
-  itkSetMacro( CacheMetricImage, bool );
-  itkGetConstMacro( CacheMetricImage, bool );
-  itkBooleanMacro( CacheMetricImage );
+  itkSetMacro(CacheMetricImage, bool);
+  itkGetConstMacro(CacheMetricImage, bool);
+  itkBooleanMacro(CacheMetricImage);
 
   /** Set a metric image pixel.  This is the way to supply input to this class.
    * The point is the center point of the corresponding fixed block.
@@ -106,13 +103,16 @@ public:
    * metric image may or may not be stored in the class's MetricImageImage
    * depending on the needs of the implementation and whether
    * SetCacheMetricImageOn() has been set. */
-  virtual void SetMetricImagePixel( const PointType & point, const IndexType& index, MetricImageType * image );
+  virtual void
+  SetMetricImagePixel(const PointType & point, const IndexType & index, MetricImageType * image);
 
   /** Set/Get the displacement image.  Get should only be called after calling
    * Compute() and all the metric image pixels have been set. */
-  virtual void SetDisplacementImage( DisplacementImageType * image );
+  virtual void
+  SetDisplacementImage(DisplacementImageType * image);
 
-  const DisplacementImageType * GetDisplacementImage() const
+  const DisplacementImageType *
+  GetDisplacementImage() const
   {
     return this->m_DisplacementImage.GetPointer();
   }
@@ -120,29 +120,34 @@ public:
   /** Get the MetricImage image (The image of metric images.)  This should only
    * be called after all the the metric image pixels have been set with
    * SetMetricImagePixel(). */
-  itkSetObjectMacro( MetricImageImage, MetricImageImageType );
-  itkGetConstObjectMacro( MetricImageImage, MetricImageImageType );
+  itkSetObjectMacro(MetricImageImage, MetricImageImageType);
+  itkGetConstObjectMacro(MetricImageImage, MetricImageImageType);
 
   /** Get the center points of the kernels.  The points in the metric image that
    * corresponds to the kernels movement subtracted from these points is the
    * displacement. */
-  itkSetObjectMacro( CenterPointsImage, CenterPointsImageType );
-  itkGetConstObjectMacro( CenterPointsImage, CenterPointsImageType );
+  itkSetObjectMacro(CenterPointsImage, CenterPointsImageType);
+  itkGetConstObjectMacro(CenterPointsImage, CenterPointsImageType);
 
   /** Subclasses must implement this method.  If the displacement calculation takes place in
    * SetMetricImagePixel(), then this can do nothing. */
-  virtual void Compute() = 0;
+  virtual void
+  Compute() = 0;
 
   /** Modify the associated BlockMatching::ImageRegistrationMethod's
    * GenerateInputRequestedRegion().  */
-  virtual void ModifyGenerateInputRequestedRegion( RegionType& region ) {}
+  virtual void
+  ModifyGenerateInputRequestedRegion(RegionType & region)
+  {}
 
   /** Modify the associated BlockMatching::ImageRegistrationMethod's
    * EnlargeOutputRequestedRegion().  */
-  virtual void ModifyEnlargeOutputRequestedRegion( DataObject* data ) {}
+  virtual void
+  ModifyEnlargeOutputRequestedRegion(DataObject * data)
+  {}
 
 protected:
-  typedef ImageDuplicator<MetricImageType> MetricImageDuplicatorType;
+  using MetricImageDuplicatorType = ImageDuplicator<MetricImageType>;
   MetricImageToDisplacementCalculator();
 
   CenterPointsImagePointerType m_CenterPointsImage;
@@ -157,14 +162,13 @@ protected:
   MultiThreaderBase::Pointer m_MultiThreader;
 
 private:
-
 };
 
 } // end namespace BlockMatching
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingMetricImageToDisplacementCalculator.hxx"
+#  include "itkBlockMatchingMetricImageToDisplacementCalculator.hxx"
 #endif
 
 #endif

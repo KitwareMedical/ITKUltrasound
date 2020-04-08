@@ -23,7 +23,7 @@
 #include "itkVnlComplexToComplex1DFFTImageFilter.h"
 
 #if defined(ITK_USE_FFTWD) || defined(ITK_USE_FFTWF)
-#include "itkFFTWComplexToComplex1DFFTImageFilter.h"
+#  include "itkFFTWComplexToComplex1DFFTImageFilter.h"
 #endif
 
 #include "itkMetaDataDictionary.h"
@@ -32,140 +32,122 @@
 namespace itk
 {
 
-template < typename TInputImage, typename TOutputImage >
-typename ComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >::Pointer
-ComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
-::New()
+template <typename TInputImage, typename TOutputImage>
+typename ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::Pointer
+ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::New()
 {
-  Pointer smartPtr = ObjectFactory< Self >::Create();
+  Pointer smartPtr = ObjectFactory<Self>::Create();
 
 #ifdef ITK_USE_FFTWD
-  if( smartPtr.IsNull() )
+  if (smartPtr.IsNull())
+  {
+    if (typeid(typename TInputImage::PixelType::value_type) == typeid(double))
     {
-    if( typeid( typename TInputImage::PixelType::value_type ) == typeid( double ) )
-      {
-      smartPtr = dynamic_cast< Self* >(
-  FFTWComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
-  ::New().GetPointer() );
-      }
+      smartPtr =
+        dynamic_cast<Self *>(FFTWComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::New().GetPointer());
     }
+  }
 #endif
 #ifdef ITK_USE_FFTWF
-  if( smartPtr.IsNull() )
+  if (smartPtr.IsNull())
+  {
+    if (typeid(typename TInputImage::PixelType::value_type) == typeid(float))
     {
-    if( typeid( typename TInputImage::PixelType::value_type ) == typeid( float ) )
-      {
-      smartPtr = dynamic_cast<Self *>(
-  FFTWComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
-  ::New().GetPointer() );
-      }
+      smartPtr =
+        dynamic_cast<Self *>(FFTWComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::New().GetPointer());
     }
+  }
 #endif
 
-  if( smartPtr.IsNull() )
-    {
-    smartPtr = VnlComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
-      ::New().GetPointer();
-    }
+  if (smartPtr.IsNull())
+  {
+    smartPtr = VnlComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::New().GetPointer();
+  }
 
   return smartPtr;
 }
 
 
-template< typename TInputImage, typename TOutputImage >
-ComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
-::ComplexToComplex1DFFTImageFilter():
- m_Direction(0),
-  m_TransformDirection( DIRECT )
-{
-}
+template <typename TInputImage, typename TOutputImage>
+ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::ComplexToComplex1DFFTImageFilter()
+  : m_Direction(0)
+  , m_TransformDirection(DIRECT)
+{}
 
 
-template< typename TInputImage, typename TOutputImage >
+template <typename TInputImage, typename TOutputImage>
 void
-ComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
-::GenerateInputRequestedRegion()
+ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::GenerateInputRequestedRegion()
 {
   // call the superclass' implementation of this method
   Superclass::GenerateInputRequestedRegion();
 
   // get pointers to the inputs
-  typename InputImageType::Pointer inputPtr  =
-    const_cast<InputImageType *> (this->GetInput());
+  typename InputImageType::Pointer  inputPtr = const_cast<InputImageType *>(this->GetInput());
   typename OutputImageType::Pointer outputPtr = this->GetOutput();
 
-  if ( !inputPtr || !outputPtr )
-    {
+  if (!inputPtr || !outputPtr)
+  {
     return;
-    }
+  }
 
   // we need to compute the input requested region (size and start index)
-  typedef const typename OutputImageType::SizeType& OutputSizeType;
-  OutputSizeType outputRequestedRegionSize =
-    outputPtr->GetRequestedRegion().GetSize();
-  typedef const typename OutputImageType::IndexType& OutputIndexType;
-  OutputIndexType outputRequestedRegionStartIndex =
-    outputPtr->GetRequestedRegion().GetIndex();
+  using OutputSizeType = const typename OutputImageType::SizeType &;
+  OutputSizeType outputRequestedRegionSize = outputPtr->GetRequestedRegion().GetSize();
+  using OutputIndexType = const typename OutputImageType::IndexType &;
+  OutputIndexType outputRequestedRegionStartIndex = outputPtr->GetRequestedRegion().GetIndex();
 
   //// the regions other than the fft direction are fine
   typename InputImageType::SizeType  inputRequestedRegionSize = outputRequestedRegionSize;
   typename InputImageType::IndexType inputRequestedRegionStartIndex = outputRequestedRegionStartIndex;
 
   // we but need all of the input in the fft direction
-  const unsigned int direction = this->m_Direction;
-  const typename InputImageType::SizeType& inputLargeSize =
-    inputPtr->GetLargestPossibleRegion().GetSize();
+  const unsigned int                        direction = this->m_Direction;
+  const typename InputImageType::SizeType & inputLargeSize = inputPtr->GetLargestPossibleRegion().GetSize();
   inputRequestedRegionSize[direction] = inputLargeSize[direction];
-  const typename InputImageType::IndexType& inputLargeIndex =
-    inputPtr->GetLargestPossibleRegion().GetIndex();
+  const typename InputImageType::IndexType & inputLargeIndex = inputPtr->GetLargestPossibleRegion().GetIndex();
   inputRequestedRegionStartIndex[direction] = inputLargeIndex[direction];
 
   typename InputImageType::RegionType inputRequestedRegion;
-  inputRequestedRegion.SetSize( inputRequestedRegionSize );
-  inputRequestedRegion.SetIndex( inputRequestedRegionStartIndex );
+  inputRequestedRegion.SetSize(inputRequestedRegionSize);
+  inputRequestedRegion.SetIndex(inputRequestedRegionStartIndex);
 
-  inputPtr->SetRequestedRegion( inputRequestedRegion );
+  inputPtr->SetRequestedRegion(inputRequestedRegion);
 }
 
 
-template< typename TInputImage, typename TOutputImage >
+template <typename TInputImage, typename TOutputImage>
 void
-ComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
-::EnlargeOutputRequestedRegion(DataObject *output)
+ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::EnlargeOutputRequestedRegion(DataObject * output)
 {
-  OutputImageType* outputPtr = dynamic_cast<OutputImageType*>( output );
+  OutputImageType * outputPtr = dynamic_cast<OutputImageType *>(output);
 
   // we need to enlarge the region in the fft direction to the
   // largest possible in that direction
-  typedef const typename OutputImageType::SizeType& ConstOutputSizeType;
-  ConstOutputSizeType requestedSize =
-    outputPtr->GetRequestedRegion().GetSize();
-  ConstOutputSizeType outputLargeSize =
-    outputPtr->GetLargestPossibleRegion().GetSize();
-  typedef const typename OutputImageType::IndexType& ConstOutputIndexType;
-  ConstOutputIndexType requestedIndex =
-    outputPtr->GetRequestedRegion().GetIndex();
-  ConstOutputIndexType outputLargeIndex =
-    outputPtr->GetLargestPossibleRegion().GetIndex();
+  using ConstOutputSizeType = const typename OutputImageType::SizeType &;
+  ConstOutputSizeType requestedSize = outputPtr->GetRequestedRegion().GetSize();
+  ConstOutputSizeType outputLargeSize = outputPtr->GetLargestPossibleRegion().GetSize();
+  using ConstOutputIndexType = const typename OutputImageType::IndexType &;
+  ConstOutputIndexType requestedIndex = outputPtr->GetRequestedRegion().GetIndex();
+  ConstOutputIndexType outputLargeIndex = outputPtr->GetLargestPossibleRegion().GetIndex();
 
-  typename OutputImageType::SizeType enlargedSize   = requestedSize;
+  typename OutputImageType::SizeType  enlargedSize = requestedSize;
   typename OutputImageType::IndexType enlargedIndex = requestedIndex;
-  enlargedSize[this->m_Direction]  = outputLargeSize[this->m_Direction];
+  enlargedSize[this->m_Direction] = outputLargeSize[this->m_Direction];
   enlargedIndex[this->m_Direction] = outputLargeIndex[this->m_Direction];
 
   typename OutputImageType::RegionType enlargedRegion;
-  enlargedRegion.SetSize( enlargedSize );
-  enlargedRegion.SetIndex( enlargedIndex );
-  outputPtr->SetRequestedRegion( enlargedRegion );
+  enlargedRegion.SetSize(enlargedSize);
+  enlargedRegion.SetIndex(enlargedIndex);
+  outputPtr->SetRequestedRegion(enlargedRegion);
 }
 
 
-template< typename TInputImage, typename TOutputImage >
+template <typename TInputImage, typename TOutputImage>
 void
-ComplexToComplex1DFFTImageFilter< TInputImage, TOutputImage >
-::PrintSelf( std::ostream& os, Indent indent ) const
+ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::PrintSelf(std::ostream & os, Indent indent) const
 {
-  Superclass::PrintSelf( os, indent );
+  Superclass::PrintSelf(os, indent);
 
   os << indent << "Direction: " << m_Direction << std::endl;
   os << indent << "TransformDirection: " << m_TransformDirection << std::endl;

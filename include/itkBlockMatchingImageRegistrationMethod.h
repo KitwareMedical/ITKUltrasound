@@ -48,52 +48,54 @@ namespace BlockMatching
  * \ingroup RegistrationFilters
  * \ingroup Ultrasound
  */
-template< typename TFixedImage, typename TMovingImage,
-  typename TMetricImage, typename TDisplacementImage, typename TCoordRep >
-class ITK_TEMPLATE_EXPORT ImageRegistrationMethod :
-  public ImageToImageFilter< itk::Image< typename TMovingImage::RegionType,
-    TDisplacementImage::ImageDimension >, TDisplacementImage >
+template <typename TFixedImage,
+          typename TMovingImage,
+          typename TMetricImage,
+          typename TDisplacementImage,
+          typename TCoordRep>
+class ITK_TEMPLATE_EXPORT ImageRegistrationMethod
+  : public ImageToImageFilter<itk::Image<typename TMovingImage::RegionType, TDisplacementImage::ImageDimension>,
+                              TDisplacementImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(ImageRegistrationMethod);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int,
-                      TDisplacementImage::ImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, TDisplacementImage::ImageDimension);
 
   /** Type of the fixed image. */
-  typedef TFixedImage                         FixedImageType;
-  typedef typename FixedImageType::RegionType FixedRegionType;
+  using FixedImageType = TFixedImage;
+  using FixedRegionType = typename FixedImageType::RegionType;
 
   /** Type of the radius used to characterized the fixed image block. */
-  typedef typename FixedImageType::SizeType RadiusType;
+  using RadiusType = typename FixedImageType::SizeType;
 
   /** Type of the moving image. */
-  typedef TMovingImage                         MovingImageType;
-  typedef typename MovingImageType::RegionType MovingRegionType;
+  using MovingImageType = TMovingImage;
+  using MovingRegionType = typename MovingImageType::RegionType;
 
   /** Type of the metric image. */
-  typedef TMetricImage  MetricImageType;
+  using MetricImageType = TMetricImage;
 
   /** Type of the displacement image. */
-  typedef TDisplacementImage ImageType;
+  using ImageType = TDisplacementImage;
 
-  typedef typename ImageType::RegionType RegionType;
-  typedef typename RegionType::IndexType IndexType;
-  typedef typename RegionType::SizeType  SizeType;
+  using RegionType = typename ImageType::RegionType;
+  using IndexType = typename RegionType::IndexType;
+  using SizeType = typename RegionType::SizeType;
 
-  typedef typename ImageType::SpacingType   SpacingType;
-  typedef typename ImageType::DirectionType DirectionType;
-  typedef typename ImageType::PointType     OriginType;
+  using SpacingType = typename ImageType::SpacingType;
+  using DirectionType = typename ImageType::DirectionType;
+  using OriginType = typename ImageType::PointType;
 
   /** Type of the search region image. */
-  typedef Image< typename MovingImageType::RegionType, ImageDimension > SearchRegionImageType;
+  using SearchRegionImageType = Image<typename MovingImageType::RegionType, ImageDimension>;
 
-  /** Standard class typedefs. */
-  typedef ImageRegistrationMethod                                         Self;
-  typedef ImageToImageFilter< SearchRegionImageType, TDisplacementImage > Superclass;
-  typedef SmartPointer< Self >                                            Pointer;
-  typedef SmartPointer< const Self >                                      ConstPointer;
+  /** Standard class type alias. */
+  using Self = ImageRegistrationMethod;
+  using Superclass = ImageToImageFilter<SearchRegionImageType, TDisplacementImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -103,62 +105,68 @@ public:
 
   /** Type of the point use for determing the location in the fixed image of a
    * block's center. */
-  typedef typename itk::Point< TCoordRep, ImageDimension > CoordRepType;
+  using CoordRepType = typename itk::Point<TCoordRep, ImageDimension>;
 
   /** Type of the MetricImageFilter. */
-  typedef MetricImageFilter< FixedImageType, MovingImageType, MetricImageType >
-    MetricImageFilterType;
+  using MetricImageFilterType = MetricImageFilter<FixedImageType, MovingImageType, MetricImageType>;
 
   /** Type of the MetricImageToDisplacementCalculator. */
-  typedef MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
-    MetricImageToDisplacementCalculatorType;
+  using MetricImageToDisplacementCalculatorType = MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>;
 
   /** Set the fixed image. */
-  void SetFixedImage( FixedImageType * fixedImage );
-  const FixedImageType * GetFixedImage() const
-    { return this->m_FixedImage.GetPointer(); }
+  void
+  SetFixedImage(FixedImageType * fixedImage);
+  const FixedImageType *
+  GetFixedImage() const
+  {
+    return this->m_FixedImage.GetPointer();
+  }
 
   /** Set the moving image. */
-  void SetMovingImage( MovingImageType * movingImage );
-  const MovingImageType * GetMovingImage() const
-    { return this->m_MovingImage.GetPointer(); }
+  void
+  SetMovingImage(MovingImageType * movingImage);
+  const MovingImageType *
+  GetMovingImage() const
+  {
+    return this->m_MovingImage.GetPointer();
+  }
 
   /** Set the MetricImageFilter. */
-  itkSetObjectMacro( MetricImageFilter, MetricImageFilterType );
-  itkGetConstObjectMacro( MetricImageFilter, MetricImageFilterType );
+  itkSetObjectMacro(MetricImageFilter, MetricImageFilterType);
+  itkGetConstObjectMacro(MetricImageFilter, MetricImageFilterType);
 
   /** Set/Get the MetricImageToDisplacementCalculator.  This defaults to a
    * MaximumPixelDisplacementCalculator. */
-  itkSetObjectMacro( MetricImageToDisplacementCalculator,
-    MetricImageToDisplacementCalculatorType );
-  itkGetConstObjectMacro( MetricImageToDisplacementCalculator,
-    MetricImageToDisplacementCalculatorType );
+  itkSetObjectMacro(MetricImageToDisplacementCalculator, MetricImageToDisplacementCalculatorType);
+  itkGetConstObjectMacro(MetricImageToDisplacementCalculator, MetricImageToDisplacementCalculatorType);
 
   /** Whether or not to use streaming.  Streaming is achieved by streaming each
    * block matching.  This allows for deformable registration of very large
    * images, but it comes at a performance penalty.  By default it is OFF. */
-  itkSetMacro( UseStreaming, bool );
-  itkGetConstMacro( UseStreaming, bool );
-  itkBooleanMacro( UseStreaming );
+  itkSetMacro(UseStreaming, bool);
+  itkGetConstMacro(UseStreaming, bool);
+  itkBooleanMacro(UseStreaming);
 
   /** Set the radius for blocks in the fixed image to be matched against the
    * moving image.  This is a radius defined similarly to an itk::Neighborhood
    * radius, i.e., the size of the block in the i'th direction is 2*radius[i] +
    * 1.  Every fixed image block to be registered uses the same radius.
    */
-  virtual void SetRadius( const RadiusType& radius )
-    {
+  virtual void
+  SetRadius(const RadiusType & radius)
+  {
     m_Radius = radius;
     this->Modified();
-    }
+  }
   /** Set the radius to the given value in all directions. */
-  virtual void SetRadius( const unsigned int rad )
-    {
+  virtual void
+  SetRadius(const unsigned int rad)
+  {
     RadiusType radius;
-    radius.Fill( rad );
-    this->SetRadius( radius );
-    }
-  itkGetConstReferenceMacro( Radius, RadiusType );
+    radius.Fill(rad);
+    this->SetRadius(radius);
+  }
+  itkGetConstReferenceMacro(Radius, RadiusType);
 
   /** Set/Get the search region image.  The SearchRegionImage has the same
    * LargestPossibleRegion as the output displacement image.  It contains
@@ -172,26 +180,32 @@ public:
    * metric at the spacing of the metric image.  Therefore, contributing region
    * in the moving image to the search is actually the given search region
    * dilated by the radius of the kernel block. */
-  virtual void SetSearchRegionImage( SearchRegionImageType * searchRegionImage )
-    {
-    this->SetInput( searchRegionImage );
-    }
+  virtual void
+  SetSearchRegionImage(SearchRegionImageType * searchRegionImage)
+  {
+    this->SetInput(searchRegionImage);
+  }
 
 
 protected:
   ImageRegistrationMethod();
   virtual ~ImageRegistrationMethod() {}
 
-  void GenerateOutputInformation() override;
+  void
+  GenerateOutputInformation() override;
 
-  void GenerateInputRequestedRegion() override;
+  void
+  GenerateInputRequestedRegion() override;
 
-  void EnlargeOutputRequestedRegion( DataObject * data ) override;
+  void
+  EnlargeOutputRequestedRegion(DataObject * data) override;
 
   /** Initialize by setting the interconnects between the components. */
-  virtual void Initialize();
+  virtual void
+  Initialize();
 
-  void GenerateData() override;
+  void
+  GenerateData() override;
 
   typename FixedImageType::Pointer  m_FixedImage;
   typename MovingImageType::Pointer m_MovingImage;
@@ -199,8 +213,8 @@ protected:
   typename MetricImageFilterType::Pointer                   m_MetricImageFilter;
   typename MetricImageToDisplacementCalculatorType::Pointer m_MetricImageToDisplacementCalculator;
 
-  bool          m_UseStreaming;
-  RadiusType    m_Radius;
+  bool       m_UseStreaming;
+  RadiusType m_Radius;
 
 private:
 };
@@ -209,7 +223,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingImageRegistrationMethod.hxx"
+#  include "itkBlockMatchingImageRegistrationMethod.hxx"
 #endif
 
 #endif

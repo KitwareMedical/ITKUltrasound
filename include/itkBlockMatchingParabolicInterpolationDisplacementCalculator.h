@@ -35,63 +35,63 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  */
-template < typename TMetricImage, typename TDisplacementImage, typename TCoordRep=double >
-class ITK_TEMPLATE_EXPORT ParabolicInterpolationDisplacementCalculator:
-  public MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage >
+template <typename TMetricImage, typename TDisplacementImage, typename TCoordRep = double>
+class ITK_TEMPLATE_EXPORT ParabolicInterpolationDisplacementCalculator
+  : public MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(ParabolicInterpolationDisplacementCalculator);
 
-  /** Standard class typedefs. */
-  typedef ParabolicInterpolationDisplacementCalculator                            Self;
-  typedef MetricImageToDisplacementCalculator< TMetricImage, TDisplacementImage > Superclass;
-  typedef SmartPointer< Self >                                                    Pointer;
-  typedef SmartPointer< const Self >                                              ConstPointer;
+  /** Standard class type alias. */
+  using Self = ParabolicInterpolationDisplacementCalculator;
+  using Superclass = MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ParabolicInterpolationDisplacementCalculator, MetricImageToDisplacementCalculator );
+  itkTypeMacro(ParabolicInterpolationDisplacementCalculator, MetricImageToDisplacementCalculator);
 
-  typedef typename Superclass::MetricImageType        MetricImageType;
-  typedef typename Superclass::MetricImagePointerType MetricImagePointerType;
-  typedef typename MetricImageType::PixelType         PixelType;
-  typedef typename MetricImageType::SpacingType       SpacingType;
-  typedef typename MetricImageType::RegionType        RegionType;
+  using MetricImageType = typename Superclass::MetricImageType;
+  using MetricImagePointerType = typename Superclass::MetricImagePointerType;
+  using PixelType = typename MetricImageType::PixelType;
+  using SpacingType = typename MetricImageType::SpacingType;
+  using RegionType = typename MetricImageType::RegionType;
 
-  typedef typename Superclass::MetricImageImageType MetricImageImageType;
-  typedef typename Superclass::MetricImageImagePointerType
-    MetricImageImagePointerType;
-  typedef ImageRegionIterator< MetricImageImageType >
-    MetricImageImageIteratorType;
+  using MetricImageImageType = typename Superclass::MetricImageImageType;
+  typedef typename Superclass::MetricImageImagePointerType MetricImageImagePointerType;
+  using MetricImageImageIteratorType = ImageRegionIterator<MetricImageImageType>;
 
-  typedef typename Superclass::CenterPointsImageType CenterPointsImageType;
+  using CenterPointsImageType = typename Superclass::CenterPointsImageType;
 
-  typedef typename Superclass::DisplacementImageType DisplacementImageType;
+  using DisplacementImageType = typename Superclass::DisplacementImageType;
 
-  typedef typename Superclass::PointType PointType;
-  typedef typename Superclass::IndexType IndexType;
+  using PointType = typename Superclass::PointType;
+  using IndexType = typename Superclass::IndexType;
 
-  void Compute() override;
+  void
+  Compute() override;
 
 protected:
   ParabolicInterpolationDisplacementCalculator();
 
   /** Use a parabolic fit to find the subsample peak. */
-  void ThreadedParabolicInterpolation( const RegionType& region );
+  void
+  ThreadedParabolicInterpolation(const RegionType & region);
 
 private:
 };
 
-} // end namespace itk
-} // end namespace BlockMatching
+} // namespace BlockMatching
+} // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingParabolicInterpolationDisplacementCalculator.hxx"
+#  include "itkBlockMatchingParabolicInterpolationDisplacementCalculator.hxx"
 #endif
 
 #endif

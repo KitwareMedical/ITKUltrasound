@@ -35,19 +35,17 @@ namespace itk
  * \ingroup FourierTransform
  * \ingroup Ultrasound
  */
-class FrequencyDomain1DFilterFunction:
-  public Object
+class FrequencyDomain1DFilterFunction : public Object
 {
 public:
+  /** Standard class type alias. */
+  using Self = FrequencyDomain1DFilterFunction;
+  using Superclass = Object;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
-  /** Standard class typedefs. */
-  typedef FrequencyDomain1DFilterFunction      Self;
-  typedef Object                               Superclass;
-  typedef SmartPointer< Self >                 Pointer;
-  typedef SmartPointer< const Self >           ConstPointer;
-
-  itkTypeMacro( FrequencyDomain1DFilterFunction, Object);
-  itkNewMacro( Self );
+  itkTypeMacro(FrequencyDomain1DFilterFunction, Object);
+  itkNewMacro(Self);
 
 
   /** discrete frequency index such as retunr by FFTW, i.e.
@@ -56,101 +54,107 @@ public:
    * i.e., first half positive frequencies and
    * second half negative frequencies in reverse order.
    */
-  double EvaluateIndex(SizeValueType &i) const
+  double
+  EvaluateIndex(SizeValueType & i) const
+  {
+    if (m_UseCache)
     {
-    if( m_UseCache )
-      {
-      //TODO: Check for out of bounds?
+      // TODO: Check for out of bounds?
       return m_Cache[i];
-      }
+    }
     else
-      {
-      return this->EvaluateFrequency( this->GetFrequency(i) );
-      }
-    }
-
-  void SetSignalSize( const SizeValueType &size)
     {
-    if( this->m_SignalSize != size )
-      {
+      return this->EvaluateFrequency(this->GetFrequency(i));
+    }
+  }
+
+  void
+  SetSignalSize(const SizeValueType & size)
+  {
+    if (this->m_SignalSize != size)
+    {
       this->m_SignalSize = size;
-      if( this->m_UseCache )
-        {
-        this->m_Cache.resize( size );
-        }
-      this->Modified();
+      if (this->m_UseCache)
+      {
+        this->m_Cache.resize(size);
       }
+      this->Modified();
     }
+  }
 
-  SizeValueType GetSignalSize() const
-    {
+  SizeValueType
+  GetSignalSize() const
+  {
     return m_SignalSize;
-    }
+  }
 
-   itkSetMacro( UseCache, bool );
-   itkGetMacro( UseCache, bool );
+  itkSetMacro(UseCache, bool);
+  itkGetMacro(UseCache, bool);
 
   /**
    * Override this function to implement a specific filter.
    * The input ranges from -1 to 1
    * Default is identity function.
    */
-  virtual double EvaluateFrequency( double itkNotUsed( frequency ) ) const
-    {
+  virtual double
+  EvaluateFrequency(double itkNotUsed(frequency)) const
+  {
     return 1.0;
-    }
+  }
 
-  virtual void Modified( ) const override
-    {
-    //Force a chache update
-    const_cast< FrequencyDomain1DFilterFunction *>(this)->UpdateCache();
+  virtual void
+  Modified() const override
+  {
+    // Force a chache update
+    const_cast<FrequencyDomain1DFilterFunction *>(this)->UpdateCache();
     Superclass::Modified();
-    }
+  }
 
 protected:
-
-  virtual void PrintSelf( std::ostream& os, Indent indent ) const override
-    {
-    Superclass::PrintSelf( os, indent );
+  virtual void
+  PrintSelf(std::ostream & os, Indent indent) const override
+  {
+    Superclass::PrintSelf(os, indent);
 
     os << indent << "SignalSize: " << m_SignalSize << std::endl;
     os << indent << "UseCache: " << m_UseCache << std::endl;
     os << indent << "CacheSize: " << m_Cache.size() << std::endl;
-    }
+  }
 
-    FrequencyDomain1DFilterFunction()
-      {
-      m_UseCache = true;
-      m_SignalSize = 0;
-      }
+  FrequencyDomain1DFilterFunction()
+  {
+    m_UseCache = true;
+    m_SignalSize = 0;
+  }
 
 private:
-
-  double GetFrequency(SizeValueType &i) const
+  double
+  GetFrequency(SizeValueType & i) const
+  {
+    double f = (2.0 * i) / m_SignalSize;
+    if (f > 1.0)
     {
-    double f = (2.0 * i ) / m_SignalSize;
-    if( f > 1.0 )
-      {
       f = f - 2.0;
-      }
+    }
     return f;
-    }
+  }
 
-  void UpdateCache()
+  void
+  UpdateCache()
+  {
+    if (this->m_UseCache)
     {
-    if( this->m_UseCache )
+      for (SizeValueType i = 0; i < m_Cache.size(); i++)
       {
-      for( SizeValueType i=0; i < m_Cache.size(); i++)
-        {
-        this->m_Cache[i] = this->EvaluateFrequency( this->GetFrequency(i) );
-        }
+        this->m_Cache[i] = this->EvaluateFrequency(this->GetFrequency(i));
       }
     }
+  }
 
-  bool                  m_UseCache;
-  std::vector< double > m_Cache;
-  SizeValueType         m_SignalSize;
+  bool                m_UseCache;
+  std::vector<double> m_Cache;
+  SizeValueType       m_SignalSize;
 };
 
-}
+} // namespace itk
 #endif // itkFrequencyDomain1DFilterFunction.h

@@ -32,15 +32,17 @@ namespace itk
  *
  * \ingroup Ultrasound
  */
-template< typename TInputImage >
-class ITK_TEMPLATE_EXPORT SpecialCoordinatesImageToVTKStructuredGridFilter: public ProcessObject
+template <typename TInputImage>
+class ITK_TEMPLATE_EXPORT SpecialCoordinatesImageToVTKStructuredGridFilter : public ProcessObject
 {
 public:
-  /** Standard class typedefs. */
-  typedef SpecialCoordinatesImageToVTKStructuredGridFilter Self;
-  typedef ProcessObject                                    Superclass;
-  typedef SmartPointer<Self>                               Pointer;
-  typedef SmartPointer<const Self>                         ConstPointer;
+  ITK_DISALLOW_COPY_AND_ASSIGN(SpecialCoordinatesImageToVTKStructuredGridFilter);
+
+  /** Standard class type alias. */
+  using Self = SpecialCoordinatesImageToVTKStructuredGridFilter;
+  using Superclass = ProcessObject;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -48,19 +50,22 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro(SpecialCoordinatesImageToVTKStructuredGridFilter, ProcessObject);
 
-  typedef TInputImage InputImageType;
+  using InputImageType = TInputImage;
 
-  typedef vtkSmartPointer< vtkStructuredGrid >                   StructuredGridPointerType;
-  typedef SimpleDataObjectDecorator< StructuredGridPointerType > DecoratedStructuredGridPointerType;
+  using StructuredGridPointerType = vtkSmartPointer<vtkStructuredGrid>;
+  using DecoratedStructuredGridPointerType = SimpleDataObjectDecorator<StructuredGridPointerType>;
 
   itkStaticConstMacro(ImageDimension, unsigned int, InputImageType::ImageDimension);
 
 
   using Superclass::SetInput;
-  virtual void SetInput(const InputImageType * image);
-  const InputImageType * GetInput() const;
+  virtual void
+  SetInput(const InputImageType * image);
+  const InputImageType *
+  GetInput() const;
 
-  vtkStructuredGrid * GetOutput();
+  vtkStructuredGrid *
+  GetOutput();
   itkGetDecoratedOutputMacro(StructuredGrid, StructuredGridPointerType);
 
 protected:
@@ -68,23 +73,21 @@ protected:
   virtual ~SpecialCoordinatesImageToVTKStructuredGridFilter();
 
   /** Make a DataObject of the correct type to be used as the specified output. */
-  typedef ProcessObject::DataObjectPointerArraySizeType DataObjectPointerArraySizeType;
+  using DataObjectPointerArraySizeType = ProcessObject::DataObjectPointerArraySizeType;
   using Superclass::MakeOutput;
-  virtual DataObjectPointer MakeOutput( DataObjectPointerArraySizeType ) override;
+  virtual DataObjectPointer MakeOutput(DataObjectPointerArraySizeType) override;
 
-  virtual void GenerateData() override;
+  virtual void
+  GenerateData() override;
 
 private:
-  SpecialCoordinatesImageToVTKStructuredGridFilter(const Self &) ITK_DELETED_FUNCTION;
-  void operator=(const Self&) ITK_DELETED_FUNCTION;
-
-  vtkSmartPointer< vtkStructuredGrid > m_StructuredGrid;
+  vtkSmartPointer<vtkStructuredGrid> m_StructuredGrid;
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkSpecialCoordinatesImageToVTKStructuredGridFilter.hxx"
+#  include "itkSpecialCoordinatesImageToVTKStructuredGridFilter.hxx"
 #endif
 
 #endif

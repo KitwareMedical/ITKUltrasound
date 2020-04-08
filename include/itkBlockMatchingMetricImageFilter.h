@@ -51,73 +51,79 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  */
-template< typename TFixedImage, typename TMovingImage, typename TMetricImage >
-class ITK_TEMPLATE_EXPORT MetricImageFilter :
-  public ImageToImageFilter< TFixedImage, TMetricImage >
+template <typename TFixedImage, typename TMovingImage, typename TMetricImage>
+class ITK_TEMPLATE_EXPORT MetricImageFilter : public ImageToImageFilter<TFixedImage, TMetricImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(MetricImageFilter);
 
-  /** Standard class typedefs. */
-  typedef MetricImageFilter                               Self;
-  typedef ImageToImageFilter< TFixedImage, TMetricImage > Superclass;
-  typedef SmartPointer<Self>                              Pointer;
-  typedef SmartPointer<const Self>                        ConstPointer;
+  /** Standard class type alias. */
+  using Self = MetricImageFilter;
+  using Superclass = ImageToImageFilter<TFixedImage, TMetricImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(MetricImageFilter, ImageToImageFilter);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int,
-                      TFixedImage::ImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, TFixedImage::ImageDimension);
 
   /**  Type of the Fixed image. */
-  typedef          TFixedImage                FixedImageType;
-  typedef typename FixedImageType::RegionType FixedImageRegionType;
+  using FixedImageType = TFixedImage;
+  using FixedImageRegionType = typename FixedImageType::RegionType;
 
   /**  Type of the Moving image. */
-  typedef          TMovingImage                MovingImageType;
-  typedef typename MovingImageType::RegionType MovingImageRegionType;
+  using MovingImageType = TMovingImage;
+  using MovingImageRegionType = typename MovingImageType::RegionType;
 
   /** Type of the Metric image. */
-  typedef          TMetricImage                 MetricImageType;
-  typedef typename MetricImageType::SpacingType MetricImageSpacingType;
-  typedef typename MetricImageType::RegionType  MetricImageRegionType;
+  using MetricImageType = TMetricImage;
+  using MetricImageSpacingType = typename MetricImageType::SpacingType;
+  using MetricImageRegionType = typename MetricImageType::RegionType;
 
   /** Type of the block radius. */
-  typedef typename FixedImageType::SizeType RadiusType;
+  using RadiusType = typename FixedImageType::SizeType;
 
   /** Set the fixed image. */
-  void SetFixedImage( FixedImageType * fixedImage );
+  void
+  SetFixedImage(FixedImageType * fixedImage);
 
   /** Set the moving image. */
-  void SetMovingImage( MovingImageType * movingImage );
+  void
+  SetMovingImage(MovingImageType * movingImage);
 
   /** Set/Get the fixed image region.  This will defined the kernel in the fixed
    * image to be compared against the moving.  Every pixel in this region will
    * be compared against the moving image region to generate a pixel in the
    * output metric image. */
-  void SetFixedImageRegion( const FixedImageRegionType& region );
-  itkGetConstReferenceMacro( FixedImageRegion, FixedImageRegionType );
+  void
+  SetFixedImageRegion(const FixedImageRegionType & region);
+  itkGetConstReferenceMacro(FixedImageRegion, FixedImageRegionType);
 
   /** Set/Get the moving image region.  This will defined the search region over
    * which the FixedImageRegion will be iteratively translated over to create
    * the metric image. */
-  void SetMovingImageRegion( const MovingImageRegionType& region );
-  itkGetConstReferenceMacro( MovingImageRegion, MovingImageRegionType );
+  void
+  SetMovingImageRegion(const MovingImageRegionType & region);
+  itkGetConstReferenceMacro(MovingImageRegion, MovingImageRegionType);
 
 protected:
   MetricImageFilter();
-  virtual ~MetricImageFilter() {};
+  virtual ~MetricImageFilter(){};
 
-  void GenerateOutputInformation() override;
+  void
+  GenerateOutputInformation() override;
 
   /** We set the fixed and moving image's requested region.  The fixed image's
-   * requested region is equal to FixedImageRegion and the moving image's requested region is equal to the MovingImageRegion dilated by a radius related to the FixedImageRegion's size. */
-  void GenerateInputRequestedRegion() override;
+   * requested region is equal to FixedImageRegion and the moving image's requested region is equal to the
+   * MovingImageRegion dilated by a radius related to the FixedImageRegion's size. */
+  void
+  GenerateInputRequestedRegion() override;
 
   /** This filter produces the LargestPossibleRegion. */
-  void EnlargeOutputRequestedRegion( DataObject * data ) override;
+  void
+  EnlargeOutputRequestedRegion(DataObject * data) override;
 
   FixedImageRegionType  m_FixedImageRegion;
   MovingImageRegionType m_MovingImageRegion;
@@ -140,7 +146,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingMetricImageFilter.hxx"
+#  include "itkBlockMatchingMetricImageFilter.hxx"
 #endif
 
 #endif

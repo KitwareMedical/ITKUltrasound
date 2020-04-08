@@ -26,26 +26,30 @@
 namespace itk
 {
 /** \class HDF5UltrasoundImageIOFactory
-   * \brief Create instances of HDF5UltrasoundImageIO objects using an object
-   * factory.
-   *
-   * \author Matt McCormick
-   *
-   * \ingroup Ultrasound
-   */
-class Ultrasound_EXPORT HDF5UltrasoundImageIOFactory: public ObjectFactoryBase
+ * \brief Create instances of HDF5UltrasoundImageIO objects using an object
+ * factory.
+ *
+ * \author Matt McCormick
+ *
+ * \ingroup Ultrasound
+ */
+class Ultrasound_EXPORT HDF5UltrasoundImageIOFactory : public ObjectFactoryBase
 {
 public:
-  /** Standard class typedefs. */
-  typedef HDF5UltrasoundImageIOFactory Self;
-  typedef ObjectFactoryBase            Superclass;
-  typedef SmartPointer< Self >         Pointer;
-  typedef SmartPointer< const Self >   ConstPointer;
+  ITK_DISALLOW_COPY_AND_ASSIGN(HDF5UltrasoundImageIOFactory);
+
+  /** Standard class type alias. */
+  using Self = HDF5UltrasoundImageIOFactory;
+  using Superclass = ObjectFactoryBase;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Class methods used to interface with the registered factories. */
-  virtual const char * GetITKSourceVersion() const override;
+  virtual const char *
+  GetITKSourceVersion() const override;
 
-  virtual const char * GetDescription() const override;
+  virtual const char *
+  GetDescription() const override;
 
   /** Method for class instantiation. */
   itkFactorylessNewMacro(Self);
@@ -54,7 +58,8 @@ public:
   itkTypeMacro(HDF5UltrasoundImageIOFactory, ObjectFactoryBase);
 
   /** Register one factory of this type  */
-  static void RegisterOneFactory(void)
+  static void
+  RegisterOneFactory(void)
   {
     HDF5UltrasoundImageIOFactory::Pointer metaFactory = HDF5UltrasoundImageIOFactory::New();
 
@@ -64,11 +69,8 @@ public:
 protected:
   HDF5UltrasoundImageIOFactory();
   ~HDF5UltrasoundImageIOFactory();
-  virtual void PrintSelf(std::ostream & os, Indent indent) const override;
-
-private:
-  HDF5UltrasoundImageIOFactory(const Self &) ITK_DELETED_FUNCTION;
-  void operator=(const Self &) ITK_DELETED_FUNCTION;
+  virtual void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 };
 } // end namespace itk
 

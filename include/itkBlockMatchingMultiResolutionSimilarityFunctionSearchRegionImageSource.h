@@ -62,99 +62,96 @@ namespace BlockMatching
  *
  * \ingroup Ultrasound
  * */
-template <class TFixedImage, class TMovingImage, class TMetricImage, class TDisplacementImage,
-          class TFunctor, class TInterpolatorPrecisionType = double>
-class ITK_TEMPLATE_EXPORT MultiResolutionSimilarityFunctionSearchRegionImageSource :
-  public MultiResolutionSearchRegionImageSource<TFixedImage, TMovingImage, TDisplacementImage>,
-  public MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>
+template <class TFixedImage,
+          class TMovingImage,
+          class TMetricImage,
+          class TDisplacementImage,
+          class TFunctor,
+          class TInterpolatorPrecisionType = double>
+class ITK_TEMPLATE_EXPORT MultiResolutionSimilarityFunctionSearchRegionImageSource
+  : public MultiResolutionSearchRegionImageSource<TFixedImage, TMovingImage, TDisplacementImage>
+  , public MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>
 {
 public:
-  /** Standard class typedefs. */
-  typedef MultiResolutionSimilarityFunctionSearchRegionImageSource Self;
-  typedef MultiResolutionSearchRegionImageSource<TFixedImage,
-                                                 TMovingImage,
-                                                 TDisplacementImage>                            Superclass;
-  typedef MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>
-  DisplacementCalculatorSuperclass;
+  /** Standard class type alias. */
+  using Self = MultiResolutionSimilarityFunctionSearchRegionImageSource;
+  using Superclass = MultiResolutionSearchRegionImageSource<TFixedImage, TMovingImage, TDisplacementImage>;
+  using DisplacementCalculatorSuperclass = MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>;
 
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, TMovingImage::ImageDimension);
 
   /** Type of the fixed image. */
-  typedef TFixedImage                         FixedImageType;
-  typedef typename FixedImageType::RegionType FixedRegionType;
+  using FixedImageType = TFixedImage;
+  using FixedRegionType = typename FixedImageType::RegionType;
 
   /** Type of the radius used to characterized the fixed image block. */
-  typedef typename FixedImageType::SizeType RadiusType;
+  using RadiusType = typename FixedImageType::SizeType;
 
   /** Type of the moving image. */
-  typedef TMovingImage                         MovingImageType;
-  typedef typename MovingImageType::RegionType MovingRegionType;
+  using MovingImageType = TMovingImage;
+  using MovingRegionType = typename MovingImageType::RegionType;
 
   /** Type of the metric image. */
-  typedef TMetricImage MetricImageType;
+  using MetricImageType = TMetricImage;
 
   /** Type of the image of metric images. */
-  typedef typename DisplacementCalculatorSuperclass::MetricImageImageType  MetricImageImageType;
-  typedef typename DisplacementCalculatorSuperclass::CenterPointsImageType CenterPointsImageType;
+  using MetricImageImageType = typename DisplacementCalculatorSuperclass::MetricImageImageType;
+  using CenterPointsImageType = typename DisplacementCalculatorSuperclass::CenterPointsImageType;
 
-  /** Interpolator typedef. */
-  typedef InterpolateImageFunction<MetricImageType, TInterpolatorPrecisionType> InterpolatorType;
-  typedef typename InterpolatorType::Pointer                                    InterpolatorPointerType;
+  /** Interpolator type alias. */
+  using InterpolatorType = InterpolateImageFunction<MetricImageType, TInterpolatorPrecisionType>;
+  using InterpolatorPointerType = typename InterpolatorType::Pointer;
 
   /** Type of the search region image. */
-  typedef typename Superclass::OutputImageType
-  OutputImageType;
-  typedef typename OutputImageType::RegionType
-  OutputRegionType;
-  typedef Image<typename itk::Vector<typename RadiusType::SizeValueType,
-                                     ImageDimension>, ImageDimension> SearchRegionRadiusImageType;
-  typedef typename SearchRegionRadiusImageType::Pointer
-  SearchRegionRadiusImagePointer;
-  typedef VectorResampleIdentityNeumannImageFilter<SearchRegionRadiusImageType,
-                                                   SearchRegionRadiusImageType>
-  SearchRegionRadiusResamplerType;
+  typedef typename Superclass::OutputImageType OutputImageType;
+  typedef typename OutputImageType::RegionType OutputRegionType;
+  using SearchRegionRadiusImageType =
+    Image<typename itk::Vector<typename RadiusType::SizeValueType, ImageDimension>, ImageDimension>;
+  typedef typename SearchRegionRadiusImageType::Pointer SearchRegionRadiusImagePointer;
+  using SearchRegionRadiusResamplerType =
+    VectorResampleIdentityNeumannImageFilter<SearchRegionRadiusImageType, SearchRegionRadiusImageType>;
 
-  /** ScheduleType typedef support. */
-  typedef typename Superclass::PyramidScheduleType PyramidScheduleType;
+  /** ScheduleType type alias support. */
+  using PyramidScheduleType = typename Superclass::PyramidScheduleType;
 
-  /** OverlapScheduleType typedef support. */
-  typedef typename Superclass::OverlapScheduleType OverlapScheduleType;
+  /** OverlapScheduleType type alias support. */
+  using OverlapScheduleType = typename Superclass::OverlapScheduleType;
 
   /** Type of the displacement image from the previous level. */
-  typedef TDisplacementImage DisplacementImageType;
+  using DisplacementImageType = TDisplacementImage;
 
   /** Type of the function object used to calculate the search region size. */
-  typedef TFunctor FunctorType;
+  using FunctorType = TFunctor;
 
   /** Type of the filter used to resample the deformations. */
-  typedef typename Superclass::DisplacementResamplerType DisplacementResamplerType;
-  typedef typename DisplacementResamplerType::Pointer    DisplacementResamplerPointer;
+  using DisplacementResamplerType = typename Superclass::DisplacementResamplerType;
+  using DisplacementResamplerPointer = typename DisplacementResamplerType::Pointer;
 
   /** Types inherited from the DisplacementCalculator superclass. */
-  typedef typename DisplacementCalculatorSuperclass::PointType PointType;
-  typedef typename DisplacementCalculatorSuperclass::IndexType IndexType;
+  using PointType = typename DisplacementCalculatorSuperclass::PointType;
+  using IndexType = typename DisplacementCalculatorSuperclass::IndexType;
 
   /** Type of the minimum search region radius factor. */
-  typedef FixedArray< double, ImageDimension > RadiusFactorType;
+  using RadiusFactorType = FixedArray<double, ImageDimension>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MultiResolutionSimilarityFunctionSearchRegionImageSource,
-                MultiResolutionFixedSearchRegionImageSource );
+  itkTypeMacro(MultiResolutionSimilarityFunctionSearchRegionImageSource, MultiResolutionFixedSearchRegionImageSource);
 
   /** New macro for creation of through a Smart Pointer is not used because of
    * ambiguities with LightObject. */
-  static Pointer New(void)
+  static Pointer
+  New(void)
   {
     Pointer smartPtr = ObjectFactory<Self>::Create();
 
-    if( smartPtr.GetPointer() == nullptr )
-      {
+    if (smartPtr.GetPointer() == nullptr)
+    {
       smartPtr = new Self;
-      }
+    }
     smartPtr->UnRegister();
     return smartPtr;
   }
@@ -169,7 +166,8 @@ public:
   // }
 
   /** Set/Get the search region radius at the top, highest level ( level 0 ). */
-  virtual void SetTopLevelRadius( const RadiusType& radius )
+  virtual void
+  SetTopLevelRadius(const RadiusType & radius)
   {
     m_TopLevelRadius = radius;
     m_TopLevelRadiusSpecified = true;
@@ -178,44 +176,53 @@ public:
 
   /** Set/Get the minimum search region radius factor.  This is multiplied by
    * the fixed block size to obtain the minimum search region radius. */
-  virtual void SetMinimumSearchRegionRadiusFactor( const RadiusFactorType & factor )
-    {
+  virtual void
+  SetMinimumSearchRegionRadiusFactor(const RadiusFactorType & factor)
+  {
     m_MinimumSearchRegionRadiusFactor = factor;
     this->Modified();
-    }
-  virtual void SetMinimumSearchRegionRadiusFactor( const double & factor )
-    {
-    RadiusFactorType rf( factor );
-    this->SetMinimumSearchRegionRadiusFactor( rf );
-    }
-  itkGetConstReferenceMacro( MinimumSearchRegionRadiusFactor, RadiusFactorType );
+  }
+  virtual void
+  SetMinimumSearchRegionRadiusFactor(const double & factor)
+  {
+    RadiusFactorType rf(factor);
+    this->SetMinimumSearchRegionRadiusFactor(rf);
+  }
+  itkGetConstReferenceMacro(MinimumSearchRegionRadiusFactor, RadiusFactorType);
 
   /** We allocate the previous search region image. */
-  virtual void SetDisplacementImage( DisplacementImageType * image );
+  virtual void
+  SetDisplacementImage(DisplacementImageType * image);
 
   /** Calculates the search region radius based on the metric image. */
-  virtual void SetMetricImagePixel( const PointType & point, const IndexType& index, MetricImageType * image );
+  virtual void
+  SetMetricImagePixel(const PointType & point, const IndexType & index, MetricImageType * image);
 
-  virtual void Compute();
+  virtual void
+  Compute();
 
   /** This is needed to avoid resolution ambiguities that occur with multiple
    * inheritance. */
-  virtual void Register() const
+  virtual void
+  Register() const
   {
     Superclass::Register();
   }
 
-  virtual void UnRegister() const
+  virtual void
+  UnRegister() const
   {
     Superclass::UnRegister();
   }
 
-  virtual void Modified() const
+  virtual void
+  Modified() const
   {
     Superclass::Modified();
   }
 
-  bool GetDebug() const
+  bool
+  GetDebug() const
   {
     return Superclass::GetDebug();
   }
@@ -223,8 +230,8 @@ public:
   /** Set/Get the internal displacement calculator that is used to calculate the
    * displacements after regularization.  Defaults to a
    * MaximumPixelDisplacementCalcultor. */
-  itkSetObjectMacro( DisplacementCalculator, DisplacementCalculatorSuperclass );
-  itkGetObjectMacro( DisplacementCalculator, DisplacementCalculatorSuperclass );
+  itkSetObjectMacro(DisplacementCalculator, DisplacementCalculatorSuperclass);
+  itkGetConstObjectMacro(DisplacementCalculator, DisplacementCalculatorSuperclass);
 
   /** Set the interpolator function.  The default is
    * itk::LinearInterpolateImageFunction<InputImageType, TInterpolatorPrecisionType>. Some
@@ -232,16 +239,17 @@ public:
    * (useful for binary masks and other images with a small number of
    * possible pixel values), and itk::BSplineInterpolateImageFunction
    * (which provides a higher order of interpolation).  */
-  itkSetObjectMacro( Interpolator, InterpolatorType );
+  itkSetObjectMacro(Interpolator, InterpolatorType);
 
   /** Get a pointer to the interpolator function. */
-  itkGetConstObjectMacro( Interpolator, InterpolatorType );
+  itkGetConstObjectMacro(Interpolator, InterpolatorType);
 
   /** Get the functor object.  The functor is returned by reference.
    * (Functors do not have to derive from itk::LightObject, so they do
    * not necessarily have a reference count. So we cannot return a
    * SmartPointer.) */
-  const FunctorType & GetFunctor() const
+  const FunctorType &
+  GetFunctor() const
   {
     return m_Functor;
   }
@@ -252,21 +260,24 @@ public:
    * This method requires an operator!=() be defined on the functor
    * (or the compiler's default implementation of operator!=() being
    * appropriate). */
-  void SetFunctor(const FunctorType & functor)
+  void
+  SetFunctor(const FunctorType & functor)
   {
-    if( m_Functor != functor )
-      {
+    if (m_Functor != functor)
+    {
       m_Functor = functor;
       this->Modified();
-      }
+    }
   }
 
 protected:
   MultiResolutionSimilarityFunctionSearchRegionImageSource();
 
-  virtual void BeforeThreadedGenerateData() override;
+  virtual void
+  BeforeThreadedGenerateData() override;
 
-  virtual void ThreadedGenerateData( const OutputRegionType& outputRegion, ThreadIdType threadID );
+  virtual void
+  ThreadedGenerateData(const OutputRegionType & outputRegion, ThreadIdType threadID);
 
   RadiusType m_TopLevelRadius;
   bool       m_TopLevelRadiusSpecified;
@@ -278,20 +289,21 @@ protected:
 
   typename DisplacementCalculatorSuperclass::Pointer m_DisplacementCalculator;
 
-  InterpolatorPointerType m_Interpolator;      // Image function for
-                                               // metric interpolation
+  InterpolatorPointerType m_Interpolator; // Image function for
+                                          // metric interpolation
   FunctorType m_Functor;
-private:
-  MultiResolutionSimilarityFunctionSearchRegionImageSource( const Self & );
-  void operator=( const Self & );
 
+private:
+  MultiResolutionSimilarityFunctionSearchRegionImageSource(const Self &);
+  void
+  operator=(const Self &);
 };
 
 } // end namespace BlockMatching
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBlockMatchingMultiResolutionSimilarityFunctionSearchRegionImageSource.hxx"
+#  include "itkBlockMatchingMultiResolutionSimilarityFunctionSearchRegionImageSource.hxx"
 #endif
 
 #endif

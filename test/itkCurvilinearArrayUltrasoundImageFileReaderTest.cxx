@@ -22,31 +22,32 @@
 
 #include "itkTestingMacros.h"
 
-int itkCurvilinearArrayUltrasoundImageFileReaderTest( int argc, char * argv [] )
+int
+itkCurvilinearArrayUltrasoundImageFileReaderTest(int argc, char * argv[])
 {
-  if( argc < 2 )
-    {
+  if (argc < 2)
+  {
     std::cerr << "Usage: " << argv[0];
     std::cerr << " inputImage";
     std::cerr << std::endl;
     return EXIT_FAILURE;
-    }
+  }
   const char * inputImageFileName = argv[1];
 
   const unsigned int Dimension = 3;
-  typedef unsigned char PixelType;
+  using PixelType = unsigned char;
 
-  typedef itk::CurvilinearArraySpecialCoordinatesImage< PixelType, Dimension > SpecialCoordinatesImageType;
+  using SpecialCoordinatesImageType = itk::CurvilinearArraySpecialCoordinatesImage<PixelType, Dimension>;
 
-  typedef itk::UltrasoundImageFileReader< SpecialCoordinatesImageType > ReaderType;
+  using ReaderType = itk::UltrasoundImageFileReader<SpecialCoordinatesImageType>;
   ReaderType::Pointer reader = ReaderType::New();
-  reader->SetFileName( inputImageFileName );
-  ITK_TRY_EXPECT_NO_EXCEPTION( reader->Update() );
+  reader->SetFileName(inputImageFileName);
+  ITK_TRY_EXPECT_NO_EXCEPTION(reader->Update());
 
   SpecialCoordinatesImageType::ConstPointer image = reader->GetOutput();
-  ITK_TEST_EXPECT_EQUAL( image->GetLateralAngularSeparation(), 0.00862832 );
-  ITK_TEST_EXPECT_EQUAL( image->GetRadiusSampleSize(), 0.0513434294 );
-  ITK_TEST_EXPECT_EQUAL( image->GetFirstSampleDistance(), 26.4 );
+  ITK_TEST_EXPECT_EQUAL(image->GetLateralAngularSeparation(), 0.00862832);
+  ITK_TEST_EXPECT_EQUAL(image->GetRadiusSampleSize(), 0.0513434294);
+  ITK_TEST_EXPECT_EQUAL(image->GetFirstSampleDistance(), 26.4);
 
   return EXIT_SUCCESS;
 }
