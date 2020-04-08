@@ -21,7 +21,7 @@
 #include <string>
 
 #include "itkExtractImageFilter.h"
-#include "itkRealAndImaginaryToComplexImageFilter.h"
+#include "itkComposeImageFilter.h"
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 
@@ -44,8 +44,8 @@ int itkOpenCLInverse1DFFTImageFilterTest( int argc, char* argv[] )
   typedef itk::Image< std::complex< PixelType >, Dimension > ComplexImageType;
 
   typedef itk::ImageFileReader< ImageType > ReaderType;
-  typedef itk::OpenCL1DComplexConjugateToRealImageFilter< PixelType, Dimension > FFTType;
-  typedef itk::RealAndImaginaryToComplexImageFilter< PixelType, PixelType, PixelType, Dimension > JoinFilterType;
+  typedef itk::OpenCLInverse1DFFTImageFilter<ComplexImageType, ImageType> FFTType;
+  typedef itk::ComposeImageFilter<ImageType, ComplexImageType> JoinFilterType;
   typedef itk::ExtractImageFilter< ImageType, ImageType > ExtractType;
   typedef itk::ImageFileWriter< ImageType > WriterType;
 

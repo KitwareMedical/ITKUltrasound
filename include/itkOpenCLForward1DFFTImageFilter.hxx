@@ -31,9 +31,9 @@
 namespace itk
 {
 
-template <class TPixel, unsigned int VDimension>
-OpenCL1DRealToComplexConjugateImageFilter<TPixel, VDimension>
-::OpenCL1DRealToComplexConjugateImageFilter():
+template <typename TInputImage, typename TOutputImage>
+OpenCLForward1DFFTImageFilter<TInputImage, TOutputImage>
+::OpenCLForward1DFFTImageFilter():
   m_PlanComputed(false),
   m_LastImageSize(0),
   m_InputBuffer(0),
@@ -57,9 +57,9 @@ OpenCL1DRealToComplexConjugateImageFilter<TPixel, VDimension>
     }
 }
 
-template <class TPixel, unsigned int VDimension>
+template <typename TInputImage, typename TOutputImage>
 bool
-OpenCL1DRealToComplexConjugateImageFilter<TPixel,VDimension>::
+OpenCLForward1DFFTImageFilter<TInputImage, TOutputImage>::
 Legaldim(int n)
 {
   int ifac = 2;
@@ -70,9 +70,9 @@ Legaldim(int n)
   return (n == 1); // return false if decomposition failed
 }
 
-template <typename TPixel, unsigned int Dimension>
+template <typename TInputImage, typename TOutputImage>
 void
-OpenCL1DRealToComplexConjugateImageFilter<TPixel,Dimension>::
+OpenCLForward1DFFTImageFilter<TInputImage, TOutputImage>::
 GenerateData()
 {
   // get pointers to the input and output
@@ -93,7 +93,7 @@ GenerateData()
   const typename OutputImageType::SizeType&   outputSize
     = outputPtr->GetRequestedRegion().GetSize();
 
-  unsigned int vec_size = inputSize[this->m_Direction];
+  unsigned int vec_size = inputSize[this->GetDirection()];
   if( !this->Legaldim(vec_size) )
     {
     ExceptionObject exception(__FILE__, __LINE__);
@@ -103,12 +103,12 @@ GenerateData()
     }
 
   cl_int batchSize = 1;
-  for( unsigned int i = 0; i < Dimension; i++ )
+  for (unsigned int i = 0; i < TInputImage::ImageDimension; i++)
     {
     batchSize *= outputSize[i];
     }
   unsigned int totalSize = batchSize;
-  batchSize /= outputSize[this->m_Direction];
+  batchSize /= outputSize[this->GetDirection()];
   
 
   if(this->m_PlanComputed)            // if we've already computed a plan
@@ -119,7 +119,7 @@ GenerateData()
       {
       delete [] this->m_InputBuffer;
       delete [] this->m_OutputBuffer;
-      clFFT_DestroyPlan(this->m_Plan);
+      //clFFT_DestroyPlan(this->m_Plan);
       this->m_PlanComputed = false;
       }
     }
@@ -137,17 +137,17 @@ GenerateData()
       itkExceptionMacro("Problem allocating memory for internal computations");
       }
     this->m_LastImageSize = totalSize;
-    clFFT_Dim3 n = { inputSize[this->m_Direction], 1, 1 };
-    cl_int error_code;
-    this->m_Plan = clFFT_CreatePlan( (*m_clContext)(),
-      n,
-      clFFT_1D,
-      clFFT_InterleavedComplexFormat,
-      &error_code );
-    if ( ! this->m_Plan || error_code )
-      {
-      itkExceptionMacro( "Could not create OpenCL FFT Plan." );
-      }
+    //clFFT_Dim3 n = { inputSize[this->m_Direction], 1, 1 };
+    //cl_int error_code;
+    //this->m_Plan = clFFT_CreatePlan( (*m_clContext)(),
+    //  n,
+    //  clFFT_1D,
+    //  clFFT_InterleavedComplexFormat,
+    //  &error_code );
+    //if ( ! this->m_Plan || error_code )
+    //  {
+    //  itkExceptionMacro( "Could not create OpenCL FFT Plan." );
+    //  }
     this->m_PlanComputed = true;
     }
 
@@ -156,8 +156,8 @@ GenerateData()
   InputIteratorType inputIt( inputPtr, inputPtr->GetRequestedRegion() );
   OutputIteratorType outputIt( outputPtr, outputPtr->GetRequestedRegion() );
 
-  inputIt.SetDirection(this->m_Direction);
-  outputIt.SetDirection(this->m_Direction);
+  inputIt.SetDirection(this->GetDirection());
+  outputIt.SetDirection(this->GetDirection());
 
   OpenCLComplexType* inputBufferIt = this->m_InputBuffer;
   // for every fft line
@@ -176,22 +176,22 @@ GenerateData()
   try
     {
     // do the transform
-    cl::Buffer clDataBuffer( *m_clContext,
-      CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR,
-      totalSize * sizeof( TPixel ) * 2,
-      m_InputBuffer
-      );
-    cl_command_queue queue = ( *m_clQueue )();
-    cl_mem data_in = clDataBuffer();
-    cl_mem data_out = clDataBuffer();
-    cl_int err = clFFT_ExecuteInterleaved( queue, this->m_Plan, batchSize, clFFT_Forward, data_in, data_out, 0, NULL, NULL );
-    if( err )
-      {
-      itkExceptionMacro( "Error in clFFT_ExecuteInterleaved(" << err << ")");
-      }
-    m_clQueue->finish();
+    //cl::Buffer clDataBuffer( *m_clContext,
+    //  CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR,
+    //  totalSize * sizeof( TPixel ) * 2,
+    //  m_InputBuffer
+    //  );
+    //cl_command_queue queue = ( *m_clQueue )();
+    //cl_mem data_in = clDataBuffer();
+    //cl_mem data_out = clDataBuffer();
+    //cl_int err = clFFT_ExecuteInterleaved( queue, this->m_Plan, batchSize, clFFT_Forward, data_in, data_out, 0, NULL, NULL );
+    //if( err )
+    //  {
+    //  itkExceptionMacro( "Error in clFFT_ExecuteInterleaved(" << err << ")");
+    //  }
+    //m_clQueue->finish();
 
-    err = m_clQueue->enqueueReadBuffer( clDataBuffer, CL_TRUE, 0, totalSize * sizeof( TPixel ) * 2, m_OutputBuffer );
+    //err = m_clQueue->enqueueReadBuffer( clDataBuffer, CL_TRUE, 0, totalSize * sizeof( TPixel ) * 2, m_OutputBuffer );
     }
   catch( const cl::Error& e )
     {
@@ -199,7 +199,7 @@ GenerateData()
     }
 
   // Follow the convention of the other FFT implementations.
-  TPixel normalizationFactor = 2 * inputSize[this->m_Direction] - 1;
+  TPixel normalizationFactor = 2 * inputSize[this->GetDirection()] - 1;
   OpenCLComplexType* outputBufferIt = this->m_OutputBuffer;
   for( outputIt.GoToBegin(); !outputIt.IsAtEnd(); outputIt.NextLine() )
     {

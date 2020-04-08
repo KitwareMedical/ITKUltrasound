@@ -22,11 +22,11 @@
 
 #define __CL_ENABLE_EXCEPTIONS
 #include "CL/cl.hpp"
-#include "clFFT.h"
+//#include "clFFT.h"
 
 namespace itk
 {
-/** /class OpenCL1DComplexToComplexImageFilter
+/** /class OpenCLComplexToComplex1DFFTImageFilter
  * /brief only do FFT along one dimension using OpenCL_FFT as a backend.
  *
  * The size of the image in the transformed direction must be a power of 2.
@@ -39,13 +39,16 @@ namespace itk
  * \ingroup
  */
 
-template <class TPixel, unsigned int Dimension = 3>
-class ITK_EXPORT OpenCL1DComplexToComplexImageFilter :
-    public FFT1DComplexToComplexImageFilter<TPixel,Dimension>
+template <typename TInputImage, typename TOutputImage = TInputImage>
+class ITK_EXPORT OpenCLComplexToComplex1DFFTImageFilter :
+    public ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>
 {
 public:
-  typedef OpenCL1DComplexToComplexImageFilter Self;
-  typedef FFT1DComplexToComplexImageFilter<TPixel,Dimension> Superclass;
+  ITK_DISALLOW_COPY_AND_ASSIGN(OpenCLComplexToComplex1DFFTImageFilter);
+  using TPixel = typename NumericTraits< typename TInputImage::PixelType >::ValueType;
+
+  typedef OpenCLComplexToComplex1DFFTImageFilter Self;
+  typedef ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage> Superclass;
   typedef SmartPointer<Self> Pointer;
   typedef SmartPointer<const Self> ConstPointer;
 
@@ -63,17 +66,17 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(OpenCL1DComplexToComplexImageFilter,
+  itkTypeMacro(OpenCLComplexToComplex1DFFTImageFilter,
                FFT1DComplexToComplexImageFilter);
 
 
 protected:
-  OpenCL1DComplexToComplexImageFilter();
-  virtual ~OpenCL1DComplexToComplexImageFilter()
+  OpenCLComplexToComplex1DFFTImageFilter();
+  virtual ~OpenCLComplexToComplex1DFFTImageFilter()
   {
     if(m_PlanComputed)
       {
-      clFFT_DestroyPlan(this->m_Plan);
+      //clFFT_DestroyPlan(this->m_Plan);
       delete [] this->m_InputBuffer;
       delete [] this->m_OutputBuffer;
       }
@@ -86,10 +89,8 @@ protected:
   ///** Method to check if an array dimension is legal for current OpenCL FFT */
   bool Legaldim(int n); 
 private:
-  OpenCL1DComplexToComplexImageFilter(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
   bool m_PlanComputed;
-  clFFT_Plan m_Plan;
+  //clFFT_Plan m_Plan;
   unsigned int m_LastImageSize;
   OpenCLComplexType *m_InputBuffer;
   OpenCLComplexType *m_OutputBuffer;

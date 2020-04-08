@@ -46,7 +46,7 @@ int itkOpenCLForward1DFFTImageFilterTest( int argc, char* argv[] )
 
   typedef itk::ImageFileReader< ImageType > ReaderType;
   typedef itk::ConstantPadImageFilter< ImageType, ImageType > PadType;
-  typedef itk::OpenCL1DRealToComplexConjugateImageFilter< PixelType, Dimension > FFTType;
+  typedef itk::OpenCLForward1DFFTImageFilter<ImageType, ComplexImageType> FFTType;
   typedef itk::ComplexToRealImageFilter< ComplexImageType, ImageType > RealFilterType;
   typedef itk::ComplexToImaginaryImageFilter< ComplexImageType, ImageType > ImaginaryFilterType;
   typedef itk::ImageFileWriter< ImageType > WriterType;
