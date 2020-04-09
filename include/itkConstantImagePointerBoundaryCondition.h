@@ -73,7 +73,7 @@ public:
   using OffsetType = typename Superclass::OffsetType;
   using NeighborhoodType = typename Superclass::NeighborhoodType;
 
-  typedef typename Superclass::NeighborhoodAccessorFunctorType NeighborhoodAccessorFunctorType;
+  using NeighborhoodAccessorFunctorType = typename Superclass::NeighborhoodAccessorFunctorType;
 
   /** Save the image dimension. */
   itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
