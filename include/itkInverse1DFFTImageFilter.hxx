@@ -26,11 +26,26 @@
 #  include "itkFFTWInverse1DFFTImageFilter.h"
 #endif
 
+#if defined(ITKUltrasound_USE_clFFT)
+#  include "itkOpenCLInverse1DFFTImageFilter.h"
+#endif
+
 #include "itkMetaDataDictionary.h"
 #include "itkMetaDataObject.h"
 
 namespace itk
 {
+#ifdef ITKUltrasound_USE_clFFT
+template <typename TSelfPointer, typename TInputImage, typename TOutputImage, typename TPixel>
+struct Dispatch_1DComplexConjugateToReal_New
+{
+  static TSelfPointer
+  Apply()
+  {
+    return OpenCLInverse1DFFTImageFilter<TInputImage, TOutputImage>::New().GetPointer();
+  }
+};
+#else
 
 template <typename TSelfPointer, typename TInputImage, typename TOutputImage, typename TPixel>
 struct Dispatch_1DComplexConjugateToReal_New
@@ -42,8 +57,7 @@ struct Dispatch_1DComplexConjugateToReal_New
   }
 };
 
-
-#ifdef ITK_USE_FFTWD
+#  ifdef ITK_USE_FFTWD
 template <typename TSelfPointer, typename TInputImage, typename TOutputImage>
 struct Dispatch_1DComplexConjugateToReal_New<TSelfPointer, TInputImage, TOutputImage, double>
 {
@@ -53,10 +67,10 @@ struct Dispatch_1DComplexConjugateToReal_New<TSelfPointer, TInputImage, TOutputI
     return FFTWInverse1DFFTImageFilter<TInputImage, TOutputImage>::New().GetPointer();
   }
 };
-#endif
+#  endif
 
 
-#ifdef ITK_USE_FFTWF
+#  ifdef ITK_USE_FFTWF
 template <typename TSelfPointer, typename TInputImage, typename TOutputImage>
 struct Dispatch_1DComplexConjugateToReal_New<TSelfPointer, TInputImage, TOutputImage, float>
 {
@@ -66,8 +80,9 @@ struct Dispatch_1DComplexConjugateToReal_New<TSelfPointer, TInputImage, TOutputI
     return FFTWInverse1DFFTImageFilter<TInputImage, TOutputImage>::New().GetPointer();
   }
 };
-#endif
+#  endif
 
+#endif // ITKUltrasound_USE_clFFT
 
 template <typename TInputImage, typename TOutputImage>
 typename Inverse1DFFTImageFilter<TInputImage, TOutputImage>::Pointer

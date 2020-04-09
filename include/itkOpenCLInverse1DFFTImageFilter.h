@@ -22,7 +22,7 @@
 
 #define __CL_ENABLE_EXCEPTIONS
 #include "CL/cl.hpp"
-//#include "clFFT.h"
+#include "clFFT.h"
 
 namespace itk
 {

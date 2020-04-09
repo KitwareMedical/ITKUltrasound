@@ -43,7 +43,7 @@ if(use_fftw)
     itkFFTWComplexToComplex1DFFTImageFilterTest.cxx
     )
 endif()
-if(ITK_USE_GPU)
+if(ITKUltrasound_USE_clFFT)
   list(APPEND UltrasoundTests
     itkOpenCLComplexToComplex1DFFTImageFilterTest.cxx
     itkOpenCLForward1DFFTImageFilterTest.cxx
@@ -362,7 +362,7 @@ if(use_fftw)
       )
 endif()
 
-if( ITK_USE_GPU )
+if(ITKUltrasound_USE_clFFT)
   itk_add_test(NAME itkOpenCLForward1DFFTImageFilterTest
     COMMAND UltrasoundTestDriver
     --compare

@@ -3,6 +3,20 @@ cmake_minimum_required(VERSION 2.8)
 
 set(Ultrasound_LIBRARIES Ultrasound)
 
+if(NOT ITK_SOURCE_DIR)
+  find_package(ITK REQUIRED)
+  list(APPEND CMAKE_MODULE_PATH ${ITK_CMAKE_DIR})
+endif()
+
+option(ITKUltrasound_USE_clFFT "Build ITKUltrasound 1D FFT filters with clFFT as the back-end." ${ITK_USE_GPU})
+mark_as_advanced(ITKUltrasound_USE_clFFT)
+if(ITKUltrasound_USE_clFFT)
+  find_package(clFFT REQUIRED)
+  list(APPEND Ultrasound_LIBRARIES ${CLFFT_LIBRARIES})
+  set_property(DIRECTORY APPEND PROPERTY INCLUDE_DIRECTORIES ${CLFFT_INCLUDE_DIRS})
+  set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS ITKUltrasound_USE_clFFT)
+endif()
+
 # required VTK version
 find_package(VTK NO_MODULE QUIET)
 set(itkultrasound_use_vtk_default OFF)
@@ -73,8 +87,6 @@ if(ITKUltrasound_USE_VTK)
 endif() # ITKUltrasound_USE_VTK
 
 if(NOT ITK_SOURCE_DIR)
-  find_package(ITK REQUIRED)
-  list(APPEND CMAKE_MODULE_PATH ${ITK_CMAKE_DIR})
   include(ITKModuleExternal)
 else()
   itk_module_impl()

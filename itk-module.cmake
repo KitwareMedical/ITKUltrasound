@@ -2,8 +2,8 @@ set(DOCUMENTATION "The modules provides filters may be particularly useful for
 ultrasound image reconstruction and analysis.")
 
 set(_fft_depends ITKFFT)
-if(ITK_USE_GPU)
-  list(APPEND _fft_depends ITKGPUCommon) # also add OpenCL_FFT, and replace by clFFT
+if(ITKUltrasound_USE_clFFT)
+  list(APPEND _fft_depends ITKGPUCommon)
 endif()
 
 itk_module(Ultrasound
