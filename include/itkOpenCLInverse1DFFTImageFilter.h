@@ -76,7 +76,7 @@ protected:
   {
     if (m_PlanComputed)
     {
-      // clFFT_DestroyPlan(this->m_Plan);
+      clfftDestroyPlan(&this->m_Plan);
       delete[] this->m_InputBuffer;
       delete[] this->m_OutputBuffer;
     }
@@ -92,13 +92,13 @@ protected:
   Legaldim(int n);
 
 private:
-  bool m_PlanComputed;
-  // clFFT_Plan m_Plan;
-  unsigned int        m_LastImageSize;
-  OpenCLComplexType * m_InputBuffer;
-  OpenCLComplexType * m_OutputBuffer;
-  cl::Context *       m_clContext;
-  cl::CommandQueue *  m_clQueue;
+  bool                m_PlanComputed = false;
+  clfftPlanHandle     m_Plan = 0;
+  unsigned int        m_LastImageSize = 0;
+  OpenCLComplexType * m_InputBuffer = nullptr;
+  OpenCLComplexType * m_OutputBuffer = nullptr;
+  cl::Context *       m_clContext = nullptr;
+  cl::CommandQueue *  m_clQueue = nullptr;
 };
 
 } // namespace itk

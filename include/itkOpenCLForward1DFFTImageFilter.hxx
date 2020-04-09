@@ -20,6 +20,7 @@
 
 #include "itkForward1DFFTImageFilter.hxx"
 #include "itkOpenCLForward1DFFTImageFilter.h"
+#include "itkclFFTInitializer.h"
 
 #include <vector>
 
@@ -33,13 +34,10 @@ namespace itk
 
 template <typename TInputImage, typename TOutputImage>
 OpenCLForward1DFFTImageFilter<TInputImage, TOutputImage>::OpenCLForward1DFFTImageFilter()
-  : m_PlanComputed(false)
-  , m_LastImageSize(0)
-  , m_InputBuffer(0)
-  , m_OutputBuffer(0)
 {
   try
   {
+    auto initObject = clFFFInitialization();
     m_clContext = new cl::Context(CL_DEVICE_TYPE_ALL);
     std::vector<cl::Device> devices = m_clContext->getInfo<CL_CONTEXT_DEVICES>();
     if (devices.size() < 1)
@@ -60,12 +58,7 @@ template <typename TInputImage, typename TOutputImage>
 bool
 OpenCLForward1DFFTImageFilter<TInputImage, TOutputImage>::Legaldim(int n)
 {
-  int ifac = 2;
-  for (; n % ifac == 0;)
-  {
-    n /= ifac;
-  }
-  return (n == 1); // return false if decomposition failed
+  return clFFFFactorization(n);
 }
 
 template <typename TInputImage, typename TOutputImage>
@@ -130,17 +123,25 @@ OpenCLForward1DFFTImageFilter<TInputImage, TOutputImage>::GenerateData()
       itkExceptionMacro("Problem allocating memory for internal computations");
     }
     this->m_LastImageSize = totalSize;
-    // clFFT_Dim3 n = { inputSize[this->m_Direction], 1, 1 };
-    // cl_int error_code;
-    // this->m_Plan = clFFT_CreatePlan( (*m_clContext)(),
-    //  n,
-    //  clFFT_1D,
-    //  clFFT_InterleavedComplexFormat,
-    //  &error_code );
-    // if ( ! this->m_Plan || error_code )
-    //  {
-    //  itkExceptionMacro( "Could not create OpenCL FFT Plan." );
-    //  }
+    const size_t n[3] = { inputSize[this->GetDirection()], 1, 1 };
+    clfftStatus  error_code = clfftCreateDefaultPlan(&this->m_Plan, (*m_clContext)(), CLFFT_1D, n);
+    if (!this->m_Plan || error_code)
+    {
+      itkExceptionMacro("Could not create OpenCL FFT Plan.");
+    }
+    error_code = clfftSetResultLocation(this->m_Plan, CLFFT_INPLACE);
+    // a few changes need to get this working:
+    // error_code = clfftSetLayout(this->m_Plan, CLFFT_REAL, CLFFT_HERMITIAN_INTERLEAVED);
+    error_code = clfftSetPlanBatchSize(this->m_Plan, batchSize);
+    if (std::is_same<TPixel, double>::value) // float by default
+    {
+      error_code = clfftSetPlanPrecision(this->m_Plan, CLFFT_DOUBLE);
+    }
+
+    // Scale factor to follow the convention of the other FFT implementations
+    //TPixel normalizationFactor = 2 * inputSize[this->GetDirection()] - 1;
+    //clfftSetPlanScale(this->m_Plan, CLFFT_FORWARD, 1. / normalizationFactor);
+
     this->m_PlanComputed = true;
   }
 
@@ -169,37 +170,34 @@ OpenCLForward1DFFTImageFilter<TInputImage, TOutputImage>::GenerateData()
   try
   {
     // do the transform
-    // cl::Buffer clDataBuffer( *m_clContext,
-    //  CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR,
-    //  totalSize * sizeof( TPixel ) * 2,
-    //  m_InputBuffer
-    //  );
-    // cl_command_queue queue = ( *m_clQueue )();
-    // cl_mem data_in = clDataBuffer();
-    // cl_mem data_out = clDataBuffer();
-    // cl_int err = clFFT_ExecuteInterleaved( queue, this->m_Plan, batchSize, clFFT_Forward, data_in, data_out, 0, NULL,
-    // NULL ); if( err )
-    //  {
-    //  itkExceptionMacro( "Error in clFFT_ExecuteInterleaved(" << err << ")");
-    //  }
-    // m_clQueue->finish();
+    cl::Buffer clDataBuffer(
+      *m_clContext, CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR, totalSize * sizeof(TPixel) * 2, m_InputBuffer);
+    cl_command_queue queue = (*m_clQueue)();
+    cl_mem           data_in = clDataBuffer();
+    cl_mem           data_out = clDataBuffer();
+    clfftStatus      err =
+      clfftEnqueueTransform(this->m_Plan, CLFFT_FORWARD, 1, &queue, 0, nullptr, nullptr, &data_in, &data_out, nullptr);
+    if (err)
+    {
+      itkExceptionMacro("Error in clfftEnqueueTransform(" << err << ")");
+    }
+    // m_clQueue->finish(); // enqueueReadBuffer does an implicit flush due to blocking==CL_TRUE
 
-    // err = m_clQueue->enqueueReadBuffer( clDataBuffer, CL_TRUE, 0, totalSize * sizeof( TPixel ) * 2, m_OutputBuffer );
+    cl_int err2 =
+      m_clQueue->enqueueReadBuffer(clDataBuffer, CL_TRUE, 0, totalSize * sizeof(TPixel) * 2, m_OutputBuffer);
   }
   catch (const cl::Error & e)
   {
     itkExceptionMacro("Error in OpenCL: " << e.what() << "(" << e.err() << ")");
   }
 
-  // Follow the convention of the other FFT implementations.
-  TPixel              normalizationFactor = 2 * inputSize[this->GetDirection()] - 1;
   OpenCLComplexType * outputBufferIt = this->m_OutputBuffer;
   for (outputIt.GoToBegin(); !outputIt.IsAtEnd(); outputIt.NextLine())
   {
     outputIt.GoToBeginOfLine();
     while (!outputIt.IsAtEndOfLine())
     {
-      outputIt.Set(*reinterpret_cast<typename OutputIteratorType::PixelType *>(outputBufferIt) / normalizationFactor);
+      outputIt.Set(*reinterpret_cast<typename OutputIteratorType::PixelType *>(outputBufferIt));
       ++outputIt;
       ++outputBufferIt;
     }
