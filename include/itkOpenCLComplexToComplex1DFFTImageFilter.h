@@ -40,12 +40,12 @@ namespace itk
  */
 
 template <typename TInputImage, typename TOutputImage = TInputImage>
-class ITK_EXPORT OpenCLComplexToComplex1DFFTImageFilter :
-    public ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>
+class ITK_EXPORT OpenCLComplexToComplex1DFFTImageFilter
+  : public ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(OpenCLComplexToComplex1DFFTImageFilter);
-  using TPixel = typename NumericTraits< typename TInputImage::PixelType >::ValueType;
+  using TPixel = typename NumericTraits<typename TInputImage::PixelType>::ValueType;
 
   using Self = OpenCLComplexToComplex1DFFTImageFilter;
   using Superclass = ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>;
@@ -66,43 +66,44 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(OpenCLComplexToComplex1DFFTImageFilter,
-               FFT1DComplexToComplexImageFilter);
+  itkTypeMacro(OpenCLComplexToComplex1DFFTImageFilter, FFT1DComplexToComplexImageFilter);
 
 
 protected:
   OpenCLComplexToComplex1DFFTImageFilter();
   virtual ~OpenCLComplexToComplex1DFFTImageFilter()
   {
-    if(m_PlanComputed)
-      {
-      //clFFT_DestroyPlan(this->m_Plan);
-      delete [] this->m_InputBuffer;
-      delete [] this->m_OutputBuffer;
-      }
+    if (m_PlanComputed)
+    {
+      // clFFT_DestroyPlan(this->m_Plan);
+      delete[] this->m_InputBuffer;
+      delete[] this->m_OutputBuffer;
+    }
     delete m_clQueue;
     delete m_clContext;
   }
 
-  virtual void GenerateData();  // generates output from input
+  virtual void
+  GenerateData(); // generates output from input
 
   ///** Method to check if an array dimension is legal for current OpenCL FFT */
-  bool Legaldim(int n); 
+  bool
+  Legaldim(int n);
+
 private:
   bool m_PlanComputed;
-  //clFFT_Plan m_Plan;
-  unsigned int m_LastImageSize;
-  OpenCLComplexType *m_InputBuffer;
-  OpenCLComplexType *m_OutputBuffer;
-  cl::Context *m_clContext;
-  cl::CommandQueue *m_clQueue;
-
+  // clFFT_Plan m_Plan;
+  unsigned int        m_LastImageSize;
+  OpenCLComplexType * m_InputBuffer;
+  OpenCLComplexType * m_OutputBuffer;
+  cl::Context *       m_clContext;
+  cl::CommandQueue *  m_clQueue;
 };
 
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkOpenCLComplexToComplex1DFFTImageFilter.hxx"
+#  include "itkOpenCLComplexToComplex1DFFTImageFilter.hxx"
 #endif
 
-#endif //itkOpenCLComplexToComplex1DFFTImageFilter_h
+#endif // itkOpenCLComplexToComplex1DFFTImageFilter_h

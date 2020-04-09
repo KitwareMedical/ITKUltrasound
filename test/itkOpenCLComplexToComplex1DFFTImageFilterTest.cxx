@@ -28,71 +28,72 @@
 
 #include "itkOpenCLComplexToComplex1DFFTImageFilter.h"
 
-int itkOpenCLComplexToComplex1DFFTImageFilterTest( int argc, char* argv[] )
+int
+itkOpenCLComplexToComplex1DFFTImageFilterTest(int argc, char * argv[])
 {
-  if( argc < 3 )
-    {
+  if (argc < 3)
+  {
     std::cerr << "Usage: " << argv[0];
     std::cerr << " inputImagePrefix outputImage";
     std::cerr << std::endl;
     return EXIT_FAILURE;
-    }
+  }
 
   using PixelType = float;
   const unsigned int Dimension = 2;
 
-  using ImageType = itk::Image< PixelType, Dimension >;
-  using ComplexImageType = itk::Image< std::complex< PixelType >, Dimension >;
+  using ImageType = itk::Image<PixelType, Dimension>;
+  using ComplexImageType = itk::Image<std::complex<PixelType>, Dimension>;
 
-  using ReaderType = itk::ImageFileReader< ImageType >;
+  using ReaderType = itk::ImageFileReader<ImageType>;
   using FFTType = itk::OpenCLComplexToComplex1DFFTImageFilter<ComplexImageType, ComplexImageType>;
   using JoinFilterType = itk::ComposeImageFilter<ImageType, ComplexImageType>;
-  using ToRealFilterType = itk::ComplexToRealImageFilter< ComplexImageType, ImageType >;
-  using ExtractType = itk::ExtractImageFilter< ImageType, ImageType >;
-  using WriterType = itk::ImageFileWriter< ImageType >;
+  using ToRealFilterType = itk::ComplexToRealImageFilter<ComplexImageType, ImageType>;
+  using ExtractType = itk::ExtractImageFilter<ImageType, ImageType>;
+  using WriterType = itk::ImageFileWriter<ImageType>;
 
-  ReaderType::Pointer readerReal = ReaderType::New();
-  ReaderType::Pointer readerImag = ReaderType::New();
-  FFTType::Pointer    fft    = FFTType::New();
-  JoinFilterType::Pointer joinFilter = JoinFilterType::New();
+  ReaderType::Pointer       readerReal = ReaderType::New();
+  ReaderType::Pointer       readerImag = ReaderType::New();
+  FFTType::Pointer          fft = FFTType::New();
+  JoinFilterType::Pointer   joinFilter = JoinFilterType::New();
   ToRealFilterType::Pointer toReal = ToRealFilterType::New();
-  ExtractType::Pointer extractor = ExtractType::New();
-  WriterType::Pointer writer = WriterType::New();
+  ExtractType::Pointer      extractor = ExtractType::New();
+  WriterType::Pointer       writer = WriterType::New();
 
-  readerReal->SetFileName( std::string( argv[1] ) + "Real128.mhd" );
-  readerImag->SetFileName( std::string( argv[1] ) + "Imaginary128.mhd" );
-  joinFilter->SetInput1( readerReal->GetOutput() );
-  joinFilter->SetInput2( readerImag->GetOutput() );
-  fft->SetTransformDirection( FFTType::INVERSE );
-  fft->SetInput( joinFilter->GetOutput() );
-  fft->SetDirection( 0 );
-  toReal->SetInput( fft->GetOutput() );
-  extractor->SetInput( toReal->GetOutput() );
-  ImageType::RegionType outputRegion;
+  readerReal->SetFileName(std::string(argv[1]) + "Real128.mhd");
+  readerImag->SetFileName(std::string(argv[1]) + "Imaginary128.mhd");
+  joinFilter->SetInput1(readerReal->GetOutput());
+  joinFilter->SetInput2(readerImag->GetOutput());
+  fft->SetTransformDirection(FFTType::INVERSE);
+  fft->SetInput(joinFilter->GetOutput());
+  fft->SetDirection(0);
+  toReal->SetInput(fft->GetOutput());
+  extractor->SetInput(toReal->GetOutput());
+  ImageType::RegionType            outputRegion;
   ImageType::RegionType::IndexType outputIndex;
   outputIndex[0] = 0;
   outputIndex[1] = 0;
-  outputRegion.SetIndex( outputIndex );
+  outputRegion.SetIndex(outputIndex);
   ImageType::RegionType::SizeType outputSize;
   outputSize[0] = 100;
   outputSize[1] = 100;
-  outputRegion.SetSize( outputSize );
-  extractor->SetExtractionRegion( outputRegion );
-  writer->SetInput( extractor->GetOutput() );
-  writer->SetFileName( argv[2] );
+  outputRegion.SetSize(outputSize);
+  extractor->SetExtractionRegion(outputRegion);
+  writer->SetInput(extractor->GetOutput());
+  writer->SetFileName(argv[2]);
 
   try
-    {
+  {
     writer->Update();
-    }
-  catch( itk::ExceptionObject & excep )
-    {
+  }
+  catch (itk::ExceptionObject & excep)
+  {
     std::cerr << "Exception caught !" << std::endl;
     std::cerr << excep << std::endl;
     return EXIT_FAILURE;
-    }
+  }
 
-  fft.Print( std::cout );
+  fft.Print(std::cout);
 
   return EXIT_SUCCESS;
 }

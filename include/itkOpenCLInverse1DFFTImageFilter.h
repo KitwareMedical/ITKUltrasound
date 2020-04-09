@@ -39,13 +39,14 @@ namespace itk
  * \ingroup
  */
 
-template< typename TInputImage, typename TOutputImage=Image< typename NumericTraits< typename TInputImage::PixelType >::ValueType, TInputImage::ImageDimension > >
-class ITK_EXPORT OpenCLInverse1DFFTImageFilter :
-    public Inverse1DFFTImageFilter<TInputImage, TOutputImage>
+template <typename TInputImage,
+          typename TOutputImage =
+            Image<typename NumericTraits<typename TInputImage::PixelType>::ValueType, TInputImage::ImageDimension>>
+class ITK_EXPORT OpenCLInverse1DFFTImageFilter : public Inverse1DFFTImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(OpenCLInverse1DFFTImageFilter);
-  using TPixel = typename NumericTraits< typename TInputImage::PixelType >::ValueType;
+  using TPixel = typename NumericTraits<typename TInputImage::PixelType>::ValueType;
 
   using Self = OpenCLInverse1DFFTImageFilter;
   using Superclass = Inverse1DFFTImageFilter<TInputImage, TOutputImage>;
@@ -66,43 +67,44 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(OpenCLInverse1DFFTImageFilter,
-               FFT1DComplexConjugateToRealImageFilter);
+  itkTypeMacro(OpenCLInverse1DFFTImageFilter, FFT1DComplexConjugateToRealImageFilter);
 
 
 protected:
   OpenCLInverse1DFFTImageFilter();
   virtual ~OpenCLInverse1DFFTImageFilter()
   {
-    if(m_PlanComputed)
-      {
-      //clFFT_DestroyPlan(this->m_Plan);
-      delete [] this->m_InputBuffer;
-      delete [] this->m_OutputBuffer;
-      }
+    if (m_PlanComputed)
+    {
+      // clFFT_DestroyPlan(this->m_Plan);
+      delete[] this->m_InputBuffer;
+      delete[] this->m_OutputBuffer;
+    }
     delete m_clQueue;
     delete m_clContext;
   }
 
-  virtual void GenerateData();  // generates output from input
+  virtual void
+  GenerateData(); // generates output from input
 
   ///** Method to check if an array dimension is legal for current OpenCL FFT */
-  bool Legaldim(int n); 
+  bool
+  Legaldim(int n);
+
 private:
   bool m_PlanComputed;
-  //clFFT_Plan m_Plan;
-  unsigned int m_LastImageSize;
-  OpenCLComplexType *m_InputBuffer;
-  OpenCLComplexType *m_OutputBuffer;
-  cl::Context *m_clContext;
-  cl::CommandQueue *m_clQueue;
-
+  // clFFT_Plan m_Plan;
+  unsigned int        m_LastImageSize;
+  OpenCLComplexType * m_InputBuffer;
+  OpenCLComplexType * m_OutputBuffer;
+  cl::Context *       m_clContext;
+  cl::CommandQueue *  m_clQueue;
 };
 
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkOpenCLInverse1DFFTImageFilter.hxx"
+#  include "itkOpenCLInverse1DFFTImageFilter.hxx"
 #endif
 
-#endif //itkOpenCLInverse1DFFTImageFilter_h
+#endif // itkOpenCLInverse1DFFTImageFilter_h

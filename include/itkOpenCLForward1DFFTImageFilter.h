@@ -39,9 +39,9 @@ namespace itk
  * \ingroup
  */
 
-template< typename TInputImage, typename TOutputImage=Image< std::complex< typename TInputImage::PixelType >, TInputImage::ImageDimension > >
-class ITK_EXPORT OpenCLForward1DFFTImageFilter :
-    public Forward1DFFTImageFilter<TInputImage, TOutputImage>
+template <typename TInputImage,
+          typename TOutputImage = Image<std::complex<typename TInputImage::PixelType>, TInputImage::ImageDimension>>
+class ITK_EXPORT OpenCLForward1DFFTImageFilter : public Forward1DFFTImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(OpenCLForward1DFFTImageFilter);
@@ -66,43 +66,44 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(OpenCLForward1DFFTImageFilter,
-               FFT1DRealToComplexConjugateImageFilter);
+  itkTypeMacro(OpenCLForward1DFFTImageFilter, FFT1DRealToComplexConjugateImageFilter);
 
 
 protected:
   OpenCLForward1DFFTImageFilter();
   virtual ~OpenCLForward1DFFTImageFilter()
   {
-    if(m_PlanComputed)
-      {
-      //clFFT_DestroyPlan(this->m_Plan);
-      delete [] this->m_InputBuffer;
-      delete [] this->m_OutputBuffer;
-      }
+    if (m_PlanComputed)
+    {
+      // clFFT_DestroyPlan(this->m_Plan);
+      delete[] this->m_InputBuffer;
+      delete[] this->m_OutputBuffer;
+    }
     delete m_clQueue;
     delete m_clContext;
   }
 
-  virtual void GenerateData();  // generates output from input
+  virtual void
+  GenerateData(); // generates output from input
 
   ///** Method to check if an array dimension is legal for current OpenCL FFT */
-  bool Legaldim(int n); 
+  bool
+  Legaldim(int n);
+
 private:
   bool m_PlanComputed;
-  //clFFT_Plan m_Plan;
-  unsigned int m_LastImageSize;
-  OpenCLComplexType *m_InputBuffer;
-  OpenCLComplexType *m_OutputBuffer;
-  cl::Context *m_clContext;
-  cl::CommandQueue *m_clQueue;
-
+  // clFFT_Plan m_Plan;
+  unsigned int        m_LastImageSize;
+  OpenCLComplexType * m_InputBuffer;
+  OpenCLComplexType * m_OutputBuffer;
+  cl::Context *       m_clContext;
+  cl::CommandQueue *  m_clQueue;
 };
 
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkOpenCLForward1DFFTImageFilter.hxx"
+#  include "itkOpenCLForward1DFFTImageFilter.hxx"
 #endif
 
-#endif //itkOpenCLForward1DFFTImageFilter_h
+#endif // itkOpenCLForward1DFFTImageFilter_h
