@@ -151,8 +151,8 @@ GenerateData()
     this->m_PlanComputed = true;
     }
 
-  typedef itk::ImageLinearConstIteratorWithIndex< InputImageType >  InputIteratorType;
-  typedef itk::ImageLinearIteratorWithIndex< OutputImageType > OutputIteratorType;
+  using InputIteratorType = itk::ImageLinearConstIteratorWithIndex< InputImageType >;
+  using OutputIteratorType = itk::ImageLinearIteratorWithIndex< OutputImageType >;
   InputIteratorType inputIt( inputPtr, inputPtr->GetRequestedRegion() );
   OutputIteratorType outputIt( outputPtr, outputPtr->GetRequestedRegion() );
 

@@ -151,8 +151,8 @@ GenerateData()
     this->m_PlanComputed = true;
     }
 
-  typedef itk::ImageLinearConstIteratorWithIndex< InputImageType >  InputIteratorType;
-  typedef itk::ImageLinearIteratorWithIndex< OutputImageType > OutputIteratorType;
+  using InputIteratorType = itk::ImageLinearConstIteratorWithIndex< InputImageType >;
+  using OutputIteratorType = itk::ImageLinearIteratorWithIndex< OutputImageType >;
   InputIteratorType inputIt( inputPtr, inputPtr->GetRequestedRegion() );
   OutputIteratorType outputIt( outputPtr, outputPtr->GetRequestedRegion() );
 
@@ -200,7 +200,7 @@ GenerateData()
     }
 
   // Follow the convention of the other FFT implementations.
-  TPixel normalizationFactor = 1. / 2. ;
+  TPixel normalizationFactor = 1. / 2.;
   OpenCLComplexType* outputBufferIt = this->m_OutputBuffer;
   // for every fft line
   for( outputIt.GoToBegin(); !outputIt.IsAtEnd(); outputIt.NextLine() )

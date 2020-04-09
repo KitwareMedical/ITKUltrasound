@@ -47,14 +47,14 @@ public:
   ITK_DISALLOW_COPY_AND_ASSIGN(OpenCLComplexToComplex1DFFTImageFilter);
   using TPixel = typename NumericTraits< typename TInputImage::PixelType >::ValueType;
 
-  typedef OpenCLComplexToComplex1DFFTImageFilter Self;
-  typedef ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage> Superclass;
-  typedef SmartPointer<Self> Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Self = OpenCLComplexToComplex1DFFTImageFilter;
+  using Superclass = ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
-  /** Standard class typedefs.*/
-  typedef typename Superclass::InputImageType InputImageType;
-  typedef typename Superclass::OutputImageType OutputImageType;
+  /** Standard class type alias.*/
+  using InputImageType = typename Superclass::InputImageType;
+  using OutputImageType = typename Superclass::OutputImageType;
 
   struct OpenCLComplexType
   {
