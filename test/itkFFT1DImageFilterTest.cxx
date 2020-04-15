@@ -107,11 +107,11 @@ itkFFT1DImageFilterTest(int argc, char * argv[])
     backend = std::stoi(argv[3]);
   }
 
-  if (backend==0)
+  if (backend == 0)
   {
-  using FFTForwardType = itk::Forward1DFFTImageFilter<ImageType, ComplexImageType>;
-  using FFTInverseType = itk::Inverse1DFFTImageFilter<ComplexImageType, ImageType>;
-  return doTest<FFTForwardType, FFTInverseType>(argv[1], argv[2]);
+    using FFTForwardType = itk::Forward1DFFTImageFilter<ImageType, ComplexImageType>;
+    using FFTInverseType = itk::Inverse1DFFTImageFilter<ComplexImageType, ImageType>;
+    return doTest<FFTForwardType, FFTInverseType>(argv[1], argv[2]);
   }
   else if (backend == 1)
   {

@@ -58,7 +58,7 @@ template <typename TInputImage, typename TOutputImage>
 bool
 OpenCLComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::Legaldim(int n)
 {
-  return clFFFFactorization(n);
+  return clFFTFactorization(n);
 }
 
 template <typename TInputImage, typename TOutputImage>
@@ -107,7 +107,7 @@ OpenCLComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::GenerateData(
     {
       delete[] this->m_InputBuffer;
       delete[] this->m_OutputBuffer;
-      // clFFT_DestroyPlan(this->m_Plan);
+      clfftDestroyPlan(&this->m_Plan);
       this->m_PlanComputed = false;
     }
   }
@@ -129,6 +129,7 @@ OpenCLComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::GenerateData(
     {
       itkExceptionMacro("Could not create OpenCL FFT Plan.");
     }
+
     error_code = clfftSetResultLocation(this->m_Plan, CLFFT_INPLACE);
     error_code = clfftSetPlanBatchSize(this->m_Plan, batchSize);
     if (std::is_same<TPixel, double>::value) // float by default
@@ -136,12 +137,6 @@ OpenCLComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::GenerateData(
       error_code = clfftSetPlanPrecision(this->m_Plan, CLFFT_DOUBLE);
     }
     clfftBakePlan(this->m_Plan, 1, &queue, nullptr, nullptr);
-    // Scale factor to follow the convention of the other FFT implementations
-    //TPixel normalizationFactor = 1. / 2.;
-    //clfftSetPlanScale(this->m_Plan, CLFFT_FORWARD, 1. / normalizationFactor);
-    //normalizationFactor = 2 * inputSize[this->GetDirection()] - 1;
-    //clfftSetPlanScale(this->m_Plan, CLFFT_BACKWARD, 1. / normalizationFactor);
-
     this->m_PlanComputed = true;
   }
 
@@ -161,8 +156,8 @@ OpenCLComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::GenerateData(
     inputIt.GoToBeginOfLine();
     while (!inputIt.IsAtEndOfLine())
     {
-      inputBufferIt->real = inputIt.Get().real();
-      inputBufferIt->imag = inputIt.Get().imag();
+      inputBufferIt->real(inputIt.Get().real());
+      inputBufferIt->imag(inputIt.Get().imag());
       ++inputIt;
       ++inputBufferIt;
     }
@@ -173,21 +168,18 @@ OpenCLComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::GenerateData(
     // do the transform
     cl::Buffer clDataBuffer(
       *m_clContext, CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR, totalSize * sizeof(TPixel) * 2, m_InputBuffer);
-    cl_mem           data_in = clDataBuffer();
-    cl_mem           data_out = clDataBuffer();
+    cl_mem      clPointer = clDataBuffer();
     clfftStatus err;
     if (this->m_TransformDirection == Superclass::DIRECT)
       err = clfftEnqueueTransform(
-        this->m_Plan, CLFFT_FORWARD, 1, &queue, 0, nullptr, nullptr, &data_in, &data_out, nullptr);
+        this->m_Plan, CLFFT_FORWARD, 1, &queue, 0, nullptr, nullptr, &clPointer, nullptr, nullptr);
     else
       err = clfftEnqueueTransform(
-        this->m_Plan, CLFFT_BACKWARD, 1, &queue, 0, nullptr, nullptr, &data_in, &data_out, nullptr);
+        this->m_Plan, CLFFT_BACKWARD, 1, &queue, 0, nullptr, nullptr, &clPointer, nullptr, nullptr);
     if (err)
     {
       itkExceptionMacro("Error in clfftEnqueueTransform(" << err << ")");
     }
-    // m_clQueue->finish(); // enqueueReadBuffer does an implicit flush due to blocking==CL_TRUE
-
     cl_int err2 =
       m_clQueue->enqueueReadBuffer(clDataBuffer, CL_TRUE, 0, totalSize * sizeof(TPixel) * 2, m_OutputBuffer);
   }

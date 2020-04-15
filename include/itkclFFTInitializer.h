@@ -39,6 +39,7 @@ Ultrasound_EXPORT clFFTInitializer &
                   clFFFInitialization();
 
 // does this size factorize using supported prime factors?
-Ultrasound_EXPORT bool clFFFFactorization(size_t dimension);
+Ultrasound_EXPORT bool
+clFFTFactorization(size_t dimension);
 } // namespace itk
 #endif // itkclFFTInitializer_h

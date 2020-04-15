@@ -35,7 +35,7 @@ clFFFInitialization()
 
 
 bool
-clFFFFactorization(size_t dimension)
+clFFTFactorization(size_t dimension)
 {
   const unsigned char primeFactors[] = { 2, 3, 5, 7 };
   for (const auto & factor : primeFactors)

@@ -58,7 +58,7 @@ template <typename TInputImage, typename TOutputImage>
 bool
 OpenCLForward1DFFTImageFilter<TInputImage, TOutputImage>::Legaldim(int n)
 {
-  return clFFFFactorization(n);
+  return clFFTFactorization(n);
 }
 
 template <typename TInputImage, typename TOutputImage>
@@ -85,7 +85,7 @@ OpenCLForward1DFFTImageFilter<TInputImage, TOutputImage>::GenerateData()
   if (!this->Legaldim(vec_size))
   {
     ExceptionObject exception(__FILE__, __LINE__);
-    exception.SetDescription("Illegal Array DIM for FFT");
+    exception.SetDescription("Illegal dimension for FFT: " + std::to_string(vec_size));
     exception.SetLocation(ITK_LOCATION);
     throw exception;
   }
@@ -107,7 +107,7 @@ OpenCLForward1DFFTImageFilter<TInputImage, TOutputImage>::GenerateData()
     {
       delete[] this->m_InputBuffer;
       delete[] this->m_OutputBuffer;
-      // clFFT_DestroyPlan(this->m_Plan);
+      clfftDestroyPlan(&this->m_Plan);
       this->m_PlanComputed = false;
     }
   }
@@ -122,6 +122,7 @@ OpenCLForward1DFFTImageFilter<TInputImage, TOutputImage>::GenerateData()
     {
       itkExceptionMacro("Problem allocating memory for internal computations");
     }
+
     this->m_LastImageSize = totalSize;
     const size_t n[3] = { inputSize[this->GetDirection()], 1, 1 };
     clfftStatus  error_code = clfftCreateDefaultPlan(&this->m_Plan, (*m_clContext)(), CLFFT_1D, n);
@@ -129,19 +130,14 @@ OpenCLForward1DFFTImageFilter<TInputImage, TOutputImage>::GenerateData()
     {
       itkExceptionMacro("Could not create OpenCL FFT Plan.");
     }
+
     error_code = clfftSetResultLocation(this->m_Plan, CLFFT_INPLACE);
-    // a few changes need to get this working:
-    // error_code = clfftSetLayout(this->m_Plan, CLFFT_REAL, CLFFT_HERMITIAN_INTERLEAVED);
     error_code = clfftSetPlanBatchSize(this->m_Plan, batchSize);
     if (std::is_same<TPixel, double>::value) // float by default
     {
       error_code = clfftSetPlanPrecision(this->m_Plan, CLFFT_DOUBLE);
     }
     clfftBakePlan(this->m_Plan, 1, &queue, nullptr, nullptr);
-    // Scale factor to follow the convention of the other FFT implementations
-    //TPixel normalizationFactor = 2 * inputSize[this->GetDirection()] - 1;
-    //clfftSetPlanScale(this->m_Plan, CLFFT_FORWARD, 1. / normalizationFactor);
-
     this->m_PlanComputed = true;
   }
 
@@ -161,7 +157,7 @@ OpenCLForward1DFFTImageFilter<TInputImage, TOutputImage>::GenerateData()
     inputIt.GoToBeginOfLine();
     while (!inputIt.IsAtEndOfLine())
     {
-      inputBufferIt->real = inputIt.Get();
+      inputBufferIt->real(inputIt.Get());
       ++inputIt;
       ++inputBufferIt;
     }
@@ -172,15 +168,13 @@ OpenCLForward1DFFTImageFilter<TInputImage, TOutputImage>::GenerateData()
     // do the transform
     cl::Buffer clDataBuffer(
       *m_clContext, CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR, totalSize * sizeof(TPixel) * 2, m_InputBuffer);
-    cl_mem           data_in = clDataBuffer();
-    cl_mem           data_out = clDataBuffer();
+    cl_mem      clPointer = clDataBuffer();
     clfftStatus err =
-      clfftEnqueueTransform(this->m_Plan, CLFFT_FORWARD, 1, &queue, 0, nullptr, nullptr, &data_in, &data_out, nullptr);
+      clfftEnqueueTransform(this->m_Plan, CLFFT_FORWARD, 1, &queue, 0, nullptr, nullptr, &clPointer, nullptr, nullptr);
     if (err)
     {
       itkExceptionMacro("Error in clfftEnqueueTransform(" << err << ")");
     }
-    // m_clQueue->finish(); // enqueueReadBuffer does an implicit flush due to blocking==CL_TRUE
 
     cl_int err2 =
       m_clQueue->enqueueReadBuffer(clDataBuffer, CL_TRUE, 0, totalSize * sizeof(TPixel) * 2, m_OutputBuffer);

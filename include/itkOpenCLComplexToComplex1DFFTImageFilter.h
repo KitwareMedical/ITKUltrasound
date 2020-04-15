@@ -26,17 +26,19 @@
 
 namespace itk
 {
-/** /class OpenCLComplexToComplex1DFFTImageFilter
- * /brief only do FFT along one dimension using OpenCL_FFT as a backend.
+/** \class OpenCLComplexToComplex1DFFTImageFilter
+ * \brief Do FFT along only one dimension using clFFT library as a backend.
  *
- * The size of the image in the transformed direction must be a power of 2.
+ * The size of the image in the transformed direction
+ * must be a multiple of powers of 2, 3, 5, and 7.
  *
  * There is considerable overhead to generate the FFT plan, which occurs
  * whenever the input image size changes.  Therefore, the throughput benefit
  * will only be realized for large images or many small images of
  * the same size.
  *
- * \ingroup
+ * \ingroup FourierTransform
+ * \ingroup Ultrasound
  */
 
 template <typename TInputImage, typename TOutputImage = TInputImage>
@@ -56,11 +58,7 @@ public:
   using InputImageType = typename Superclass::InputImageType;
   using OutputImageType = typename Superclass::OutputImageType;
 
-  struct OpenCLComplexType
-  {
-    TPixel real;
-    TPixel imag;
-  };
+  using OpenCLComplexType = std::complex<TPixel>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

@@ -8,7 +8,8 @@ if(NOT ITK_SOURCE_DIR)
   list(APPEND CMAKE_MODULE_PATH ${ITK_CMAKE_DIR})
 endif()
 
-option(ITKUltrasound_USE_clFFT "Build ITKUltrasound 1D FFT filters with clFFT as the back-end." ${ITK_USE_GPU})
+option(ITKUltrasound_USE_clFFT "Build ITKUltrasound 1D FFT filters with clFFT as the back-end.\n\
+  https://github.com/clMathLibraries/clFFT" ${ITK_USE_GPU})
 mark_as_advanced(ITKUltrasound_USE_clFFT)
 if(ITKUltrasound_USE_clFFT)
   find_package(clFFT REQUIRED)
