@@ -97,7 +97,7 @@ OpenCLInverse1DFFTImageFilter<TInputImage, TOutputImage>::GenerateData()
   }
   unsigned int totalSize = batchSize;
   batchSize /= outputSize[this->m_Direction];
-
+  cl_command_queue queue = (*m_clQueue)();
 
   if (this->m_PlanComputed) // if we've already computed a plan
   {
@@ -137,7 +137,7 @@ OpenCLInverse1DFFTImageFilter<TInputImage, TOutputImage>::GenerateData()
     {
       error_code = clfftSetPlanPrecision(this->m_Plan, CLFFT_DOUBLE);
     }
-
+    clfftBakePlan(this->m_Plan, 1, &queue, nullptr, nullptr);
     // Scale factor to follow the convention of the other FFT implementations
     //TPixel normalizationFactor = 1. / 2.;
     //clfftSetPlanScale(this->m_Plan, CLFFT_BACKWARD, 1. / normalizationFactor);
@@ -173,7 +173,6 @@ OpenCLInverse1DFFTImageFilter<TInputImage, TOutputImage>::GenerateData()
     // do the transform
     cl::Buffer clDataBuffer(
       *m_clContext, CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR, totalSize * sizeof(TPixel) * 2, m_InputBuffer);
-    cl_command_queue queue = (*m_clQueue)();
     cl_mem           data_in = clDataBuffer();
     cl_mem           data_out = clDataBuffer();
     clfftStatus      err =
