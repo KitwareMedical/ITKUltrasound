@@ -15,14 +15,14 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef itkOpenCLInverse1DFFTImageFilter_h
-#define itkOpenCLInverse1DFFTImageFilter_h
+#if !defined(itkOpenCLInverse1DFFTImageFilter_h) && defined(ITKUltrasound_USE_clFFT)
+#  define itkOpenCLInverse1DFFTImageFilter_h
 
-#include "itkInverse1DFFTImageFilter.h"
+#  include "itkInverse1DFFTImageFilter.h"
 
-#define __CL_ENABLE_EXCEPTIONS
-#include "CL/cl.hpp"
-#include "clFFT.h"
+#  define __CL_ENABLE_EXCEPTIONS
+#  include "CL/cl.hpp"
+#  include "clFFT.h"
 
 namespace itk
 {
@@ -44,7 +44,7 @@ namespace itk
 template <typename TInputImage,
           typename TOutputImage =
             Image<typename NumericTraits<typename TInputImage::PixelType>::ValueType, TInputImage::ImageDimension>>
-class ITK_EXPORT OpenCLInverse1DFFTImageFilter : public Inverse1DFFTImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT OpenCLInverse1DFFTImageFilter : public Inverse1DFFTImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(OpenCLInverse1DFFTImageFilter);
@@ -106,8 +106,8 @@ private:
 
 } // namespace itk
 
-#ifndef ITK_MANUAL_INSTANTIATION
-#  include "itkOpenCLInverse1DFFTImageFilter.hxx"
-#endif
+#  ifndef ITK_MANUAL_INSTANTIATION
+#    include "itkOpenCLInverse1DFFTImageFilter.hxx"
+#  endif
 
 #endif // itkOpenCLInverse1DFFTImageFilter_h

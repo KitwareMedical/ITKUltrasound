@@ -46,6 +46,9 @@ struct Dispatch_1DRealToComplexConjugate_New
 };
 #else
 
+template<typename TInputImage, typename TOutputImage>
+class VnlForward1DFFTImageFilter;
+
 template <typename TSelfPointer, typename TInputImage, typename TOutputImage, typename TPixel>
 struct Dispatch_1DRealToComplexConjugate_New
 {

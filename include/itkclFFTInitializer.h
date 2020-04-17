@@ -15,13 +15,13 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef itkclFFTInitializer_h
-#define itkclFFTInitializer_h
-#include "UltrasoundExport.h"
+#if !defined(itkclFFTInitializer_h) && defined(ITKUltrasound_USE_clFFT)
+#  define itkclFFTInitializer_h
+#  include "UltrasoundExport.h"
 
-#define __CL_ENABLE_EXCEPTIONS
-#include "CL/cl.hpp"
-#include "clFFT.h"
+#  define __CL_ENABLE_EXCEPTIONS
+#  include "CL/cl.hpp"
+#  include "clFFT.h"
 
 namespace itk
 {

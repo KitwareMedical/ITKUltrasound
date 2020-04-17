@@ -3,3 +3,10 @@ include/itkBlockMatchingBayesianRegularizationDisplacementCalculator\.h Comments
 include/itkBlockMatchingMetricImageToDisplacementCalculator\.h Comments Disable
 include/itkBlockMatchingOptimizingInterpolationDisplacementCalculator\.h Comments Disable
 include/itkBlockMatchingParabolicInterpolationDisplacementCalculator\.h Comments Disable
+include/itkclFFTInitializer\.h IfNDefDefine Disable
+include/itkOpenCLComplexToComplex1DFFTImageFilter\.h IfNDefDefine Disable
+include/itkOpenCLComplexToComplex1DFFTImageFilter\.hxx IfNDefDefine Disable
+include/itkOpenCLForward1DFFTImageFilter\.h IfNDefDefine Disable
+include/itkOpenCLForward1DFFTImageFilter\.hxx IfNDefDefine Disable
+include/itkOpenCLInverse1DFFTImageFilter\.h IfNDefDefine Disable
+include/itkOpenCLInverse1DFFTImageFilter\.hxx IfNDefDefine Disable

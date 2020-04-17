@@ -15,14 +15,14 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef itkOpenCLComplexToComplex1DFFTImageFilter_h
-#define itkOpenCLComplexToComplex1DFFTImageFilter_h
+#if !defined(itkOpenCLComplexToComplex1DFFTImageFilter_h) && defined(ITKUltrasound_USE_clFFT)
+#  define itkOpenCLComplexToComplex1DFFTImageFilter_h
 
-#include "itkComplexToComplex1DFFTImageFilter.h"
+#  include "itkComplexToComplex1DFFTImageFilter.h"
 
-#define __CL_ENABLE_EXCEPTIONS
-#include "CL/cl.hpp"
-#include "clFFT.h"
+#  define __CL_ENABLE_EXCEPTIONS
+#  include "CL/cl.hpp"
+#  include "clFFT.h"
 
 namespace itk
 {
@@ -42,7 +42,7 @@ namespace itk
  */
 
 template <typename TInputImage, typename TOutputImage = TInputImage>
-class ITK_EXPORT OpenCLComplexToComplex1DFFTImageFilter
+class ITK_TEMPLATE_EXPORT OpenCLComplexToComplex1DFFTImageFilter
   : public ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>
 {
 public:
@@ -105,8 +105,8 @@ private:
 
 } // namespace itk
 
-#ifndef ITK_MANUAL_INSTANTIATION
-#  include "itkOpenCLComplexToComplex1DFFTImageFilter.hxx"
-#endif
+#  ifndef ITK_MANUAL_INSTANTIATION
+#    include "itkOpenCLComplexToComplex1DFFTImageFilter.hxx"
+#  endif
 
 #endif // itkOpenCLComplexToComplex1DFFTImageFilter_h

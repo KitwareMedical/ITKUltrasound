@@ -10,12 +10,25 @@ endif()
 
 option(ITKUltrasound_USE_clFFT "Build ITKUltrasound 1D FFT filters with clFFT as the back-end.\n\
   https://github.com/clMathLibraries/clFFT" ${ITK_USE_GPU})
-mark_as_advanced(ITKUltrasound_USE_clFFT)
 if(ITKUltrasound_USE_clFFT)
   find_package(clFFT REQUIRED)
   list(APPEND Ultrasound_LIBRARIES ${CLFFT_LIBRARIES})
+
+  list(APPEND Ultrasound_SYSTEM_INCLUDE_DIRS ${CLFFT_INCLUDE_DIRS})
+  get_target_property(Ultrasound_clFFT_LIBRARY_DIRS clFFT LINK_DIRECTORIES)  
+  set(Ultrasound_SYSTEM_LIBRARY_DIRS ${Ultrasound_clFFT_LIBRARY_DIRS})
+
+  set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS ITKUltrasound_USE_clFFT)
+  set(Ultrasound_EXPORT_CODE_INSTALL "
   set_property(DIRECTORY APPEND PROPERTY INCLUDE_DIRECTORIES ${CLFFT_INCLUDE_DIRS})
   set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS ITKUltrasound_USE_clFFT)
+  ")
+  set(Ultrasound_EXPORT_CODE_BUILD "
+  if(NOT ITK_BINARY_DIR)
+    set_property(DIRECTORY APPEND PROPERTY INCLUDE_DIRECTORIES ${CLFFT_INCLUDE_DIRS})
+    set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS ITKUltrasound_USE_clFFT)
+  endif()
+  ")
 endif()
 
 # required VTK version
@@ -55,8 +68,9 @@ if(ITKUltrasound_USE_VTK)
            "" Ultrasound_VTK_INCLUDE_DIRS "${Ultrasound_VTK_INCLUDE_DIRS}")
 
   # Set up the include and library dirs needed for the module
-  set(Ultrasound_SYSTEM_INCLUDE_DIRS ${Ultrasound_VTK_INCLUDE_DIRS})
-  set(Ultrasound_SYSTEM_LIBRARY_DIRS ${Ultrasound_VTK_LIBRARY_DIRS})
+  # Use append syntax to avoid overwriting possible clFFT-related content
+  list(APPEND Ultrasound_SYSTEM_INCLUDE_DIRS ${Ultrasound_VTK_INCLUDE_DIRS})
+  list(APPEND Ultrasound_SYSTEM_LIBRARY_DIRS ${Ultrasound_VTK_LIBRARY_DIRS})
 
   # Add preprocessor definitions needed to use VTK.
   set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS ${Ultrasound_VTK_DEFINITIONS})

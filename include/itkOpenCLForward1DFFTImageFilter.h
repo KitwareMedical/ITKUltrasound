@@ -15,14 +15,14 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef itkOpenCLForward1DFFTImageFilter_h
-#define itkOpenCLForward1DFFTImageFilter_h
+#if !defined(itkOpenCLForward1DFFTImageFilter_h) && defined(ITKUltrasound_USE_clFFT)
+#  define itkOpenCLForward1DFFTImageFilter_h
 
-#include "itkForward1DFFTImageFilter.h"
+#  include "itkForward1DFFTImageFilter.h"
 
-#define __CL_ENABLE_EXCEPTIONS
-#include "CL/cl.hpp"
-#include "clFFT.h"
+#  define __CL_ENABLE_EXCEPTIONS
+#  include "CL/cl.hpp"
+#  include "clFFT.h"
 
 namespace itk
 {
@@ -43,7 +43,7 @@ namespace itk
 
 template <typename TInputImage,
           typename TOutputImage = Image<std::complex<typename TInputImage::PixelType>, TInputImage::ImageDimension>>
-class ITK_EXPORT OpenCLForward1DFFTImageFilter : public Forward1DFFTImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT OpenCLForward1DFFTImageFilter : public Forward1DFFTImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(OpenCLForward1DFFTImageFilter);
@@ -105,8 +105,8 @@ private:
 
 } // namespace itk
 
-#ifndef ITK_MANUAL_INSTANTIATION
-#  include "itkOpenCLForward1DFFTImageFilter.hxx"
-#endif
+#  ifndef ITK_MANUAL_INSTANTIATION
+#    include "itkOpenCLForward1DFFTImageFilter.hxx"
+#  endif
 
 #endif // itkOpenCLForward1DFFTImageFilter_h

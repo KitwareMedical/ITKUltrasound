@@ -15,19 +15,19 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef itkOpenCLInverse1DFFTImageFilter_hxx
-#define itkOpenCLInverse1DFFTImageFilter_hxx
+#if !defined(itkOpenCLInverse1DFFTImageFilter_hxx) && defined(ITKUltrasound_USE_clFFT)
+#  define itkOpenCLInverse1DFFTImageFilter_hxx
 
-#include "itkInverse1DFFTImageFilter.hxx"
-#include "itkOpenCLInverse1DFFTImageFilter.h"
-#include "itkclFFTInitializer.h"
+#  include "itkInverse1DFFTImageFilter.hxx"
+#  include "itkOpenCLInverse1DFFTImageFilter.h"
+#  include "itkclFFTInitializer.h"
 
-#include <vector>
+#  include <vector>
 
-#include "itkIndent.h"
-#include "itkImageLinearConstIteratorWithIndex.h"
-#include "itkImageLinearIteratorWithIndex.h"
-#include "itkMetaDataObject.h"
+#  include "itkIndent.h"
+#  include "itkImageLinearConstIteratorWithIndex.h"
+#  include "itkImageLinearIteratorWithIndex.h"
+#  include "itkMetaDataObject.h"
 
 namespace itk
 {
