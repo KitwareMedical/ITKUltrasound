@@ -81,12 +81,12 @@ public:
 
   using SearchRegionRadiusImageType =
     Image<typename itk::Vector<typename RadiusType::SizeValueType, ImageDimension>, ImageDimension>;
-  typedef typename SearchRegionRadiusImageType::Pointer SearchRegionRadiusImagePointer;
+  using SearchRegionRadiusImagePointer = typename SearchRegionRadiusImageType::Pointer;
 
   /** Type of the filter used to resample the search region images. */
   using SearchRegionRadiusResamplerType =
     VectorResampleIdentityNeumannImageFilter<SearchRegionRadiusImageType, SearchRegionRadiusImageType>;
-  typedef typename SearchRegionRadiusResamplerType::Pointer SearchRegionRadiusResamplerPointer;
+  using SearchRegionRadiusResamplerPointer = typename SearchRegionRadiusResamplerType::Pointer;
 
   /** ScheduleType type alias support. */
   using PyramidScheduleType = typename Superclass::PyramidScheduleType;
@@ -104,7 +104,7 @@ public:
   /** Type of the filter used to resample the deformations. */
   using DisplacementResamplerType =
     VectorResampleIdentityNeumannImageFilter<DisplacementImageType, DisplacementImageType>;
-  typedef typename DisplacementResamplerType::Pointer DisplacementResamplerPointer;
+  using DisplacementResamplerPointer = typename DisplacementResamplerType::Pointer;
 
   /** Types inherited from the DisplacementCalculator superclass. */
   using MetricImageType = typename DisplacementCalculatorSuperclass::MetricImageType;

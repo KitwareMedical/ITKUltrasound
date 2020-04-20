@@ -66,6 +66,13 @@ public:
   /** Set the direction in which the filter is to be applied. */
   itkSetClampMacro(Direction, unsigned int, 0, ImageDimension - 1);
 
+  /** Get the greatest supported prime factor. */
+  virtual SizeValueType
+  GetSizeGreatestPrimeFactor() const
+  {
+    return 2;
+  }
+
 protected:
   Forward1DFFTImageFilter();
   virtual ~Forward1DFFTImageFilter() {}
@@ -86,15 +93,7 @@ private:
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#  ifndef itkVnlForward1DFFTImageFilter_h
-#    ifndef itkVnlForward1DFFTImageFilter_hxx
-#      ifndef itkFFTWForward1DFFTImageFilter_h
-#        ifndef itkFFTWForward1DFFTImageFilter_hxx
-#          include "itkForward1DFFTImageFilter.hxx"
-#        endif
-#      endif
-#    endif
-#  endif
+#  include "itkForward1DFFTImageFilter.hxx"
 #endif
 
 #endif // itkForward1DFFTImageFilter_h

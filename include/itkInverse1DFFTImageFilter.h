@@ -67,6 +67,13 @@ public:
   /** Set the direction in which the filter is to be applied. */
   itkSetClampMacro(Direction, unsigned int, 0, ImageDimension - 1);
 
+  /** Get the greatest supported prime factor. */
+  virtual SizeValueType
+  GetSizeGreatestPrimeFactor() const
+  {
+    return 2;
+  }
+
 protected:
   Inverse1DFFTImageFilter();
   virtual ~Inverse1DFFTImageFilter() {}
@@ -88,15 +95,7 @@ private:
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#  ifndef itkVnlInverse1DFFTImageFilter_h
-#    ifndef itkVnlInverse1DFFTImageFilter_hxx
-#      ifndef itkFFTWInverse1DFFTImageFilter_h
-#        ifndef itkFFTWInverse1DFFTImageFilter_hxx
-#          include "itkInverse1DFFTImageFilter.hxx"
-#        endif
-#      endif
-#    endif
-#  endif
+#  include "itkInverse1DFFTImageFilter.hxx"
 #endif
 
 #endif // itkInverse1DFFTImageFilter_h

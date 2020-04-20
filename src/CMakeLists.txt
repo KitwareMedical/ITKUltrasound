@@ -4,4 +4,8 @@ set(Ultrasound_SRCS
   itkTextProgressBarCommand.cxx
   )
 
+if(ITKUltrasound_USE_clFFT)
+  list(APPEND Ultrasound_SRCS itkclFFTInitializer.cxx)
+endif()
+
 itk_module_add_library(Ultrasound ${Ultrasound_SRCS})

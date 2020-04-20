@@ -73,7 +73,7 @@ public:
 
   /** Type of the interpolator. */
   using InterpolatorType = typename itk::InterpolateImageFunction<MetricImageType, TCoordRep>;
-  typedef typename InterpolatorType::ContinuousIndexType ContinuousIndexType;
+  using ContinuousIndexType = typename InterpolatorType::ContinuousIndexType;
 
   /** Type of the optimizer. */
   using OptimizerType = SingleValuedNonLinearOptimizer;

@@ -64,7 +64,7 @@ public:
   using RegionType = typename MetricImageType::RegionType;
 
   using MetricImageImageType = typename Superclass::MetricImageImageType;
-  typedef typename Superclass::MetricImageImagePointerType MetricImageImagePointerType;
+  using MetricImageImagePointerType = typename Superclass::MetricImageImagePointerType;
   using MetricImageImageIteratorType = ImageRegionIterator<MetricImageImageType>;
 
   using CenterPointsImageType = typename Superclass::CenterPointsImageType;

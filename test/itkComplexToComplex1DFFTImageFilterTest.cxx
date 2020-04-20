@@ -25,46 +25,43 @@
 #include "itkImageFileWriter.h"
 
 #include "itkComplexToComplex1DFFTImageFilter.h"
+#include "itkVnlComplexToComplex1DFFTImageFilter.h"
+#if defined(ITK_USE_FFTWD) || defined(ITK_USE_FFTWF)
+#  include "itkFFTWComplexToComplex1DFFTImageFilter.h"
+#endif
+#if defined(ITKUltrasound_USE_clFFT)
+#  include "itkOpenCLComplexToComplex1DFFTImageFilter.h"
+#endif
 
+template <typename FFTType>
 int
-itkComplexToComplex1DFFTImageFilterTest(int argc, char * argv[])
+doTest(const char * inputImagePrefix, const char * outputImage)
 {
-  if (argc < 3)
-  {
-    std::cerr << "Usage: " << argv[0];
-    std::cerr << " inputImagePrefix outputImage";
-    std::cerr << std::endl;
-    return EXIT_FAILURE;
-  }
-
-  using PixelType = double;
-  const unsigned int Dimension = 2;
-
-  using ImageType = itk::Image<PixelType, Dimension>;
-  using ComplexImageType = itk::Image<std::complex<PixelType>, Dimension>;
+  using ComplexImageType = typename FFTType::InputImageType;
+  using ImageType = itk::Image<typename itk::NumericTraits<typename ComplexImageType::PixelType>::ValueType,
+                               ComplexImageType::ImageDimension>;
 
   using ReaderType = itk::ImageFileReader<ImageType>;
-  using FFTType = itk::ComplexToComplex1DFFTImageFilter<ComplexImageType, ComplexImageType>;
   using JoinFilterType = itk::ComposeImageFilter<ImageType, ComplexImageType>;
   using ToRealFilterType = itk::ComplexToRealImageFilter<ComplexImageType, ImageType>;
   using WriterType = itk::ImageFileWriter<ImageType>;
 
-  ReaderType::Pointer       readerReal = ReaderType::New();
-  ReaderType::Pointer       readerImag = ReaderType::New();
-  FFTType::Pointer          fft = FFTType::New();
-  JoinFilterType::Pointer   joinFilter = JoinFilterType::New();
-  ToRealFilterType::Pointer toReal = ToRealFilterType::New();
-  WriterType::Pointer       writer = WriterType::New();
+  typename ReaderType::Pointer       readerReal = ReaderType::New();
+  typename ReaderType::Pointer       readerImag = ReaderType::New();
+  typename FFTType::Pointer          fft = FFTType::New();
+  typename JoinFilterType::Pointer   joinFilter = JoinFilterType::New();
+  typename ToRealFilterType::Pointer toReal = ToRealFilterType::New();
+  typename WriterType::Pointer       writer = WriterType::New();
 
-  readerReal->SetFileName(std::string(argv[1]) + "RealFull.mhd");
-  readerImag->SetFileName(std::string(argv[1]) + "ImaginaryFull.mhd");
+  readerReal->SetFileName(std::string(inputImagePrefix) + "RealFull.mhd");
+  readerImag->SetFileName(std::string(inputImagePrefix) + "ImaginaryFull.mhd");
   joinFilter->SetInput1(readerReal->GetOutput());
   joinFilter->SetInput2(readerImag->GetOutput());
   fft->SetTransformDirection(FFTType::INVERSE);
   fft->SetInput(joinFilter->GetOutput());
   toReal->SetInput(fft->GetOutput());
   writer->SetInput(toReal->GetOutput());
-  writer->SetFileName(argv[2]);
+  writer->SetFileName(outputImage);
 
   try
   {
@@ -80,4 +77,61 @@ itkComplexToComplex1DFFTImageFilterTest(int argc, char * argv[])
   fft.Print(std::cout);
 
   return EXIT_SUCCESS;
+}
+
+int
+itkComplexToComplex1DFFTImageFilterTest(int argc, char * argv[])
+{
+  if (argc < 3)
+  {
+    std::cerr << "Usage: " << argv[0];
+    std::cerr << " inputImagePrefix outputImage [backend]\n";
+    std::cerr << "backend implementation options:\n";
+    std::cerr << "  0 default\n";
+    std::cerr << "  1 VNL\n";
+    std::cerr << "  2 FFTW\n";
+    std::cerr << "  3 OpenCL via clFFT\n";
+    std::cerr << std::flush;
+    return EXIT_FAILURE;
+  }
+
+  using PixelType = double;
+  const unsigned int Dimension = 2;
+
+  using ImageType = itk::Image<PixelType, Dimension>;
+  using ComplexImageType = itk::Image<std::complex<PixelType>, Dimension>;
+
+  int backend = 0;
+  if (argc > 3)
+  {
+    backend = std::stoi(argv[3]);
+  }
+
+  if (backend == 0)
+  {
+    using FFTInverseType = itk::ComplexToComplex1DFFTImageFilter<ComplexImageType, ComplexImageType>;
+    return doTest<FFTInverseType>(argv[1], argv[2]);
+  }
+  else if (backend == 1)
+  {
+    using FFTInverseType = itk::VnlComplexToComplex1DFFTImageFilter<ComplexImageType, ComplexImageType>;
+    return doTest<FFTInverseType>(argv[1], argv[2]);
+  }
+  else if (backend == 2)
+  {
+#if defined(ITK_USE_FFTWD) || defined(ITK_USE_FFTWF)
+    using FFTInverseType = itk::FFTWComplexToComplex1DFFTImageFilter<ComplexImageType, ComplexImageType>;
+    return doTest<FFTInverseType>(argv[1], argv[2]);
+#endif
+  }
+  else if (backend == 3)
+  {
+#if defined(ITKUltrasound_USE_clFFT)
+    using FFTInverseType = itk::OpenCLComplexToComplex1DFFTImageFilter<ComplexImageType, ComplexImageType>;
+    return doTest<FFTInverseType>(argv[1], argv[2]);
+#endif
+  }
+
+  std::cerr << "Backend " << backend << " (" << argv[3] << ") not implemented" << std::endl;
+  return EXIT_FAILURE;
 }

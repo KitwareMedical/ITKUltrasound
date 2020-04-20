@@ -56,7 +56,7 @@ public:
   using SupportWindowImageType = TSupportWindowImage;
   using OutputImageType = TOutputImage;
 
-  typedef typename DefaultConvertPixelTraits<typename OutputImageType::PixelType>::ComponentType ScalarType;
+  using ScalarType = typename DefaultConvertPixelTraits<typename OutputImageType::PixelType>::ComponentType;
 
   /** Standard class type alias. */
   using Self = Spectra1DImageFilter;

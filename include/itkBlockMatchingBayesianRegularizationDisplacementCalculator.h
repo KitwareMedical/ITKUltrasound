@@ -82,7 +82,7 @@ public:
 
   using MetricImageType = typename Superclass::MetricImageType;
   using MetricImagePointerType = typename Superclass::MetricImagePointerType;
-  typedef typename MetricImageType::ConstPointer MetricImageConstPointerType;
+  using MetricImageConstPointerType = typename MetricImageType::ConstPointer;
 
   using PixelType = typename MetricImageType::PixelType;
   using SpacingType = typename MetricImageType::SpacingType;
@@ -96,7 +96,7 @@ public:
   using CenterPointsImageType = typename Superclass::CenterPointsImageType;
 
   using MetricImageImageType = typename Superclass::MetricImageImageType;
-  typedef typename Superclass::MetricImageImagePointerType MetricImageImagePointerType;
+  using MetricImageImagePointerType = typename Superclass::MetricImageImagePointerType;
   using MetricImageImageIteratorType = typename itk::ImageRegionIterator<MetricImageImageType>;
   using MetricImageImageNeighborhoodIteratorType = NeighborhoodIterator<MetricImageImageType>;
 

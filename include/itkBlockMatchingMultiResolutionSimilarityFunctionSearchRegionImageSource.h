@@ -107,11 +107,11 @@ public:
   using InterpolatorPointerType = typename InterpolatorType::Pointer;
 
   /** Type of the search region image. */
-  typedef typename Superclass::OutputImageType OutputImageType;
-  typedef typename OutputImageType::RegionType OutputRegionType;
+  using OutputImageType = typename Superclass::OutputImageType;
+  using OutputRegionType = typename OutputImageType::RegionType;
   using SearchRegionRadiusImageType =
     Image<typename itk::Vector<typename RadiusType::SizeValueType, ImageDimension>, ImageDimension>;
-  typedef typename SearchRegionRadiusImageType::Pointer SearchRegionRadiusImagePointer;
+  using SearchRegionRadiusImagePointer = typename SearchRegionRadiusImageType::Pointer;
   using SearchRegionRadiusResamplerType =
     VectorResampleIdentityNeumannImageFilter<SearchRegionRadiusImageType, SearchRegionRadiusImageType>;
 

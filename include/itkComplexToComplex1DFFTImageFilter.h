@@ -83,6 +83,13 @@ public:
   /** Set the direction in which the filter is to be applied. */
   itkSetClampMacro(Direction, unsigned int, 0, ImageDimension - 1);
 
+  /** Get the greatest supported prime factor. */
+  virtual SizeValueType
+  GetSizeGreatestPrimeFactor() const
+  {
+    return 2;
+  }
+
 protected:
   ComplexToComplex1DFFTImageFilter();
   virtual ~ComplexToComplex1DFFTImageFilter() {}
@@ -107,15 +114,7 @@ private:
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#  ifndef itkVnlComplexToComplex1DFFTImageFilter_h
-#    ifndef itkVnlComplexToComplex1DFFTImageFilter_hxx
-#      ifndef itkFFTWComplexToComplex1DFFTImageFilter_h
-#        ifndef itkFFTWComplexToComplex1DFFTImageFilter_hxx
-#          include "itkComplexToComplex1DFFTImageFilter.hxx"
-#        endif
-#      endif
-#    endif
-#  endif
+#  include "itkComplexToComplex1DFFTImageFilter.hxx"
 #endif
 
 #endif // itkComplexToComplex1DFFTImageFilter_h

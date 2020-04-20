@@ -94,7 +94,7 @@ public:
   /** Type of the filter used to resample the deformations. */
   using DisplacementResamplerType =
     VectorResampleIdentityNeumannImageFilter<DisplacementImageType, DisplacementImageType>;
-  typedef typename DisplacementResamplerType::Pointer DisplacementResamplerPointer;
+  using DisplacementResamplerPointer = typename DisplacementResamplerType::Pointer;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(MultiResolutionSearchRegionImageSource, ImageSource);

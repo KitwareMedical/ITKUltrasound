@@ -25,42 +25,40 @@
 #include "itkForward1DFFTImageFilter.h"
 #include "itkInverse1DFFTImageFilter.h"
 
-int
-itkFFT1DImageFilterTest(int argc, char * argv[])
-{
-  if (argc < 3)
-  {
-    std::cerr << "Usage: " << argv[0];
-    std::cerr << " inputImage outputImage";
-    std::cerr << std::endl;
-    return EXIT_FAILURE;
-  }
-  const char * inputImage = argv[1];
-  const char * outputImage = argv[2];
+#include "itkVnlForward1DFFTImageFilter.h"
+#include "itkVnlInverse1DFFTImageFilter.h"
+#if defined(ITK_USE_FFTWD) || defined(ITK_USE_FFTWF)
+#  include "itkFFTWForward1DFFTImageFilter.h"
+#  include "itkFFTWInverse1DFFTImageFilter.h"
+#endif
+#if defined(ITKUltrasound_USE_clFFT)
+#  include "itkOpenCLForward1DFFTImageFilter.h"
+#  include "itkOpenCLInverse1DFFTImageFilter.h"
+#endif
 
-  using PixelType = double;
-  const unsigned int Dimension = 2;
+template <typename FFTForwardType, typename FFTInverseType>
+int
+doTest(const char * inputImage, const char * outputImage)
+{
   const unsigned int direction = 1;
 
-  using ImageType = itk::Image<PixelType, Dimension>;
-  using ComplexImageType = itk::Image<std::complex<PixelType>, Dimension>;
+  using ImageType = typename FFTForwardType::InputImageType;
+  using ComplexImageType = typename FFTInverseType::InputImageType;
 
   using ReaderType = itk::ImageFileReader<ImageType>;
-  ReaderType::Pointer reader = ReaderType::New();
+  typename ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName(inputImage);
 
-  using FFTForwardType = itk::Forward1DFFTImageFilter<ImageType, ComplexImageType>;
-  FFTForwardType::Pointer fftForward = FFTForwardType::New();
+  typename FFTForwardType::Pointer fftForward = FFTForwardType::New();
   fftForward->SetInput(reader->GetOutput());
   fftForward->SetDirection(direction);
 
-  using FFTInverseType = itk::Inverse1DFFTImageFilter<ComplexImageType, ImageType>;
-  FFTInverseType::Pointer fftInverse = FFTInverseType::New();
+  typename FFTInverseType::Pointer fftInverse = FFTInverseType::New();
   fftInverse->SetInput(fftForward->GetOutput());
   fftInverse->SetDirection(direction);
 
   using WriterType = itk::ImageFileWriter<ImageType>;
-  WriterType::Pointer writer = WriterType::New();
+  typename WriterType::Pointer writer = WriterType::New();
   writer->SetInput(fftInverse->GetOutput());
   writer->SetFileName(outputImage);
 
@@ -79,4 +77,65 @@ itkFFT1DImageFilterTest(int argc, char * argv[])
   fftInverse.Print(std::cout);
 
   return EXIT_SUCCESS;
+}
+
+int
+itkFFT1DImageFilterTest(int argc, char * argv[])
+{
+  if (argc < 3)
+  {
+    std::cerr << "Usage: " << argv[0];
+    std::cerr << " inputImage outputImage [backend]\n";
+    std::cerr << "backend implementation options:\n";
+    std::cerr << "  0 default\n";
+    std::cerr << "  1 VNL\n";
+    std::cerr << "  2 FFTW\n";
+    std::cerr << "  3 OpenCL via clFFT\n";
+    std::cerr << std::flush;
+    return EXIT_FAILURE;
+  }
+
+  using PixelType = double;
+  const unsigned int Dimension = 2;
+
+  using ImageType = itk::Image<PixelType, Dimension>;
+  using ComplexImageType = itk::Image<std::complex<PixelType>, Dimension>;
+
+  int backend = 0;
+  if (argc > 3)
+  {
+    backend = std::stoi(argv[3]);
+  }
+
+  if (backend == 0)
+  {
+    using FFTForwardType = itk::Forward1DFFTImageFilter<ImageType, ComplexImageType>;
+    using FFTInverseType = itk::Inverse1DFFTImageFilter<ComplexImageType, ImageType>;
+    return doTest<FFTForwardType, FFTInverseType>(argv[1], argv[2]);
+  }
+  else if (backend == 1)
+  {
+    using FFTForwardType = itk::VnlForward1DFFTImageFilter<ImageType, ComplexImageType>;
+    using FFTInverseType = itk::VnlInverse1DFFTImageFilter<ComplexImageType, ImageType>;
+    return doTest<FFTForwardType, FFTInverseType>(argv[1], argv[2]);
+  }
+  else if (backend == 2)
+  {
+#if defined(ITK_USE_FFTWD) || defined(ITK_USE_FFTWF)
+    using FFTForwardType = itk::FFTWForward1DFFTImageFilter<ImageType, ComplexImageType>;
+    using FFTInverseType = itk::FFTWInverse1DFFTImageFilter<ComplexImageType, ImageType>;
+    return doTest<FFTForwardType, FFTInverseType>(argv[1], argv[2]);
+#endif
+  }
+  else if (backend == 3)
+  {
+#if defined(ITKUltrasound_USE_clFFT)
+    using FFTForwardType = itk::OpenCLForward1DFFTImageFilter<ImageType, ComplexImageType>;
+    using FFTInverseType = itk::OpenCLInverse1DFFTImageFilter<ComplexImageType, ImageType>;
+    return doTest<FFTForwardType, FFTInverseType>(argv[1], argv[2]);
+#endif
+  }
+
+  std::cerr << "Backend " << backend << " (" << argv[3] << ") not implemented" << std::endl;
+  return EXIT_FAILURE;
 }
