@@ -58,7 +58,7 @@ template <typename TInputImage, typename TOutputImage>
 bool
 OpenCLInverse1DFFTImageFilter<TInputImage, TOutputImage>::Legaldim(int n)
 {
-  return clFFTFactorization(n);
+  return Math::GreatestPrimeFactor(static_cast<SizeValueType>(n)) <= this->GetSizeGreatestPrimeFactor();
 }
 
 template <typename TInputImage, typename TOutputImage>

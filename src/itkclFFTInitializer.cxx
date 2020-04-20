@@ -25,26 +25,10 @@ clFFTInitializer::clFFTInitializer()
   clfftSetup(&this->m_clFFTdefaults);
 }
 
-
 clFFTInitializer &
 clFFFInitialization()
 {
   static clFFTInitializer clFFTInitializerGlobal;
   return clFFTInitializerGlobal;
-}
-
-
-bool
-clFFTFactorization(size_t dimension)
-{
-  const unsigned char primeFactors[] = { 2, 3, 5, 7 };
-  for (const auto & factor : primeFactors)
-  {
-    while (dimension % factor == 0)
-    {
-      dimension /= factor;
-    }
-  }
-  return (dimension == 1);
 }
 } // namespace itk

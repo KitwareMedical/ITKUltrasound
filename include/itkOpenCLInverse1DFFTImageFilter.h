@@ -67,6 +67,11 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro(OpenCLInverse1DFFTImageFilter, FFT1DComplexConjugateToRealImageFilter);
 
+  SizeValueType
+  GetSizeGreatestPrimeFactor() const override
+  {
+    return 7; // clFFT supports prime factors 2, 3, 5 and 7
+  }
 
 protected:
   OpenCLInverse1DFFTImageFilter();
