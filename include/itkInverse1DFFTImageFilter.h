@@ -95,7 +95,15 @@ private:
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#  include "itkInverse1DFFTImageFilter.hxx"
+#  ifndef itkVnlInverse1DFFTImageFilter_h
+#    ifndef itkVnlInverse1DFFTImageFilter_hxx
+#      ifndef itkFFTWInverse1DFFTImageFilter_h
+#        ifndef itkFFTWInverse1DFFTImageFilter_hxx
+#          include "itkInverse1DFFTImageFilter.hxx"
+#        endif
+#      endif
+#    endif
+#  endif
 #endif
 
 #endif // itkInverse1DFFTImageFilter_h
