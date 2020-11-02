@@ -124,6 +124,10 @@ GetH5TypeSpecialize(float, H5::PredType::NATIVE_FLOAT) GetH5TypeSpecialize(doubl
   {
     return IOComponentEnum::DOUBLE;
   }
+  else if (type == H5::PredType::NATIVE_LDOUBLE)
+  {
+    return IOComponentEnum::LDOUBLE;
+  }
   else if (type == H5::PredType::NATIVE_ULONG)
   {
     if (sizeof(unsigned int) == sizeof(unsigned long))
@@ -178,6 +182,8 @@ ComponentToPredType(IOComponentEnum cType)
       return H5::PredType::NATIVE_FLOAT;
     case IOComponentEnum::DOUBLE:
       return H5::PredType::NATIVE_DOUBLE;
+    case IOComponentEnum::LDOUBLE:
+      return H5::PredType::NATIVE_LDOUBLE;
     case IOComponentEnum::UNKNOWNCOMPONENTTYPE:
       itkGenericExceptionMacro(<< "unsupported IOComponentType" << cType);
   }
@@ -220,6 +226,9 @@ ComponentToString(IOComponentEnum cType)
       break;
     case IOComponentEnum::DOUBLE:
       rval = "DOUBLE";
+      break;
+    case IOComponentEnum::LDOUBLE:
+      rval = "LDOUBLE";
       break;
     default:
       itkGenericExceptionMacro(<< "unsupported IOComponentType" << cType);
