@@ -153,7 +153,6 @@ public:
       const itk::SizeValueType               angles = largestSize[SliceDimension];
       ElevationalSliceAnglesType             elevationalSliceAngles(angles);
       itk::ExposeMetaData<ElevationalSliceAnglesType>(dictionary, "ElevationalSliceAngles", elevationalSliceAngles);
-      typename SliceImageType::PointType sliceOrigin;
       for (unsigned int ii = 0; ii < angles; ++ii)
       {
         typename TransformType::Pointer transform = TransformType::New();
