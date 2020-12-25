@@ -5,7 +5,7 @@ from skbuild import setup
 
 setup(
     name='itk-ultrasound',
-    version='0.2.4',
+    version='0.2.5',
     author='Matthew McCormick',
     author_email='matt.mccormick@kitware.com',
     packages=['itk'],
@@ -41,7 +41,7 @@ setup(
     keywords='ITK InsightToolkit ultrasound imaging',
     url=r'http://www.insight-journal.org/browse/publication/722',
     install_requires=[
-        r'itk>=5.1.1.post1',
+        r'itk>=5.1.2',
         r'itk-bsplinegradient'
     ]
     )
