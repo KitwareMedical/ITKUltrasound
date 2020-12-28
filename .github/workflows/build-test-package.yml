@@ -35,7 +35,6 @@ jobs:
         python-version: 3.7
 
     - name: Install build dependencies
-      if: matrix.os != 'windows-2019'
       run: |
         python -m pip install --upgrade pip
         python -m pip install ninja
@@ -159,7 +158,39 @@ jobs:
     - name: 'Build 🐍 Python 📦 package'
       run: |
         export ITK_PACKAGE_VERSION=${{ matrix.itk-python-git-tag }}
+        git clone https://github.com/InsightSoftwareConsortium/ITKBSplineGradient.git
+        cp ./dockcross-manylinux-download-cache-and-build-module-wheels.sh ./ITKBSplineGradient
+        pushd ITKBSplineGradient
         ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
+        popd
+        cp ITKBSplineGradient/include/* include/
+        ln -s $(pwd)/ITKBSplineGradient/ITKPythonPackage .
+        ln -s $(pwd)/ITKBSplineGradient/tools .
+        git clone https://github.com/InsightSoftwareConsortium/ITKHigherOrderAccurateGradient.git
+        cp ./dockcross-manylinux-download-cache-and-build-module-wheels.sh ./ITKHigherOrderAccurateGradient
+        pushd ITKHigherOrderAccurateGradient
+        ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
+        popd
+        cp ITKHigherOrderAccurateGradient/include/* include/
+        ln -s $(pwd)/ITKHigherOrderAccurateGradient/ITKPythonPackage .
+        ln -s $(pwd)/ITKHigherOrderAccurateGradient/tools .
+        git clone https://github.com/InsightSoftwareConsortium/ITKSplitComponents.git
+        cp ./dockcross-manylinux-download-cache-and-build-module-wheels.sh ./ITKSplitComponents
+        pushd ITKSplitComponents
+        ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
+        popd
+        cp ITKSplitComponents/include/* include/
+        ln -s $(pwd)/ITKSplitComponents/ITKPythonPackage .
+        ln -s $(pwd)/ITKSplitComponents/tools .
+        git clone https://github.com/KitwareMedical/ITKStrain.git
+        cp ./dockcross-manylinux-download-cache-and-build-module-wheels.sh ./ITKStrain
+        pushd ITKStrain
+        ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
+        popd
+        cp ITKStrain/include/* include/
+        ln -s $(pwd)/ITKStrain/ITKPythonPackage .
+        ln -s $(pwd)/ITKStrain/tools .
+        ./ITKPythonPackage/scripts/dockcross-manylinux-build-module-wheels.sh cp${{ matrix.python-version }}
 
     - name: Publish Python package as GitHub Artifact
       uses: actions/upload-artifact@v1
@@ -194,7 +225,31 @@ jobs:
       run: |
         export ITK_PACKAGE_VERSION=${{ matrix.itk-python-git-tag }}
         export MACOSX_DEPLOYMENT_TARGET=10.9
+        git clone https://github.com/InsightSoftwareConsortium/ITKBSplineGradient
+        cp ./macpython-download-cache-and-build-module-wheels.sh ITKBSplineGradient/
+        pushd ITKBSplineGradient
         ./macpython-download-cache-and-build-module-wheels.sh
+        popd
+        cp ITKBSplineGradient/include/* include/
+        git clone https://github.com/InsightSoftwareConsortium/ITKHigherOrderAccurateGradient.git
+        cp ./macpython-download-cache-and-build-module-wheels.sh ./ITKHigherOrderAccurateGradient
+        pushd ITKHigherOrderAccurateGradient
+        ./macpython-download-cache-and-build-module-wheels.sh
+        popd
+        cp ITKHigherOrderAccurateGradient/include/* include/
+        git clone https://github.com/InsightSoftwareConsortium/ITKSplitComponents.git
+        cp ./macpython-download-cache-and-build-module-wheels.sh ./ITKSplitComponents
+        pushd ITKSplitComponents
+        ./macpython-download-cache-and-build-module-wheels.sh
+        popd
+        cp ITKSplitComponents/include/* include/
+        git clone https://github.com/KitwareMedical/ITKStrain.git
+        cp ./macpython-download-cache-and-build-module-wheels.sh ./ITKStrain
+        pushd ITKStrain
+        ./macpython-download-cache-and-build-module-wheels.sh
+        popd
+        cp ITKStrain/include/* include/
+        /Users/Kitware/Dashboards/ITK/ITKPythonPackage/scripts/macpython-build-module-wheels.sh
 
     - name: Publish Python package as GitHub Artifact
       uses: actions/upload-artifact@v1
@@ -236,6 +291,10 @@ jobs:
         7z x doxygen-1.8.11.windows.bin.zip -o/c/P/doxygen -aoa -r
         curl -L "https://data.kitware.com/api/v1/file/5bbf87ba8d777f06b91f27d6/download/grep-win.zip" -o "grep-win.zip"
         7z x grep-win.zip -o/c/P/grep -aoa -r
+        git clone https://github.com/InsightSoftwareConsortium/ITKBSplineGradient.git
+        git clone https://github.com/InsightSoftwareConsortium/ITKHigherOrderAccurateGradient.git
+        git clone https://github.com/InsightSoftwareConsortium/ITKSplitComponents.git
+        git clone https://github.com/KitwareMedical/ITKStrain.git
 
     - name: 'Build 🐍 Python 📦 package'
       shell: cmd
@@ -245,6 +304,22 @@ jobs:
         set PATH="C:\P\grep;%PATH%"
         set CC=cl.exe
         set CXX=cl.exe
+        cd ITKBSplineGradient
+        C:\Python3${{ matrix.python-version-minor }}-x64\python.exe C:\P\IPP\scripts\windows_build_module_wheels.py --py-envs "3${{ matrix.python-version-minor }}-x64" --no-cleanup
+        cd ..
+        copy ITKBSplineGradient/include/* include/
+        cd ITKHigherOrderAccurateGradient
+        C:\Python3${{ matrix.python-version-minor }}-x64\python.exe C:\P\IPP\scripts\windows_build_module_wheels.py --py-envs "3${{ matrix.python-version-minor }}-x64" --no-cleanup
+        cd ..
+        copy ITKHigherOrderAccurateGradient/include/* include/
+        cd ITKSplitComponents
+        C:\Python3${{ matrix.python-version-minor }}-x64\python.exe C:\P\IPP\scripts\windows_build_module_wheels.py --py-envs "3${{ matrix.python-version-minor }}-x64" --no-cleanup
+        cd ..
+        copy ITKSplitComponents/include/* include/
+        cd ITKStrain
+        C:\Python3${{ matrix.python-version-minor }}-x64\python.exe C:\P\IPP\scripts\windows_build_module_wheels.py --py-envs "3${{ matrix.python-version-minor }}-x64" --no-cleanup
+        cd ..
+        copy ITKStrain/include/* include/
         C:\Python3${{ matrix.python-version-minor }}-x64\python.exe C:\P\IPP\scripts\windows_build_module_wheels.py --py-envs "3${{ matrix.python-version-minor }}-x64" --no-cleanup
 
     - name: Publish Python package as GitHub Artifact
