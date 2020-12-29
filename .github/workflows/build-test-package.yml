@@ -2,6 +2,12 @@ name: Build, test, package
 
 on: [push,pull_request]
 
+env:
+  ITKBSplineGradient-git-tag: v0.2.2
+  ITKHigherOrderAccurateGradient-git-tag: 61bb1c51de12b699bbb573460443067868b8f054
+  ITKSplitComponents-git-tag: v2.0.1
+  ITKStrain-git-tag: v0.3.0
+
 jobs:
   build-test-cxx:
     runs-on: ${{ matrix.os }}
@@ -161,6 +167,7 @@ jobs:
         git clone https://github.com/InsightSoftwareConsortium/ITKBSplineGradient.git
         cp ./dockcross-manylinux-download-cache-and-build-module-wheels.sh ./ITKBSplineGradient
         pushd ITKBSplineGradient
+        git checkout ${{env.ITKBSplineGradient-git-tag}}
         ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
         popd
         cp ITKBSplineGradient/include/* include/
@@ -169,6 +176,7 @@ jobs:
         git clone https://github.com/InsightSoftwareConsortium/ITKHigherOrderAccurateGradient.git
         cp ./dockcross-manylinux-download-cache-and-build-module-wheels.sh ./ITKHigherOrderAccurateGradient
         pushd ITKHigherOrderAccurateGradient
+        git checkout ${{env.ITKHigherOrderAccurateGradient-git-tag}}
         ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
         popd
         cp ITKHigherOrderAccurateGradient/include/* include/
@@ -177,6 +185,7 @@ jobs:
         git clone https://github.com/InsightSoftwareConsortium/ITKSplitComponents.git
         cp ./dockcross-manylinux-download-cache-and-build-module-wheels.sh ./ITKSplitComponents
         pushd ITKSplitComponents
+        git checkout ${{env.ITKSplitComponents-git-tag}}
         ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
         popd
         cp ITKSplitComponents/include/* include/
@@ -185,6 +194,7 @@ jobs:
         git clone https://github.com/KitwareMedical/ITKStrain.git
         cp ./dockcross-manylinux-download-cache-and-build-module-wheels.sh ./ITKStrain
         pushd ITKStrain
+        git checkout ${{env.ITKStrain-git-tag}}
         ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
         popd
         cp ITKStrain/include/* include/
@@ -228,24 +238,28 @@ jobs:
         git clone https://github.com/InsightSoftwareConsortium/ITKBSplineGradient
         cp ./macpython-download-cache-and-build-module-wheels.sh ITKBSplineGradient/
         pushd ITKBSplineGradient
+        git checkout ${{env.ITKBSplineGradient-git-tag}}
         ./macpython-download-cache-and-build-module-wheels.sh
         popd
         cp ITKBSplineGradient/include/* include/
         git clone https://github.com/InsightSoftwareConsortium/ITKHigherOrderAccurateGradient.git
         cp ./macpython-download-cache-and-build-module-wheels.sh ./ITKHigherOrderAccurateGradient
         pushd ITKHigherOrderAccurateGradient
+        git checkout ${{env.ITKHigherOrderAccurateGradient-git-tag}}
         ./macpython-download-cache-and-build-module-wheels.sh
         popd
         cp ITKHigherOrderAccurateGradient/include/* include/
         git clone https://github.com/InsightSoftwareConsortium/ITKSplitComponents.git
         cp ./macpython-download-cache-and-build-module-wheels.sh ./ITKSplitComponents
         pushd ITKSplitComponents
+        git checkout ${{env.ITKSplitComponents-git-tag}}
         ./macpython-download-cache-and-build-module-wheels.sh
         popd
         cp ITKSplitComponents/include/* include/
         git clone https://github.com/KitwareMedical/ITKStrain.git
         cp ./macpython-download-cache-and-build-module-wheels.sh ./ITKStrain
         pushd ITKStrain
+        git checkout ${{env.ITKStrain-git-tag}}
         ./macpython-download-cache-and-build-module-wheels.sh
         popd
         cp ITKStrain/include/* include/
@@ -305,18 +319,22 @@ jobs:
         set CC=cl.exe
         set CXX=cl.exe
         cd ITKBSplineGradient
+        "C:\Program Files\Git\bin\git.exe" checkout ${{env.ITKBSplineGradient-git-tag}}
         C:\Python3${{ matrix.python-version-minor }}-x64\python.exe C:\P\IPP\scripts\windows_build_module_wheels.py --py-envs "3${{ matrix.python-version-minor }}-x64" --no-cleanup
         cd ..
         copy ITKBSplineGradient/include/* include/
         cd ITKHigherOrderAccurateGradient
+        "C:\Program Files\Git\bin\git.exe" checkout ${{env.ITKHigherOrderAccurateGradient-git-tag}}
         C:\Python3${{ matrix.python-version-minor }}-x64\python.exe C:\P\IPP\scripts\windows_build_module_wheels.py --py-envs "3${{ matrix.python-version-minor }}-x64" --no-cleanup
         cd ..
         copy ITKHigherOrderAccurateGradient/include/* include/
         cd ITKSplitComponents
+        "C:\Program Files\Git\bin\git.exe" checkout ${{env.ITKSplitComponents-git-tag}}
         C:\Python3${{ matrix.python-version-minor }}-x64\python.exe C:\P\IPP\scripts\windows_build_module_wheels.py --py-envs "3${{ matrix.python-version-minor }}-x64" --no-cleanup
         cd ..
         copy ITKSplitComponents/include/* include/
         cd ITKStrain
+        "C:\Program Files\Git\bin\git.exe" checkout ${{env.ITKStrain-git-tag}}
         C:\Python3${{ matrix.python-version-minor }}-x64\python.exe C:\P\IPP\scripts\windows_build_module_wheels.py --py-envs "3${{ matrix.python-version-minor }}-x64" --no-cleanup
         cd ..
         copy ITKStrain/include/* include/
