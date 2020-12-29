@@ -229,7 +229,7 @@ jobs:
       shell: bash
       run: |
         mv im ../../
-        cd ../../
+        cd ../../im
         curl -L "https://github.com/InsightSoftwareConsortium/ITKPythonBuilds/releases/download/${{ matrix.itk-python-git-tag }}/ITKPythonBuilds-windows.zip" -o "ITKPythonBuilds-windows.zip"
         7z x ITKPythonBuilds-windows.zip -o/c/P -aoa -r
         curl -L "https://data.kitware.com/api/v1/file/5c0ad59d8d777f2179dd3e9c/download" -o "doxygen-1.8.11.windows.bin.zip"
