@@ -42,6 +42,9 @@ setup(
     url=r'http://www.insight-journal.org/browse/publication/722',
     install_requires=[
         r'itk>=5.1.2',
-        r'itk-bsplinegradient'
+        r'itk-bsplinegradient',
+        r'itk-higherorderaccurategradient',
+        r'itk-splitcomponents',
+        r'itk-strain'
     ]
     )
