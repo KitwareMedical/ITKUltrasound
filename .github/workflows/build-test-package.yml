@@ -151,6 +151,8 @@ jobs:
       run: |
         # Workaround for https://github.com/actions/virtual-environments/issues/709
         df -h
+        sudo swapoff -a
+        sudo rm -f /swapfile
         sudo apt-get clean
         sudo rm -rf "/usr/local/share/boost"
         sudo rm -rf "$AGENT_TOOLSDIRECTORY"
@@ -177,29 +179,37 @@ jobs:
         cp ./dockcross-manylinux-download-cache-and-build-module-wheels.sh ./ITKHigherOrderAccurateGradient
         pushd ITKHigherOrderAccurateGradient
         git checkout ${{env.ITKHigherOrderAccurateGradient-git-tag}}
+        mv ../ITKBSplineGradient/doxygen-1.8.11.linux.bin.tar.gz .
+        mv ../ITKBSplineGradient/ITKPythonBuilds-linux.tar.zst .
         ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
         popd
         cp ITKHigherOrderAccurateGradient/include/* include/
-        ln -s $(pwd)/ITKHigherOrderAccurateGradient/ITKPythonPackage .
-        ln -s $(pwd)/ITKHigherOrderAccurateGradient/tools .
+        rm -rf $(pwd)/ITKHigherOrderAccurateGradient/ITKPythonPackage
+        rm -rf $(pwd)/ITKHigherOrderAccurateGradient/tools
         git clone https://github.com/InsightSoftwareConsortium/ITKSplitComponents.git
         cp ./dockcross-manylinux-download-cache-and-build-module-wheels.sh ./ITKSplitComponents
         pushd ITKSplitComponents
         git checkout ${{env.ITKSplitComponents-git-tag}}
+        mv ../ITKHigherOrderAccurateGradient/doxygen-1.8.11.linux.bin.tar.gz .
+        mv ../ITKHigherOrderAccurateGradient/ITKPythonBuilds-linux.tar.zst .
         ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
         popd
         cp ITKSplitComponents/include/* include/
-        ln -s $(pwd)/ITKSplitComponents/ITKPythonPackage .
-        ln -s $(pwd)/ITKSplitComponents/tools .
+        rm -rf $(pwd)/ITKSplitComponents/ITKPythonPackage
+        rm -rf $(pwd)/ITKSplitComponents/tools
         git clone https://github.com/KitwareMedical/ITKStrain.git
         cp ./dockcross-manylinux-download-cache-and-build-module-wheels.sh ./ITKStrain
         pushd ITKStrain
         git checkout ${{env.ITKStrain-git-tag}}
+        mv ../ITKSplitComponents/doxygen-1.8.11.linux.bin.tar.gz .
+        mv ../ITKSplitComponents/ITKPythonBuilds-linux.tar.zst .
         ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
+        rm doxygen-1.8.11.linux.bin.tar.gz
+        rm ITKPythonBuilds-linux.tar.zst
         popd
         cp ITKStrain/include/* include/
-        ln -s $(pwd)/ITKStrain/ITKPythonPackage .
-        ln -s $(pwd)/ITKStrain/tools .
+        rm -rf $(pwd)/ITKStrain/ITKPythonPackage
+        rm -rf $(pwd)/ITKStrain/tools
         ./ITKPythonPackage/scripts/dockcross-manylinux-build-module-wheels.sh cp${{ matrix.python-version }}
 
     - name: Publish Python package as GitHub Artifact
