@@ -273,7 +273,7 @@ jobs:
         ./macpython-download-cache-and-build-module-wheels.sh
         popd
         cp ITKStrain/include/* include/
-        /Users/Kitware/Dashboards/ITK/ITKPythonPackage/scripts/macpython-build-module-wheels.sh
+        ./ITKPythonPackage/scripts/macpython-build-module-wheels.sh
 
     - name: Publish Python package as GitHub Artifact
       uses: actions/upload-artifact@v1
