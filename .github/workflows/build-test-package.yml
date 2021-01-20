@@ -165,6 +165,8 @@ jobs:
 
     - name: 'Build 🐍 Python 📦 package'
       run: |
+        pwd
+        ls -l
         export ITK_PACKAGE_VERSION=${{ matrix.itk-python-git-tag }}
         git clone https://github.com/InsightSoftwareConsortium/ITKBSplineGradient.git
         cp ./dockcross-manylinux-download-cache-and-build-module-wheels.sh ./ITKBSplineGradient
@@ -173,43 +175,40 @@ jobs:
         ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
         popd
         cp ITKBSplineGradient/include/* include/
-        ln -s $(pwd)/ITKBSplineGradient/ITKPythonPackage .
-        ln -s $(pwd)/ITKBSplineGradient/tools .
+        mv ./ITKBSplineGradient/ITKPythonPackage .
+        mv ./ITKBSplineGradient/tools .
         git clone https://github.com/InsightSoftwareConsortium/ITKHigherOrderAccurateGradient.git
         cp ./dockcross-manylinux-download-cache-and-build-module-wheels.sh ./ITKHigherOrderAccurateGradient
         pushd ITKHigherOrderAccurateGradient
         git checkout ${{env.ITKHigherOrderAccurateGradient-git-tag}}
-        mv ../ITKBSplineGradient/doxygen-1.8.11.linux.bin.tar.gz .
-        mv ../ITKBSplineGradient/ITKPythonBuilds-linux.tar.zst .
-        ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
+        rm ../ITKBSplineGradient/doxygen-1.8.11.linux.bin.tar.gz
+        rm ../ITKBSplineGradient/ITKPythonBuilds-linux.tar.zst
+        ln -s ../ITKPythonPackage
+        ln -s ../tools
+        ./ITKPythonPackage/scripts/dockcross-manylinux-build-module-wheels.sh cp${{ matrix.python-version }}
         popd
         cp ITKHigherOrderAccurateGradient/include/* include/
-        rm -rf $(pwd)/ITKHigherOrderAccurateGradient/ITKPythonPackage
-        rm -rf $(pwd)/ITKHigherOrderAccurateGradient/tools
         git clone https://github.com/InsightSoftwareConsortium/ITKSplitComponents.git
         cp ./dockcross-manylinux-download-cache-and-build-module-wheels.sh ./ITKSplitComponents
         pushd ITKSplitComponents
         git checkout ${{env.ITKSplitComponents-git-tag}}
-        mv ../ITKHigherOrderAccurateGradient/doxygen-1.8.11.linux.bin.tar.gz .
-        mv ../ITKHigherOrderAccurateGradient/ITKPythonBuilds-linux.tar.zst .
-        ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
+        ln -s ../ITKPythonPackage
+        ln -s ../tools
+        ./ITKPythonPackage/scripts/dockcross-manylinux-build-module-wheels.sh cp${{ matrix.python-version }}
         popd
         cp ITKSplitComponents/include/* include/
-        rm -rf $(pwd)/ITKSplitComponents/ITKPythonPackage
-        rm -rf $(pwd)/ITKSplitComponents/tools
         git clone https://github.com/KitwareMedical/ITKStrain.git
         cp ./dockcross-manylinux-download-cache-and-build-module-wheels.sh ./ITKStrain
         pushd ITKStrain
         git checkout ${{env.ITKStrain-git-tag}}
-        mv ../ITKSplitComponents/doxygen-1.8.11.linux.bin.tar.gz .
-        mv ../ITKSplitComponents/ITKPythonBuilds-linux.tar.zst .
-        ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
-        rm doxygen-1.8.11.linux.bin.tar.gz
-        rm ITKPythonBuilds-linux.tar.zst
+        ln -s ../ITKPythonPackage
+        ln -s ../tools
+        ./ITKPythonPackage/scripts/dockcross-manylinux-build-module-wheels.sh cp${{ matrix.python-version }}
         popd
         cp ITKStrain/include/* include/
-        rm -rf $(pwd)/ITKStrain/ITKPythonPackage
-        rm -rf $(pwd)/ITKStrain/tools
+        pwd
+        ls -l
+        du -sh ./* | sort -hr | head -n 20
         ./ITKPythonPackage/scripts/dockcross-manylinux-build-module-wheels.sh cp${{ matrix.python-version }}
 
     - name: Publish Python package as GitHub Artifact
@@ -240,6 +239,7 @@ jobs:
       run: |
         curl -L https://raw.githubusercontent.com/InsightSoftwareConsortium/ITKPythonPackage/master/scripts/macpython-download-cache-and-build-module-wheels.sh -O
         chmod u+x macpython-download-cache-and-build-module-wheels.sh
+        git clone https://github.com/InsightSoftwareConsortium/ITKPythonPackage.git
 
     - name: 'Build 🐍 Python 📦 package'
       run: |
