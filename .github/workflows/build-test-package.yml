@@ -250,29 +250,25 @@ jobs:
         popd
         cp ITKBSplineGradient/include/* include/
         rm ./ITKBSplineGradient/ITKPythonBuilds-macosx.tar.zst
-        mv ./ITKBSplineGradient/ITKPythonPackage .
         git clone https://github.com/InsightSoftwareConsortium/ITKHigherOrderAccurateGradient.git
         pushd ITKHigherOrderAccurateGradient
         git checkout ${{env.ITKHigherOrderAccurateGradient-git-tag}}
-        ln -s ../ITKPythonPackage
-        ./ITKPythonPackage/scripts/macpython-build-module-wheels.sh
+        /Users/svc-dashboard/D/P/ITKPythonPackage/scripts/macpython-build-module-wheels.sh
         popd
         cp ITKHigherOrderAccurateGradient/include/* include/
         git clone https://github.com/InsightSoftwareConsortium/ITKSplitComponents.git
         pushd ITKSplitComponents
         git checkout ${{env.ITKSplitComponents-git-tag}}
-        ln -s ../ITKPythonPackage
-        ./ITKPythonPackage/scripts/macpython-build-module-wheels.sh
+        /Users/svc-dashboard/D/P/ITKPythonPackage/scripts/macpython-build-module-wheels.sh
         popd
         cp ITKSplitComponents/include/* include/
         git clone https://github.com/KitwareMedical/ITKStrain.git
         pushd ITKStrain
         git checkout ${{env.ITKStrain-git-tag}}
-        ln -s ../ITKPythonPackage
-        ./ITKPythonPackage/scripts/macpython-build-module-wheels.sh
+        /Users/svc-dashboard/D/P/ITKPythonPackage/scripts/macpython-build-module-wheels.sh
         popd
         cp ITKStrain/include/* include/
-        ./ITKPythonPackage/scripts/macpython-build-module-wheels.sh
+        /Users/svc-dashboard/D/P/ITKPythonPackage/scripts/macpython-build-module-wheels.sh
 
     - name: Publish Python package as GitHub Artifact
       uses: actions/upload-artifact@v1
