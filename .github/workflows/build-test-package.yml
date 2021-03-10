@@ -249,25 +249,27 @@ jobs:
         ./macpython-download-cache-and-build-module-wheels.sh
         popd
         cp ITKBSplineGradient/include/* include/
+        rm ./ITKBSplineGradient/ITKPythonBuilds-macosx.tar.zst
+        mv ./ITKBSplineGradient/ITKPythonPackage .
         git clone https://github.com/InsightSoftwareConsortium/ITKHigherOrderAccurateGradient.git
-        cp ./macpython-download-cache-and-build-module-wheels.sh ./ITKHigherOrderAccurateGradient
         pushd ITKHigherOrderAccurateGradient
         git checkout ${{env.ITKHigherOrderAccurateGradient-git-tag}}
-        ./macpython-download-cache-and-build-module-wheels.sh
+        ln -s ../ITKPythonPackage
+        ./ITKPythonPackage/scripts/macpython-build-module-wheels.sh
         popd
         cp ITKHigherOrderAccurateGradient/include/* include/
         git clone https://github.com/InsightSoftwareConsortium/ITKSplitComponents.git
-        cp ./macpython-download-cache-and-build-module-wheels.sh ./ITKSplitComponents
         pushd ITKSplitComponents
         git checkout ${{env.ITKSplitComponents-git-tag}}
-        ./macpython-download-cache-and-build-module-wheels.sh
+        ln -s ../ITKPythonPackage
+        ./ITKPythonPackage/scripts/macpython-build-module-wheels.sh
         popd
         cp ITKSplitComponents/include/* include/
         git clone https://github.com/KitwareMedical/ITKStrain.git
-        cp ./macpython-download-cache-and-build-module-wheels.sh ./ITKStrain
         pushd ITKStrain
         git checkout ${{env.ITKStrain-git-tag}}
-        ./macpython-download-cache-and-build-module-wheels.sh
+        ln -s ../ITKPythonPackage
+        ./ITKPythonPackage/scripts/macpython-build-module-wheels.sh
         popd
         cp ITKStrain/include/* include/
         ./ITKPythonPackage/scripts/macpython-build-module-wheels.sh
