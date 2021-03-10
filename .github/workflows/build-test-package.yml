@@ -175,21 +175,19 @@ jobs:
         ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
         popd
         cp ITKBSplineGradient/include/* include/
+        rm ./ITKBSplineGradient/doxygen-1.8.11.linux.bin.tar.gz
+        rm ./ITKBSplineGradient/ITKPythonBuilds-linux.tar.zst
         mv ./ITKBSplineGradient/ITKPythonPackage .
         mv ./ITKBSplineGradient/tools .
         git clone https://github.com/InsightSoftwareConsortium/ITKHigherOrderAccurateGradient.git
-        cp ./dockcross-manylinux-download-cache-and-build-module-wheels.sh ./ITKHigherOrderAccurateGradient
         pushd ITKHigherOrderAccurateGradient
         git checkout ${{env.ITKHigherOrderAccurateGradient-git-tag}}
-        rm ../ITKBSplineGradient/doxygen-1.8.11.linux.bin.tar.gz
-        rm ../ITKBSplineGradient/ITKPythonBuilds-linux.tar.zst
         ln -s ../ITKPythonPackage
         ln -s ../tools
         ./ITKPythonPackage/scripts/dockcross-manylinux-build-module-wheels.sh cp${{ matrix.python-version }}
         popd
         cp ITKHigherOrderAccurateGradient/include/* include/
         git clone https://github.com/InsightSoftwareConsortium/ITKSplitComponents.git
-        cp ./dockcross-manylinux-download-cache-and-build-module-wheels.sh ./ITKSplitComponents
         pushd ITKSplitComponents
         git checkout ${{env.ITKSplitComponents-git-tag}}
         ln -s ../ITKPythonPackage
@@ -198,7 +196,6 @@ jobs:
         popd
         cp ITKSplitComponents/include/* include/
         git clone https://github.com/KitwareMedical/ITKStrain.git
-        cp ./dockcross-manylinux-download-cache-and-build-module-wheels.sh ./ITKStrain
         pushd ITKStrain
         git checkout ${{env.ITKStrain-git-tag}}
         ln -s ../ITKPythonPackage
