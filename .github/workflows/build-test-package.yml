@@ -236,7 +236,6 @@ jobs:
       run: |
         curl -L https://raw.githubusercontent.com/InsightSoftwareConsortium/ITKPythonPackage/master/scripts/macpython-download-cache-and-build-module-wheels.sh -O
         chmod u+x macpython-download-cache-and-build-module-wheels.sh
-        git clone https://github.com/InsightSoftwareConsortium/ITKPythonPackage.git
 
     - name: 'Build 🐍 Python 📦 package'
       run: |
