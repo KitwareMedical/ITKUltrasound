@@ -365,10 +365,10 @@ jobs:
       run: |
         ls -R
         for d in */; do
-          mv ${d}/*.whl .
+          mv ${d}/itk_ultrasound*.whl .
         done
         mkdir dist
-        mv *.whl dist/
+        mv itk_ultrasound*.whl dist/
         ls dist
 
     - name: Publish 🐍 Python 📦 package to PyPI
