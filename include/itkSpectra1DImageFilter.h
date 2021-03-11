@@ -27,7 +27,7 @@
 
 #include <utility>
 
-#include "itksys/hash_map.hxx"
+#include <unordered_map>
 
 #include "itkSpectra1DSupportWindowImageFilter.h"
 
@@ -106,7 +106,7 @@ private:
   using Spectra1DSupportWindowFilterType = Spectra1DSupportWindowImageFilter<InputImageType>;
   using FFT1DSizeType = typename Spectra1DSupportWindowFilterType::FFT1DSizeType;
 
-  using LineWindowMapType = itksys::hash_map<FFT1DSizeType, SpectraVectorType>;
+  using LineWindowMapType = std::unordered_map<FFT1DSizeType, SpectraVectorType>;
 
   struct PerThreadData
   {

@@ -2,6 +2,12 @@ name: Build, test, package
 
 on: [push,pull_request]
 
+env:
+  ITKBSplineGradient-git-tag: 591ac478731ccc73afd538dc7225363581d2a6f7
+  ITKHigherOrderAccurateGradient-git-tag: 8658e1531c83aafa3752cf39b3df403db8db5086
+  ITKSplitComponents-git-tag: f992cce502c642a696e23740e5310c386ea617ee
+  ITKStrain-git-tag: fba02d89ceeb6f526045c91a7b95ca33a253376a
+
 jobs:
   build-test-cxx:
     runs-on: ${{ matrix.os }}
@@ -13,17 +19,17 @@ jobs:
           - os: ubuntu-18.04
             c-compiler: "gcc"
             cxx-compiler: "g++"
-            itk-git-tag: "v5.1.1"
+            itk-git-tag: "v5.2rc03"
             cmake-build-type: "MinSizeRel"
           - os: windows-2019
             c-compiler: "cl.exe"
             cxx-compiler: "cl.exe"
-            itk-git-tag: "v5.1.1"
+            itk-git-tag: "v5.2rc03"
             cmake-build-type: "Release"
           - os: macos-10.15
             c-compiler: "clang"
             cxx-compiler: "clang++"
-            itk-git-tag: "v5.1.1"
+            itk-git-tag: "v5.2rc03"
             cmake-build-type: "MinSizeRel"
 
     steps:
@@ -35,10 +41,12 @@ jobs:
         python-version: 3.7
 
     - name: Install build dependencies
-      if: matrix.os != 'windows-2019'
       run: |
         python -m pip install --upgrade pip
         python -m pip install ninja
+
+    - name: Get specific version of CMake, Ninja
+      uses: lukka/get-cmake@v3.18.3
 
     - name: Download ITK
       run: |
@@ -101,6 +109,9 @@ jobs:
         set(dashboard_no_clean 1)
         set(ENV{CC} ${{ matrix.c-compiler }})
         set(ENV{CXX} ${{ matrix.cxx-compiler }})
+        if(WIN32)
+          set(ENV{PATH} "\${CTEST_DASHBOARD_ROOT}/ITK-build/bin;\$ENV{PATH}")
+        endif()
         set(dashboard_cache "
         ITK_DIR:PATH=\${CTEST_DASHBOARD_ROOT}/ITK-b
         BUILD_TESTING:BOOL=ON
@@ -129,9 +140,9 @@ jobs:
     strategy:
       max-parallel: 2
       matrix:
-        python-version: [36, 37, 38]
+        python-version: [36, 37, 38, 39]
         include:
-          - itk-python-git-tag: "v5.1.1.post1"
+          - itk-python-git-tag: "v5.2rc03"
 
     steps:
     - uses: actions/checkout@v2
@@ -140,6 +151,8 @@ jobs:
       run: |
         # Workaround for https://github.com/actions/virtual-environments/issues/709
         df -h
+        sudo swapoff -a
+        sudo rm -f /swapfile
         sudo apt-get clean
         sudo rm -rf "/usr/local/share/boost"
         sudo rm -rf "$AGENT_TOOLSDIRECTORY"
@@ -152,8 +165,48 @@ jobs:
 
     - name: 'Build 🐍 Python 📦 package'
       run: |
+        pwd
+        ls -l
         export ITK_PACKAGE_VERSION=${{ matrix.itk-python-git-tag }}
+        git clone https://github.com/InsightSoftwareConsortium/ITKBSplineGradient.git
+        cp ./dockcross-manylinux-download-cache-and-build-module-wheels.sh ./ITKBSplineGradient
+        pushd ITKBSplineGradient
+        git checkout ${{env.ITKBSplineGradient-git-tag}}
         ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
+        popd
+        cp ITKBSplineGradient/include/* include/
+        rm ./ITKBSplineGradient/doxygen-1.8.11.linux.bin.tar.gz
+        rm ./ITKBSplineGradient/ITKPythonBuilds-linux.tar.zst
+        mv ./ITKBSplineGradient/ITKPythonPackage .
+        mv ./ITKBSplineGradient/tools .
+        git clone https://github.com/InsightSoftwareConsortium/ITKHigherOrderAccurateGradient.git
+        pushd ITKHigherOrderAccurateGradient
+        git checkout ${{env.ITKHigherOrderAccurateGradient-git-tag}}
+        ln -s ../ITKPythonPackage
+        ln -s ../tools
+        ./ITKPythonPackage/scripts/dockcross-manylinux-build-module-wheels.sh cp${{ matrix.python-version }}
+        popd
+        cp ITKHigherOrderAccurateGradient/include/* include/
+        git clone https://github.com/InsightSoftwareConsortium/ITKSplitComponents.git
+        pushd ITKSplitComponents
+        git checkout ${{env.ITKSplitComponents-git-tag}}
+        ln -s ../ITKPythonPackage
+        ln -s ../tools
+        ./ITKPythonPackage/scripts/dockcross-manylinux-build-module-wheels.sh cp${{ matrix.python-version }}
+        popd
+        cp ITKSplitComponents/include/* include/
+        git clone https://github.com/KitwareMedical/ITKStrain.git
+        pushd ITKStrain
+        git checkout ${{env.ITKStrain-git-tag}}
+        ln -s ../ITKPythonPackage
+        ln -s ../tools
+        ./ITKPythonPackage/scripts/dockcross-manylinux-build-module-wheels.sh cp${{ matrix.python-version }}
+        popd
+        cp ITKStrain/include/* include/
+        pwd
+        ls -l
+        du -sh ./* | sort -hr | head -n 20
+        ./ITKPythonPackage/scripts/dockcross-manylinux-build-module-wheels.sh cp${{ matrix.python-version }}
 
     - name: Publish Python package as GitHub Artifact
       uses: actions/upload-artifact@v1
@@ -167,10 +220,17 @@ jobs:
       max-parallel: 2
       matrix:
         include:
-          - itk-python-git-tag: "v5.1.1.post1"
+          - itk-python-git-tag: "v5.2rc03"
 
     steps:
     - uses: actions/checkout@v2
+
+    - name: 'Specific XCode version'
+      run: |
+        sudo xcode-select -s "/Applications/Xcode_11.7.app"
+
+    - name: Get specific version of CMake, Ninja
+      uses: lukka/get-cmake@v3.18.3
 
     - name: 'Fetch build script'
       run: |
@@ -181,7 +241,33 @@ jobs:
       run: |
         export ITK_PACKAGE_VERSION=${{ matrix.itk-python-git-tag }}
         export MACOSX_DEPLOYMENT_TARGET=10.9
+        git clone https://github.com/InsightSoftwareConsortium/ITKBSplineGradient
+        cp ./macpython-download-cache-and-build-module-wheels.sh ITKBSplineGradient/
+        pushd ITKBSplineGradient
+        git checkout ${{env.ITKBSplineGradient-git-tag}}
         ./macpython-download-cache-and-build-module-wheels.sh
+        popd
+        cp ITKBSplineGradient/include/* include/
+        rm ./ITKBSplineGradient/ITKPythonBuilds-macosx.tar.zst
+        git clone https://github.com/InsightSoftwareConsortium/ITKHigherOrderAccurateGradient.git
+        pushd ITKHigherOrderAccurateGradient
+        git checkout ${{env.ITKHigherOrderAccurateGradient-git-tag}}
+        /Users/svc-dashboard/D/P/ITKPythonPackage/scripts/macpython-build-module-wheels.sh
+        popd
+        cp ITKHigherOrderAccurateGradient/include/* include/
+        git clone https://github.com/InsightSoftwareConsortium/ITKSplitComponents.git
+        pushd ITKSplitComponents
+        git checkout ${{env.ITKSplitComponents-git-tag}}
+        /Users/svc-dashboard/D/P/ITKPythonPackage/scripts/macpython-build-module-wheels.sh
+        popd
+        cp ITKSplitComponents/include/* include/
+        git clone https://github.com/KitwareMedical/ITKStrain.git
+        pushd ITKStrain
+        git checkout ${{env.ITKStrain-git-tag}}
+        /Users/svc-dashboard/D/P/ITKPythonPackage/scripts/macpython-build-module-wheels.sh
+        popd
+        cp ITKStrain/include/* include/
+        /Users/svc-dashboard/D/P/ITKPythonPackage/scripts/macpython-build-module-wheels.sh
 
     - name: Publish Python package as GitHub Artifact
       uses: actions/upload-artifact@v1
@@ -194,11 +280,14 @@ jobs:
     strategy:
       max-parallel: 2
       matrix:
-        python-version-minor: [6, 7, 8]
+        python-version-minor: [6, 7, 8, 9]
         include:
-          - itk-python-git-tag: "v5.1.1.post1"
+          - itk-python-git-tag: "v5.2rc03"
 
     steps:
+    - name: Get specific version of CMake, Ninja
+      uses: lukka/get-cmake@v3.18.3
+
     - uses: actions/checkout@v2
       with:
         path: "im"
@@ -213,13 +302,17 @@ jobs:
       shell: bash
       run: |
         mv im ../../
-        cd ../../
+        cd ../../im
         curl -L "https://github.com/InsightSoftwareConsortium/ITKPythonBuilds/releases/download/${{ matrix.itk-python-git-tag }}/ITKPythonBuilds-windows.zip" -o "ITKPythonBuilds-windows.zip"
         7z x ITKPythonBuilds-windows.zip -o/c/P -aoa -r
         curl -L "https://data.kitware.com/api/v1/file/5c0ad59d8d777f2179dd3e9c/download" -o "doxygen-1.8.11.windows.bin.zip"
         7z x doxygen-1.8.11.windows.bin.zip -o/c/P/doxygen -aoa -r
         curl -L "https://data.kitware.com/api/v1/file/5bbf87ba8d777f06b91f27d6/download/grep-win.zip" -o "grep-win.zip"
         7z x grep-win.zip -o/c/P/grep -aoa -r
+        git clone https://github.com/InsightSoftwareConsortium/ITKBSplineGradient.git
+        git clone https://github.com/InsightSoftwareConsortium/ITKHigherOrderAccurateGradient.git
+        git clone https://github.com/InsightSoftwareConsortium/ITKSplitComponents.git
+        git clone https://github.com/KitwareMedical/ITKStrain.git
 
     - name: 'Build 🐍 Python 📦 package'
       shell: cmd
@@ -229,12 +322,32 @@ jobs:
         set PATH="C:\P\grep;%PATH%"
         set CC=cl.exe
         set CXX=cl.exe
+        cd ITKBSplineGradient
+        "C:\Program Files\Git\bin\git.exe" checkout ${{env.ITKBSplineGradient-git-tag}}
+        C:\Python3${{ matrix.python-version-minor }}-x64\python.exe C:\P\IPP\scripts\windows_build_module_wheels.py --py-envs "3${{ matrix.python-version-minor }}-x64" --no-cleanup
+        cd ..
+        copy ITKBSplineGradient/include/* include/
+        cd ITKHigherOrderAccurateGradient
+        "C:\Program Files\Git\bin\git.exe" checkout ${{env.ITKHigherOrderAccurateGradient-git-tag}}
+        C:\Python3${{ matrix.python-version-minor }}-x64\python.exe C:\P\IPP\scripts\windows_build_module_wheels.py --py-envs "3${{ matrix.python-version-minor }}-x64" --no-cleanup
+        cd ..
+        copy ITKHigherOrderAccurateGradient/include/* include/
+        cd ITKSplitComponents
+        "C:\Program Files\Git\bin\git.exe" checkout ${{env.ITKSplitComponents-git-tag}}
+        C:\Python3${{ matrix.python-version-minor }}-x64\python.exe C:\P\IPP\scripts\windows_build_module_wheels.py --py-envs "3${{ matrix.python-version-minor }}-x64" --no-cleanup
+        cd ..
+        copy ITKSplitComponents/include/* include/
+        cd ITKStrain
+        "C:\Program Files\Git\bin\git.exe" checkout ${{env.ITKStrain-git-tag}}
+        C:\Python3${{ matrix.python-version-minor }}-x64\python.exe C:\P\IPP\scripts\windows_build_module_wheels.py --py-envs "3${{ matrix.python-version-minor }}-x64" --no-cleanup
+        cd ..
+        copy ITKStrain/include/* include/
         C:\Python3${{ matrix.python-version-minor }}-x64\python.exe C:\P\IPP\scripts\windows_build_module_wheels.py --py-envs "3${{ matrix.python-version-minor }}-x64" --no-cleanup
 
     - name: Publish Python package as GitHub Artifact
       uses: actions/upload-artifact@v1
       with:
-        name: WindowWheel3.${{ matrix.python-version-minor }}
+        name: WindowsWheel3.${{ matrix.python-version-minor }}
         path: ../../im/dist
 
   publish-python-packages-to-pypi:
