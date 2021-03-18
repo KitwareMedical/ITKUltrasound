@@ -5,7 +5,7 @@ from skbuild import setup
 
 setup(
     name='itk-ultrasound',
-    version='0.3',
+    version='0.3.1',
     author='Matthew McCormick',
     author_email='matt.mccormick@kitware.com',
     packages=['itk'],
@@ -42,9 +42,9 @@ setup(
     url=r'http://www.insight-journal.org/browse/publication/722',
     install_requires=[
         r'itk>=5.2rc3',
-        r'itk-bsplinegradient',
-        r'itk-higherorderaccurategradient',
-        r'itk-splitcomponents',
-        r'itk-strain'
+        r'itk-bsplinegradient>=0.2.3',
+        r'itk-higherorderaccurategradient>=1.0.8',
+        r'itk-splitcomponents>=2.0.3',
+        r'itk-strain>=0.3.1',
     ]
     )
