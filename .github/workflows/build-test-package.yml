@@ -3,10 +3,10 @@ name: Build, test, package
 on: [push,pull_request]
 
 env:
-  ITKBSplineGradient-git-tag: 591ac478731ccc73afd538dc7225363581d2a6f7
-  ITKHigherOrderAccurateGradient-git-tag: 8658e1531c83aafa3752cf39b3df403db8db5086
-  ITKSplitComponents-git-tag: f992cce502c642a696e23740e5310c386ea617ee
-  ITKStrain-git-tag: fba02d89ceeb6f526045c91a7b95ca33a253376a
+  ITKBSplineGradient-git-tag: v0.2.3
+  ITKHigherOrderAccurateGradient-git-tag: v1.0.8
+  ITKSplitComponents-git-tag: v2.0.3
+  ITKStrain-git-tag: v0.3.1
 
 jobs:
   build-test-cxx:
@@ -19,17 +19,17 @@ jobs:
           - os: ubuntu-18.04
             c-compiler: "gcc"
             cxx-compiler: "g++"
-            itk-git-tag: "v5.2rc03"
+            itk-git-tag: "c7586a12e8538c59041c480880ff0ea15c9550c2"
             cmake-build-type: "MinSizeRel"
           - os: windows-2019
             c-compiler: "cl.exe"
             cxx-compiler: "cl.exe"
-            itk-git-tag: "v5.2rc03"
+            itk-git-tag: "c7586a12e8538c59041c480880ff0ea15c9550c2"
             cmake-build-type: "Release"
           - os: macos-10.15
             c-compiler: "clang"
             cxx-compiler: "clang++"
-            itk-git-tag: "v5.2rc03"
+            itk-git-tag: "c7586a12e8538c59041c480880ff0ea15c9550c2"
             cmake-build-type: "MinSizeRel"
 
     steps:
