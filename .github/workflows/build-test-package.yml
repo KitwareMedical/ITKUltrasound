@@ -289,10 +289,10 @@ jobs:
         path: "im"
 
     - name: 'Install Python'
-      run: |
-        $pythonArch = "64"
-        $pythonVersion = "3.${{ matrix.python-version-minor }}"
-        iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/scikit-build/scikit-ci-addons/master/windows/install-python.ps1'))
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.${{ matrix.python-version-minor }}'
+        architecture: 'x64'
 
     - name: 'Fetch build dependencies'
       shell: bash
