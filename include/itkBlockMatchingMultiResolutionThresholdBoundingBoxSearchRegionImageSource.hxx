@@ -24,6 +24,7 @@
 #include "itkImageRegionConstIterator.h"
 #include "itkImageRegionIteratorWithIndex.h"
 #include "itkResampleImageFilter.h"
+#include "itkNearestNeighborExtrapolateImageFunction.h"
 
 namespace itk
 {
@@ -43,6 +44,11 @@ MultiResolutionThresholdBoundingBoxSearchRegionImageSource<
 
   m_DisplacementResampler = DisplacementResamplerType::New();
   m_SearchRegionRadiusResampler = SearchRegionRadiusResamplerType::New();
+
+  using ExtrapolatorType = NearestNeighborExtrapolateImageFunction<DisplacementImageType, SpacePrecisionType>;
+  typename ExtrapolatorType::Pointer nnExtrapolator = ExtrapolatorType::New();
+  m_DisplacementResampler->SetExtrapolator(nnExtrapolator);
+  m_SearchRegionRadiusResampler->SetExtrapolator(nnExtrapolator);
 
   // Sane default.
   m_MinimumSearchRegionRadius.Fill(1);

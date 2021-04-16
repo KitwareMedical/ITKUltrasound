@@ -25,6 +25,7 @@
 #include "itkImageRegionConstIterator.h"
 #include "itkImageRegionIterator.h"
 #include "itkLinearInterpolateImageFunction.h"
+#include "itkNearestNeighborExtrapolateImageFunction.h"
 
 namespace itk
 {
@@ -50,6 +51,10 @@ MultiResolutionSimilarityFunctionSearchRegionImageSource<
   this->m_SearchRegionRadiusImage = nullptr;
 
   m_SearchRegionRadiusResampler = SearchRegionRadiusResamplerType::New();
+
+  using ExtrapolatorType = NearestNeighborExtrapolateImageFunction<DisplacementImageType, SpacePrecisionType>;
+  typename ExtrapolatorType::Pointer nnExtrapolator = ExtrapolatorType::New();
+  m_SearchRegionRadiusResampler->SetExtrapolator(nnExtrapolator);
 
   // Sane default.
   m_MinimumSearchRegionRadiusFactor.Fill(1.0);
