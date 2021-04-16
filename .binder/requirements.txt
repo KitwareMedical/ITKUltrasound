@@ -2,3 +2,8 @@ itk-ultrasound>=0.3.2
 itkwidgets
 matplotlib
 requests
+zarr
+xarray
+pandas
+seaborn
+sklearn
