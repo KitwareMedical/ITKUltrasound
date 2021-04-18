@@ -19,6 +19,7 @@
 #define itkBlockMatchingMultiResolutionSearchRegionImageSource_hxx
 
 #include "itkBlockMatchingMultiResolutionSearchRegionImageSource.h"
+#include "itkNearestNeighborExtrapolateImageFunction.h"
 
 namespace itk
 {
@@ -33,6 +34,10 @@ MultiResolutionSearchRegionImageSource<TFixedImage, TMovingImage, TDisplacementI
   m_PreviousDisplacements = DisplacementImageType::New();
   m_DisplacementDuplicator = DisplacementDuplicatorType::New();
   m_DisplacementResampler = DisplacementResamplerType::New();
+
+  using ExtrapolatorType = NearestNeighborExtrapolateImageFunction<DisplacementImageType, SpacePrecisionType>;
+  typename ExtrapolatorType::Pointer nnExtrapolator = ExtrapolatorType::New();
+  m_DisplacementResampler->SetExtrapolator(nnExtrapolator);
 }
 
 

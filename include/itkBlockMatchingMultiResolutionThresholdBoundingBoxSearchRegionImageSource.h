@@ -19,7 +19,7 @@
 #define itkBlockMatchingMultiResolutionThresholdBoundingBoxSearchRegionImageSource_h
 
 #include "itkArray.h"
-#include "itkVectorResampleIdentityNeumannImageFilter.h"
+#include "itkResampleImageFilter.h"
 #include "itkVector.h"
 
 #include "itkBlockMatchingMultiResolutionSearchRegionImageSource.h"
@@ -84,8 +84,7 @@ public:
   using SearchRegionRadiusImagePointer = typename SearchRegionRadiusImageType::Pointer;
 
   /** Type of the filter used to resample the search region images. */
-  using SearchRegionRadiusResamplerType =
-    VectorResampleIdentityNeumannImageFilter<SearchRegionRadiusImageType, SearchRegionRadiusImageType>;
+  using SearchRegionRadiusResamplerType = ResampleImageFilter<SearchRegionRadiusImageType, SearchRegionRadiusImageType>;
   using SearchRegionRadiusResamplerPointer = typename SearchRegionRadiusResamplerType::Pointer;
 
   /** ScheduleType type alias support. */
@@ -102,8 +101,7 @@ public:
   using DisplacementImageType = TDisplacementImage;
 
   /** Type of the filter used to resample the deformations. */
-  using DisplacementResamplerType =
-    VectorResampleIdentityNeumannImageFilter<DisplacementImageType, DisplacementImageType>;
+  using DisplacementResamplerType = ResampleImageFilter<DisplacementImageType, DisplacementImageType>;
   using DisplacementResamplerPointer = typename DisplacementResamplerType::Pointer;
 
   /** Types inherited from the DisplacementCalculator superclass. */

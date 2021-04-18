@@ -25,7 +25,7 @@
 #include "itkBlockMatchingMultiResolutionSearchRegionImageSource.h"
 #include "itkBlockMatchingMetricImageToDisplacementCalculator.h"
 
-#include "itkResampleIdentityNeumannImageFilter.h"
+#include "itkResampleImageFilter.h"
 
 namespace itk
 {
@@ -112,8 +112,7 @@ public:
   using SearchRegionRadiusImageType =
     Image<typename itk::Vector<typename RadiusType::SizeValueType, ImageDimension>, ImageDimension>;
   using SearchRegionRadiusImagePointer = typename SearchRegionRadiusImageType::Pointer;
-  using SearchRegionRadiusResamplerType =
-    VectorResampleIdentityNeumannImageFilter<SearchRegionRadiusImageType, SearchRegionRadiusImageType>;
+  using SearchRegionRadiusResamplerType = ResampleImageFilter<SearchRegionRadiusImageType, SearchRegionRadiusImageType>;
 
   /** ScheduleType type alias support. */
   using PyramidScheduleType = typename Superclass::PyramidScheduleType;

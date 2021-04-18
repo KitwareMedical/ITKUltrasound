@@ -9,6 +9,7 @@ endif()
 itk_module(Ultrasound
   DEPENDS
     ITKImageCompose
+    ITKImageFunction
     ITKImageIntensity
     ITKIOImageBase
     ITKTransform

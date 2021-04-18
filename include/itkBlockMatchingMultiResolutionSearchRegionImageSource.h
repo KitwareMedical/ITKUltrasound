@@ -18,7 +18,7 @@
 #ifndef itkBlockMatchingMultiResolutionSearchRegionImageSource_h
 #define itkBlockMatchingMultiResolutionSearchRegionImageSource_h
 
-#include "itkVectorResampleIdentityNeumannImageFilter.h"
+#include "itkResampleImageFilter.h"
 
 #include "itkImageDuplicator.h"
 #include "itkImageSource.h"
@@ -92,8 +92,7 @@ public:
   using DisplacementImagePointer = typename DisplacementImageType::Pointer;
 
   /** Type of the filter used to resample the deformations. */
-  using DisplacementResamplerType =
-    VectorResampleIdentityNeumannImageFilter<DisplacementImageType, DisplacementImageType>;
+  using DisplacementResamplerType = ResampleImageFilter<DisplacementImageType, DisplacementImageType>;
   using DisplacementResamplerPointer = typename DisplacementResamplerType::Pointer;
 
   /** Run-time type information (and related methods). */
