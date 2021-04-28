@@ -14,6 +14,8 @@ set(WRAPPER_LIBRARY_GROUPS
   itkFrequencyDomain1DImageFilter
   itkForward1DFFTImageFilter
   itkInverse1DFFTImageFilter
+  itkRegionFromReferenceImageFilter
+  itkAnalyticSignalImageFilter
   itkBModeImageFilter
   )
 itk_auto_load_submodules()
