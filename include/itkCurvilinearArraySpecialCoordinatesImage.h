@@ -225,6 +225,29 @@ public:
     return isInside;
   }
 
+  /** \brief Returns the continuous index from a physical point
+   * \note This specific overload does not figure out whether or not
+   *  the returned index is inside the image. Of course, the user can
+   * still test this afterwards by calling ImageRegion::IsInside(index):
+     \code
+     auto index = image->TransformPhysicalPointToContinuousIndex<double>(point);
+     if (image->GetLargestPossibleRegion().IsInside(index)) // Et cetera...
+     \endcode
+   * Which is equivalent to the following code, which calls the other overload:
+     \code
+     itk::ContinuousIndex<double, ImageDimension> index;
+     if (image->TransformPhysicalPointToContinuousIndex(point, index)) // Et cetera...
+     \endcode
+   * \sa Transform */
+  template <typename TIndexRep, typename TCoordRep>
+  ContinuousIndex<TIndexRep, VDimension>
+  TransformPhysicalPointToContinuousIndex(const Point<TCoordRep, VDimension> & point) const
+  {
+    ContinuousIndex<TIndexRep, VDimension> index;
+    TransformPhysicalPointToContinuousIndex<TIndexRep>(point, index);
+    return index;
+  }
+
   /** Get the index (discrete) from a physical point.
    * Floating point index results are truncated to integers.
    * Returns true if the resulting index is within the image, false otherwise
@@ -263,6 +286,30 @@ public:
     return isInside;
   }
 
+  /** Returns the index (discrete) of a voxel from a physical point.
+   * Floating point index results are rounded to integers
+   * \note This specific overload does not figure out whether or not
+   * the returned index is inside the image. Of course, the user can
+   * still test this afterwards by calling ImageRegion::IsInside(index):
+     \code
+      auto index = image->TransformPhysicalPointToIndex(point);
+      if (image->GetLargestPossibleRegion().IsInside(index)) // Et cetera...
+     \endcode
+   * Which is equivalent to the following code, which calls the other overload:
+     \code
+      IndexType index;
+      if (image->TransformPhysicalPointToIndex(point, index)) // Et cetera...
+     \endcode
+   * \sa Transform */
+  template <typename TCoordRep>
+  IndexType
+  TransformPhysicalPointToIndex(const Point<TCoordRep, VDimension> & point) const
+  {
+    IndexType index;
+    TransformPhysicalPointToIndex(point, index);
+    return index;
+  }
+
   /** Get a physical point (in the space which
    * the origin and spacing information comes from)
    * from a continuous index (in the index space)
@@ -293,6 +340,19 @@ public:
     }
   }
 
+  /** Returns a physical point (in the space which
+   * the origin and spacing information comes from)
+   * from a continuous index (in the index space)
+   * \sa Transform */
+  template <typename TCoordRep, typename TIndexRep>
+  Point<TCoordRep, VDimension>
+  TransformContinuousIndexToPhysicalPoint(const ContinuousIndex<TIndexRep, VDimension> & index) const
+  {
+    Point<TCoordRep, VDimension> point;
+    TransformContinuousIndexToPhysicalPoint(index, point);
+    return point;
+  }
+
   /** Get a physical point (in the space which
    * the origin and spacing information comes from)
    * from a discrete index (in the index space)
@@ -320,6 +380,20 @@ public:
         point[ii] += this->m_IndexToPhysicalPoint[ii][jj] * index[jj];
       }
     }
+  }
+
+  /** Returns a physical point (in the space which
+   * the origin and spacing information comes from)
+   * from a discrete index (in the index space)
+   *
+   * \sa Transform */
+  template <typename TCoordRep>
+  Point<TCoordRep, VDimension>
+  TransformIndexToPhysicalPoint(const IndexType & index) const
+  {
+    Point<TCoordRep, VDimension> point;
+    TransformIndexToPhysicalPoint(index, point);
+    return point;
   }
 
   /** Set/Get the number of radians between each lateral unit.   */
