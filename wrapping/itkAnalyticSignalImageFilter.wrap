@@ -1,0 +1,8 @@
+itk_wrap_class("itk::AnalyticSignalImageFilter" POINTER)
+  foreach(d ${ITK_WRAP_IMAGE_DIMS})
+    foreach(rt ${WRAP_ITK_REAL})
+      itk_wrap_template("I${ITKM_${rt}}${d}I${ITKM_C${rt}}${d}"
+        "itk::Image<${ITKT_${rt}}, ${d}>, itk::Image<${ITKT_C${rt}}, ${d}>")
+    endforeach()
+  endforeach()
+itk_end_wrap_class()
