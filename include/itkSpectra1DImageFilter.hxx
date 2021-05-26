@@ -48,14 +48,17 @@ Spectra1DImageFilter<TInputImage, TSupportWindowImage, TOutputImage>::GenerateOu
   OutputImageType *              output = this->GetOutput();
   const SupportWindowImageType * supportWindowImage = this->GetSupportWindowImage();
 
+  // Support windows inform output image region and metadata
   output->SetSpacing(supportWindowImage->GetSpacing());
   output->SetLargestPossibleRegion(supportWindowImage->GetLargestPossibleRegion());
 
   const MetaDataDictionary & dict = supportWindowImage->GetMetaDataDictionary();
   FFT1DSizeType              fft1DSize = 32;
   ExposeMetaData<FFT1DSizeType>(dict, "FFT1DSize", fft1DSize);
+
+  // Number of frequency bins represented by each vector pixel.
   // Divide by two for Hermitian symmetry. Divide by two for Welch's method
-  // with 50% overlap
+  // with 50% overlap. Subtract one for discarding DC component.
   const FFT1DSizeType spectraComponents = fft1DSize / 2 / 2 - 1;
 
   output->SetVectorLength(spectraComponents);
@@ -70,6 +73,8 @@ Spectra1DImageFilter<TInputImage, TSupportWindowImage, TOutputImage>::BeforeThre
   const MetaDataDictionary &     dict = supportWindowImage->GetMetaDataDictionary();
   FFT1DSizeType                  fft1DSize = 32;
   ExposeMetaData<FFT1DSizeType>(dict, "FFT1DSize", fft1DSize);
+  // Divide by two for Hermitian symmetry. Divide by two for Welch's method
+  // with 50% overlap. Subtract one for discarding DC component.
   const FFT1DSizeType spectraComponents = fft1DSize / 2 / 2 - 1;
 
   const ThreadIdType numberOfWorkUnits = this->GetNumberOfWorkUnits();
@@ -144,6 +149,7 @@ Spectra1DImageFilter<TInputImage, TSupportWindowImage, TOutputImage>::ComputeSpe
   const double overlap = 0.5;
   IndexType    segmentIndex(lineIndex);
   const double spectralScale = 1.0 / (fftSize * fftSize);
+  // 3 segments for Welch's method with 50% overlap (D=M/2)
   for (unsigned int segment = 0; segment < 3; ++segment)
   {
     segmentIndex[0] =
@@ -164,6 +170,8 @@ Spectra1DImageFilter<TInputImage, TSupportWindowImage, TOutputImage>::ComputeSpe
     spectraVectorIt = perThreadData.SpectraVector.begin();
     // drop DC component
     ++complexVectorConstIt;
+
+    // Each spectral component = (Re^2 + Im^2) / 3 / (fftSize)^2
     for (size_t freq = 0; freq < highFreq; ++freq)
     {
       spectraVectorIt[freq] +=
@@ -282,6 +290,7 @@ Spectra1DImageFilter<TInputImage, TSupportWindowImage, TOutputImage>::ThreadedGe
     }
   }
 
+  // Optionally normalize for system noise via reference spectra image input
   const OutputImageType * referenceSpectra = this->GetReferenceSpectraImage();
   if (referenceSpectra != nullptr)
   {
