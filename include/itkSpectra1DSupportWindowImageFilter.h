@@ -28,6 +28,10 @@ namespace itk
 /** \class Spectra1DSupportWindowImageFilter
  * \brief Generate an image of local spectra computation support windows.
  *
+ * Windowing is a necessary consideration of any FFT application. This filter
+ * is primarily used to segment an image into regions for subsequent local
+ * spectra computation with itk::Spectra1DImageFilter.
+ *
  * The information from the input image is used to determine the output image
  * information. The pixel value of the input image is used to specify the
  * nominal number of lines on either side of the central FFT line to add to
@@ -36,7 +40,14 @@ namespace itk
  * The overlap between windows is specified with SetStep(). By default, the
  * Step is only one sample.
  *
+ * This filter expects that beam input lies along the zeroth dimension and lateral lines
+ * lie along the first dimension. Images not matching this description may be permuted
+ * with itk::PermuteAxesImageFilter prior to running the filter.
+ *
  * \ingroup Ultrasound
+ *
+ * \sa Spectra1DImageFilter
+ * \sa PermuteAxesImageFilter
  */
 template <typename TInputImage>
 class ITK_TEMPLATE_EXPORT Spectra1DSupportWindowImageFilter
