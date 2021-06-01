@@ -54,15 +54,17 @@ public:
     return x * y;
   };
 
-  itkSetMacro(UpperFrequency, double) itkGetMacro(UpperFrequency, double)
+  itkSetMacro(UpperFrequency, double);
+  itkGetMacro(UpperFrequency, double);
 
-    itkSetMacro(LowerFrequency, double) itkGetMacro(LowerFrequency, double)
+  itkSetMacro(LowerFrequency, double);
+  itkGetMacro(LowerFrequency, double);
 
-      itkSetMacro(Order, int) itkGetMacro(Order, int)
+  itkSetMacro(Order, int);
+  itkGetMacro(Order, int);
 
 
-        protected
-    :
+protected:
 
     ButterworthBandpass1DFilterFunction()
   {
