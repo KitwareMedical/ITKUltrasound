@@ -1,0 +1,13 @@
+set(WRAPPER_AUTO_INCLUDE_HEADERS OFF)
+
+itk_wrap_include("itkBlockMatchingMetricImageToDisplacementCalculator.h")
+itk_wrap_class("itk::BlockMatching::MetricImageToDisplacementCalculator" POINTER)
+  foreach(t ${WRAP_ITK_REAL})
+    foreach(t2 ${WRAP_ITK_REAL})
+      foreach(d ${ITK_WRAP_IMAGE_DIMS})
+        itk_wrap_template("I${ITKM_${t}}${d}I${ITKM_V${t2}${d}}${d}"
+                          "${ITKT_I${ITKM_${t}}${d}}, ${ITKT_I${ITKM_V${t2}${d}}${d}}")
+      endforeach()
+    endforeach()
+  endforeach()
+itk_end_wrap_class()
