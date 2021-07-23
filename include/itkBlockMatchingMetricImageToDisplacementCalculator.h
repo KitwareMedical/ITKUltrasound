@@ -32,7 +32,7 @@ namespace BlockMatching
  *
  * \brief Calculates the displacement of a block from the MetricImage(s).
  *
- * This class tightly integrates with BlockMatching::ImageRegistrationMethod.
+ * This class tightly integrates with BlockMatching::BlockMatchingImageRegistrationMethod.
  * It is the responsibility of this class to calculate the displacement given
  * MetricImage(s) in a block matching registration method.
  *
@@ -47,7 +47,7 @@ namespace BlockMatching
  *
  * Caching of the MetricImage can be enabled by SetCacheMetricImageOn();
  *
- * The behavior of the associated BlockMatching::ImageRegistrationMethod
+ * The behavior of the associated BlockMatching::BlockMatchingImageRegistrationMethod
  * GenerateInputRequestedRegion() and EnlargeOutputRequestedRegion() with
  * ModifyGenerateInputRequestedRegion() and
  * ModifyEnlargeOutputRequestedRegion().
@@ -134,13 +134,13 @@ public:
   virtual void
   Compute() = 0;
 
-  /** Modify the associated BlockMatching::ImageRegistrationMethod's
+  /** Modify the associated BlockMatching::BlockMatchingImageRegistrationMethod's
    * GenerateInputRequestedRegion().  */
   virtual void
   ModifyGenerateInputRequestedRegion(RegionType & region)
   {}
 
-  /** Modify the associated BlockMatching::ImageRegistrationMethod's
+  /** Modify the associated BlockMatching::BlockMatchingImageRegistrationMethod's
    * EnlargeOutputRequestedRegion().  */
   virtual void
   ModifyEnlargeOutputRequestedRegion(DataObject * data)

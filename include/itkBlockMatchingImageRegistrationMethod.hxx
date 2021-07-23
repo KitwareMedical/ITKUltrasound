@@ -36,8 +36,8 @@ template <typename TFixedImage,
           typename TMetricImage,
           typename TDisplacementImage,
           typename TCoordRep>
-ImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
-  ImageRegistrationMethod()
+BlockMatchingImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+  BlockMatchingImageRegistrationMethod()
   : m_UseStreaming(false)
 {
   m_FixedImage = nullptr;
@@ -55,7 +55,7 @@ template <typename TFixedImage,
           typename TDisplacementImage,
           typename TCoordRep>
 void
-ImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::SetFixedImage(
+BlockMatchingImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::SetFixedImage(
   FixedImageType * fixedImage)
 {
   if (this->m_FixedImage.GetPointer() != fixedImage)
@@ -72,7 +72,7 @@ template <typename TFixedImage,
           typename TDisplacementImage,
           typename TCoordRep>
 void
-ImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::SetMovingImage(
+BlockMatchingImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::SetMovingImage(
   MovingImageType * movingImage)
 {
   if (this->m_MovingImage.GetPointer() != movingImage)
@@ -89,7 +89,7 @@ template <typename TFixedImage,
           typename TDisplacementImage,
           typename TCoordRep>
 void
-ImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+BlockMatchingImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
   GenerateOutputInformation()
 {
   Superclass::GenerateOutputInformation();
@@ -109,7 +109,7 @@ template <typename TFixedImage,
           typename TDisplacementImage,
           typename TCoordRep>
 void
-ImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+BlockMatchingImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
   GenerateInputRequestedRegion()
 {
   Superclass::GenerateInputRequestedRegion();
@@ -132,7 +132,7 @@ template <typename TFixedImage,
           typename TDisplacementImage,
           typename TCoordRep>
 void
-ImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+BlockMatchingImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
   EnlargeOutputRequestedRegion(DataObject * data)
 {
   this->m_MetricImageToDisplacementCalculator->ModifyEnlargeOutputRequestedRegion(data);
@@ -145,7 +145,7 @@ template <typename TFixedImage,
           typename TDisplacementImage,
           typename TCoordRep>
 void
-ImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::GenerateData()
+BlockMatchingImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::GenerateData()
 {
   const SearchRegionImageType * input = this->GetInput();
 
@@ -212,7 +212,7 @@ template <typename TFixedImage,
           typename TDisplacementImage,
           typename TCoordRep>
 void
-ImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::Initialize()
+BlockMatchingImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::Initialize()
 {
   if (!m_FixedImage)
   {

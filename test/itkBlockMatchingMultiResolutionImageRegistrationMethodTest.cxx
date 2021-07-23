@@ -85,11 +85,11 @@ itkBlockMatchingMultiResolutionImageRegistrationMethodTest(int argc, char * argv
   MetricImageFilterType::Pointer metricImageFilter = MetricImageFilterType::New();
 
   using LevelRegistrationMethodType = itk::BlockMatching::
-    ImageRegistrationMethod<InputImageType, InputImageType, MetricImageType, DisplacementImageType, CoordRepType>;
+    BlockMatchingImageRegistrationMethod<InputImageType, InputImageType, MetricImageType, DisplacementImageType, CoordRepType>;
   LevelRegistrationMethodType::Pointer levelRegistrationMethod = LevelRegistrationMethodType::New();
   levelRegistrationMethod->SetMetricImageFilter(metricImageFilter);
 
-  using RegistrationMethodType = itk::BlockMatching::MultiResolutionImageRegistrationMethod<InputImageType,
+  using RegistrationMethodType = itk::BlockMatching::BlockMatchingMultiResolutionImageRegistrationMethod<InputImageType,
                                                                                             InputImageType,
                                                                                             MetricImageType,
                                                                                             DisplacementImageType,

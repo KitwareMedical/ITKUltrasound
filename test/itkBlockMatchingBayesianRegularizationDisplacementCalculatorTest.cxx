@@ -74,7 +74,7 @@ itkBlockMatchingBayesianRegularizationDisplacementCalculatorTest(int argc, char 
 
   // The image registration method.
   using RegistrationMethodType = itk::BlockMatching::
-    ImageRegistrationMethod<InputImageType, InputImageType, MetricImageType, DisplacementImageType, CoordRepType>;
+    BlockMatchingImageRegistrationMethod<InputImageType, InputImageType, MetricImageType, DisplacementImageType, CoordRepType>;
   RegistrationMethodType::Pointer registrationMethod = RegistrationMethodType::New();
   registrationMethod->SetFixedImage(fixedReader->GetOutput());
   registrationMethod->SetMovingImage(movingReader->GetOutput());
