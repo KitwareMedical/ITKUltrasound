@@ -142,7 +142,7 @@ jobs:
       matrix:
         python-version: [36, 37, 38, 39]
         include:
-          - itk-python-git-tag: "v5.2.0.post2"
+          - itk-python-git-tag: "v5.2.0.post3"
 
     steps:
     - uses: actions/checkout@v2
@@ -217,7 +217,7 @@ jobs:
       max-parallel: 2
       matrix:
         include:
-          - itk-python-git-tag: "v5.2.0.post2"
+          - itk-python-git-tag: "v5.2.0.post3"
 
     steps:
     - uses: actions/checkout@v2
@@ -279,7 +279,7 @@ jobs:
       matrix:
         python-version-minor: [6, 7, 8, 9]
         include:
-          - itk-python-git-tag: "v5.2.0.post2"
+          - itk-python-git-tag: "v5.2.0.post3"
 
     steps:
     - name: Get specific version of CMake, Ninja
