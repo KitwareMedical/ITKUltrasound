@@ -1,5 +1,17 @@
 set(WRAPPER_AUTO_INCLUDE_HEADERS OFF)
 
+# Wrap for member types
+itk_wrap_include("itkPoint.h")
+itk_wrap_include("itkImage.h")
+UNIQUE(point_types "${WRAP_ITK_REAL};D")
+itk_wrap_class("itk::Image" POINTER)
+  foreach(t ${point_types})
+    foreach(d ${ITK_WRAP_IMAGE_DIMS})
+      itk_wrap_template("P${ITKM_${t}}${d}" "itk::Point<${ITKT_${t}}, ${d}>, ${d}")
+    endforeach()
+  endforeach()
+itk_end_wrap_class()
+
 itk_wrap_include("itkBlockMatchingMetricImageToDisplacementCalculator.h")
 itk_wrap_class("itk::BlockMatching::MetricImageToDisplacementCalculator" POINTER)
   foreach(t ${WRAP_ITK_REAL})
