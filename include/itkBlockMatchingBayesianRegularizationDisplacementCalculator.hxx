@@ -342,8 +342,8 @@ BayesianRegularizationDisplacementCalculator<TMetricImage, TDisplacementImage>::
   typename FaceCalculatorType::FaceListType::iterator fit;
 
   MetricImageImagePointerType tempMetricImageImagePtr;
-  MetricImagePointerType      postImage;
-  MetricImagePointerType      priorImage;
+  //MetricImagePointerType      postImage;
+  //MetricImagePointerType      priorImage;
   m_CurrentIteration = 0;
   // Hack to make the SplitRequestedRegion method operate on the face list
   // regions;

@@ -98,6 +98,7 @@ itkBlockMatchingBayesianRegularizationDisplacementCalculatorTest(int argc, char 
   strainSigma[1] = 0.04;
   regularizer->SetStrainSigma(strainSigma);
   regularizer->SetMaximumIterations(3);
+  //regularizer->SetCacheMetricImage(true);
   registrationMethod->SetMetricImageToDisplacementCalculator(regularizer);
   registrationMethod->Update();
 
