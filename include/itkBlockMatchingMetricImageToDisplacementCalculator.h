@@ -71,7 +71,7 @@ public:
 
   /** Type of the metric image (input pixels). */
   using MetricImageType = TMetricImage;
-  using MetricImagePointerType = typename MetricImageType::Pointer;
+  using MetricImagePointerType = typename MetricImageType *;//::Pointer;
   using IndexType = typename MetricImageType::IndexType;
 
   /** Type of the displacement image (output). */

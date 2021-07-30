@@ -425,14 +425,14 @@ BayesianRegularizationDisplacementCalculator<TMetricImage, TDisplacementImage>::
     {
       priorImage = priorImageImageIt.GetPrevious(direction);
       // If we are inside the boundary.
-      if (priorImage.GetPointer() != nullptr)
+      if (priorImage != nullptr)
       {
         shift.Fill(0.0);
         shift[direction] = -1 * spacing[direction];
         this->ImpartLikelihood(postImage, priorImage, direction, shift);
       }
       priorImage = priorImageImageIt.GetNext(direction);
-      if (priorImage.GetPointer() != nullptr)
+      if (priorImage != nullptr)
       {
         shift.Fill(0.0);
         shift[direction] = spacing[direction];

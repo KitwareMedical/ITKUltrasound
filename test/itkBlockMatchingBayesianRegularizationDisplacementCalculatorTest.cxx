@@ -99,6 +99,7 @@ itkBlockMatchingBayesianRegularizationDisplacementCalculatorTest(int argc, char 
   regularizer->SetStrainSigma(strainSigma);
   regularizer->SetMaximumIterations(3);
   registrationMethod->SetMetricImageToDisplacementCalculator(regularizer);
+  registrationMethod->Update();
 
   // Break the displacement vector image into components.
   using TensorComponentsFilterType = itk::SplitComponentsImageFilter<DisplacementImageType, MetricImageType>;

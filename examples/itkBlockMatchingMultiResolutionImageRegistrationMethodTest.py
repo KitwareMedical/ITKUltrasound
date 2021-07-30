@@ -34,11 +34,11 @@ if not os.path.exists(MOVING_IMAGE_PATH):
     url = 'https://data.kitware.com/api/v1/file/58ee3b758d777f16d095fd87/download'
     urlretrieve(url, MOVING_IMAGE_PATH)
 
-fixed_image = itk.imread(FIXED_IMAGE_PATH, itk.D)
-moving_image = itk.imread(MOVING_IMAGE_PATH, itk.D)
+fixed_image = itk.imread(FIXED_IMAGE_PATH, itk.F)
+moving_image = itk.imread(MOVING_IMAGE_PATH, itk.F)
 
 dimension = fixed_image.GetImageDimension()
-displacement_image_type = itk.Image[itk.Vector[itk.D,dimension],dimension]
+displacement_image_type = itk.Image[itk.Vector[itk.F,dimension],dimension]
 
 block_radius_calculator = itk.Ultrasound.MultiResolutionFixedBlockRadiusCalculator[type(fixed_image)].New()
 block_radius_calculator.SetRadius([12,4])
@@ -68,7 +68,7 @@ level_registration_method = itk.Ultrasound.BlockMatchingImageRegistrationMethod[
                                                                    type(fixed_image),
                                                                    type(fixed_image),
                                                                    displacement_image_type,
-                                                                   itk.D].New()
+                                                                   itk.F].New()
 level_registration_method.SetMetricImageFilter(metric_image_filter)
 
 # Set up the multi-resolution registration object
@@ -76,7 +76,7 @@ multi_res_registration_method = itk.Ultrasound.BlockMatchingMultiResolutionImage
                                                                    type(fixed_image),
                                                                    type(fixed_image),
                                                                    displacement_image_type,
-                                                                   itk.D].New()
+                                                                   itk.F].New()
 multi_res_registration_method.SetFixedImage(fixed_image)
 multi_res_registration_method.SetMovingImage(moving_image)
 multi_res_registration_method.SetBlockRadiusCalculator(block_radius_calculator)

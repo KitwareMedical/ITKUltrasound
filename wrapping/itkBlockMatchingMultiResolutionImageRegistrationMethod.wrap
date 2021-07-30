@@ -4,28 +4,6 @@ itk_wrap_include("itkSmartPointer.h")
 itk_wrap_include("itkImage.h")
 itk_wrap_include("itkImageRegion.h")
 
-# Wrap base classes for itk::BlockMatching::MetricImageToDisplacementCalculator public members
-#itk_wrap_class("itk::SmartPointer")
-#  foreach(t ${WRAP_ITK_REAL})
-#    foreach(d ${ITK_WRAP_IMAGE_DIMS})
-#      itk_wrap_template("I${ITKM_${t}}${d}" "itk::Image<${ITKT_${t}},${d}>")
-#    endforeach()
-#  endforeach()
-#itk_end_wrap_class()
-
-message(STATUS ${ITK_WRAP_POINT})
-itk_wrap_class("itk::Image" POINTER)
-  foreach(d ${ITK_WRAP_IMAGE_DIMS})
-    #FIXME
-    foreach(t ${ITK_WRAP_POINT})
-      itk_wrap_template("P${ITKM_${t}}${d}${d}" "itk::Point<${ITKT_${t}},${d}>, ${d}")
-    endforeach()
-    foreach(t ${WRAP_ITK_REAL})
-      itk_wrap_template("SPI${ITKM_${t}}${d}${d}" "itk::SmartPointer<itk::Image<${ITKT_${t}},${d}>>, ${d}")
-    endforeach()
-  endforeach()
-itk_end_wrap_class()
-
 # Wrap class hierarchy
 itk_wrap_include("itkImageToImageFilter.h")
 itk_wrap_class("itk::ImageToImageFilter" POINTER)
