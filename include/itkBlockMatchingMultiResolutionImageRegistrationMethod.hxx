@@ -33,8 +33,8 @@ template <typename TFixedImage,
           typename TMetricImage,
           typename TDisplacementImage,
           typename TCoordRep>
-MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
-  MultiResolutionImageRegistrationMethod()
+BlockMatchingMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+  BlockMatchingMultiResolutionImageRegistrationMethod()
   : m_FixedImage(nullptr)
   , m_MovingImage(nullptr)
   , m_NumberOfLevels(1)
@@ -57,7 +57,7 @@ template <typename TFixedImage,
           typename TDisplacementImage,
           typename TCoordRep>
 ModifiedTimeType
-MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+BlockMatchingMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
   GetMTime() const
 {
   unsigned long mtime = Superclass::GetMTime();
@@ -85,7 +85,7 @@ template <typename TFixedImage,
           typename TDisplacementImage,
           typename TCoordRep>
 void
-MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+BlockMatchingMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
   StopRegistration(void)
 {
   m_Stop = true;
@@ -98,7 +98,7 @@ template <typename TFixedImage,
           typename TDisplacementImage,
           typename TCoordRep>
 void
-MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+BlockMatchingMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
   Initialize()
 {
   // Sanity checks
@@ -122,7 +122,7 @@ template <typename TFixedImage,
           typename TDisplacementImage,
           typename TCoordRep>
 void
-MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+BlockMatchingMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
   SetSchedules(const ScheduleType & fixedImagePyramidSchedule, const ScheduleType & movingImagePyramidSchedule)
 {
   if (m_NumberOfLevelsSpecified)
@@ -155,7 +155,7 @@ template <typename TFixedImage,
           typename TDisplacementImage,
           typename TCoordRep>
 void
-MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+BlockMatchingMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
   SetNumberOfLevels(unsigned long numberOfLevels)
 {
   if (m_ScheduleSpecified)
@@ -176,7 +176,7 @@ template <typename TFixedImage,
           typename TDisplacementImage,
           typename TCoordRep>
 void
-MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+BlockMatchingMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
   GenerateOutputInformation()
 {
   if (!m_FixedImage)
@@ -215,7 +215,7 @@ template <typename TFixedImage,
           typename TDisplacementImage,
           typename TCoordRep>
 void
-MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+BlockMatchingMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
   PreparePyramids()
 {
   // Sanity checks
@@ -259,7 +259,7 @@ template <typename TFixedImage,
           typename TDisplacementImage,
           typename TCoordRep>
 void
-MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+BlockMatchingMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
   PrepareBlockRadiusCalculator()
 {
   // Sanity checks
@@ -279,7 +279,7 @@ template <typename TFixedImage,
           typename TDisplacementImage,
           typename TCoordRep>
 void
-MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+BlockMatchingMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
   PrepareSearchRegionImageSource()
 {
   // Sanity checks
@@ -299,7 +299,7 @@ template <typename TFixedImage,
           typename TDisplacementImage,
           typename TCoordRep>
 void
-MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
+BlockMatchingMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>::
   GenerateData()
 {
   m_Stop = false;

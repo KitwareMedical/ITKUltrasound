@@ -64,7 +64,7 @@ metric_image_filter = itk.Ultrasound.NormalizedCrossCorrelationNeighborhoodItera
                                                                                                      type(fixed_image),
                                                                                                      type(fixed_image)].New()
 
-level_registration_method = itk.Ultrasound.ImageRegistrationMethod[type(fixed_image),
+level_registration_method = itk.Ultrasound.BlockMatchingImageRegistrationMethod[type(fixed_image),
                                                                    type(fixed_image),
                                                                    type(fixed_image),
                                                                    displacement_image_type,
@@ -72,7 +72,7 @@ level_registration_method = itk.Ultrasound.ImageRegistrationMethod[type(fixed_im
 level_registration_method.SetMetricImageFilter(metric_image_filter)
 
 # Set up the multi-resolution registration object
-multi_res_registration_method = itk.Ultrasound.MultiResolutionImageRegistrationMethod[type(fixed_image),
+multi_res_registration_method = itk.Ultrasound.BlockMatchingMultiResolutionImageRegistrationMethod[type(fixed_image),
                                                                    type(fixed_image),
                                                                    type(fixed_image),
                                                                    displacement_image_type,
