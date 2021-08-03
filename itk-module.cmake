@@ -8,6 +8,7 @@ endif()
 
 itk_module(Ultrasound
   DEPENDS
+    ITKAnisotropicSmoothing
     ITKImageCompose
     ITKImageFunction
     ITKImageIntensity
