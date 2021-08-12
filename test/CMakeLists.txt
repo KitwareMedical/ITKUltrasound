@@ -19,6 +19,7 @@ set(UltrasoundTests
   itkReplaceNonFiniteImageFilterTest.cxx
   itkScanConvertPhasedArray3DSpecialCoordinatesImageTest.cxx
   itkSliceSeriesSpecialCoordinatesImageTest.cxx
+  itkSpeckleReducingAnisotropicDiffusionImageFilterTest.cxx
   itkSpectra1DImageFilterTest.cxx
   itkSpectra1DSupportWindowImageFilterTest.cxx
   itkSpectra1DSupportWindowToMaskImageFilterTest.cxx
@@ -325,6 +326,17 @@ itk_add_test(NAME itkInverse1DFFTImageFilterTest
     ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkForward1DFFTImageFilterTestBaseline
     ${ITK_TEST_OUTPUT_DIR}/itkInverse1DFFTImageFilterTestOutput.mha
     )
+
+itk_add_test(NAME itkSpeckleReducingAnisotropicDiffusionImageFilterTest
+  COMMAND UltrasoundTestDriver
+  --compareIntensityTolerance 0.01
+  --compare
+  DATA{Baseline/itkSpeckleReducingAnisotropicDiffusionImageFilterTestOutputBaseline.mha}
+  ${ITK_TEST_OUTPUT_DIR}/itkSpeckleReducingAnisotropicDiffusionImageFilterTestOutput.mha
+  itkSpeckleReducingAnisotropicDiffusionImageFilterTest
+  DATA{Input/PhantomRFFrame0.mha}
+  ${ITK_TEST_OUTPUT_DIR}/itkSpeckleReducingAnisotropicDiffusionImageFilterTestOutput.mha
+  )
     
 if(use_fftw)
   itk_add_test(NAME itkFFTWForward1DFFTImageFilterTest
