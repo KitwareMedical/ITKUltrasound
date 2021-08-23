@@ -33,6 +33,7 @@ set(UltrasoundTests
   itkBlockMatchingImageRegistrationMethodTest.cxx
   itkBlockMatchingMultiResolutionImageRegistrationMethodTest.cxx
   itkButterworthBandpass1DFilterTest.cxx
+  itkNrrdSequenceToVideoStreamTest.cxx
   )
 if(ITKUltrasound_USE_VTK)
   list(APPEND UltrasoundTests
@@ -326,7 +327,7 @@ itk_add_test(NAME itkInverse1DFFTImageFilterTest
     ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkForward1DFFTImageFilterTestBaseline
     ${ITK_TEST_OUTPUT_DIR}/itkInverse1DFFTImageFilterTestOutput.mha
     )
-
+    
 itk_add_test(NAME itkSpeckleReducingAnisotropicDiffusionImageFilterTest
   COMMAND UltrasoundTestDriver
   --compareIntensityTolerance 0.01
@@ -337,6 +338,15 @@ itk_add_test(NAME itkSpeckleReducingAnisotropicDiffusionImageFilterTest
   DATA{Input/PhantomRFFrame0.mha}
   ${ITK_TEST_OUTPUT_DIR}/itkSpeckleReducingAnisotropicDiffusionImageFilterTestOutput.mha
   )
+
+itk_add_test(NAME itkNrrdSequenceToVideoStreamTest
+  COMMAND UltrasoundTestDriver
+  --compare
+  DATA{Baseline/itkNrrdSequenceToVideoStreamTestOutputBaseline.mha}
+  ${ITK_TEST_OUTPUT_DIR}/itkNrrdSequenceToVideoStreamTestOutput.mha
+  itkNrrdSequenceToVideoStreamTest
+  DATA{Input/SeqDemoBMode.seq.nrrd}
+  ${ITK_TEST_OUTPUT_DIR}/itkNrrdSequenceToVideoStreamTestOutput.mha)
     
 if(use_fftw)
   itk_add_test(NAME itkFFTWForward1DFFTImageFilterTest
