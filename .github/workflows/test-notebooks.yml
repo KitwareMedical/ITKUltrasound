@@ -19,8 +19,10 @@ jobs:
         python-version: '3.9'
     - name: Install build dependencies
       run: |
-          python -m pip install -r ./.binder/requirements.txt
-          python -m pip install nbmake[html]
+        python --version
+        python -m pip install --upgrade pip
+        python -m pip install -r ./.binder/requirements.txt -v
+        python -m pip install nbmake[html]
     - uses: "treebeardtech/nbmake-action@v0.2"
       with:
         path: "./examples/"

@@ -19,17 +19,17 @@ jobs:
           - os: ubuntu-18.04
             c-compiler: "gcc"
             cxx-compiler: "g++"
-            itk-git-tag: "9955419fcecb2507eb2c274610e534a2fe0aed4f"
+            itk-git-tag: "v5.3rc03"
             cmake-build-type: "MinSizeRel"
           - os: windows-2019
             c-compiler: "cl.exe"
             cxx-compiler: "cl.exe"
-            itk-git-tag: "9955419fcecb2507eb2c274610e534a2fe0aed4f"
+            itk-git-tag: "v5.3rc03"
             cmake-build-type: "Release"
           - os: macos-10.15
             c-compiler: "clang"
             cxx-compiler: "clang++"
-            itk-git-tag: "9955419fcecb2507eb2c274610e534a2fe0aed4f"
+            itk-git-tag: "v5.3rc03"
             cmake-build-type: "MinSizeRel"
 
     steps:
@@ -140,9 +140,9 @@ jobs:
     strategy:
       max-parallel: 2
       matrix:
-        python-version: [36, 37, 38, 39]
+        python-version: [37, 38, 39, 310]
         include:
-          - itk-python-git-tag: "v5.2.1.post1"
+          - itk-python-git-tag: "v5.3rc03"
 
     steps:
     - uses: actions/checkout@v2
@@ -151,9 +151,13 @@ jobs:
       run: |
         # Workaround for https://github.com/actions/virtual-environments/issues/709
         df -h
+        sudo apt-get remove -y '^dotnet-.*'
+        sudo apt-get remove -y '^llvm-.*'
+        sudo apt-get remove -y 'php.*'
         sudo apt-get autoremove -y
         sudo apt-get clean
         sudo rm -rf "/usr/local/share/boost"
+        sudo rm -rf /usr/share/dotnet/
         sudo rm -rf "$AGENT_TOOLSDIRECTORY"
         df -h
 
@@ -178,6 +182,7 @@ jobs:
         pushd ITKHigherOrderAccurateGradient
         git checkout ${{env.ITKHigherOrderAccurateGradient-git-tag}}
         ln -s ../ITKPythonPackage
+        ln -s ./ITKPythonPackage/oneTBB-prefix
         ./ITKPythonPackage/scripts/dockcross-manylinux-build-module-wheels.sh cp${{ matrix.python-version }}
         popd
         cp ITKHigherOrderAccurateGradient/include/* include/
@@ -185,6 +190,7 @@ jobs:
         pushd ITKSplitComponents
         git checkout ${{env.ITKSplitComponents-git-tag}}
         ln -s ../ITKPythonPackage
+        ln -s ./ITKPythonPackage/oneTBB-prefix
         ./ITKPythonPackage/scripts/dockcross-manylinux-build-module-wheels.sh cp${{ matrix.python-version }}
         popd
         cp ITKSplitComponents/include/* include/
@@ -192,12 +198,14 @@ jobs:
         pushd ITKStrain
         git checkout ${{env.ITKStrain-git-tag}}
         ln -s ../ITKPythonPackage
+        ln -s ./ITKPythonPackage/oneTBB-prefix
         ./ITKPythonPackage/scripts/dockcross-manylinux-build-module-wheels.sh cp${{ matrix.python-version }}
         popd
         cp ITKStrain/include/* include/
         pwd
         ls -l
         du -sh ./* | sort -hr | head -n 20
+        ln -s ./ITKPythonPackage/oneTBB-prefix .
         ./ITKPythonPackage/scripts/dockcross-manylinux-build-module-wheels.sh cp${{ matrix.python-version }}
 
     - name: Publish Python package as GitHub Artifact
@@ -212,7 +220,7 @@ jobs:
       max-parallel: 2
       matrix:
         include:
-          - itk-python-git-tag: "v5.2.1.post1"
+          - itk-python-git-tag: "v5.3rc03"
 
     steps:
     - uses: actions/checkout@v2
@@ -272,9 +280,9 @@ jobs:
     strategy:
       max-parallel: 2
       matrix:
-        python-version-minor: [6, 7, 8, 9]
+        python-version-minor: [7, 8, 9, 10]
         include:
-          - itk-python-git-tag: "v5.2.1.post1"
+          - itk-python-git-tag: "v5.3rc03"
 
     steps:
     - name: Get specific version of CMake, Ninja
