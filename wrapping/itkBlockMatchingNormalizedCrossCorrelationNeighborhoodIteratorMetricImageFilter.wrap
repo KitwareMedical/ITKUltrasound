@@ -1,0 +1,12 @@
+set(WRAPPER_AUTO_INCLUDE_HEADERS OFF)
+itk_wrap_include("itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter.h")
+itk_wrap_class("itk::BlockMatching::NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter" POINTER)
+  foreach(d ${ITK_WRAP_IMAGE_DIMS})
+    foreach(t1 ${WRAP_ITK_SCALAR})
+      foreach(t2 ${WRAP_ITK_REAL})
+        itk_wrap_template("I${ITKM_${t1}}${d}I${ITKM_${t1}}${d}I${ITKM_${t2}}${d}"
+          "itk::Image<${ITKT_${t1}}, ${d}>, itk::Image<${ITKT_${t1}}, ${d}>, itk::Image<${ITKT_${t2}}, ${d}>")
+        endforeach()
+    endforeach()
+  endforeach()
+itk_end_wrap_class()
