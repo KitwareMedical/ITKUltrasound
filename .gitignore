@@ -1,6 +1,15 @@
-notebooks/.ipynb_checkpoints/
+examples/.ipynb_checkpoints/
+examples/Input
 examples/Notebooks/.ipynb_checkpoints/
 examples/Notebooks/EyeRoundOverChuck_5.0MHz_20V.mha
+examples/MouseLiverSpectra-label.mha
+examples/MouseLiverSpectra-label.zarr/
+examples/MouseLiverSpectra.zarr/
+examples/Output/
+
+.vs/
+Testing/
+out/
 
 ITK-cp27-cp27m-manylinux1_x64
 ITK-cp27-cp27mu-manylinux1_x64
