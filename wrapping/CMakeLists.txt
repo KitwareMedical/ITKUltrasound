@@ -8,6 +8,10 @@ endif()
 
 itk_wrap_module(Ultrasound)
 set(WRAPPER_LIBRARY_GROUPS
+  itkBlockMatchingMetricImageFilter
+  itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter
+  itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilter
+  itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter
   itkSpectra1DSupportWindowImageFilter
   itkCurvilinearArraySpecialCoordinatesImage
   itkFrequencyDomain1DFilterFunction
