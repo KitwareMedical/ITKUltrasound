@@ -31,7 +31,7 @@ namespace BlockMatching
  * region.
  *
  * This class is intended to be used internally by
- * itk::BlockMatching::ImageRegistrationMethod and its ilk.
+ * itk::BlockMatching::BlockMatchingImageRegistrationMethod and its ilk.
  *
  * There are two inputs to this image, the Fixed Image, and the Moving Image.
  * A block or kernel from the FixedImage is specified with SetFixedRegion().

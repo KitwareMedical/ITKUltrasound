@@ -28,10 +28,10 @@ namespace BlockMatching
 /** \class SearchRegionImageInitializer
  *
  * \brief Creates a SearchRegionImage for input into a
- * BlockMatching::ImageRegistrationMethod.
+ * BlockMatching::BlockMatchingImageRegistrationMethod.
  *
  * This creates a SearchRegionImage for input into the
- * BlockMatching::ImageRegistrationMethod.  The search regions are centered
+ * BlockMatching::BlockMatchingImageRegistrationMethod.  The search regions are centered
  * around the fixed image blocks and evenly spaced.  Overlap between blocks may
  * be set with SetOverlap().  The input fixed image, fixed image block radius,
  * moving image, and search region radius must be set.

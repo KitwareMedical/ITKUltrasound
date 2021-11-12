@@ -31,7 +31,7 @@ namespace BlockMatching
  * \class MultiResolutionIterationCommand
  *
  * \brief This is a base class for classes that want to observe/adjust a
- * BlockMatching::MultiResolutionImageRegistrationMethod at every iteration.
+ * BlockMatching::BlockMatchingMultiResolutionImageRegistrationMethod at every iteration.
  *
  * \ingroup Ultrasound
  * */

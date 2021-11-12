@@ -30,7 +30,7 @@ namespace BlockMatching
  * \brief A fixed radius is used for every level.
  *
  * This class generates the fixed image matching kernel radius in a
- * BlockMatching::MultiResolutionImageRegistrationMethod.  A fixed block radius
+ * BlockMatching::BlockMatchingMultiResolutionImageRegistrationMethod.  A fixed block radius
  * is used, which means the size of the block in physical coordinates then
  * scales with the pyramid schedule.
  *

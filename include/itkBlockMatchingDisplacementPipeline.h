@@ -129,7 +129,7 @@ public:
 
   /** The registration method. */
   using LevelRegistrationMethodType = BlockMatching::
-    ImageRegistrationMethod<FixedImageType, MovingImageType, MetricImageType, DisplacementImageType, CoordRepType>;
+    BlockMatchingImageRegistrationMethod<FixedImageType, MovingImageType, MetricImageType, DisplacementImageType, CoordRepType>;
 
   /** Interpolation classes. */
   using ParabolicInterpolatorType =
@@ -174,7 +174,7 @@ public:
     BlockMatching::BayesianRegularizationDisplacementCalculator<MetricImageType, DisplacementImageType>;
 
   /** Multi-resolution registration method. */
-  using RegistrationMethodType = BlockMatching::MultiResolutionImageRegistrationMethod<FixedImageType,
+  using RegistrationMethodType = BlockMatching::BlockMatchingMultiResolutionImageRegistrationMethod<FixedImageType,
                                                                                        MovingImageType,
                                                                                        MetricImageType,
                                                                                        DisplacementImageType,

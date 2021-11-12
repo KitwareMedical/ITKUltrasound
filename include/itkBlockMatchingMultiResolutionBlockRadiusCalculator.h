@@ -29,7 +29,7 @@ namespace BlockMatching
 /** \class MultiResolutionBlockRadiusCalculator
  *
  * \brief Base class calculate the fixed image matching kernel radius for each level in a
- * BlockMatching::MultiResolutionImageRegistrationMethod.
+ * BlockMatching::BlockMatchingMultiResolutionImageRegistrationMethod.
  *
  * This must be able to produce the fixed image block radius for every level of
  * the MultiResolutionPyramidImage filter.
@@ -74,7 +74,7 @@ public:
   itkGetConstReferenceMacro(PyramidSchedule, ScheduleType);
 
   /** Set/Get the Fixed image. The fixed image is set during the
-   * BlockMatching::MultiResolutionImageRegistrationMethod and is available for
+   * BlockMatching::BlockMatchingMultiResolutionImageRegistrationMethod and is available for
    * child classes if the choose to use it.  */
   itkSetConstObjectMacro(FixedImage, FixedImageType);
   itkGetConstObjectMacro(FixedImage, FixedImageType);

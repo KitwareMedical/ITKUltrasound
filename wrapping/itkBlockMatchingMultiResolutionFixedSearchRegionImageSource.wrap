@@ -1,0 +1,46 @@
+set(WRAPPER_AUTO_INCLUDE_HEADERS OFF)
+
+itk_wrap_include("itkVector.h")
+itk_wrap_include("itkImage.h")
+itk_wrap_include("itkImageRegion.h")
+
+# Wrap for class template
+itk_wrap_include("itkImageRegion.h")
+itk_wrap_class("itk::Image" POINTER)
+  foreach(d ${ITK_WRAP_IMAGE_DIMS})
+    itk_wrap_template("IR${d}${d}" "itk::ImageRegion<${d}>, ${d}")
+  endforeach()
+itk_end_wrap_class()
+
+itk_wrap_include("itkImageSource.h")
+itk_wrap_class("itk::ImageSource" POINTER)
+  foreach(d ${ITK_WRAP_IMAGE_DIMS})
+    itk_wrap_template("IIR${d}${d}" "itk::Image<itk::ImageRegion<${d}>,${d}>")
+  endforeach()
+itk_end_wrap_class()
+
+# Wrap class hierarchy
+itk_wrap_include("itkBlockMatchingMultiResolutionSearchRegionImageSource.h")
+itk_wrap_class("itk::BlockMatching::MultiResolutionSearchRegionImageSource" POINTER)
+  foreach(t ${WRAP_ITK_REAL})
+    foreach(d ${ITK_WRAP_IMAGE_DIMS})
+      foreach(vt ${WRAP_ITK_VECTOR_REAL})
+        itk_wrap_template("I${ITKM_${t}}${d}I${ITKM_${t}}${d}I${ITKM_${vt}${d}}${d}"
+                          "itk::Image<${ITKT_${t}},${d}>, itk::Image<${ITKT_${t}},${d}>, itk::Image<${ITKT_${vt}${d}},${d}>")
+      endforeach()
+    endforeach()
+  endforeach()
+itk_end_wrap_class()
+
+# Wrap class
+itk_wrap_include("itkBlockMatchingMultiResolutionFixedSearchRegionImageSource.h")
+itk_wrap_class("itk::BlockMatching::MultiResolutionFixedSearchRegionImageSource" POINTER)
+  foreach(t ${WRAP_ITK_REAL})
+    foreach(d ${ITK_WRAP_IMAGE_DIMS})
+      foreach(vt ${WRAP_ITK_VECTOR_REAL})
+        itk_wrap_template("I${ITKM_${t}}${d}I${ITKM_${t}}${d}I${ITKM_${vt}${d}}${d}"
+                          "itk::Image<${ITKT_${t}},${d}>, itk::Image<${ITKT_${t}},${d}>, itk::Image<${ITKT_${vt}${d}},${d}>")
+      endforeach()
+    endforeach()
+  endforeach()
+itk_end_wrap_class()

@@ -30,7 +30,7 @@ namespace itk
 namespace BlockMatching
 {
 
-/** \class MultiResolutionImageRegistrationMethod
+/** \class BlockMatchingMultiResolutionImageRegistrationMethod
  *
  * \brief Base class for multi-resolution image registration methods in the
  * BlockMatching set of tools.
@@ -42,7 +42,7 @@ namespace BlockMatching
  * The SetNumberOfLevels() or SetSchedule() is used to set up the
  * MultiResolutionPyramidImageFilter.
  *
- * \sa ImageRegistrationMethod
+ * \sa BlockMatchingImageRegistrationMethod
  *
  * \ingroup RegistrationFilters
  * \ingroup Ultrasound
@@ -52,10 +52,10 @@ template <typename TFixedImage,
           typename TMetricImage,
           typename TDisplacementImage,
           typename TCoordRep>
-class ITK_TEMPLATE_EXPORT MultiResolutionImageRegistrationMethod : public ImageSource<TDisplacementImage>
+class ITK_TEMPLATE_EXPORT BlockMatchingMultiResolutionImageRegistrationMethod : public ImageSource<TDisplacementImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionImageRegistrationMethod);
+  ITK_DISALLOW_COPY_AND_ASSIGN(BlockMatchingMultiResolutionImageRegistrationMethod);
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, TDisplacementImage::ImageDimension);
@@ -91,7 +91,7 @@ public:
   using SearchRegionImageType = Image<typename MovingImageType::RegionType, ImageDimension>;
 
   /** Standard class type alias. */
-  using Self = MultiResolutionImageRegistrationMethod;
+  using Self = BlockMatchingMultiResolutionImageRegistrationMethod;
   using Superclass = ImageSource<TDisplacementImage>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
@@ -100,7 +100,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MultiResolutionImageRegistrationMethod, ImageSource);
+  itkTypeMacro(BlockMatchingMultiResolutionImageRegistrationMethod, ImageSource);
 
   /** Type of the Fixed image multiresolution pyramid. */
   using FixedImagePyramidType = MultiResolutionPyramidImageFilter<FixedImageType, FixedImageType>;
@@ -115,7 +115,7 @@ public:
 
   /** Type of the registration method used at every level. */
   using ImageRegistrationMethodType = typename BlockMatching::
-    ImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>;
+    BlockMatchingImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementImage, TCoordRep>;
   using ImageRegistrationMethodPointer = typename ImageRegistrationMethodType::Pointer;
 
   /** Type of the class to calculate the fixed image matching kernel block
@@ -166,7 +166,7 @@ public:
   ModifiedTimeType
   GetMTime() const override;
 
-  /** BlockMatching::ImageRegistrationMethod used to register each image at
+  /** BlockMatching::BlockMatchingImageRegistrationMethod used to register each image at
    * every level. */
   itkSetObjectMacro(ImageRegistrationMethod, ImageRegistrationMethodType);
   itkGetModifiableObjectMacro(ImageRegistrationMethod, ImageRegistrationMethodType);
@@ -181,8 +181,8 @@ public:
   itkGetConstObjectMacro(SearchRegionImageSource, SearchRegionImageSourceType);
 
 protected:
-  MultiResolutionImageRegistrationMethod();
-  virtual ~MultiResolutionImageRegistrationMethod(){};
+  BlockMatchingMultiResolutionImageRegistrationMethod();
+  virtual ~BlockMatchingMultiResolutionImageRegistrationMethod(){};
 
   /** The size and spacing of the search region image at the lowest level is
    * used to generate the information for the output image. */

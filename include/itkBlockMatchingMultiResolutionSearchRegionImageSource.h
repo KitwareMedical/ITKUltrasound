@@ -35,7 +35,7 @@ template <typename TFixedImageF,
           typename TMetricImage,
           typename TDisplacementImageF,
           typename TCoordRep>
-class MultiResolutionImageRegistrationMethod;
+class BlockMatchingMultiResolutionImageRegistrationMethod;
 
 
 /** \class MultiResolutionSearchRegionImageSource
@@ -179,7 +179,7 @@ public:
             typename TMetricImage,
             typename TDisplacementImageF,
             typename TCoordRep>
-  friend class MultiResolutionImageRegistrationMethod;
+  friend class BlockMatchingMultiResolutionImageRegistrationMethod;
 
   itkGetConstObjectMacro(PreviousDisplacements, DisplacementImageType);
 

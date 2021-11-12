@@ -28,7 +28,7 @@ namespace itk
 namespace BlockMatching
 {
 
-/** \class ImageRegistrationMethod
+/** \class BlockMatchingImageRegistrationMethod
  *
  * This class defines the interface to perform deformable image registration by
  * block matching.
@@ -43,7 +43,7 @@ namespace BlockMatching
  * area.  The information from the search region image (origin, spacing, region,
  * etc) determines the information in the output displacement image.
  *
- * \sa ImageRegistrationMethod
+ * \sa BlockMatchingImageRegistrationMethod
  *
  * \ingroup RegistrationFilters
  * \ingroup Ultrasound
@@ -53,12 +53,12 @@ template <typename TFixedImage,
           typename TMetricImage,
           typename TDisplacementImage,
           typename TCoordRep>
-class ITK_TEMPLATE_EXPORT ImageRegistrationMethod
+class ITK_TEMPLATE_EXPORT BlockMatchingImageRegistrationMethod
   : public ImageToImageFilter<itk::Image<typename TMovingImage::RegionType, TDisplacementImage::ImageDimension>,
                               TDisplacementImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(ImageRegistrationMethod);
+  ITK_DISALLOW_COPY_AND_ASSIGN(BlockMatchingImageRegistrationMethod);
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, TDisplacementImage::ImageDimension);
@@ -92,7 +92,7 @@ public:
   using SearchRegionImageType = Image<typename MovingImageType::RegionType, ImageDimension>;
 
   /** Standard class type alias. */
-  using Self = ImageRegistrationMethod;
+  using Self = BlockMatchingImageRegistrationMethod;
   using Superclass = ImageToImageFilter<SearchRegionImageType, TDisplacementImage>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
@@ -101,7 +101,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ImageRegistrationMethod, ImageSource);
+  itkTypeMacro(BlockMatchingImageRegistrationMethod, ImageSource);
 
   /** Type of the point use for determing the location in the fixed image of a
    * block's center. */
@@ -188,8 +188,8 @@ public:
 
 
 protected:
-  ImageRegistrationMethod();
-  virtual ~ImageRegistrationMethod() {}
+  BlockMatchingImageRegistrationMethod();
+  virtual ~BlockMatchingImageRegistrationMethod() {}
 
   void
   GenerateOutputInformation() override;

@@ -74,7 +74,7 @@ itkBlockMatchingBayesianRegularizationDisplacementCalculatorTest(int argc, char 
 
   // The image registration method.
   using RegistrationMethodType = itk::BlockMatching::
-    ImageRegistrationMethod<InputImageType, InputImageType, MetricImageType, DisplacementImageType, CoordRepType>;
+    BlockMatchingImageRegistrationMethod<InputImageType, InputImageType, MetricImageType, DisplacementImageType, CoordRepType>;
   RegistrationMethodType::Pointer registrationMethod = RegistrationMethodType::New();
   registrationMethod->SetFixedImage(fixedReader->GetOutput());
   registrationMethod->SetMovingImage(movingReader->GetOutput());
@@ -98,7 +98,9 @@ itkBlockMatchingBayesianRegularizationDisplacementCalculatorTest(int argc, char 
   strainSigma[1] = 0.04;
   regularizer->SetStrainSigma(strainSigma);
   regularizer->SetMaximumIterations(3);
+  //regularizer->SetCacheMetricImage(true);
   registrationMethod->SetMetricImageToDisplacementCalculator(regularizer);
+  registrationMethod->Update();
 
   // Break the displacement vector image into components.
   using TensorComponentsFilterType = itk::SplitComponentsImageFilter<DisplacementImageType, MetricImageType>;
