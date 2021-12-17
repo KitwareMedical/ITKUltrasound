@@ -18,7 +18,6 @@
 #ifndef itkTimeGainCompensationImageFilter_hxx
 #define itkTimeGainCompensationImageFilter_hxx
 
-#include "itkTimeGainCompensationImageFilter.h"
 
 #include "itkImageScanlineIterator.h"
 #include "itkImageScanlineConstIterator.h"

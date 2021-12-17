@@ -18,7 +18,6 @@
 #ifndef itkFrequencyDomain1DImageFilter_hxx
 #define itkFrequencyDomain1DImageFilter_hxx
 
-#include "itkFrequencyDomain1DImageFilter.h"
 
 #include "itkImageLinearConstIteratorWithIndex.h"
 #include "itkImageLinearIteratorWithIndex.h"

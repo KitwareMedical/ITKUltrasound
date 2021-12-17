@@ -18,7 +18,6 @@
 #ifndef itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilter_hxx
 #define itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilter_hxx
 
-#include "itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilter.h"
 
 #include "itkImageRegionConstIterator.h"
 #include "itkImageRegionIterator.h"

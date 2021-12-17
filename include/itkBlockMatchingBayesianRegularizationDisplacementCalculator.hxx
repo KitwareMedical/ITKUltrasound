@@ -18,7 +18,6 @@
 #ifndef itkBlockMatchingBayesianRegularizationDisplacementCalculator_hxx
 #define itkBlockMatchingBayesianRegularizationDisplacementCalculator_hxx
 
-#include "itkBlockMatchingBayesianRegularizationDisplacementCalculator.h"
 #include "itkBlockMatchingMaximumPixelDisplacementCalculator.h"
 
 #include "itkNeighborhoodAlgorithm.h"

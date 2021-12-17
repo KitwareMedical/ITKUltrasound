@@ -18,7 +18,6 @@
 #ifndef itkBlockMatchingStrainWindowBlockAffineTransformCommand_hxx
 #define itkBlockMatchingStrainWindowBlockAffineTransformCommand_hxx
 
-#include "itkBlockMatchingStrainWindowBlockAffineTransformCommand.h"
 
 namespace itk
 {

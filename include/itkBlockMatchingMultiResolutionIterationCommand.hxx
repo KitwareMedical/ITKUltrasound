@@ -18,7 +18,6 @@
 #ifndef itkBlockMatchingMultiResolutionIterationCommand_hxx
 #define itkBlockMatchingMultiResolutionIterationCommand_hxx
 
-#include "itkBlockMatchingMultiResolutionIterationCommand.h"
 
 namespace itk
 {

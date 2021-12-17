@@ -18,7 +18,6 @@
 #ifndef itkUltrasoundImageFileReader_hxx
 #define itkUltrasoundImageFileReader_hxx
 
-#include "itkUltrasoundImageFileReader.h"
 
 #include "itkMetaDataDictionary.h"
 #include "itkMetaDataObject.h"

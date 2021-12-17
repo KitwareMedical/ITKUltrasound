@@ -18,7 +18,6 @@
 #ifndef itkBlockMatchingOptimizingInterpolationDisplacementCalculator_hxx
 #define itkBlockMatchingOptimizingInterpolationDisplacementCalculator_hxx
 
-#include "itkBlockMatchingOptimizingInterpolationDisplacementCalculator.h"
 
 #include "itkImageRegionConstIteratorWithIndex.h"
 
