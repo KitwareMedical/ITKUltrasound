@@ -18,7 +18,6 @@
 #ifndef itkRegionFromReferenceImageFilter_hxx
 #define itkRegionFromReferenceImageFilter_hxx
 
-#include "itkRegionFromReferenceImageFilter.h"
 
 namespace itk
 {

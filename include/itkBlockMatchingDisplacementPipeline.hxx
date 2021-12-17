@@ -18,7 +18,6 @@
 #ifndef itkBlockMatchingDisplacementPipeline_hxx
 #define itkBlockMatchingDisplacementPipeline_hxx
 
-#include "itkBlockMatchingDisplacementPipeline.h"
 
 namespace itk
 {

@@ -18,7 +18,6 @@
 #ifndef itkSpectra1DSupportWindowImageFilter_hxx
 #define itkSpectra1DSupportWindowImageFilter_hxx
 
-#include "itkSpectra1DSupportWindowImageFilter.h"
 #include "itkImageRegionIterator.h"
 #include "itkImageLinearConstIteratorWithIndex.h"
 #include "itkMetaDataObject.h"

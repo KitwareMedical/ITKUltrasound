@@ -18,7 +18,6 @@
 #ifndef itkLinearLeastSquaresGradientImageFilter_hxx
 #define itkLinearLeastSquaresGradientImageFilter_hxx
 
-#include "itkLinearLeastSquaresGradientImageFilter.h"
 
 #include "itkConstNeighborhoodIterator.h"
 #include "itkImageRegionIterator.h"

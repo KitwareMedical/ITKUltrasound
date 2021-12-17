@@ -18,7 +18,6 @@
 #ifndef itkSpectra1DSupportWindowToMaskImageFilter_hxx
 #define itkSpectra1DSupportWindowToMaskImageFilter_hxx
 
-#include "itkSpectra1DSupportWindowToMaskImageFilter.h"
 #include "itkSpectra1DSupportWindowImageFilter.h"
 #include "itkImageRegionIterator.h"
 #include "itkImageRegionConstIteratorWithIndex.h"

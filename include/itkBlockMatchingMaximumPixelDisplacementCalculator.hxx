@@ -18,7 +18,6 @@
 #ifndef itkBlockMatchingMaximumPixelDisplacementCalculator_hxx
 #define itkBlockMatchingMaximumPixelDisplacementCalculator_hxx
 
-#include "itkBlockMatchingMaximumPixelDisplacementCalculator.h"
 
 #include "itkImageRegionConstIteratorWithIndex.h"
 

@@ -18,7 +18,6 @@
 #ifndef itkBlockMatchingParabolicInterpolationDisplacementCalculator_hxx
 #define itkBlockMatchingParabolicInterpolationDisplacementCalculator_hxx
 
-#include "itkBlockMatchingParabolicInterpolationDisplacementCalculator.h"
 
 #include "itkImageRegionConstIteratorWithIndex.h"
 #include "itkImageRegionConstIterator.h"

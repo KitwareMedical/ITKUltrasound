@@ -18,7 +18,6 @@
 #ifndef itkSpeckleReducingAnisotropicDiffusionFunction_hxx
 #define itkSpeckleReducingAnisotropicDiffusionFunction_hxx
 
-#include "itkSpeckleReducingAnisotropicDiffusionFunction.h"
 
 #include <cmath>
 #include "itkMath.h"

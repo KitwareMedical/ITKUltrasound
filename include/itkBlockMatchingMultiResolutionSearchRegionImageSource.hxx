@@ -18,7 +18,6 @@
 #ifndef itkBlockMatchingMultiResolutionSearchRegionImageSource_hxx
 #define itkBlockMatchingMultiResolutionSearchRegionImageSource_hxx
 
-#include "itkBlockMatchingMultiResolutionSearchRegionImageSource.h"
 #include "itkNearestNeighborExtrapolateImageFunction.h"
 
 namespace itk

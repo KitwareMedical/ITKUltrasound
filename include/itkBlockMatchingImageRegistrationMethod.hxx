@@ -23,7 +23,6 @@
 #include "itkProgressReporter.h"
 
 #include "itkBlockMatchingMaximumPixelDisplacementCalculator.h"
-#include "itkBlockMatchingImageRegistrationMethod.h"
 
 
 namespace itk

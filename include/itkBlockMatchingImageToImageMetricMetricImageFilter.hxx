@@ -18,7 +18,6 @@
 #ifndef itkBlockMatchingImageToImageMetricMetricImageFilter_hxx
 #define itkBlockMatchingImageToImageMetricMetricImageFilter_hxx
 
-#include "itkBlockMatchingImageToImageMetricMetricImageFilter.h"
 
 namespace itk
 {

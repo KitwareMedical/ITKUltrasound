@@ -19,7 +19,6 @@
 #define itkBoxSigmaSqrtNMinusOneImageFilter_hxx
 
 #include "itkImage.h"
-#include "itkBoxSigmaSqrtNMinusOneImageFilter.h"
 #include "itkImageRegionIteratorWithIndex.h"
 #include "itkOffset.h"
 #include "itkProgressAccumulator.h"

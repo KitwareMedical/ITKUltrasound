@@ -18,7 +18,6 @@
 #ifndef itkBlockMatchingMultiResolutionIterationObserver_hxx
 #define itkBlockMatchingMultiResolutionIterationObserver_hxx
 
-#include "itkBlockMatchingMultiResolutionIterationObserver.h"
 
 #include <iostream>
 #include <sstream>

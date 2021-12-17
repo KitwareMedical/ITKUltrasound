@@ -18,7 +18,6 @@
 #ifndef itkBlockMatchingMultiResolutionImageRegistrationMethod_hxx
 #define itkBlockMatchingMultiResolutionImageRegistrationMethod_hxx
 
-#include "itkBlockMatchingMultiResolutionImageRegistrationMethod.h"
 
 #include "itkRecursiveMultiResolutionPyramidImageFilter.h"
 
