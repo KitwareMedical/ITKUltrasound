@@ -19,17 +19,17 @@ jobs:
           - os: ubuntu-18.04
             c-compiler: "gcc"
             cxx-compiler: "g++"
-            itk-git-tag: "9955419fcecb2507eb2c274610e534a2fe0aed4f"
+            itk-git-tag: "a89145bccda6a36f42cfdd45d3a6b27234ff54fe"
             cmake-build-type: "MinSizeRel"
           - os: windows-2019
             c-compiler: "cl.exe"
             cxx-compiler: "cl.exe"
-            itk-git-tag: "9955419fcecb2507eb2c274610e534a2fe0aed4f"
+            itk-git-tag: "a89145bccda6a36f42cfdd45d3a6b27234ff54fe"
             cmake-build-type: "Release"
           - os: macos-10.15
             c-compiler: "clang"
             cxx-compiler: "clang++"
-            itk-git-tag: "9955419fcecb2507eb2c274610e534a2fe0aed4f"
+            itk-git-tag: "a89145bccda6a36f42cfdd45d3a6b27234ff54fe"
             cmake-build-type: "MinSizeRel"
 
     steps:
