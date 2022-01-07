@@ -1,0 +1,27 @@
+# Extra wrapping definitions here are needed for
+# Spectra1DAveragingImageFilter and Spectra1DNormalizeImageFilter
+
+# ImageToImageFilter is already wrapped for VI 2D -> VI 2D
+set(IMAGE_DIMS_EXCEPT_2 ${ITK_WRAP_IMAGE_DIMS})
+list(REMOVE_ITEM IMAGE_DIMS_EXCEPT_2 "2")
+
+# As we are using an unusual combination here, we first need to wrap it for ImageToImageFilter
+itk_wrap_class("itk::ImageToImageFilter" POINTER)
+  foreach(d ${IMAGE_DIMS_EXCEPT_2})
+    if(ITK_WRAP_vector_float AND ITKM_VIF${d} AND ITKM_VIF2)
+      itk_wrap_template("${ITKM_VIF${d}}${ITKM_VIF2}" "${ITKT_VIF${d}},${ITKT_VIF2}")
+    endif()
+    if(ITK_WRAP_vector_double AND ITKM_VID${d} AND ITKM_VID2)
+      itk_wrap_template("${ITKM_VID${d}}${ITKM_VID2}" "${ITKT_VID${d}},${ITKT_VID2}")
+    endif()
+    if(ITK_WRAP_vector_float AND ITK_WRAP_vector_double)
+      # VectorImage(float) <-> VectorImage(double)
+      if(ITKM_VIF${d} AND ITKM_VID2)
+        itk_wrap_template("${ITKM_VIF${d}}${ITKM_VID2}" "${ITKT_VIF${d}},${ITKT_VID2}")
+      endif()
+      if(ITKM_VID${d} AND ITKM_VIF2)
+        itk_wrap_template("${ITKM_VID${d}}${ITKM_VIF2}" "${ITKT_VID${d}},${ITKT_VIF2}")
+      endif()
+    endif()
+  endforeach()
+itk_end_wrap_class()
