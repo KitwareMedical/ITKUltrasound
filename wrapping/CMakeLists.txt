@@ -21,6 +21,8 @@ set(WRAPPER_SUBMODULE_ORDER
   itkAnalyticSignalImageFilter
   itkBModeImageFilter
   itkSpeckleReducingAnisotropicDiffusionImageFilter
+  itkImageToImageFilter
+  itkSpectra1DAveragingImageFilter
   )
 itk_auto_load_submodules()
 itk_end_wrap_module()

@@ -1,0 +1,26 @@
+if(NOT ITKM_VIF2 AND NOT ITKM_VID2)
+  message(WARNING "Spectra1DAveragingImageFilter will not be wrapped.")
+endif()
+
+itk_wrap_class("itk::Spectra1DAveragingImageFilter" POINTER)
+  foreach(d ${ITK_WRAP_IMAGE_DIMS})
+    # Only wrap VectorImage, because Image<Vector> is typically only wrapped for 2,3 and 4 components.
+    # Only wrap nD -> 2D because that is the typical use case.
+    # We use 2D because VectorImage is typically not wrapped for 1D.
+    if(ITK_WRAP_vector_float AND ITKM_VIF${d} AND ITKM_VIF2)
+      itk_wrap_template("${ITKM_VIF${d}}${ITKM_VIF2}" "${ITKT_VIF${d}},${ITKT_VIF2}")
+    endif()
+    if(ITK_WRAP_vector_double AND ITKM_VID${d} AND ITKM_VID2)
+      itk_wrap_template("${ITKM_VID${d}}${ITKM_VID2}" "${ITKT_VID${d}},${ITKT_VID2}")
+    endif()
+    if(ITK_WRAP_vector_float AND ITK_WRAP_vector_double)
+      # VectorImage(float) <-> VectorImage(double)
+      if(ITKM_VIF${d} AND ITKM_VID2)
+        itk_wrap_template("${ITKM_VIF${d}}${ITKM_VID2}" "${ITKT_VIF${d}},${ITKT_VID2}")
+      endif()
+      if(ITKM_VID${d} AND ITKM_VIF2)
+        itk_wrap_template("${ITKM_VID${d}}${ITKM_VIF2}" "${ITKT_VID${d}},${ITKT_VIF2}")
+      endif()
+    endif()
+  endforeach()
+itk_end_wrap_class()

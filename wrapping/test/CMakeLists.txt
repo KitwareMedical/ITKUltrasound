@@ -12,3 +12,15 @@ if(wrap_3_index GREATER -1)
 	    ${ITK_TEST_OUTPUT_DIR}/PythonBModeImageFilterTestTiming.mha
 	  )
 endif()
+
+itk_python_add_test(NAME PythonSpectra1DAveragingImageFilterTest
+  TEST_DRIVER_ARGS
+  --compare
+    DATA{${test_input_dir}/spectra_pixel_image.mha}
+    ${ITK_TEST_OUTPUT_DIR}/PythonSpectra1DAveragingImageFilterTest.mha
+  COMMAND PythonSpectra1DAveragingImageFilterTest.py
+    -o ${ITK_TEST_OUTPUT_DIR}/PythonSpectra1DAveragingImageFilterTest.mha
+    -i DATA{${test_input_dir}/spectra_pixel_image.mha}
+    -i DATA{${test_input_dir}/spectra_pixel_image.mha}
+    -i DATA{${test_input_dir}/spectra_pixel_image.mha}
+  )
