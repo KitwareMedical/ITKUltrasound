@@ -64,7 +64,7 @@ protected:
   using OutputImageRegionType = typename OutputImageType::RegionType;
 
   TimeGainCompensationImageFilter();
-  virtual ~TimeGainCompensationImageFilter() {}
+  ~TimeGainCompensationImageFilter() override = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override;

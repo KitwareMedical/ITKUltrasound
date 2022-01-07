@@ -70,7 +70,7 @@ public:
 
 protected:
   FrequencyDomain1DImageFilter();
-  virtual ~FrequencyDomain1DImageFilter() {}
+  ~FrequencyDomain1DImageFilter() override = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override;

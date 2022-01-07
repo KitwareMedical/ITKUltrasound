@@ -61,11 +61,6 @@ SpecialCoordinatesImageToVTKStructuredGridFilter<TInputImage>::SpecialCoordinate
 
 
 template <typename TInputImage>
-SpecialCoordinatesImageToVTKStructuredGridFilter<TInputImage>::~SpecialCoordinatesImageToVTKStructuredGridFilter()
-{}
-
-
-template <typename TInputImage>
 DataObject::Pointer
 SpecialCoordinatesImageToVTKStructuredGridFilter<TInputImage>::MakeOutput(DataObjectPointerArraySizeType output)
 {

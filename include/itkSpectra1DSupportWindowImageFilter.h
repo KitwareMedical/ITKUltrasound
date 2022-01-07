@@ -87,7 +87,7 @@ public:
 
 protected:
   Spectra1DSupportWindowImageFilter();
-  virtual ~Spectra1DSupportWindowImageFilter(){};
+  ~Spectra1DSupportWindowImageFilter() override = default;
 
   using OutputImageRegionType = typename OutputImageType::RegionType;
 

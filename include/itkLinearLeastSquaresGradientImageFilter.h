@@ -114,7 +114,7 @@ public:
 
 protected:
   LinearLeastSquaresGradientImageFilter();
-  virtual ~LinearLeastSquaresGradientImageFilter() {}
+  ~LinearLeastSquaresGradientImageFilter() override = default;
 
   using NeighborhoodIteratorType = ConstNeighborhoodIterator<InputImageType>;
 

@@ -31,7 +31,10 @@ public:
   clfftSetupData m_clFFTdefaults;
 
   clFFTInitializer();
-  ~clFFTInitializer() { clfftTeardown(); }
+  ~clFFTInitializer() override
+  {
+    clfftTeardown();
+  }
 };
 
 // make sure clFFT has been initialized

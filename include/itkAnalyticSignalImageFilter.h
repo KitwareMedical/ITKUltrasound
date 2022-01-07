@@ -111,7 +111,7 @@ public:
 
 protected:
   AnalyticSignalImageFilter();
-  virtual ~AnalyticSignalImageFilter() {}
+  ~AnalyticSignalImageFilter() override = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override;

@@ -37,10 +37,8 @@ public:
   using InputType = TInput;
   using OutputType = TOutput;
 
-  ReplaceNonFinite()
-    : m_ReplacementValue(NumericTraits<OutputType>::ZeroValue())
-  {}
-  ~ReplaceNonFinite() {}
+  ReplaceNonFinite() = default;
+  ~ReplaceNonFinite() = default;
 
   const OutputType &
   GetReplacementValue() const
@@ -79,7 +77,7 @@ public:
   }
 
 private:
-  OutputType m_ReplacementValue;
+  OutputType m_ReplacementValue{ NumericTraits<OutputType>::ZeroValue() };
 };
 } // namespace Functor
 
@@ -118,8 +116,8 @@ public:
   itkTypeMacro(ReplaceNonFiniteImageFilter, UnaryFunctorImageFilter);
 
 protected:
-  ReplaceNonFiniteImageFilter() {}
-  virtual ~ReplaceNonFiniteImageFilter() {}
+  ReplaceNonFiniteImageFilter() = default;
+  ~ReplaceNonFiniteImageFilter() override = default;
 };
 
 } // end namespace itk

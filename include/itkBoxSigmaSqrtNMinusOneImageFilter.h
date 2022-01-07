@@ -271,7 +271,7 @@ public:
 
 protected:
   BoxSigmaSqrtNMinusOneImageFilter();
-  ~BoxSigmaSqrtNMinusOneImageFilter(){};
+  ~BoxSigmaSqrtNMinusOneImageFilter() override = default;
 
   /** Multi-thread version GenerateData. */
 #if ITK_VERSION_MAJOR < 5

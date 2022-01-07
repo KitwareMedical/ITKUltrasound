@@ -75,7 +75,7 @@ public:
 
 protected:
   MultiResolutionIterationCommand() { m_MultiResolutionMethod = nullptr; }
-  virtual ~MultiResolutionIterationCommand(){};
+  ~MultiResolutionIterationCommand() override = default;
 
   typename MultiResolutionMethodType::Pointer m_MultiResolutionMethod;
 

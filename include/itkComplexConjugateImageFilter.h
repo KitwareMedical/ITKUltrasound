@@ -38,8 +38,8 @@ template <class TInput, class TOutput>
 class ComplexConjugate
 {
 public:
-  ComplexConjugate() {}
-  ~ComplexConjugate() {}
+  ComplexConjugate() = default;
+  ~ComplexConjugate() = default;
   bool
   operator!=(const ComplexConjugate &) const
   {
@@ -93,8 +93,8 @@ public:
 #endif
 
 protected:
-  ComplexConjugateImageFilter() {}
-  virtual ~ComplexConjugateImageFilter() {}
+  ComplexConjugateImageFilter() = default;
+  ~ComplexConjugateImageFilter() override = default;
 
 private:
   ComplexConjugateImageFilter(const Self &); // purposely not implemented

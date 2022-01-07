@@ -74,7 +74,7 @@ public:
 
 protected:
   OpenCLComplexToComplex1DFFTImageFilter();
-  virtual ~OpenCLComplexToComplex1DFFTImageFilter()
+  ~OpenCLComplexToComplex1DFFTImageFilter() override
   {
     if (m_PlanComputed)
     {

@@ -644,8 +644,8 @@ public:
 
 protected:
   SliceSeriesSpecialCoordinatesImage();
+  ~SliceSeriesSpecialCoordinatesImage() override = default;
 
-  virtual ~SliceSeriesSpecialCoordinatesImage() {}
   virtual void
   PrintSelf(std::ostream & os, Indent indent) const override;
 

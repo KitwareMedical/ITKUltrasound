@@ -87,7 +87,7 @@ public:
 
 protected:
   HDF5UltrasoundImageIO();
-  ~HDF5UltrasoundImageIO();
+  ~HDF5UltrasoundImageIO() override;
 
   virtual SizeType
   GetHeaderSize() const override;

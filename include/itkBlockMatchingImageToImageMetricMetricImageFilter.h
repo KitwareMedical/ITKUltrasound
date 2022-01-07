@@ -74,7 +74,7 @@ public:
 
 protected:
   ImageToImageMetricMetricImageFilter();
-  virtual ~ImageToImageMetricMetricImageFilter() {}
+  ~ImageToImageMetricMetricImageFilter() override = default;
 
   virtual void
   GenerateOutputInformation() override;

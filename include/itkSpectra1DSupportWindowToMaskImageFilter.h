@@ -65,7 +65,7 @@ public:
 
 protected:
   Spectra1DSupportWindowToMaskImageFilter();
-  virtual ~Spectra1DSupportWindowToMaskImageFilter(){};
+  ~Spectra1DSupportWindowToMaskImageFilter() override = default;
 
   virtual void
   GenerateData() override;

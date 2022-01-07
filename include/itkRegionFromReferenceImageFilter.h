@@ -105,7 +105,7 @@ public:
 
 protected:
   RegionFromReferenceImageFilter() { this->SetNumberOfRequiredInputs(2); }
-  ~RegionFromReferenceImageFilter() {}
+  ~RegionFromReferenceImageFilter() override = default;
 
   virtual void
   VerifyInputInformation() const override;

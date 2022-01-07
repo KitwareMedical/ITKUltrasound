@@ -70,7 +70,7 @@ public:
 
 protected:
   SpecialCoordinatesImageToVTKStructuredGridFilter();
-  virtual ~SpecialCoordinatesImageToVTKStructuredGridFilter();
+  ~SpecialCoordinatesImageToVTKStructuredGridFilter() override = default;
 
   /** Make a DataObject of the correct type to be used as the specified output. */
   using DataObjectPointerArraySizeType = ProcessObject::DataObjectPointerArraySizeType;

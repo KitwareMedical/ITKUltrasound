@@ -114,7 +114,7 @@ public:
 
 protected:
   BModeImageFilter();
-  ~BModeImageFilter() {}
+  ~BModeImageFilter() override = default;
 
   virtual void
   PrintSelf(std::ostream & os, Indent indent) const override;

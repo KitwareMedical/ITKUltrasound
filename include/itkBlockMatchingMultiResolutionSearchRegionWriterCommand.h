@@ -70,7 +70,7 @@ public:
 
 protected:
   MultiResolutionSearchRegionWriterCommand();
-  ~MultiResolutionSearchRegionWriterCommand();
+  ~MultiResolutionSearchRegionWriterCommand() override = default;
 
   SearchRegionImageComponentPointer        m_SearchRegionImageComponent;
   SearchRegionComponentWriterType::Pointer m_SearchRegionComponentWriter;

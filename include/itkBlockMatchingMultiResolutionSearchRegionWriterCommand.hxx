@@ -42,11 +42,6 @@ MultiResolutionSearchRegionWriterCommand<TMultiResolutionMethod>::MultiResolutio
 
 
 template <typename TMultiResolutionMethod>
-MultiResolutionSearchRegionWriterCommand<TMultiResolutionMethod>::~MultiResolutionSearchRegionWriterCommand()
-{}
-
-
-template <typename TMultiResolutionMethod>
 void
 MultiResolutionSearchRegionWriterCommand<TMultiResolutionMethod>::Execute(const itk::Object *      object,
                                                                           const itk::EventObject & event)

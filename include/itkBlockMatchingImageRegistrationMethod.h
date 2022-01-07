@@ -189,7 +189,7 @@ public:
 
 protected:
   ImageRegistrationMethod();
-  virtual ~ImageRegistrationMethod() {}
+  ~ImageRegistrationMethod() override = default;
 
   void
   GenerateOutputInformation() override;

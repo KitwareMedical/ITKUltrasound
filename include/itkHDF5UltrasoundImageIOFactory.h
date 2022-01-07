@@ -68,7 +68,7 @@ public:
 
 protected:
   HDF5UltrasoundImageIOFactory();
-  ~HDF5UltrasoundImageIOFactory();
+  ~HDF5UltrasoundImageIOFactory() override;
   virtual void
   PrintSelf(std::ostream & os, Indent indent) const override;
 };

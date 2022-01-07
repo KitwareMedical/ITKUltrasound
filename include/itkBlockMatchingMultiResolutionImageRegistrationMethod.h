@@ -182,7 +182,7 @@ public:
 
 protected:
   MultiResolutionImageRegistrationMethod();
-  virtual ~MultiResolutionImageRegistrationMethod(){};
+  ~MultiResolutionImageRegistrationMethod() override = default;
 
   /** The size and spacing of the search region image at the lowest level is
    * used to generate the information for the output image. */

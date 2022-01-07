@@ -454,12 +454,11 @@ protected:
   CurvilinearArraySpecialCoordinatesImage()
   {
     m_RadiusSampleSize = 1;
-    m_LateralAngularSeparation = 1 * (2.0 * vnl_math::pi / 360.0); // 1
-                                                                   // degree
+    m_LateralAngularSeparation = 1 * (2.0 * vnl_math::pi / 360.0); // 1 degree
     m_FirstSampleDistance = 0;
   }
-
-  virtual ~CurvilinearArraySpecialCoordinatesImage() {}
+  ~CurvilinearArraySpecialCoordinatesImage() override = default;
+  
   virtual void
   PrintSelf(std::ostream & os, Indent indent) const override;
 

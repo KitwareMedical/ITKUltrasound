@@ -67,7 +67,7 @@ public:
 
 protected:
   UltrasoundImageFileReader();
-  ~UltrasoundImageFileReader() {}
+  ~UltrasoundImageFileReader() override = default;
 
   /** Prepare the allocation of the output image during the first back
    * propagation of the pipeline. */

@@ -75,7 +75,7 @@ public:
 
 protected:
   OpenCLInverse1DFFTImageFilter();
-  virtual ~OpenCLInverse1DFFTImageFilter()
+  ~OpenCLInverse1DFFTImageFilter() override
   {
     if (m_PlanComputed)
     {

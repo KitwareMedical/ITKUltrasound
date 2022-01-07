@@ -69,7 +69,7 @@ public:
 
 protected:
   MultiResolutionIterationObserver();
-  virtual ~MultiResolutionIterationObserver();
+  ~MultiResolutionIterationObserver() override;
 
   // search region radius
   std::string m_OutputFilePrefix;

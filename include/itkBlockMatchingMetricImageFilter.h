@@ -110,7 +110,7 @@ public:
 
 protected:
   MetricImageFilter();
-  virtual ~MetricImageFilter(){};
+  ~MetricImageFilter() override = default;
 
   void
   GenerateOutputInformation() override;

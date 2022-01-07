@@ -74,7 +74,7 @@ public:
 
 protected:
   OpenCLForward1DFFTImageFilter();
-  virtual ~OpenCLForward1DFFTImageFilter()
+  ~OpenCLForward1DFFTImageFilter() override
   {
     if (m_PlanComputed)
     {
