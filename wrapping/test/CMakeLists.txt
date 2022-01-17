@@ -24,3 +24,14 @@ itk_python_add_test(NAME PythonSpectra1DAveragingImageFilterTest
     -i DATA{${test_input_dir}/spectra_pixel_image.mha}
     -i DATA{${test_input_dir}/spectra_pixel_image.mha}
   )
+
+itk_python_add_test(NAME PythonSpectra1DNormalizeImageFilterTest
+  TEST_DRIVER_ARGS
+  --compare
+    DATA{${test_baseline_dir}/itkSpectra1DNormalizeImageFilterTestBaseline.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkSpectra1DNormalizeImageFilterTest.mha
+  COMMAND PythonSpectra1DNormalizeImageFilterTest.py
+    DATA{${test_input_dir}/spectra_pixel_image.mha}
+    DATA{${test_input_dir}/spectra_pixel_image.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkSpectra1DNormalizeImageFilterTest.mha
+  )

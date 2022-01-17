@@ -23,6 +23,7 @@ set(WRAPPER_SUBMODULE_ORDER
   itkSpeckleReducingAnisotropicDiffusionImageFilter
   itkImageToImageFilter
   itkSpectra1DAveragingImageFilter
+  itkSpectra1DNormalizeImageFilter
   )
 itk_auto_load_submodules()
 itk_end_wrap_module()
