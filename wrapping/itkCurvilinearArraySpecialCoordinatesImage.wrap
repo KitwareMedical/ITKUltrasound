@@ -97,3 +97,6 @@ itk_wrap_class("itk::Spectra1DSupportWindowToMaskImageFilter" POINTER_WITH_2_SUP
   endforeach()
 itk_end_wrap_class()
 
+set(WRAPPER_SWIG_LIBRARY_FILES ${WRAPPER_SWIG_LIBRARY_FILES}
+  "${CMAKE_CURRENT_SOURCE_DIR}/itkCurvilinearArraySpecialCoordinatesImageConfig.i")
+message(STATUS "WRAPPER_SWIG_LIBRARY_FILES ${WRAPPER_SWIG_LIBRARY_FILES}")
