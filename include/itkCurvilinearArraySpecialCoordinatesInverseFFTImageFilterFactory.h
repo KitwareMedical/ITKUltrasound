@@ -106,11 +106,11 @@ protected:
   {
     OverrideFFTImageFilterType<typename FFTImageFilterTraits<TFFTImageFilter>::template InputPixelType<float>,
                                typename FFTImageFilterTraits<TFFTImageFilter>::template OutputPixelType<float>>(
-      typename FFTImageFilterTraits<TFFTImageFilter>::FilterDimensions{});
+      std::integer_sequence<unsigned int, 4, 3, 2, 1>{});
 
     OverrideFFTImageFilterType<typename FFTImageFilterTraits<TFFTImageFilter>::template InputPixelType<double>,
                                typename FFTImageFilterTraits<TFFTImageFilter>::template OutputPixelType<double>>(
-      typename FFTImageFilterTraits<TFFTImageFilter>::FilterDimensions{});
+      std::integer_sequence<unsigned int, 4, 3, 2, 1>{});
   }
 };
 
