@@ -18,6 +18,7 @@
 
 #include "itkTimeGainCompensationImageFilter.h"
 #include "itkCurvilinearArraySpecialCoordinatesImage.h"
+#include "itkCurvilinearArraySpecialCoordinatesForwardFFTImageFilterFactory.h"
 #include "itkBModeImageFilter.h"
 #include "itkCastImageFilter.h"
 #include "itkRescaleIntensityImageFilter.h"
@@ -88,6 +89,10 @@ itkTimeGainCompensationImageFilterTest(int argc, char * argv[])
   using CasterType = itk::CastImageFilter<IntegerImageType, RealImageType>;
   CasterType::Pointer caster = CasterType::New();
   caster->SetInput(tgcFilter->GetOutput());
+
+  using FFTFactoryType =
+    itk::CurvilinearArraySpecialCoordinatesForwardFFTImageFilterFactory<itk::VnlForward1DFFTImageFilter>;
+  FFTFactoryType::RegisterOneFactory();
 
   using BModeFilterType = itk::BModeImageFilter<RealImageType, RealImageType>;
   BModeFilterType::Pointer bmodeFilter = BModeFilterType::New();
