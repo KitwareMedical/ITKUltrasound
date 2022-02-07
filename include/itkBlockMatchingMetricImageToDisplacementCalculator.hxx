@@ -18,7 +18,6 @@
 #ifndef itkBlockMatchingMetricImageToDisplacementCalculator_hxx
 #define itkBlockMatchingMetricImageToDisplacementCalculator_hxx
 
-#include "itkBlockMatchingMetricImageToDisplacementCalculator.h"
 
 #include "itkImageRegionConstIterator.h"
 #include "itkImageRegionIterator.h"

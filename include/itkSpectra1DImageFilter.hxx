@@ -18,7 +18,6 @@
 #ifndef itkSpectra1DImageFilter_hxx
 #define itkSpectra1DImageFilter_hxx
 
-#include "itkSpectra1DImageFilter.h"
 
 #include "itkImageLinearConstIteratorWithIndex.h"
 #include "itkImageLinearIteratorWithIndex.h"

@@ -18,7 +18,6 @@
 #ifndef itkBlockMatchingMultiResolutionIterationDisplacementCalculatorCommand_hxx
 #define itkBlockMatchingMultiResolutionIterationDisplacementCalculatorCommand_hxx
 
-#include "itkBlockMatchingMultiResolutionIterationDisplacementCalculatorCommand.h"
 
 namespace itk
 {

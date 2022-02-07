@@ -18,7 +18,6 @@
 #ifndef itkBModeImageFilter_hxx
 #define itkBModeImageFilter_hxx
 
-#include "itkBModeImageFilter.h"
 
 #include "itkMetaDataDictionary.h"
 

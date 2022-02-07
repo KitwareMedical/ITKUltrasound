@@ -18,7 +18,6 @@
 #ifndef itkSpecialCoordinatesImageToVTKStructuredGridFilter_hxx
 #define itkSpecialCoordinatesImageToVTKStructuredGridFilter_hxx
 
-#include "itkSpecialCoordinatesImageToVTKStructuredGridFilter.h"
 
 #include "itkImageRegionConstIteratorWithIndex.h"
 #include "itkPixelTraits.h"

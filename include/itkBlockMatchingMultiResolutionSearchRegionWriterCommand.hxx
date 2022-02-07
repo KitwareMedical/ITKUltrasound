@@ -18,7 +18,6 @@
 #ifndef itkBlockMatchingMultiResolutionSearchRegionWriterCommand_hxx
 #define itkBlockMatchingMultiResolutionSearchRegionWriterCommand_hxx
 
-#include "itkBlockMatchingMultiResolutionSearchRegionWriterCommand.h"
 
 #include <fstream>
 #include <iostream>

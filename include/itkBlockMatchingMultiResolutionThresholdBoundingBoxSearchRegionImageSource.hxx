@@ -18,7 +18,6 @@
 #ifndef itkBlockMatchingMultiResolutionThresholdBoundingBoxSearchRegionImageSource_hxx
 #define itkBlockMatchingMultiResolutionThresholdBoundingBoxSearchRegionImageSource_hxx
 
-#include "itkBlockMatchingMultiResolutionThresholdBoundingBoxSearchRegionImageSource.h"
 
 #include "itkImageLinearConstIteratorWithIndex.h"
 #include "itkImageRegionConstIterator.h"

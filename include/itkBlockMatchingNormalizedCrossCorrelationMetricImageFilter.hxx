@@ -18,7 +18,6 @@
 #ifndef itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter_hxx
 #define itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter_hxx
 
-#include "itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter.h"
 
 #include "itkConstNeighborhoodIterator.h"
 #include "itkImageKernelOperator.h"

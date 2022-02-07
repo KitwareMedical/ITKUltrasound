@@ -1,11 +1,5 @@
 itk_module_test()
 
-if(ITK_USE_FFTWF OR ITK_USE_FFTWD)
-  set(use_fftw 1)
-else()
-  set(use_fftw 0)
-endif()
-
 set(UltrasoundTests
   itkAnalyticSignalImageFilterTest.cxx
   itkBModeImageFilterTestTiming.cxx
@@ -88,69 +82,7 @@ itk_add_test(NAME itkCurvilinearArrayUltrasoundImageFileReaderTest
   itkCurvilinearArrayUltrasoundImageFileReaderTest
     DATA{Input/curvilinear_envelope_with_metadata.mha}
     )
-itk_add_test(NAME itkComplexToComplex1DFFTImageFilterTest
-  COMMAND UltrasoundTestDriver
-  --compare
-    ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-    ${ITK_TEST_OUTPUT_DIR}/itkComplexToComplex1DFFTImageFilterTestOutput.mha
-  itkComplexToComplex1DFFTImageFilterTest
-    ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkForward1DFFTImageFilterTestBaseline
-    ${ITK_TEST_OUTPUT_DIR}/itkComplexToComplex1DFFTImageFilterTestOutput.mha
-    )
-# use a forward fft, then inverse fft for this instead because of the FullMatrix
-# issue
-itk_add_test(NAME itkFFT1DImageFilterTest
-  COMMAND UltrasoundTestDriver
-  --compare
-    ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-    ${ITK_TEST_OUTPUT_DIR}/itkFFT1DImageFilterTestOutput.mha
-  itkFFT1DImageFilterTest
-    ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-    ${ITK_TEST_OUTPUT_DIR}/itkFFT1DImageFilterTestOutput.mha
-    )
-itk_add_test(NAME itkVnlComplexToComplex1DFFTImageFilterTest
-  COMMAND UltrasoundTestDriver
-  --compare
-    ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-    ${ITK_TEST_OUTPUT_DIR}/itkVnlComplexToComplex1DFFTImageFilterTestOutput.mhd
-  itkComplexToComplex1DFFTImageFilterTest
-    ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkForward1DFFTImageFilterTestBaseline
-    ${ITK_TEST_OUTPUT_DIR}/itkVnlComplexToComplex1DFFTImageFilterTestOutput.mhd
-    1
-    )
-itk_add_test(NAME itkVnlForward1DFFTImageFilterTest
-  COMMAND UltrasoundTestDriver
-  --compare
-    ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkForward1DFFTImageFilterTestBaselineRealFull.mhd
-    ${ITK_TEST_OUTPUT_DIR}/itkVnlForward1DFFTImageFilterTestOutputReal.mha
-  --compare
-    ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkForward1DFFTImageFilterTestBaselineImaginaryFull.mhd
-    ${ITK_TEST_OUTPUT_DIR}/itkVnlForward1DFFTImageFilterTestOutputImaginary.mha
-  itkForward1DFFTImageFilterTest
-    ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-    ${ITK_TEST_OUTPUT_DIR}/itkVnlForward1DFFTImageFilterTestOutput
-    1
-    )
-itk_add_test( NAME itkVnlInverse1DFFTImageFilterTest
-  COMMAND UltrasoundTestDriver
-  --compare
-    ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-    ${ITK_TEST_OUTPUT_DIR}/itkVnlInverse1DFFTImageFilterTestOutput.mhd
-  itkInverse1DFFTImageFilterTest
-    ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkForward1DFFTImageFilterTestBaseline
-    ${ITK_TEST_OUTPUT_DIR}/itkVnlInverse1DFFTImageFilterTestOutput.mhd
-    1
-    )
-itk_add_test(NAME itkVnlFFT1DImageFilterTest
-  COMMAND UltrasoundTestDriver
-  --compare
-    ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-    ${ITK_TEST_OUTPUT_DIR}/itkVnlFFT1DImageFilterTestOutput.mha
-  itkFFT1DImageFilterTest
-    ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-    ${ITK_TEST_OUTPUT_DIR}/itkVnlFFT1DImageFilterTestOutput.mha
-    1
-    )
+
 itk_add_test(NAME itkSliceSeriesSpecialCoordinatesImageTest
   COMMAND UltrasoundTestDriver
   --compareIntensityTolerance 10.0
@@ -304,29 +236,6 @@ itk_add_test(NAME itkButterworthBandpass1DFilterTest
     DATA{Input/rf_voltage_15_freq_0005000000_2017-5-31_12-36-44.nrrd}
     ${ITK_TEST_OUTPUT_DIR}/itkButterworthBandpass1DFilterTestOutput.mha
   )
-
-
-itk_add_test(NAME itkForward1DFFTImageFilterTest
-  COMMAND UltrasoundTestDriver
-  --compare
-    ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkForward1DFFTImageFilterTestBaselineRealFull.mhd
-    ${ITK_TEST_OUTPUT_DIR}/itkForward1DFFTImageFilterTestOutputReal.mha
-  --compare
-    ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkForward1DFFTImageFilterTestBaselineImaginaryFull.mhd
-    ${ITK_TEST_OUTPUT_DIR}/itkForward1DFFTImageFilterTestOutputImaginary.mha
-  itkForward1DFFTImageFilterTest
-    ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-    ${ITK_TEST_OUTPUT_DIR}/itkForward1DFFTImageFilterTestOutput
-    )
-itk_add_test(NAME itkInverse1DFFTImageFilterTest
-  COMMAND UltrasoundTestDriver
-  --compare
-    ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-    ${ITK_TEST_OUTPUT_DIR}/itkInverse1DFFTImageFilterTestOutput.mha
-  itkInverse1DFFTImageFilterTest
-    ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkForward1DFFTImageFilterTestBaseline
-    ${ITK_TEST_OUTPUT_DIR}/itkInverse1DFFTImageFilterTestOutput.mha
-    )
     
 itk_add_test(NAME itkSpeckleReducingAnisotropicDiffusionImageFilterTest
   COMMAND UltrasoundTestDriver
@@ -347,52 +256,6 @@ itk_add_test(NAME itkNrrdSequenceToVideoStreamTest
   itkNrrdSequenceToVideoStreamTest
   DATA{Input/SeqDemoBMode.seq.nrrd}
   ${ITK_TEST_OUTPUT_DIR}/itkNrrdSequenceToVideoStreamTestOutput.mha)
-    
-if(use_fftw)
-  itk_add_test(NAME itkFFTWForward1DFFTImageFilterTest
-    COMMAND UltrasoundTestDriver
-    --compare
-      ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkForward1DFFTImageFilterTestBaselineRealFull.mhd
-      ${ITK_TEST_OUTPUT_DIR}/itkFFTWForward1DFFTImageFilterTestOutputReal.mha
-    --compare
-      ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkForward1DFFTImageFilterTestBaselineImaginaryFull.mhd
-      ${ITK_TEST_OUTPUT_DIR}/itkFFTWForward1DFFTImageFilterTestOutputImaginary.mha
-    itkForward1DFFTImageFilterTest
-      ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-      ${ITK_TEST_OUTPUT_DIR}/itkFFTWForward1DFFTImageFilterTestOutput
-      2
-      )
-  itk_add_test(NAME itkFFTWInverse1DFFTImageFilterTest
-    COMMAND UltrasoundTestDriver
-    --compare
-      ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-      ${ITK_TEST_OUTPUT_DIR}/itkFFTWInverse1DFFTImageFilterTestOutput.mha
-    itkInverse1DFFTImageFilterTest
-      ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkForward1DFFTImageFilterTestBaseline
-      ${ITK_TEST_OUTPUT_DIR}/itkFFTWInverse1DFFTImageFilterTestOutput.mha
-      2
-      )
-  itk_add_test(NAME itkFFTWComplexToComplex1DFFTImageFilterTest
-    COMMAND UltrasoundTestDriver
-    --compare
-      ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-      ${ITK_TEST_OUTPUT_DIR}/itkFFTWComplexToComplex1DFFTImageFilterTestOutput.mha
-    itkComplexToComplex1DFFTImageFilterTest
-      ${CMAKE_CURRENT_SOURCE_DIR}/Input/itkForward1DFFTImageFilterTestBaseline
-      ${ITK_TEST_OUTPUT_DIR}/itkFFTWComplexToComplex1DFFTImageFilterTestOutput.mha
-      2
-      )
-  itk_add_test(NAME itkFFTW1DImageFilterTest
-    COMMAND UltrasoundTestDriver
-    --compare
-      ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-      ${ITK_TEST_OUTPUT_DIR}/itkFFTW1DImageFilterTestOutput.mha
-    itkFFT1DImageFilterTest
-      ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
-      ${ITK_TEST_OUTPUT_DIR}/itkFFTW1DImageFilterTestOutput.mha
-      2
-      )
-endif()
 
 if(ITKUltrasound_USE_clFFT)
   itk_add_test(NAME itkOpenCLForward1DFFTImageFilterTest

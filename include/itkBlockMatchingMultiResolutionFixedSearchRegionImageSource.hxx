@@ -18,7 +18,6 @@
 #ifndef itkBlockMatchingMultiResolutionFixedSearchRegionImageSource_hxx
 #define itkBlockMatchingMultiResolutionFixedSearchRegionImageSource_hxx
 
-#include "itkBlockMatchingMultiResolutionFixedSearchRegionImageSource.h"
 
 #include "itkImageRegionConstIterator.h"
 #include "itkImageRegionIteratorWithIndex.h"

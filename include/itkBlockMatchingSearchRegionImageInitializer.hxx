@@ -18,7 +18,6 @@
 #ifndef itkBlockMatchingSearchRegionImageInitializer_hxx
 #define itkBlockMatchingSearchRegionImageInitializer_hxx
 
-#include "itkBlockMatchingSearchRegionImageInitializer.h"
 
 #include "itkImageRegionIteratorWithIndex.h"
 

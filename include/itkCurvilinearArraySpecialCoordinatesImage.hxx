@@ -27,7 +27,6 @@
  *=========================================================================*/
 #ifndef itkCurvilinearArraySpecialCoordinatesImage_hxx
 #define itkCurvilinearArraySpecialCoordinatesImage_hxx
-#include "itkCurvilinearArraySpecialCoordinatesImage.h"
 
 #include <complex>
 

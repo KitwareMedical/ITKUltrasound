@@ -18,7 +18,6 @@
 #ifndef itkAnalyticSignalImageFilter_hxx
 #define itkAnalyticSignalImageFilter_hxx
 
-#include "itkAnalyticSignalImageFilter.h"
 
 #include "itkVnlForward1DFFTImageFilter.h"
 #include "itkVnlComplexToComplex1DFFTImageFilter.h"

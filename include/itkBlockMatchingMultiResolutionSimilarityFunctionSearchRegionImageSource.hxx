@@ -18,7 +18,6 @@
 #ifndef itkBlockMatchingMultiResolutionSimilarityFunctionSearchRegionImageSource_hxx
 #define itkBlockMatchingMultiResolutionSimilarityFunctionSearchRegionImageSource_hxx
 
-#include "itkBlockMatchingMultiResolutionSimilarityFunctionSearchRegionImageSource.h"
 #include "itkBlockMatchingMaximumPixelDisplacementCalculator.h"
 
 #include "itkImageConstIteratorWithIndex.h"

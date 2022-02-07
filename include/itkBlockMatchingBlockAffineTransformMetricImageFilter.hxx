@@ -18,7 +18,6 @@
 #ifndef itkBlockMatchingBlockAffineTransformMetricImageFilter_hxx
 #define itkBlockMatchingBlockAffineTransformMetricImageFilter_hxx
 
-#include "itkBlockMatchingBlockAffineTransformMetricImageFilter.h"
 
 #include "itkImageRegionIteratorWithIndex.h"
 #include "itkImageRegionIterator.h"

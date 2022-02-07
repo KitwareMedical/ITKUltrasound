@@ -27,7 +27,6 @@
  *=========================================================================*/
 #ifndef itkSliceSeriesSpecialCoordinatesImage_hxx
 #define itkSliceSeriesSpecialCoordinatesImage_hxx
-#include "itkSliceSeriesSpecialCoordinatesImage.h"
 
 namespace itk
 {
