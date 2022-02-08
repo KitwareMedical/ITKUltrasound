@@ -15,8 +15,6 @@ itk_module(Ultrasound
     ITKIOImageBase
     ITKTransform
     ITKRegistrationCommon
-    ITKVideoCore
-    ITKVideoIO
     ${_fft_depends}
   COMPILE_DEPENDS
     SplitComponents
@@ -27,6 +25,9 @@ itk_module(Ultrasound
     ITKHDF5
     ITKTestKernel
     ITKImageSources
+  TEST_DEPENDS
+    ITKVideoCore
+    ITKVideoIO
   EXCLUDE_FROM_DEFAULT
   ENABLE_SHARED
   DESCRIPTION
