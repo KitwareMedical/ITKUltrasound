@@ -2,6 +2,7 @@ itk_module_test()
 
 set(UltrasoundTests
   itkAnalyticSignalImageFilterTest.cxx
+  itkAttenuationImageFilterTest.cxx
   itkBModeImageFilterTestTiming.cxx
   itkCurvilinearArraySpecialCoordinatesImageTest.cxx
   itkCurvilinearArrayUltrasoundImageFileReaderTest.cxx
@@ -50,6 +51,39 @@ itk_add_test(NAME itkAnalyticSignalImageFilterTest
     ${CMAKE_CURRENT_SOURCE_DIR}/Input/TreeBarkTexture.png
     ${ITK_TEST_OUTPUT_DIR}/itkAnalyticSignalImageFilterTestOutput
     )
+itk_add_test(NAME itkAttenuationImageFilterTest
+  COMMAND UltrasoundTestDriver
+  --compare
+    DATA{Baseline/itkAttenuationImageFilterTestOutputBaseline.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterTestOutput.mha
+  itkAttenuationImageFilterTest
+    DATA{Input/UnfusedRF-a0-spectra-cropped.mhd,UnfusedRF-a0-spectra-cropped.raw}
+    DATA{Input/UnfusedRF-a0-spectra-label_1-cropped.mhd,UnfusedRF-a0-spectra-label_1-cropped.raw}
+    ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterTestOutput.mha
+  )
+itk_add_test(NAME itkAttenuationImageFilterMultithreadedTest
+  COMMAND UltrasoundTestDriver
+  --compare
+    DATA{Baseline/itkAttenuationImageFilterTestOutputBaseline.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterMultithreadedTestOutput.mha
+  itkAttenuationImageFilterTest
+    DATA{Input/UnfusedRF-a0-spectra-cropped.mhd,UnfusedRF-a0-spectra-cropped.raw}
+    DATA{Input/UnfusedRF-a0-spectra-label_1-cropped.mhd,UnfusedRF-a0-spectra-label_1-cropped.raw}
+    ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterMultithreadedTestOutput.mha
+    5 # work units
+  )
+itk_add_test(NAME itkAttenuationImageFilterFixedEstimationDistanceTest
+  COMMAND UltrasoundTestDriver
+  --compare
+    DATA{Baseline/itkAttenuationImageFilterTestFixedEstimationDepthBaseline.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterTestFixedEstimationDepthOutput.mha
+  itkAttenuationImageFilterTest
+    DATA{Input/UnfusedRF-a0-spectra-cropped.mhd,UnfusedRF-a0-spectra-cropped.raw}
+    DATA{Input/UnfusedRF-a0-spectra-label_1-cropped.mhd,UnfusedRF-a0-spectra-label_1-cropped.raw}
+    ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterTestFixedEstimationDepthOutput.mha
+    5   # work units
+    3.0 # Distance between pixels sampled for attenuation estimation
+  )
 itk_add_test(NAME itkBModeImageFilterTestTiming
   COMMAND UltrasoundTestDriver
   --compare
