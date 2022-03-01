@@ -25,6 +25,7 @@ itk_module(Ultrasound
     ITKHDF5
     ITKTestKernel
     ITKImageSources
+    ITKEigen3
   TEST_DEPENDS
     ITKVideoCore
     ITKVideoIO
