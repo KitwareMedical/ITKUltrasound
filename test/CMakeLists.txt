@@ -56,20 +56,30 @@ itk_add_test(NAME itkAttenuationImageFilterTest
   --compare
     DATA{Baseline/itkAttenuationImageFilterTestOutputBaseline.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterTestOutput.mha
+  --compare
+    DATA{Baseline/itkAttenuationImageFilterTestMaskOutput.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterTestMaskOutput.mha
   itkAttenuationImageFilterTest
     DATA{Input/UnfusedRF-a0-spectra-cropped.mhd,UnfusedRF-a0-spectra-cropped.raw}
     DATA{Input/UnfusedRF-a0-spectra-label_1-cropped.mhd,UnfusedRF-a0-spectra-label_1-cropped.raw}
     ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterTestOutput.mha
+    ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterTestMaskOutput.mha
+    1 # work units
+    0.0 # Distance between pixels sampled for attenuation estimation; 0.0 -> inclusion length
   )
 itk_add_test(NAME itkAttenuationImageFilterMultithreadedTest
   COMMAND UltrasoundTestDriver
   --compare
     DATA{Baseline/itkAttenuationImageFilterTestOutputBaseline.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterMultithreadedTestOutput.mha
+  --compare
+    DATA{Baseline/itkAttenuationImageFilterTestMaskOutput.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterTestMaskOutput.mha
   itkAttenuationImageFilterTest
     DATA{Input/UnfusedRF-a0-spectra-cropped.mhd,UnfusedRF-a0-spectra-cropped.raw}
     DATA{Input/UnfusedRF-a0-spectra-label_1-cropped.mhd,UnfusedRF-a0-spectra-label_1-cropped.raw}
     ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterMultithreadedTestOutput.mha
+    ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterTestMaskOutput.mha
     5 # work units
   )
 itk_add_test(NAME itkAttenuationImageFilterFixedEstimationDistanceTest
@@ -77,10 +87,14 @@ itk_add_test(NAME itkAttenuationImageFilterFixedEstimationDistanceTest
   --compare
     DATA{Baseline/itkAttenuationImageFilterTestFixedEstimationDepthBaseline.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterTestFixedEstimationDepthOutput.mha
+  --compare
+    DATA{Baseline/itkAttenuationImageFilterTestMaskOutput.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterTestMaskOutput.mha
   itkAttenuationImageFilterTest
     DATA{Input/UnfusedRF-a0-spectra-cropped.mhd,UnfusedRF-a0-spectra-cropped.raw}
     DATA{Input/UnfusedRF-a0-spectra-label_1-cropped.mhd,UnfusedRF-a0-spectra-label_1-cropped.raw}
     ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterTestFixedEstimationDepthOutput.mha
+    ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterTestMaskOutput.mha
     5   # work units
     3.0 # Distance between pixels sampled for attenuation estimation
   )

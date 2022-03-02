@@ -30,7 +30,7 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
   if (argc < 3)
   {
     std::cerr << "Usage: " << argv[0];
-    std::cerr << " spectraImage maskImage outputImage <numWorkUnits> <fixedEstimationDepthMM>";
+    std::cerr << " spectraImage maskImage outputImage <outputMaskImage> <numWorkUnits> <fixedEstimationDepthMM>";
     std::cerr << std::endl;
     return EXIT_FAILURE;
   }
@@ -45,6 +45,12 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
 
   SpectraImageType::Pointer inputImage = itk::ReadImage<SpectraImageType>(std::string(argv[1]));
   MaskImageType::Pointer    maskImage = itk::ReadImage<MaskImageType>(std::string(argv[2]));
+
+  const std::string outputImagePath = argv[3];
+  const std::string outputMaskImagePath = (argc > 4 ? argv[4] : "");
+
+  unsigned int numWorkUnits = (argc > 5 ? std::atoi(argv[5]) : 1);
+  float        fixedEstimationDepthMM = (argc > 6 ? std::atof(argv[6]) : 0.0);
 
   // Initialize the filter
   using AttenuationFilterType = itk::AttenuationImageFilter<SpectraImageType, OutputImageType, MaskImageType>;
@@ -61,8 +67,8 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
   // Verify filter does not run without mask
   ITK_TRY_EXPECT_EXCEPTION(attenuationFilter->Update());
 
-  attenuationFilter->SetMaskImage(maskImage);
-  ITK_TEST_SET_GET_VALUE(maskImage, attenuationFilter->GetMaskImage());
+  attenuationFilter->SetInputMaskImage(maskImage);
+  ITK_TEST_SET_GET_VALUE(maskImage, attenuationFilter->GetInputMaskImage());
 
   // Bad scanline direction produces an error
   attenuationFilter->SetScanDirection(Dimension);
@@ -82,7 +88,6 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
   ITK_TEST_SET_GET_VALUE(3, attenuationFilter->GetFixedEstimationDepth());
 
   // Verify spatial distance is estimated to the nearest pixel center
-  float fixedEstimationDepthMM = (argc > 5 ? std::atof(argv[5]) : 0.0);
   attenuationFilter->SetFixedEstimationDepthMM(fixedEstimationDepthMM);
   ITK_TEST_EXPECT_TRUE(fabs(attenuationFilter->GetFixedEstimationDepthMM() - fixedEstimationDepthMM) <
                        (inputImage->GetSpacing()[0] / 2));
@@ -105,7 +110,6 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
   attenuationFilter->SetPadUpperBoundsMM(0.0);
   ITK_TEST_EXPECT_TRUE(fabs(attenuationFilter->GetPadUpperBoundsMM() - 0.0) < (inputImage->GetSpacing()[0] / 2));
 
-  unsigned int numWorkUnits = (argc > 4 ? std::atoi(argv[4]) : 1);
   attenuationFilter->SetNumberOfWorkUnits(numWorkUnits);
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(attenuationFilter, AttenuationImageFilter, ImageToImageFilter);
@@ -114,7 +118,13 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
   ITK_TRY_EXPECT_NO_EXCEPTION(attenuationFilter->Update());
 
   // Verify output
-  itk::WriteImage(attenuationFilter->GetOutput(), argv[3]);
+  itk::WriteImage(attenuationFilter->GetOutput(), outputImagePath);
+
+  // Verify mask output after erosion
+  if (outputMaskImagePath != "")
+  {
+    itk::WriteImage(attenuationFilter->GetOutputMaskImage(), outputMaskImagePath);
+  }
 
   return EXIT_SUCCESS;
 }
