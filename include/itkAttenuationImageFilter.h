@@ -103,8 +103,13 @@ public:
   using OutputRegionType = typename TOutputImage::RegionType;
   using OutputPixelType = typename TOutputImage::PixelType;
 
-  itkSetInputMacro(MaskImage, TMaskImage);
-  itkGetInputMacro(MaskImage, TMaskImage);
+  /** Input mask image represents input region for analysis */
+  itkSetInputMacro(InputMaskImage, TMaskImage);
+  itkGetInputMacro(InputMaskImage, TMaskImage);
+
+  /** Output mask image represents output region for analysis
+   *  after padding is applied */
+  itkGetConstMacro(OutputMaskImage, TMaskImage *);
 
   /** Label value indicating which mask pixel values should be included in analysis.
    *  A value of zero indicates that any nonzero pixel should be included.
@@ -248,7 +253,11 @@ private:
   ImageRegionSplitterDirection::Pointer m_RegionSplitter = ImageRegionSplitterDirection::New();
 
   /** Cache mask image reference before threaded execution to reduce calls to GetMaskImage() */
-  const MaskImageType * m_ThreadedMaskImage;
+  const MaskImageType * m_ThreadedInputMaskImage;
+
+  /** Output mask image may be eroded via m_PadUpperBounds and m_PadLowerBounds
+   *  along scan line direction */
+  MaskImagePointer m_OutputMaskImage = MaskImageType::New();
 };
 } // end namespace itk
 
