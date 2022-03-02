@@ -91,13 +91,13 @@ void
 AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::BeforeThreadedGenerateData()
 {
   // Verify inputs
-  if (this->GetMaskImage() == nullptr)
+  if (this->GetInputMaskImage() == nullptr)
   {
     itkExceptionMacro("Filter requires a mask image for inclusion estimates!");
   }
   else
   {
-    m_ThreadedMaskImage = this->GetMaskImage();
+    m_ThreadedInputMaskImage = this->GetInputMaskImage();
   }
 
   if (this->GetDirection() >= ImageDimension)
@@ -115,6 +115,13 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::BeforeThreadedGen
   // Initialize metric image
   this->GetOutput()->Allocate();
   this->GetOutput()->FillBuffer(0.0f);
+
+  // Initialize output mask image
+  const MaskImageType * inputMaskImage = this->GetInputMaskImage();
+  m_OutputMaskImage->CopyInformation(inputMaskImage);
+  m_OutputMaskImage->SetRegions(inputMaskImage->GetLargestPossibleRegion());
+  m_OutputMaskImage->Allocate();
+  m_OutputMaskImage->FillBuffer(0.0f);
 }
 
 template <typename TInputImage, typename TOutputImage, typename TMaskImage>
@@ -127,9 +134,9 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::DynamicThreadedGe
     return;
   }
 
-  const MaskImageType *  maskImage = this->GetMaskImage();
   const InputImageType * input = this->GetInput();
   OutputImageType *      output = this->GetOutput();
+  const MaskImageType *  inputMaskImage = this->GetInputMaskImage();
 
   ImageLinearConstIteratorWithIndex<TInputImage> it(input, regionForThread);
   it.SetDirection(m_Direction);
@@ -185,6 +192,9 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::DynamicThreadedGe
             // each thread writes only within its allotted output region.
             output->SetPixel(start, estimatedAttenuation);
           }
+
+          // Dynamically generate the output mask with values corresponding to input
+          m_OutputMaskImage->SetPixel(start, inputMaskImage->GetPixel(start));
 
           ++start[m_Direction];
         }
@@ -289,7 +299,7 @@ template <typename TInputImage, typename TOutputImage, typename TMaskImage>
 bool
 AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::ThreadedIsIncluded(InputIndexType index) const
 {
-  auto maskValue = m_ThreadedMaskImage->GetPixel(index);
+  auto maskValue = m_ThreadedInputMaskImage->GetPixel(index);
   return (m_LabelValue == 0 && maskValue > 0) || (m_LabelValue > 0 && maskValue == m_LabelValue);
 }
 
