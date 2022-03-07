@@ -50,6 +50,16 @@ itk_wrap_class("itk::ImageToImageFilter" POINTER_WITH_SUPERCLASS)
           "itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t2}}, ${d} >")
       endforeach()
     endforeach()
+
+    foreach(rt ${WRAP_ITK_REAL})
+      foreach(ct ${WRAP_ITK_COMPLEX_REAL})
+        itk_wrap_template("CASCI${ITKM_${rt}}${d}CASCI${ITKM_${ct}}${d}"
+        "itk::CurvilinearArraySpecialCoordinatesImage<  ${ITKT_${rt}}, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage<  ${ITKT_${ct}}, ${d} >")
+        itk_wrap_template("CASCI${ITKM_${ct}}${d}CASCI${ITKM_${rt}}${d}"
+        "itk::CurvilinearArraySpecialCoordinatesImage<  ${ITKT_${ct}}, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage<  ${ITKT_${rt}}, ${d} >")
+      endforeach()
+    endforeach()
+
     foreach(t3 ${WRAP_ITK_COMPLEX_REAL})
       itk_wrap_template("CASCI${ITKM_${t3}}${d}CASCI${ITKM_${t3}}${d}"
         "itk::CurvilinearArraySpecialCoordinatesImage<  ${ITKT_${t3}}, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage<  ${ITKT_${t3}}, ${d} >")

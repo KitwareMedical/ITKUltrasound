@@ -1,0 +1,45 @@
+itk_wrap_include("itkCurvilinearArraySpecialCoordinatesImage.h")
+
+itk_wrap_include("itkComplexToComplex1DFFTImageFilter.h")
+itk_wrap_class("itk::ComplexToComplex1DFFTImageFilter" POINTER)
+  foreach(d ${ITK_WRAP_IMAGE_DIMS})
+    if(d GREATER 0 AND d LESS 5)
+      foreach(t ${WRAP_ITK_COMPLEX_REAL})
+        itk_wrap_template("CASCI${ITKM_${t}}${d}CASCI${ITKM_${t}}${d}"
+          "itk::CurvilinearArraySpecialCoordinatesImage<${ITKT_${t}},${d}>, itk::CurvilinearArraySpecialCoordinatesImage<${ITKT_${t}},${d}>")
+      endforeach()
+    endif()
+  endforeach()
+itk_end_wrap_class()
+
+itk_wrap_class("itk::Forward1DFFTImageFilter" POINTER)
+  foreach(d ${ITK_WRAP_IMAGE_DIMS})
+    if(d GREATER 0 AND d LESS 5)
+      if(ITK_WRAP_complex_float AND ITK_WRAP_float)
+        itk_wrap_template("CASCIF${d}CASCICF${d}"
+        "itk::CurvilinearArraySpecialCoordinatesImage<float,${d}>, itk::CurvilinearArraySpecialCoordinatesImage<std::complex<float>,${d}>")
+      endif()
+      if(ITK_WRAP_complex_double AND ITK_WRAP_double)
+        itk_wrap_template("CASCID${d}CASCICD${d}"
+        "itk::CurvilinearArraySpecialCoordinatesImage<double,${d}>, itk::CurvilinearArraySpecialCoordinatesImage<std::complex<double>,${d}>")
+      endif()
+    endif()
+  endforeach()
+itk_end_wrap_class()
+
+itk_wrap_class("itk::Inverse1DFFTImageFilter" POINTER)
+  foreach(d ${ITK_WRAP_IMAGE_DIMS})
+    if(d GREATER 0 AND d LESS 5)
+      if(ITK_WRAP_complex_float AND ITK_WRAP_float)
+        itk_wrap_template("CASCIF${d}CASCICF${d}"
+        "itk::CurvilinearArraySpecialCoordinatesImage<std::complex<float>,${d}>, itk::CurvilinearArraySpecialCoordinatesImage<float,${d}>")
+      endif()
+      if(ITK_WRAP_complex_double AND ITK_WRAP_double)
+        itk_wrap_template("CASCID${d}CASCICD${d}"
+        "itk::CurvilinearArraySpecialCoordinatesImage<std::complex<double>,${d}>, itk::CurvilinearArraySpecialCoordinatesImage<double,${d}>")
+      endif()
+    endif()
+  endforeach()
+itk_end_wrap_class()
+
+itk_wrap_simple_class("itk::CurvilinearFFTImageFilterInitFactory" POINTER)
