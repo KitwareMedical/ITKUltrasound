@@ -7,14 +7,14 @@ if(${ITK_WRAP_float} AND NOT ${ITK_WRAP_complex_float})
 endif()
 
 itk_wrap_module(Ultrasound)
-set(WRAPPER_LIBRARY_GROUPS
+set(WRAPPER_SUBMODULE_ORDER
+  itkCurvilinearArraySpecialCoordinatesImage
   itkAttenuationImageFilter
   itkBlockMatchingMetricImageFilter
   itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter
   itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilter
   itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter
   itkSpectra1DSupportWindowImageFilter
-  itkCurvilinearArraySpecialCoordinatesImage
   itkFrequencyDomain1DFilterFunction
   itkFrequencyDomain1DImageFilter
   itkRegionFromReferenceImageFilter
