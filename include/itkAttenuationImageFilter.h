@@ -205,7 +205,7 @@ protected:
   BeforeThreadedGenerateData() override;
 
   void
-  DynamicThreadedGenerateData(const OutputRegionType &) override;
+  ThreadedGenerateData(const OutputRegionType & regionForThread, ThreadIdType) override;
 
   const ImageRegionSplitterBase *
   GetImageRegionSplitter() const override;
