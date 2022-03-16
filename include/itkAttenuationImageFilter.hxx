@@ -33,7 +33,7 @@ template <typename TInputImage, typename TOutputImage, typename TMaskImage>
 AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::AttenuationImageFilter()
 {
   this->SetNumberOfRequiredInputs(1);
-  this->DynamicMultiThreadingOn();
+  this->DynamicMultiThreadingOff();
 }
 
 template <typename TInputImage, typename TOutputImage, typename TMaskImage>
@@ -126,8 +126,9 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::BeforeThreadedGen
 
 template <typename TInputImage, typename TOutputImage, typename TMaskImage>
 void
-AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::DynamicThreadedGenerateData(
-  const OutputRegionType & regionForThread)
+AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::ThreadedGenerateData(
+  const OutputRegionType & regionForThread,
+  ThreadIdType)
 {
   if (regionForThread.GetNumberOfPixels() == 0)
   {
