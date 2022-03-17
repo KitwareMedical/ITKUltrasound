@@ -188,6 +188,7 @@ Spectra1DAveragingImageFilter<TInputImage, TOutputImage>::GenerateData()
         }
 
         progress.CompletedPixel();
+        iIt.NextLine();
       }
     }
   }
