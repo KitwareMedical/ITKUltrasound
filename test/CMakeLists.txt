@@ -193,6 +193,16 @@ itk_add_test(NAME itkSpectra1DAveragingImageFilterTest
     DATA{Input/spectra_pixel_image.mha}
     DATA{Input/spectra_pixel_image.mha}
     )
+itk_add_test(NAME itkSpectra1DAveragingImageFilterTest2
+  COMMAND UltrasoundTestDriver
+    --compare
+    DATA{Baseline/itkSpectra1DAveragingImageFilterTest2Baseline.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkSpectra1DAveragingImageFilterTest2.mha
+  itkSpectra1DAveragingImageFilterTest
+    ${ITK_TEST_OUTPUT_DIR}/itkSpectra1DAveragingImageFilterTest2.mha
+    DATA{Input/UnfusedRF-a0-spectra-cropped.mhd,UnfusedRF-a0-spectra-cropped.raw}
+    DATA{Input/UnfusedRF-a0-spectra-cropped.mhd,UnfusedRF-a0-spectra-cropped.raw}
+    )
 itk_add_test(NAME itkSpectra1DNormalizeImageFilterTest
   COMMAND UltrasoundTestDriver
     --compare
@@ -202,6 +212,16 @@ itk_add_test(NAME itkSpectra1DNormalizeImageFilterTest
     DATA{Input/spectra_pixel_image.mha}
     DATA{Input/spectra_pixel_image.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkSpectra1DNormalizeImageFilterTest.mha
+    )
+itk_add_test(NAME itkSpectra1DNormalizeImageFilterTest2
+  COMMAND UltrasoundTestDriver
+    --compare
+    DATA{Baseline/itkSpectra1DNormalizeImageFilterTest2Baseline.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkSpectra1DNormalizeImageFilterTest2.mha
+  itkSpectra1DNormalizeImageFilterTest
+    DATA{Input/UnfusedRF-a0-spectra-cropped.mhd,UnfusedRF-a0-spectra-cropped.raw}
+    DATA{Baseline/itkSpectra1DAveragingImageFilterTest2Baseline.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkSpectra1DNormalizeImageFilterTest2.mha
     )
 itk_add_test(NAME itkTimeGainCompensationImageFilterTest
   COMMAND UltrasoundTestDriver
