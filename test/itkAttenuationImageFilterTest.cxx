@@ -23,6 +23,7 @@
 #include "itkTestingMacros.h"
 
 #include "itkAttenuationImageFilter.h"
+#include "itkMaskedImageToHistogramFilter.h"
 
 int
 itkAttenuationImageFilterTest(int argc, char * argv[])
@@ -124,6 +125,29 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
   if (outputMaskImagePath != "")
   {
     itk::WriteImage(attenuationFilter->GetOutputMaskImage(), outputMaskImagePath);
+  }
+
+  // now boil it down to a single attenuation value
+  using HistogramFilterType = itk::Statistics::MaskedImageToHistogramFilter<OutputImageType, MaskImageType>;
+  auto histogramFilter = HistogramFilterType::New();
+  histogramFilter->SetInput(attenuationFilter->GetOutput());
+  histogramFilter->SetMaskImage(attenuationFilter->GetOutputMaskImage());
+  histogramFilter->SetMaskValue(1);
+  histogramFilter->SetMarginalScale(10);
+  HistogramFilterType::HistogramSizeType histogramSize{ 1 };
+  histogramSize[0] = 1e5;
+  histogramFilter->SetHistogramSize(histogramSize);
+  histogramFilter->Update();
+  auto histogram = histogramFilter->GetOutput();
+
+  // we will use median as a robust estimate of the mean
+  auto median = histogram->Quantile(0, 0.50);
+  std::cout << "Median attenuation: " << median << " dB/(MHz*cm)" << std::endl;
+
+  if (!std::isfinite(median))
+  {
+    std::cerr << "The median attenuation if not a finite number! It is: " << median << std::endl;
+    return EXIT_FAILURE;
   }
 
   return EXIT_SUCCESS;
