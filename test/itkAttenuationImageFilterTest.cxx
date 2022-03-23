@@ -24,6 +24,7 @@
 
 #include "itkAttenuationImageFilter.h"
 #include "itkMaskedImageToHistogramFilter.h"
+#include "itkMinimumMaximumImageCalculator.h"
 
 int
 itkAttenuationImageFilterTest(int argc, char * argv[])
@@ -127,16 +128,30 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
     itk::WriteImage(attenuationFilter->GetOutputMaskImage(), outputMaskImagePath);
   }
 
+  // discover mask's inside value
+  using MaxType = itk::MinimumMaximumImageCalculator<MaskImageType>;
+  auto maxCalculator = MaxType::New();
+  maxCalculator->SetImage(attenuationFilter->GetOutputMaskImage());
+  maxCalculator->ComputeMaximum();
+  LabelType maxMaskValue = maxCalculator->GetMaximum();
+  if (maxMaskValue == 0)
+  {
+    std::cerr << "The mask has been completely eroded away!" << std::endl;
+    return EXIT_FAILURE;
+  }
+
   // now boil it down to a single attenuation value
   using HistogramFilterType = itk::Statistics::MaskedImageToHistogramFilter<OutputImageType, MaskImageType>;
   auto histogramFilter = HistogramFilterType::New();
   histogramFilter->SetInput(attenuationFilter->GetOutput());
   histogramFilter->SetMaskImage(attenuationFilter->GetOutputMaskImage());
-  histogramFilter->SetMaskValue(1);
   histogramFilter->SetMarginalScale(10);
+
   HistogramFilterType::HistogramSizeType histogramSize{ 1 };
   histogramSize[0] = 1e5;
   histogramFilter->SetHistogramSize(histogramSize);
+
+  histogramFilter->SetMaskValue(maxMaskValue); // this is most likely the only label present
   histogramFilter->Update();
   auto histogram = histogramFilter->GetOutput();
 
