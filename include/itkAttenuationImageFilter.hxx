@@ -88,9 +88,10 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::GetImageRegionSpl
 
 template <typename TInputImage, typename TOutputImage, typename TMaskImage>
 void
-AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::BeforeThreadedGenerateData()
+AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::VerifyPreconditions() const
 {
-  // Verify inputs
+  Superclass::VerifyPreconditions();
+
   if (this->GetInputMaskImage() == nullptr)
   {
     itkExceptionMacro("Filter requires a mask image for inclusion estimates!");
@@ -109,7 +110,12 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::BeforeThreadedGen
   {
     itkExceptionMacro("RF sampling frequency was not set!");
   }
+}
 
+template <typename TInputImage, typename TOutputImage, typename TMaskImage>
+void
+AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::BeforeThreadedGenerateData()
+{
   Superclass::BeforeThreadedGenerateData();
 
   // Initialize metric image
@@ -122,6 +128,19 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::BeforeThreadedGen
   m_OutputMaskImage->SetRegions(inputMaskImage->GetLargestPossibleRegion());
   m_OutputMaskImage->Allocate();
   m_OutputMaskImage->FillBuffer(0.0f);
+
+  // Initialize iVars used in ComputeAttenuation()
+  float nyquistFrequency = m_SamplingFrequencyMHz / 2;
+  float numComponents = this->GetInput()->GetNumberOfComponentsPerPixel();
+  m_FrequencyDelta = nyquistFrequency / numComponents;
+  m_StartComponent = m_FrequencyBandStartMHz / m_FrequencyDelta;
+  m_EndComponent = m_FrequencyBandEndMHz / m_FrequencyDelta;
+  if (m_EndComponent == 0) // If m_FrequencyBandEndMHz is not set
+  {
+    m_EndComponent = numComponents - 1; // Use all components
+  }
+  m_ConsideredComponents = m_EndComponent - m_StartComponent + 1;
+  m_ScanStepMM = this->GetInput()->GetSpacing()[m_Direction];
 }
 
 template <typename TInputImage, typename TOutputImage, typename TMaskImage>
@@ -184,7 +203,7 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::ThreadedGenerateD
             target[m_Direction] = start[m_Direction] + m_FixedEstimationDepth;
           }
 
-          float estimatedAttenuation = ComputeAttenuation(target, start);
+            float estimatedAttenuation = ComputeAttenuation(target, start);
 
           // Update the corresponding pixel in the metric image
           if (estimatedAttenuation > 0.0 || m_ConsiderNegativeAttenuations)
@@ -219,34 +238,22 @@ typename AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::OutputPi
 AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::ComputeAttenuation(const InputIndexType & end,
                                                                                   const InputIndexType & start) const
 {
-  const float nyquistFrequency = m_SamplingFrequencyMHz / 2;
-
-  // Number and width of RF spectra frequency bins over the range (0, nyquist_frequency]
-  const unsigned int numComponents = this->GetInput()->GetNumberOfComponentsPerPixel();
-  const float        frequencyDelta = nyquistFrequency / numComponents;
-
-  // Frequency band to consider for attenuation
-  const unsigned int startComponent = m_FrequencyBandStartMHz / frequencyDelta;
-  const unsigned int endComponent = m_FrequencyBandEndMHz / frequencyDelta;
-  const unsigned int consideredComponents = endComponent - startComponent + 1;
-
   // Get RF spectra frequency bins at start and end pixel positions
   auto           input = this->GetInput();
   InputPixelType endSample = input->GetPixel(end);
   InputPixelType startSample = input->GetPixel(start);
 
   // Get distance between start and end pixel positions (assume mm units)
-  const float        scanStepMM = input->GetSpacing()[m_Direction];
   const unsigned int pixelDistance = end[m_Direction] - start[m_Direction];
-  float              distanceMM = pixelDistance * scanStepMM;
+  float              distanceMM = pixelDistance * m_ScanStepMM;
 
-  Eigen::Matrix<float, Eigen::Dynamic, 2> A(consideredComponents, 2);
-  Eigen::Matrix<float, Eigen::Dynamic, 1> b(consideredComponents);
-  for (unsigned i = 0; i < consideredComponents; i++)
+  Eigen::Matrix<float, Eigen::Dynamic, 2> A(m_ConsideredComponents, 2);
+  Eigen::Matrix<float, Eigen::Dynamic, 1> b(m_ConsideredComponents);
+  for (unsigned i = 0; i < m_ConsideredComponents; i++)
   {
     A(i, 0) = 1;
-    A(i, 1) = (1 + i + startComponent) * frequencyDelta;                                       // x_i = frequency
-    b(i) = endSample[i + startComponent] / (startSample[i + startComponent] + itk::Math::eps); // y_i = ratio
+    A(i, 1) = (1 + i + m_StartComponent) * m_FrequencyDelta;                                       // x_i = frequency
+    b(i) = endSample[i + m_StartComponent] / (startSample[i + m_StartComponent] + itk::Math::eps); // y_i = ratio
   }
 
   // from https://eigen.tuxfamily.org/dox/group__LeastSquares.html
