@@ -200,7 +200,11 @@ protected:
   AttenuationImageFilter();
   ~AttenuationImageFilter() override = default;
 
-  /** Verify inputs and allocate buffers before threaded execution */
+
+  void
+  VerifyPreconditions() const override;
+
+  /** Allocate buffers and other initializations before threaded execution. */
   void
   BeforeThreadedGenerateData() override;
 
@@ -237,12 +241,20 @@ private:
 
   unsigned int m_Direction = 0;
 
+  float m_ScanStepMM = 1.0f;
+
   unsigned int m_FixedEstimationDepth = 0;
 
   float m_SamplingFrequencyMHz = 0.0f;
 
   float m_FrequencyBandStartMHz = 0.0f;
   float m_FrequencyBandEndMHz = 0.0f;
+  float m_FrequencyDelta = 0.0f;
+
+  // Frequency band to consider for attenuation
+  unsigned int m_StartComponent = 0;
+  unsigned int m_EndComponent = 0;
+  unsigned int m_ConsideredComponents = 1;
 
   bool m_ConsiderNegativeAttenuations = false;
 
@@ -253,7 +265,7 @@ private:
   ImageRegionSplitterDirection::Pointer m_RegionSplitter = ImageRegionSplitterDirection::New();
 
   /** Cache mask image reference before threaded execution to reduce calls to GetMaskImage() */
-  const MaskImageType * m_ThreadedInputMaskImage;
+  mutable const MaskImageType * m_ThreadedInputMaskImage;
 
   /** Output mask image may be eroded via m_PadUpperBounds and m_PadLowerBounds
    *  along scan line direction */
