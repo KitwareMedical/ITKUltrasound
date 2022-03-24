@@ -18,6 +18,8 @@
 #ifndef itkAttenuationImageFilter_h
 #define itkAttenuationImageFilter_h
 
+#include <vector>
+
 #include "itkImage.h"
 #include "itkImageToImageFilter.h"
 #include "itkImageRegionSplitterDirection.h"
@@ -244,6 +246,8 @@ private:
   float m_ScanStepMM = 1.0f;
 
   unsigned int m_FixedEstimationDepth = 0;
+
+  std::vector<float> m_DistanceWeights;
 
   float m_SamplingFrequencyMHz = 0.0f;
 
