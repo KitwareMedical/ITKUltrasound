@@ -32,7 +32,9 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
   if (argc < 3)
   {
     std::cerr << "Usage: " << argv[0];
-    std::cerr << " spectraImage maskImage outputImage <outputMaskImage> <numWorkUnits> <fixedEstimationDepthMM>";
+    std::cerr << " spectraImage maskImage outputImage";
+    std::cerr << " <outputMaskImage> <numWorkUnits> <fixedEstimationDepthMM>";
+    std::cerr << " <considerNegativeAttenuations> <expectedAttenuation>";
     std::cerr << std::endl;
     return EXIT_FAILURE;
   }
@@ -52,7 +54,8 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
   const std::string outputMaskImagePath = (argc > 4 ? argv[4] : "");
 
   unsigned int numWorkUnits = (argc > 5 ? std::atoi(argv[5]) : 1);
-  float        fixedEstimationDepthMM = (argc > 6 ? std::atof(argv[6]) : 0.0);
+  float        fixedEstimationDepthMM = (argc > 6 ? std::stof(argv[6]) : 0.0);
+  bool         considerNegativeAttenuations = (argc > 7 ? std::stoul(argv[7]) : false);
 
   // Initialize the filter
   using AttenuationFilterType = itk::AttenuationImageFilter<SpectraImageType, OutputImageType, MaskImageType>;
@@ -99,8 +102,8 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
   attenuationFilter->SetFrequencyBandEndMHz(20.0);
   ITK_TEST_SET_GET_VALUE(20.0, attenuationFilter->GetFrequencyBandEndMHz());
 
-  attenuationFilter->SetConsiderNegativeAttenuations(false);
-  ITK_TEST_SET_GET_VALUE(false, attenuationFilter->GetConsiderNegativeAttenuations());
+  attenuationFilter->SetConsiderNegativeAttenuations(considerNegativeAttenuations);
+  ITK_TEST_SET_GET_VALUE(considerNegativeAttenuations, attenuationFilter->GetConsiderNegativeAttenuations());
 
   attenuationFilter->SetPadLowerBounds(5);
   ITK_TEST_SET_GET_VALUE(5, attenuationFilter->GetPadLowerBounds());
@@ -128,7 +131,7 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
     itk::WriteImage(attenuationFilter->GetOutputMaskImage(), outputMaskImagePath, true);
   }
 
-  // discover mask's inside value
+  // Discover mask's inside value
   using MaxType = itk::MinimumMaximumImageCalculator<MaskImageType>;
   auto maxCalculator = MaxType::New();
   maxCalculator->SetImage(attenuationFilter->GetOutputMaskImage());
@@ -140,7 +143,7 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
     return EXIT_FAILURE;
   }
 
-  // now boil it down to a single attenuation value
+  // Now boil it down to a single attenuation value
   using HistogramFilterType = itk::Statistics::MaskedImageToHistogramFilter<OutputImageType, MaskImageType>;
   auto histogramFilter = HistogramFilterType::New();
   histogramFilter->SetInput(attenuationFilter->GetOutput());
@@ -151,18 +154,28 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
   histogramSize[0] = 1e5;
   histogramFilter->SetHistogramSize(histogramSize);
 
-  histogramFilter->SetMaskValue(maxMaskValue); // this is most likely the only label present
+  histogramFilter->SetMaskValue(maxMaskValue); // This is most likely the only label present
   histogramFilter->Update();
   auto histogram = histogramFilter->GetOutput();
 
-  // we will use median as a robust estimate of the mean
-  auto median = histogram->Quantile(0, 0.50);
+  // We will use median as a robust estimate of the mean
+  float median = histogram->Quantile(0, 0.50);
   std::cout << "Median attenuation: " << median << " dB/(MHz*cm)" << std::endl;
 
   if (!std::isfinite(median))
   {
     std::cerr << "The median attenuation if not a finite number! It is: " << median << std::endl;
     return EXIT_FAILURE;
+  }
+
+  if (argc > 8) // Expected value is provided on the command line
+  {
+    float expectedAttenuation = std::stof(argv[8]);
+    if (!itk::Math::FloatAlmostEqual(expectedAttenuation, median, 4, 1e-4))
+    {
+      std::cerr << "Regression test failure: the expected attenuation is: " << expectedAttenuation << std::endl;
+      return EXIT_FAILURE;
+    }
   }
 
   return EXIT_SUCCESS;

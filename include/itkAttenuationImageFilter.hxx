@@ -18,6 +18,9 @@
 #ifndef itkAttenuationImageFilter_hxx
 #define itkAttenuationImageFilter_hxx
 
+#include <algorithm>
+#include <cmath>
+
 #include "itk_eigen.h"
 #include ITK_EIGEN(Dense)
 #include "itkMath.h"
@@ -129,6 +132,15 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::BeforeThreadedGen
   m_OutputMaskImage->Allocate();
   m_OutputMaskImage->FillBuffer(0.0f);
 
+  // Initialize distance weights
+  unsigned fourSigma = std::max(m_FixedEstimationDepth, 16u); // An arbitrary default.
+  m_DistanceWeights.resize(fourSigma);
+  float twoSigmaSquared = fourSigma * fourSigma / 8.0f;
+  for (unsigned i = 0; i < fourSigma; ++i)
+  {
+    m_DistanceWeights[i] = 1.0f - std::exp(i * i / -twoSigmaSquared);
+  }
+
   // Initialize iVars used in ComputeAttenuation()
   float nyquistFrequency = m_SamplingFrequencyMHz / 2;
   float numComponents = this->GetInput()->GetNumberOfComponentsPerPixel();
@@ -165,7 +177,11 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::ThreadedGenerateD
   unsigned int   inclusionLength;
   InputIndexType start, end;
 
-  const float scanStepMM = input->GetSpacing()[m_Direction];
+  thread_local std::vector<float> accumulatedWeight;
+  accumulatedWeight.resize(regionForThread.GetSize(m_Direction));
+
+  // make sure this is not recomputed in the inner loop
+  const unsigned distanceWeightsSize = m_DistanceWeights.size();
 
   // do the work
   while (!it.IsAtEnd())
@@ -190,33 +206,49 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::ThreadedGenerateD
         start[m_Direction] += m_PadLowerBounds;
         end[m_Direction] -= m_PadUpperBounds;
 
-        // Estimate attenuation for each inclusion pixel
-        // with respect to the last pixel in the inclusion
-        while (start[m_Direction] < end[m_Direction])
+        if (start[m_Direction] != end[m_Direction]) // We need at least a pair of pixels to estimate attenuation
         {
-          // If no fixed estimation depth is set or too few pixels remain for fixed-depth estimation
-          // then take the attenuation between the given pixel and the last pixel in the inclusion
-          InputIndexType target = end;
-
-          if (m_FixedEstimationDepth != 0 && end[m_Direction] - start[m_Direction] > m_FixedEstimationDepth)
+          // Estimate attenuation for each inclusion pixel
+          // by weighted average of pair-wise attenuations for all pairs
+          while (start[m_Direction] <= end[m_Direction])
           {
-            target[m_Direction] = start[m_Direction] + m_FixedEstimationDepth;
+            for (IndexValueType k = start[m_Direction] + 1; k <= end[m_Direction]; ++k)
+            {
+              unsigned pixelDistance = k - start[m_Direction];
+
+              InputIndexType target = start;
+              target[m_Direction] = k;
+              float estimatedAttenuation = ComputeAttenuation(target, start);
+              float weight = 1.0;                      // Weight for this pair's attenuation. 1 for large distances.
+              if (pixelDistance < distanceWeightsSize) // If pixels are close, weight is lower than 1.
+              {
+                weight = m_DistanceWeights[pixelDistance];
+              }
+
+              // Update this pixel
+              accumulatedWeight[start[m_Direction]] += weight;
+              output->SetPixel(start, estimatedAttenuation * weight + output->GetPixel(start));
+
+              // Update distant pair
+              accumulatedWeight[k] += weight;
+              output->SetPixel(target, estimatedAttenuation * weight + output->GetPixel(target));
+            }
+
+            // Normalize output by accumulated weight
+            output->SetPixel(start, output->GetPixel(start) / accumulatedWeight[start[m_Direction]]);
+            accumulatedWeight[start[m_Direction]] = 0.0f; // reset for next next inclusion segment
+
+            // Possibly eliminate negative attenuations
+            if (!m_ConsiderNegativeAttenuations && output->GetPixel(start) < 0.0)
+            {
+              output->SetPixel(start, 0.0);
+            }
+
+            // Dynamically generate the output mask with values corresponding to input
+            m_OutputMaskImage->SetPixel(start, inputMaskImage->GetPixel(start));
+
+            ++start[m_Direction];
           }
-
-            float estimatedAttenuation = ComputeAttenuation(target, start);
-
-          // Update the corresponding pixel in the metric image
-          if (estimatedAttenuation > 0.0 || m_ConsiderNegativeAttenuations)
-          {
-            // Assignment is thread-safe for internal operations because
-            // each thread writes only within its allotted output region.
-            output->SetPixel(start, estimatedAttenuation);
-          }
-
-          // Dynamically generate the output mask with values corresponding to input
-          m_OutputMaskImage->SetPixel(start, inputMaskImage->GetPixel(start));
-
-          ++start[m_Direction];
         }
 
         inclusionLength = 0;
