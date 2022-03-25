@@ -107,8 +107,8 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
   attenuationFilter->SetPadUpperBounds(2);
   ITK_TEST_SET_GET_VALUE(2, attenuationFilter->GetPadUpperBounds());
 
-  attenuationFilter->SetPadLowerBoundsMM(3.0);
-  ITK_TEST_EXPECT_TRUE(fabs(attenuationFilter->GetPadLowerBoundsMM() - 3.0) < (inputImage->GetSpacing()[0] / 2));
+  attenuationFilter->SetPadLowerBoundsMM(0.1);
+  ITK_TEST_EXPECT_TRUE(fabs(attenuationFilter->GetPadLowerBoundsMM() - 0.1) < (inputImage->GetSpacing()[0] / 2));
   attenuationFilter->SetPadUpperBoundsMM(0.0);
   ITK_TEST_EXPECT_TRUE(fabs(attenuationFilter->GetPadUpperBoundsMM() - 0.0) < (inputImage->GetSpacing()[0] / 2));
 
