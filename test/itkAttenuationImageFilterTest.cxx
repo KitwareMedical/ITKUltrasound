@@ -120,12 +120,12 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
   ITK_TRY_EXPECT_NO_EXCEPTION(attenuationFilter->Update());
 
   // Verify output
-  itk::WriteImage(attenuationFilter->GetOutput(), outputImagePath);
+  itk::WriteImage(attenuationFilter->GetOutput(), outputImagePath, false);
 
   // Verify mask output after erosion
   if (outputMaskImagePath != "")
   {
-    itk::WriteImage(attenuationFilter->GetOutputMaskImage(), outputMaskImagePath);
+    itk::WriteImage(attenuationFilter->GetOutputMaskImage(), outputMaskImagePath, true);
   }
 
   // discover mask's inside value
