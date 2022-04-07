@@ -19,17 +19,17 @@ jobs:
           - os: ubuntu-18.04
             c-compiler: "gcc"
             cxx-compiler: "g++"
-            itk-git-tag: "v5.3rc03"
+            itk-git-tag: "801370c025c7d296783481779a41c6d559c992c5"
             cmake-build-type: "MinSizeRel"
           - os: windows-2019
             c-compiler: "cl.exe"
             cxx-compiler: "cl.exe"
-            itk-git-tag: "v5.3rc03"
+            itk-git-tag: "801370c025c7d296783481779a41c6d559c992c5"
             cmake-build-type: "Release"
           - os: macos-10.15
             c-compiler: "clang"
             cxx-compiler: "clang++"
-            itk-git-tag: "v5.3rc03"
+            itk-git-tag: "801370c025c7d296783481779a41c6d559c992c5"
             cmake-build-type: "MinSizeRel"
 
     steps:
@@ -142,7 +142,7 @@ jobs:
       matrix:
         python-version: [37, 38, 39, 310]
         include:
-          - itk-python-git-tag: "v5.3rc03"
+          - itk-python-git-tag: "v5.3rc04"
 
     steps:
     - uses: actions/checkout@v2
@@ -220,7 +220,7 @@ jobs:
       max-parallel: 2
       matrix:
         include:
-          - itk-python-git-tag: "v5.3rc03"
+          - itk-python-git-tag: "v5.3rc04"
 
     steps:
     - uses: actions/checkout@v2
@@ -282,7 +282,7 @@ jobs:
       matrix:
         python-version-minor: [7, 8, 9, 10]
         include:
-          - itk-python-git-tag: "v5.3rc03"
+          - itk-python-git-tag: "v5.3rc04"
 
     steps:
     - name: Get specific version of CMake, Ninja
