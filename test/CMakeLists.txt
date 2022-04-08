@@ -110,6 +110,44 @@ itk_add_test(NAME itkAttenuationImageFilterFixedEstimationDistanceTest
     0   # computation mode
     0.173493 # median attenuation
   )
+itk_add_test(NAME itkAttenuationImageFilterFixedDistanceModeTest
+  COMMAND UltrasoundTestDriver
+  --compare
+    DATA{Baseline/itkAttenuationImageFilterFixedDistanceModeTestOutput.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterFixedDistanceModeTestOutput.mha
+  --compare
+    DATA{Baseline/itkAttenuationImageFilterFixedDistanceModeTestMask.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterFixedDistanceModeTestMask.mha
+  itkAttenuationImageFilterTest
+    DATA{Input/UnfusedRF-a0-spectra-cropped.mhd,UnfusedRF-a0-spectra-cropped.raw}
+    DATA{Input/UnfusedRF-a0-spectra-label_1-cropped.mhd,UnfusedRF-a0-spectra-label_1-cropped.raw}
+    ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterFixedDistanceModeTestOutput.mha
+    ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterFixedDistanceModeTestMask.mha
+    600 # work units
+    5.0 # Distance between pixels sampled for attenuation estimation
+    1   # consider negative attenuations
+    2   # computation mode
+    -3.72332 # median attenuation
+  )
+itk_add_test(NAME itkAttenuationImageFilterPairModeTest
+  COMMAND UltrasoundTestDriver
+  --compare
+    DATA{Baseline/itkAttenuationImageFilterPairModeTestOutput.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterPairModeTestOutput.mha
+  --compare
+    DATA{Baseline/itkAttenuationImageFilterPairModeTestMask.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterPairModeTestMask.mha
+  itkAttenuationImageFilterTest
+    DATA{Input/UnfusedRF-a0-spectra-cropped.mhd,UnfusedRF-a0-spectra-cropped.raw}
+    DATA{Input/UnfusedRF-a0-spectra-label_1-cropped.mhd,UnfusedRF-a0-spectra-label_1-cropped.raw}
+    ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterPairModeTestOutput.mha
+    ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterPairModeTestMask.mha
+    100 # work units
+    0.0 # Distance between pixels sampled for attenuation estimation
+    1   # consider negative attenuations
+    1   # computation mode
+    0.0693445 # median attenuation
+  )
 itk_add_test(NAME itkBModeImageFilterTestTiming
   COMMAND UltrasoundTestDriver
   --compare
