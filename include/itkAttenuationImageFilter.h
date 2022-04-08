@@ -118,7 +118,7 @@ public:
   itkGetConstMacro(OutputMaskImage, TMaskImage *);
 
   /** Mode of computation (0=all pairs, 1=first and last, 2=fixed distance).
-   * 
+   *
    * 0. (Default) Between all pixel pairs in a segment, producing a weighted
    *    estimate for each pixel. More distant pixel pairs have higher weights.
    *    This decreases influence of numerical instability.
@@ -221,7 +221,6 @@ protected:
   AttenuationImageFilter();
   ~AttenuationImageFilter() override = default;
 
-
   void
   VerifyPreconditions() const override;
 
@@ -258,20 +257,17 @@ protected:
   ThreadedIsIncluded(InputIndexType index) const;
 
 private:
-  unsigned int m_ComputationMode = 0;
-
+  unsigned int  m_ComputationMode = 0;
   MaskPixelType m_LabelValue = 0;
-
-  unsigned int m_Direction = 0;
-
-  float m_ScanStepMM = 1.0f;
-
-  unsigned int m_FixedEstimationDepth = 0;
+  unsigned int  m_Direction = 0;
+  unsigned int  m_FixedEstimationDepth = 0;
+  unsigned int  m_PadUpperBounds = 0;
+  unsigned int  m_PadLowerBounds = 0;
 
   std::vector<float> m_DistanceWeights;
 
+  float m_ScanStepMM = 1.0f;
   float m_SamplingFrequencyMHz = 0.0f;
-
   float m_FrequencyBandStartMHz = 0.0f;
   float m_FrequencyBandEndMHz = 0.0f;
   float m_FrequencyDelta = 0.0f;
@@ -282,9 +278,6 @@ private:
   unsigned int m_ConsideredComponents = 1;
 
   bool m_ConsiderNegativeAttenuations = false;
-
-  unsigned int m_PadUpperBounds = 0;
-  unsigned int m_PadLowerBounds = 0;
 
   /** Region splitter to ensure scanline is intact in threaded regions */
   ImageRegionSplitterDirection::Pointer m_RegionSplitter = ImageRegionSplitterDirection::New();
