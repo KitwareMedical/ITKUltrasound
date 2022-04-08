@@ -69,6 +69,7 @@ itk_add_test(NAME itkAttenuationImageFilterTest
     1 # work units
     0.0 # Distance between pixels sampled for attenuation estimation; 0.0 -> inclusion length
     0   # consider negative attenuations
+    0   # computation mode
     0.173493 # median attenuation
   )
 itk_add_test(NAME itkAttenuationImageFilterMultithreadedTest
@@ -87,6 +88,7 @@ itk_add_test(NAME itkAttenuationImageFilterMultithreadedTest
     5 # work units
     0.0 # Distance between pixels sampled for attenuation estimation; 0.0 -> inclusion length
     0   # consider negative attenuations
+    0   # computation mode
     0.173493 # median attenuation
   )
 itk_add_test(NAME itkAttenuationImageFilterFixedEstimationDistanceTest
@@ -105,6 +107,7 @@ itk_add_test(NAME itkAttenuationImageFilterFixedEstimationDistanceTest
     5   # work units
     3.0 # Distance between pixels sampled for attenuation estimation
     0   # consider negative attenuations
+    0   # computation mode
     0.173493 # median attenuation
   )
 itk_add_test(NAME itkBModeImageFilterTestTiming
