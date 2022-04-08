@@ -215,47 +215,75 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::ThreadedGenerateD
 
         if (start[m_Direction] < end[m_Direction]) // We need at least a pair of pixels to estimate attenuation
         {
-          // Estimate attenuation for each inclusion pixel
-          // by weighted average of pair-wise attenuations for all pairs
-          while (start[m_Direction] <= end[m_Direction])
+          if (m_ComputationMode == 0)
           {
-            for (IndexValueType k = start[m_Direction] + 1; k <= end[m_Direction]; ++k)
+            // Estimate attenuation for each inclusion pixel
+            // by weighted average of pair-wise attenuations for all pairs
+            while (start[m_Direction] <= end[m_Direction])
             {
-              unsigned pixelDistance = k - start[m_Direction];
-
-              InputIndexType target = start;
-              target[m_Direction] = k;
-              float estimatedAttenuation = ComputeAttenuation(target, start);
-              float weight = 1.0;                      // Weight for this pair's attenuation. 1 for large distances.
-              if (pixelDistance < distanceWeightsSize) // If pixels are close, weight is lower than 1.
+              for (IndexValueType k = start[m_Direction] + 1; k <= end[m_Direction]; ++k)
               {
-                weight = m_DistanceWeights[pixelDistance];
+                unsigned pixelDistance = k - start[m_Direction];
+
+                InputIndexType target = start;
+                target[m_Direction] = k;
+                float estimatedAttenuation = ComputeAttenuation(target, start);
+                float weight = 1.0;                      // Weight for this pair's attenuation. 1 for large distances.
+                if (pixelDistance < distanceWeightsSize) // If pixels are close, weight is lower than 1.
+                {
+                  weight = m_DistanceWeights[pixelDistance];
+                }
+
+                // Update this pixel
+                accumulatedWeight[start[m_Direction]] += weight;
+                output->SetPixel(start, estimatedAttenuation * weight + output->GetPixel(start));
+
+                // Update distant pair
+                accumulatedWeight[k] += weight;
+                output->SetPixel(target, estimatedAttenuation * weight + output->GetPixel(target));
+              } // for k
+
+              // Normalize output by accumulated weight
+              output->SetPixel(start, output->GetPixel(start) / accumulatedWeight[start[m_Direction]]);
+              accumulatedWeight[start[m_Direction]] = 0.0f; // reset for next next inclusion segment
+
+              // Possibly eliminate negative attenuations
+              if (!m_ConsiderNegativeAttenuations && output->GetPixel(start) < 0.0)
+              {
+                output->SetPixel(start, 0.0);
               }
 
-              // Update this pixel
-              accumulatedWeight[start[m_Direction]] += weight;
-              output->SetPixel(start, estimatedAttenuation * weight + output->GetPixel(start));
+              // Dynamically generate the output mask with values corresponding to input
+              m_OutputMaskImage->SetPixel(start, inputMaskImage->GetPixel(start));
 
-              // Update distant pair
-              accumulatedWeight[k] += weight;
-              output->SetPixel(target, estimatedAttenuation * weight + output->GetPixel(target));
-            } // for k
+              ++start[m_Direction];
+            } // while start<=end
+          }
+          else if (m_ComputationMode == 1 || m_ComputationMode == 2)
+          {
+            InputIndexType target = end;
+            IndexValueType fixedEnd = start[m_Direction] + m_FixedEstimationDepth;
+            if (m_ComputationMode == 2 && fixedEnd < end[m_Direction])
+            {
+              target[m_Direction] = fixedEnd;
+            }
+            float estimatedAttenuation = ComputeAttenuation(target, start);
 
-            // Normalize output by accumulated weight
-            output->SetPixel(start, output->GetPixel(start) / accumulatedWeight[start[m_Direction]]);
-            accumulatedWeight[start[m_Direction]] = 0.0f; // reset for next next inclusion segment
+            // Compute mid-point index
+            target[m_Direction] = (start[m_Direction] + target[m_Direction]) / 2;
+            output->SetPixel(target, estimatedAttenuation);
+            m_OutputMaskImage->SetPixel(target, inputMaskImage->GetPixel(target));
 
             // Possibly eliminate negative attenuations
-            if (!m_ConsiderNegativeAttenuations && output->GetPixel(start) < 0.0)
+            if (!m_ConsiderNegativeAttenuations && estimatedAttenuation < 0.0)
             {
-              output->SetPixel(start, 0.0);
+              output->SetPixel(target, 0.0);
             }
-
-            // Dynamically generate the output mask with values corresponding to input
-            m_OutputMaskImage->SetPixel(start, inputMaskImage->GetPixel(start));
-
-            ++start[m_Direction];
-          } // while start<=end
+          }
+          else
+          {
+            itkExceptionMacro(<< "Invalid computation mode: " << m_ComputationMode);
+          }
         } // if start<end
       } // else !inside
 
