@@ -213,7 +213,7 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::ThreadedGenerateD
         start[m_Direction] += m_PadLowerBounds;
         end[m_Direction] -= m_PadUpperBounds;
 
-        if (start[m_Direction] != end[m_Direction]) // We need at least a pair of pixels to estimate attenuation
+        if (start[m_Direction] < end[m_Direction]) // We need at least a pair of pixels to estimate attenuation
         {
           // Estimate attenuation for each inclusion pixel
           // by weighted average of pair-wise attenuations for all pairs
