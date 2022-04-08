@@ -186,18 +186,25 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::ThreadedGenerateD
   // do the work
   while (!it.IsAtEnd())
   {
+    start = it.GetIndex();
     inclusionLength = 0;
     while (!it.IsAtEndOfLine())
     {
       // Advance until an inclusion is found
       InputIndexType index = it.GetIndex();
-      if (ThreadedIsIncluded(index) && inclusionLength == 0)
+      bool           inside = ThreadedIsIncluded(index);
+      if (inside)
       {
-        // Step into inclusion
-        start = it.GetIndex();
+        if (inclusionLength == 0)
+        {
+          start = it.GetIndex(); // Mark the start
+        }
+        ++inclusionLength;
       }
-      else if (!ThreadedIsIncluded(index) && inclusionLength > 0)
+      else if (inclusionLength > 0) // End of a segment
       {
+        inclusionLength = 0; // Prepare for the next one
+
         // Stay at last pixel in the inclusion
         end = it.GetIndex();
         end[m_Direction] -= 1;
@@ -232,7 +239,7 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::ThreadedGenerateD
               // Update distant pair
               accumulatedWeight[k] += weight;
               output->SetPixel(target, estimatedAttenuation * weight + output->GetPixel(target));
-            }
+            } // for k
 
             // Normalize output by accumulated weight
             output->SetPixel(start, output->GetPixel(start) / accumulatedWeight[start[m_Direction]]);
@@ -248,16 +255,9 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::ThreadedGenerateD
             m_OutputMaskImage->SetPixel(start, inputMaskImage->GetPixel(start));
 
             ++start[m_Direction];
-          }
-        }
-
-        inclusionLength = 0;
-      }
-
-      if (ThreadedIsIncluded(index))
-      {
-        ++inclusionLength;
-      }
+          } // while start<=end
+        } // if start<end
+      } // else !inside
 
       ++it;
     }
