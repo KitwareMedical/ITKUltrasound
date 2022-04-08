@@ -53,7 +53,7 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
   const std::string outputImagePath = argv[3];
   const std::string outputMaskImagePath = (argc > 4 ? argv[4] : "");
 
-  unsigned int numWorkUnits = (argc > 5 ? std::atoi(argv[5]) : 1);
+  unsigned int numWorkUnits = (argc > 5 ? std::stoi(argv[5]) : 1);
   float        fixedEstimationDepthMM = (argc > 6 ? std::stof(argv[6]) : 0.0);
   bool         considerNegativeAttenuations = (argc > 7 ? std::stoul(argv[7]) : false);
 
@@ -87,7 +87,7 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
 
   attenuationFilter->SetSamplingFrequencyMHz(60);
   ITK_TEST_SET_GET_VALUE(60.0, attenuationFilter->GetSamplingFrequencyMHz());
-  ITK_TRY_EXPECT_NO_EXCEPTION(attenuationFilter->Update());
+  ITK_TRY_EXPECT_NO_EXCEPTION(attenuationFilter->UpdateOutputInformation());
 
   attenuationFilter->SetFixedEstimationDepth(3);
   ITK_TEST_SET_GET_VALUE(3, attenuationFilter->GetFixedEstimationDepth());
@@ -134,12 +134,12 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
   // Discover mask's inside value
   using MaxType = itk::MinimumMaximumImageCalculator<MaskImageType>;
   auto maxCalculator = MaxType::New();
-  maxCalculator->SetImage(attenuationFilter->GetOutputMaskImage());
+  maxCalculator->SetImage(maskImage);
   maxCalculator->ComputeMaximum();
   LabelType maxMaskValue = maxCalculator->GetMaximum();
   if (maxMaskValue == 0)
   {
-    std::cerr << "The mask has been completely eroded away!" << std::endl;
+    std::cerr << "The mask is empty!" << std::endl;
     return EXIT_FAILURE;
   }
 
