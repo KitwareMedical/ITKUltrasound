@@ -21,6 +21,7 @@
 
 #include "itkImageScanlineIterator.h"
 #include "itkTotalProgressReporter.h"
+#include "itkVariableLengthVector.h"
 
 namespace itk
 {

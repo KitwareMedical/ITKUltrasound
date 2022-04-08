@@ -21,6 +21,7 @@
 #include "itkImageScanlineIterator.h"
 #include "itkDivideImageFilter.h"
 #include "itkTotalProgressReporter.h"
+#include "itkVariableLengthVector.h"
 
 #include <iterator>
 
