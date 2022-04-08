@@ -50,11 +50,15 @@ namespace itk
  * region over which attenuations should be estimated.
  *
  * AttenuationImageFilter generates a scalar output image with
- * pixel intensities representing attenuation estimates between
- * the given pixel's location in the input image and either a pixel
- * that is a fixed distance away or a pixel at the end of the given
- * mask region, depending on filter settings. Pixels outside of
- * the mask after padding erosion will have a value of zero.
+ * pixel intensities representing attenuation estimates.
+ * Estimates are made in continuous segments of the mask region
+ * along the RF sampling direction.
+ *
+ * There are three modes of computation, see documentation for
+ * ComputationMode for detailed description.
+ * Pixels outside of the mask after padding erosion will have a value of zero.
+ * Pixels inside the mask for which the attenuation has not been computed
+ * will also have a value of zero.
  *
  * \sa MaskedImageToHistogramFilter
  * \sa Spectra1DImageFilter
@@ -112,6 +116,21 @@ public:
   /** Output mask image represents output region for analysis
    *  after padding is applied */
   itkGetConstMacro(OutputMaskImage, TMaskImage *);
+
+  /** Mode of computation (0=all pairs, 1=first and last, 2=fixed distance).
+   * 
+   * 0. (Default) Between all pixel pairs in a segment, producing a weighted
+   *    estimate for each pixel. More distant pixel pairs have higher weights.
+   *    This decreases influence of numerical instability.
+   * 1. Between first and last pixel in a segment.
+   * 2. Between first pixel in a segment, and
+   *    a pixel at a fixed distance away from it.
+   *    This distance is controlled by FixedEstimationDepth parameter.
+   *
+   * Modes 1 and 2 produce an estimate for the midpoint pixel only.
+   */
+  itkSetMacro(ComputationMode, unsigned int);
+  itkGetConstMacro(ComputationMode, unsigned int);
 
   /** Label value indicating which mask pixel values should be included in analysis.
    *  A value of zero indicates that any nonzero pixel should be included.
@@ -239,6 +258,8 @@ protected:
   ThreadedIsIncluded(InputIndexType index) const;
 
 private:
+  unsigned int m_ComputationMode = 0;
+
   MaskPixelType m_LabelValue = 0;
 
   unsigned int m_Direction = 0;
