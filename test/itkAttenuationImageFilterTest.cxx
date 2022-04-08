@@ -34,7 +34,7 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
     std::cerr << "Usage: " << argv[0];
     std::cerr << " spectraImage maskImage outputImage";
     std::cerr << " <outputMaskImage> <numWorkUnits> <fixedEstimationDepthMM>";
-    std::cerr << " <considerNegativeAttenuations> <expectedAttenuation>";
+    std::cerr << " <considerNegativeAttenuations> <computationMode> <expectedAttenuation>";
     std::cerr << std::endl;
     return EXIT_FAILURE;
   }
@@ -56,6 +56,7 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
   unsigned int numWorkUnits = (argc > 5 ? std::stoi(argv[5]) : 1);
   float        fixedEstimationDepthMM = (argc > 6 ? std::stof(argv[6]) : 0.0);
   bool         considerNegativeAttenuations = (argc > 7 ? std::stoul(argv[7]) : false);
+  unsigned int computationMode = (argc > 8 ? std::stoul(argv[8]) : 0);
 
   // Initialize the filter
   using AttenuationFilterType = itk::AttenuationImageFilter<SpectraImageType, OutputImageType, MaskImageType>;
@@ -116,6 +117,7 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
   ITK_TEST_EXPECT_TRUE(fabs(attenuationFilter->GetPadUpperBoundsMM() - 0.0) < (inputImage->GetSpacing()[0] / 2));
 
   attenuationFilter->SetNumberOfWorkUnits(numWorkUnits);
+  attenuationFilter->SetComputationMode(computationMode);
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(attenuationFilter, AttenuationImageFilter, ImageToImageFilter);
 
@@ -168,9 +170,9 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
     return EXIT_FAILURE;
   }
 
-  if (argc > 8) // Expected value is provided on the command line
+  if (argc > 9) // Expected value is provided on the command line
   {
-    float expectedAttenuation = std::stof(argv[8]);
+    float expectedAttenuation = std::stof(argv[9]);
     if (!itk::Math::FloatAlmostEqual(expectedAttenuation, median, 4, 1e-4))
     {
       std::cerr << "Regression test failure: the expected attenuation is: " << expectedAttenuation << std::endl;
