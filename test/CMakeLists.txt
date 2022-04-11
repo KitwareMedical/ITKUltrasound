@@ -70,7 +70,7 @@ itk_add_test(NAME itkAttenuationImageFilterTest
     0.0 # Distance between pixels sampled for attenuation estimation; 0.0 -> inclusion length
     0   # consider negative attenuations
     0   # computation mode
-    0.173493 # median attenuation
+    0.273958 # median attenuation
   )
 itk_add_test(NAME itkAttenuationImageFilterMultithreadedTest
   COMMAND UltrasoundTestDriver
@@ -89,7 +89,7 @@ itk_add_test(NAME itkAttenuationImageFilterMultithreadedTest
     0.0 # Distance between pixels sampled for attenuation estimation; 0.0 -> inclusion length
     0   # consider negative attenuations
     0   # computation mode
-    0.173493 # median attenuation
+    0.273958 # median attenuation
   )
 itk_add_test(NAME itkAttenuationImageFilterFixedEstimationDistanceTest
   COMMAND UltrasoundTestDriver
@@ -108,7 +108,7 @@ itk_add_test(NAME itkAttenuationImageFilterFixedEstimationDistanceTest
     3.0 # Distance between pixels sampled for attenuation estimation
     0   # consider negative attenuations
     0   # computation mode
-    0.173493 # median attenuation
+    0.273958 # median attenuation
   )
 itk_add_test(NAME itkAttenuationImageFilterFixedDistanceModeTest
   COMMAND UltrasoundTestDriver

@@ -247,14 +247,12 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::ThreadedGenerateD
               output->SetPixel(start, output->GetPixel(start) / accumulatedWeight[start[m_Direction]]);
               accumulatedWeight[start[m_Direction]] = 0.0f; // reset for next next inclusion segment
 
-              // Possibly eliminate negative attenuations
-              if (!m_ConsiderNegativeAttenuations && output->GetPixel(start) < 0.0)
+              // Only set mask for valid estimates
+              if (m_ConsiderNegativeAttenuations || output->GetPixel(start) >= 0.0)
               {
-                output->SetPixel(start, 0.0);
+                // Dynamically generate the output mask with values corresponding to input
+                m_OutputMaskImage->SetPixel(start, inputMaskImage->GetPixel(start));
               }
-
-              // Dynamically generate the output mask with values corresponding to input
-              m_OutputMaskImage->SetPixel(start, inputMaskImage->GetPixel(start));
 
               ++start[m_Direction];
             } // while start<=end
@@ -272,12 +270,11 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::ThreadedGenerateD
             // Compute mid-point index
             target[m_Direction] = (start[m_Direction] + target[m_Direction]) / 2;
             output->SetPixel(target, estimatedAttenuation);
-            m_OutputMaskImage->SetPixel(target, inputMaskImage->GetPixel(target));
 
-            // Possibly eliminate negative attenuations
-            if (!m_ConsiderNegativeAttenuations && estimatedAttenuation < 0.0)
+            // Only set mask for valid estimates
+            if (m_ConsiderNegativeAttenuations || estimatedAttenuation >= 0.0)
             {
-              output->SetPixel(target, 0.0);
+              m_OutputMaskImage->SetPixel(target, inputMaskImage->GetPixel(target));
             }
           }
           else
