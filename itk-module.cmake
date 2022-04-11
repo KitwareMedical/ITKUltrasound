@@ -23,10 +23,10 @@ itk_module(Ultrasound
     Strain
   PRIVATE_DEPENDS
     ITKHDF5
-    ITKTestKernel
     ITKImageSources
     ITKEigen3
   TEST_DEPENDS
+    ITKTestKernel
     ITKVideoCore
     ITKVideoIO
   EXCLUDE_FROM_DEFAULT
