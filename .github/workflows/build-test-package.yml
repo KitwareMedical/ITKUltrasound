@@ -311,7 +311,7 @@ jobs:
       run: |
         cd ../../im
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        set PATH="C:\P\grep;%PATH%"
+        set PATH=C:\P\grep;%PATH%
         set CC=cl.exe
         set CXX=cl.exe
         cd ITKBSplineGradient
