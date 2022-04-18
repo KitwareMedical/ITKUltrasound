@@ -285,6 +285,8 @@ private:
   /** Cache mask image reference before threaded execution to reduce calls to GetMaskImage() */
   mutable const MaskImageType * m_ThreadedInputMaskImage;
 
+  unsigned int m_LastScanlineIndex = 0;
+
   /** Output mask image may be eroded via m_PadUpperBounds and m_PadLowerBounds
    *  along scan line direction */
   MaskImagePointer m_OutputMaskImage = MaskImageType::New();

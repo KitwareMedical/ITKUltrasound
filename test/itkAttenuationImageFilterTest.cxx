@@ -48,7 +48,12 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
   using MaskImageType = itk::Image<LabelType, Dimension>;
 
   SpectraImageType::Pointer inputImage = itk::ReadImage<SpectraImageType>(std::string(argv[1]));
-  MaskImageType::Pointer    maskImage = itk::ReadImage<MaskImageType>(std::string(argv[2]));
+  MaskImageType::Pointer    maskImage;
+  std::string               maskFilename = argv[2];
+  if (maskFilename != "nul")
+  {
+    maskImage = itk::ReadImage<MaskImageType>(maskFilename);
+  }
 
   const std::string outputImagePath = argv[3];
   const std::string outputMaskImagePath = (argc > 4 ? argv[4] : "");
@@ -69,9 +74,6 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
 
   attenuationFilter->SetInput(inputImage);
   ITK_TEST_SET_GET_VALUE(inputImage, attenuationFilter->GetInput());
-
-  // Verify filter does not run without mask
-  ITK_TRY_EXPECT_EXCEPTION(attenuationFilter->Update());
 
   attenuationFilter->SetInputMaskImage(maskImage);
   ITK_TEST_SET_GET_VALUE(maskImage, attenuationFilter->GetInputMaskImage());
@@ -133,16 +135,20 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
     itk::WriteImage(attenuationFilter->GetOutputMaskImage(), outputMaskImagePath, true);
   }
 
-  // Discover mask's inside value
-  using MaxType = itk::MinimumMaximumImageCalculator<MaskImageType>;
-  auto maxCalculator = MaxType::New();
-  maxCalculator->SetImage(maskImage);
-  maxCalculator->ComputeMaximum();
-  LabelType maxMaskValue = maxCalculator->GetMaximum();
-  if (maxMaskValue == 0)
+  LabelType maxMaskValue = 1;
+  if (maskFilename != "nul")
   {
-    std::cerr << "The mask is empty!" << std::endl;
-    return EXIT_FAILURE;
+    // Discover mask's inside value
+    using MaxType = itk::MinimumMaximumImageCalculator<MaskImageType>;
+    auto maxCalculator = MaxType::New();
+    maxCalculator->SetImage(maskImage);
+    maxCalculator->ComputeMaximum();
+    LabelType maxMaskValue = maxCalculator->GetMaximum();
+    if (maxMaskValue == 0)
+    {
+      std::cerr << "The mask is empty!" << std::endl;
+      return EXIT_FAILURE;
+    }
   }
 
   // Now boil it down to a single attenuation value
