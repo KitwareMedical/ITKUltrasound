@@ -95,14 +95,7 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::VerifyPreconditio
 {
   Superclass::VerifyPreconditions();
 
-  if (this->GetInputMaskImage() == nullptr)
-  {
-    itkExceptionMacro("Filter requires a mask image for inclusion estimates!");
-  }
-  else
-  {
-    m_ThreadedInputMaskImage = this->GetInputMaskImage();
-  }
+  m_ThreadedInputMaskImage = this->GetInputMaskImage();
 
   if (this->GetDirection() >= ImageDimension)
   {
@@ -126,11 +119,26 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::BeforeThreadedGen
   this->GetOutput()->FillBuffer(0.0f);
 
   // Initialize output mask image
-  const MaskImageType * inputMaskImage = this->GetInputMaskImage();
-  m_OutputMaskImage->CopyInformation(inputMaskImage);
-  m_OutputMaskImage->SetRegions(inputMaskImage->GetLargestPossibleRegion());
-  m_OutputMaskImage->Allocate();
-  m_OutputMaskImage->FillBuffer(0.0f);
+  const InputImageType * input = this->GetInput();
+  const MaskImageType *  inputMaskImage = this->GetInputMaskImage();
+
+  auto region = input->GetLargestPossibleRegion();
+  if (inputMaskImage != nullptr)
+  {
+    m_OutputMaskImage->CopyInformation(inputMaskImage);
+    region = inputMaskImage->GetLargestPossibleRegion();
+    m_OutputMaskImage->SetRegions(region);
+    m_OutputMaskImage->Allocate();
+    m_OutputMaskImage->FillBuffer(0);
+  }
+  else
+  {
+    m_OutputMaskImage->CopyInformation(input);
+    m_OutputMaskImage->SetRegions(region);
+    m_OutputMaskImage->Allocate();
+    m_OutputMaskImage->FillBuffer(1);
+  }
+  m_LastScanlineIndex = region.GetIndex(m_Direction) + region.GetSize(m_Direction) - 1;
 
   // Initialize distance weights
   unsigned fourSigma = std::max(m_FixedEstimationDepth, 16u); // An arbitrary default.
@@ -143,7 +151,7 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::BeforeThreadedGen
 
   // Initialize iVars used in ComputeAttenuation()
   float nyquistFrequency = m_SamplingFrequencyMHz / 2;
-  float numComponents = this->GetInput()->GetNumberOfComponentsPerPixel();
+  float numComponents = input->GetNumberOfComponentsPerPixel();
   m_FrequencyDelta = nyquistFrequency / numComponents;
   m_StartComponent = m_FrequencyBandStartMHz / m_FrequencyDelta;
   m_EndComponent = m_FrequencyBandEndMHz / m_FrequencyDelta;
@@ -152,7 +160,7 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::BeforeThreadedGen
     m_EndComponent = numComponents - 1; // Use all components
   }
   m_ConsideredComponents = m_EndComponent - m_StartComponent + 1;
-  m_ScanStepMM = this->GetInput()->GetSpacing()[m_Direction];
+  m_ScanStepMM = input->GetSpacing()[m_Direction];
 }
 
 template <typename TInputImage, typename TOutputImage, typename TMaskImage>
@@ -193,7 +201,7 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::ThreadedGenerateD
       // Advance until an inclusion is found
       InputIndexType index = it.GetIndex();
       bool           inside = ThreadedIsIncluded(index);
-      if (inside)
+      if (inside && index[m_Direction] < m_LastScanlineIndex)
       {
         if (inclusionLength == 0)
         {
@@ -205,9 +213,11 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::ThreadedGenerateD
       {
         inclusionLength = 0; // Prepare for the next one
 
-        // Stay at last pixel in the inclusion
-        end = it.GetIndex();
-        end[m_Direction] -= 1;
+        end = index;
+        if (index[m_Direction] < m_LastScanlineIndex)
+        {
+          end[m_Direction] -= 1; // Stay at last pixel in the inclusion
+        }
 
         // Adjust for pixel padding
         start[m_Direction] += m_PadLowerBounds;
@@ -248,7 +258,7 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::ThreadedGenerateD
               accumulatedWeight[start[m_Direction]] = 0.0f; // reset for next next inclusion segment
 
               // Only set mask for valid estimates
-              if (m_ConsiderNegativeAttenuations || output->GetPixel(start) >= 0.0)
+              if (inputMaskImage != nullptr && (m_ConsiderNegativeAttenuations || output->GetPixel(start) >= 0.0))
               {
                 // Dynamically generate the output mask with values corresponding to input
                 m_OutputMaskImage->SetPixel(start, inputMaskImage->GetPixel(start));
@@ -272,7 +282,7 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::ThreadedGenerateD
             output->SetPixel(target, estimatedAttenuation);
 
             // Only set mask for valid estimates
-            if (m_ConsiderNegativeAttenuations || estimatedAttenuation >= 0.0)
+            if (inputMaskImage != nullptr && (m_ConsiderNegativeAttenuations || estimatedAttenuation >= 0.0))
             {
               m_OutputMaskImage->SetPixel(target, inputMaskImage->GetPixel(target));
             }
@@ -282,7 +292,7 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::ThreadedGenerateD
             itkExceptionMacro(<< "Invalid computation mode: " << m_ComputationMode);
           }
         } // if start<end
-      } // else !inside
+      }   // else !inside
 
       ++it;
     }
@@ -364,6 +374,10 @@ template <typename TInputImage, typename TOutputImage, typename TMaskImage>
 bool
 AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::ThreadedIsIncluded(InputIndexType index) const
 {
+  if (m_ThreadedInputMaskImage == nullptr)
+  {
+    return true;
+  }
   auto maskValue = m_ThreadedInputMaskImage->GetPixel(index);
   return (m_LabelValue == 0 && maskValue > 0) || (m_LabelValue > 0 && maskValue == m_LabelValue);
 }
