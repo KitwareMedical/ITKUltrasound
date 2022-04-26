@@ -277,13 +277,14 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::ThreadedGenerateD
             }
             float estimatedAttenuation = ComputeAttenuation(target, start);
 
-            // Compute mid-point index
-            target[m_Direction] = (start[m_Direction] + target[m_Direction]) / 2;
+            // Record this attenuation for both pixels of the pair
+            output->SetPixel(start, estimatedAttenuation);
             output->SetPixel(target, estimatedAttenuation);
 
             // Only set mask for valid estimates
             if (inputMaskImage != nullptr && (m_ConsiderNegativeAttenuations || estimatedAttenuation >= 0.0))
             {
+              m_OutputMaskImage->SetPixel(start, inputMaskImage->GetPixel(start));
               m_OutputMaskImage->SetPixel(target, inputMaskImage->GetPixel(target));
             }
           }
