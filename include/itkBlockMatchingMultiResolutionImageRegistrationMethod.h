@@ -191,7 +191,7 @@ protected:
 
   /** Generates the entire displacement image. */
   void
-  EnlargeOutputRequestedRegion(DataObject * data) override
+  EnlargeOutputRequestedRegion(DataObject * itkNotUsed(data)) override
   {
     TDisplacementImage * output = this->GetOutput(0);
     output->SetRequestedRegionToLargestPossibleRegion();
