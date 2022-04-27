@@ -139,7 +139,7 @@ NormalizedCrossCorrelationMetricImageFilter<TFixedImage, TMovingImage, TMetricIm
 template <typename TFixedImage, typename TMovingImage, typename TMetricImage>
 void
 NormalizedCrossCorrelationMetricImageFilter<TFixedImage, TMovingImage, TMetricImage>::EnlargeOutputRequestedRegion(
-  DataObject * data)
+  DataObject * itkNotUsed(data))
 {
   MetricImagePointerType outputPtr = this->GetOutput(0);
 

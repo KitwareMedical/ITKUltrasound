@@ -90,7 +90,7 @@ protected:
 
   /** Don't let the default mess with our output requested regions. */
   virtual void
-  GenerateOutputRequestedRegion(DataObject * data) override{};
+  GenerateOutputRequestedRegion(DataObject * itkNotUsed(data)) override{};
 
   /** Generates helper images for the calculation.  These are only needed for
    * internal calculation, but they are put on the
