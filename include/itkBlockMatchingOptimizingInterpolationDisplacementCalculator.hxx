@@ -92,7 +92,7 @@ OptimizingInterpolationDisplacementCalculator<TMetricImage, TDisplacementImage, 
     for (unsigned int i = 0; i < ImageDimension; i++)
       parameters[i] += 0.1;
     m_CostFunction->Initialize(parameters);
-    m_CostFunction->GetInterpolator()->SetInputImage(metricImage);
+    const_cast<InterpolatorType*>(m_CostFunction->GetInterpolator())->SetInputImage(metricImage);
     m_Optimizer->StartOptimization();
 
     parameters = m_Optimizer->GetCurrentPosition();
