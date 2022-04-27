@@ -79,7 +79,7 @@ public:
 
   /** Type of the strain image. */
   using StrainImageType = Image<SymmetricSecondRankTensor<TStrainValueType, ImageDimension>, ImageDimension>;
-  using StrainImagePointerType = typename StrainImageType::Pointer;
+  using StrainImagePointerType = typename StrainImageType::ConstPointer;
   using StrainInterpolatorType = LinearInterpolateImageFunction<StrainImageType, double>;
 
   /** Type of the transform. */
@@ -101,7 +101,7 @@ public:
   itkGetConstObjectMacro(MetricImageFilter, Superclass);
 
   /** Set/Get the strain image used to modify the fixed image block. */
-  itkSetObjectMacro(StrainImage, StrainImageType);
+  itkSetConstObjectMacro(StrainImage, StrainImageType);
   itkGetConstObjectMacro(StrainImage, StrainImageType);
 
 protected:

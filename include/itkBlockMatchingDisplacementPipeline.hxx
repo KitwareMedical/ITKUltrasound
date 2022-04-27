@@ -32,8 +32,8 @@ template <typename TFixedPixel,
 DisplacementPipeline<TFixedPixel, TMovingPixel, TMetricPixel, TCoordRep, VImageDimension>::DisplacementPipeline()
   : m_LevelRegistrationMethodTextProgressBar(false)
   , m_Direction(0)
-  , m_MaximumAbsStrainAllowed(0.075)
   , m_BlockOverlap(0.75)
+  , m_MaximumAbsStrainAllowed(0.075)
   , m_ScaleBlockByStrain(true)
   , m_RegularizationMaximumNumberOfIterations(2)
 {

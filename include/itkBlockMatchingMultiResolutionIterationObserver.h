@@ -51,6 +51,7 @@ public:
 
   itkNewMacro(Self);
 
+  using Superclass::Execute;
   void
   Execute(itk::Object * caller, const itk::EventObject & event) override;
   //{

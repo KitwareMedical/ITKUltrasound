@@ -137,13 +137,13 @@ public:
   /** Modify the associated BlockMatching::ImageRegistrationMethod's
    * GenerateInputRequestedRegion().  */
   virtual void
-  ModifyGenerateInputRequestedRegion(RegionType & region)
+  ModifyGenerateInputRequestedRegion(RegionType & itkNotUsed(region))
   {}
 
   /** Modify the associated BlockMatching::ImageRegistrationMethod's
    * EnlargeOutputRequestedRegion().  */
   virtual void
-  ModifyEnlargeOutputRequestedRegion(DataObject * data)
+  ModifyEnlargeOutputRequestedRegion(DataObject * itkNotUsed(data))
   {}
 
 protected:
