@@ -22,7 +22,7 @@
 #include "itkConstNeighborhoodIterator.h"
 #include "itkImageRegionIterator.h"
 
-#include "vnl/vnl_math.h"
+#include "itkMath.h"
 #include "vnl/algo/vnl_svd.h"
 
 namespace itk
@@ -94,7 +94,7 @@ LinearLeastSquaresGradientImageFilter<TInputImage, TOperatorValueType, TOutputVa
 {
   unsigned int maxConsistentCount = 1;
   unsigned int currentConsistentCount = maxConsistentCount;
-  int          previousSgn = vnl_math_sgn0(nit.GetPixel(s.start()));
+  int          previousSgn = itk::Math::sgn0(nit.GetPixel(s.start()));
   int          nextSgn;
   unsigned int maxConsistentIdx = 0;
   unsigned int currentConsistentIdx = maxConsistentIdx;
@@ -102,7 +102,7 @@ LinearLeastSquaresGradientImageFilter<TInputImage, TOperatorValueType, TOutputVa
   unsigned int nitIdx;
   for (sliceIdx = 1, nitIdx = s.start() + s.stride(); sliceIdx < s.size(); ++sliceIdx, nitIdx += s.stride())
   {
-    nextSgn = vnl_math_sgn0(nit.GetPixel(nitIdx));
+    nextSgn = itk::Math::sgn0(nit.GetPixel(nitIdx));
     if (nextSgn == previousSgn)
     {
       ++currentConsistentCount;
