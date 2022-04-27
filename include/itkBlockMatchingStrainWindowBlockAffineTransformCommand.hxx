@@ -70,13 +70,15 @@ StrainWindowBlockAffineTransformCommand<TStrainWindowDisplacemenCalculator,
 
   if (m_UseStrainWindowStrain)
   {
-    m_BlockAffineTransformMetricImageFilter->SetStrainImage(strainWindower->GetStrainImageFilter()->GetOutput());
+    m_BlockAffineTransformMetricImageFilter->SetStrainImage(
+          const_cast<typename BlockAffineTransformMetricImageFilterType::StrainImageType *>(strainWindower->GetStrainImageFilter()->GetOutput()));
   }
   else
   {
     m_StrainImageFilter->SetInput(strainWindower->GetStrainImageFilter()->GetInput());
     m_StrainImageFilter->Update();
-    m_BlockAffineTransformMetricImageFilter->SetStrainImage(m_StrainImageFilter->GetOutput());
+    m_BlockAffineTransformMetricImageFilter->SetStrainImage(
+          const_cast<typename BlockAffineTransformMetricImageFilterType::StrainImageType *>(m_StrainImageFilter->GetOutput()));
   }
 }
 
