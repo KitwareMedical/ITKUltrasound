@@ -29,6 +29,8 @@ itk_module(Ultrasound
     ITKTestKernel
     ITKVideoCore
     ITKVideoIO
+  FACTORY_NAMES
+    "FFTImageFilterInit::Curvilinear"
   EXCLUDE_FROM_DEFAULT
   ENABLE_SHARED
   DESCRIPTION
