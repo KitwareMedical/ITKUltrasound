@@ -3,6 +3,7 @@ itk_module_test()
 set(UltrasoundTests
   itkAnalyticSignalImageFilterTest.cxx
   itkAttenuationImageFilterTest.cxx
+  itkBackscatterImageFilterTest.cxx
   itkBModeImageFilterTestTiming.cxx
   itkCurvilinearArraySpecialCoordinatesImageTest.cxx
   itkCurvilinearArrayUltrasoundImageFileReaderTest.cxx
@@ -166,6 +167,44 @@ itk_add_test(NAME itkAttenuationImageFilterWholeImageTest
     1   # consider negative attenuations
     0   # computation mode
     0.458781 # median attenuation
+  )
+itk_add_test(NAME itkBackscatterImageFilterTest100
+  COMMAND UltrasoundTestDriver
+  --compareIntensityTolerance 0.01
+  --compare
+    DATA{Baseline/itkBackscatterImageFilterTest0Output.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkBackscatterImageFilterTest0_100Output.mha
+  --compare
+    DATA{Baseline/itkBackscatterImageFilterTest1Output.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkBackscatterImageFilterTest1_100Output.mha
+  --compare
+    DATA{Baseline/itkBackscatterImageFilterTest2Output.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkBackscatterImageFilterTest2_100Output.mha
+  itkBackscatterImageFilterTest
+    DATA{Input/UnfusedRF-a0-spectra-cropped.mhd,UnfusedRF-a0-spectra-cropped.raw}
+    ${ITK_TEST_OUTPUT_DIR}/itkBackscatterImageFilterTest0_100Output.mha
+    ${ITK_TEST_OUTPUT_DIR}/itkBackscatterImageFilterTest1_100Output.mha
+    ${ITK_TEST_OUTPUT_DIR}/itkBackscatterImageFilterTest2_100Output.mha
+    100 # work units
+  )
+itk_add_test(NAME itkBackscatterImageFilterTest16
+  COMMAND UltrasoundTestDriver
+  --compareIntensityTolerance 0.01
+  --compare
+    DATA{Baseline/itkBackscatterImageFilterTest0Output.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkBackscatterImageFilterTest0_16Output.mha
+  --compare
+    DATA{Baseline/itkBackscatterImageFilterTest1Output.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkBackscatterImageFilterTest1_16Output.mha
+  --compare
+    DATA{Baseline/itkBackscatterImageFilterTest2Output.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkBackscatterImageFilterTest2_16Output.mha
+  itkBackscatterImageFilterTest
+    DATA{Input/UnfusedRF-a0-spectra-cropped.mhd,UnfusedRF-a0-spectra-cropped.raw}
+    ${ITK_TEST_OUTPUT_DIR}/itkBackscatterImageFilterTest0_16Output.mha
+    ${ITK_TEST_OUTPUT_DIR}/itkBackscatterImageFilterTest1_16Output.mha
+    ${ITK_TEST_OUTPUT_DIR}/itkBackscatterImageFilterTest2_16Output.mha
+    16 # work units
   )
 itk_add_test(NAME itkBModeImageFilterTestTiming
   COMMAND UltrasoundTestDriver
