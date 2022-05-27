@@ -35,3 +35,7 @@ itk_python_add_test(NAME PythonSpectra1DNormalizeImageFilterTest
     DATA{${test_input_dir}/spectra_pixel_image.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkSpectra1DNormalizeImageFilterTest.mha
   )
+  
+itk_python_add_test(NAME PythonCurvilinearArraySpecialCoordinatesImageTemplateMethodsTest
+  COMMAND PythonCurvilinearArraySpecialCoordinatesImageTemplateMethodsTest.py
+  )
