@@ -3,7 +3,7 @@ name: Build, test, package
 on: [push,pull_request]
 
 env:
-  itk-git-tag: "801370c025c7d296783481779a41c6d559c992c5"
+  itk-git-tag: "ee664da6bb1a83cdf82e2582126e65119a4de1a4"
   itk-wheel-tag: "v5.3rc04"
   ITKBSplineGradient-git-tag: v0.2.4
   ITKHigherOrderAccurateGradient-git-tag: v1.1.0
