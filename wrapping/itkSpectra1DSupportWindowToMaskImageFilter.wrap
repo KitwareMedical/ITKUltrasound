@@ -1,4 +1,6 @@
 itk_wrap_include("list")
+itk_wrap_include("itkIndex.h")
+itk_wrap_include("itkImage.h")
 
 itk_wrap_class("itk::Spectra1DSupportWindowToMaskImageFilter" POINTER_WITH_2_SUPERCLASSES)
   foreach(d ${ITK_WRAP_IMAGE_DIMS})

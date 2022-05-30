@@ -1,24 +1,3 @@
-itk_wrap_include("list")
-set(TEMPLATE_LIST_INDEX "")
-foreach(d ${ITK_WRAP_IMAGE_DIMS})
-  set(TEMPLATE_LIST_INDEX "${TEMPLATE_LIST_INDEX}
-%template(listIndex${d}) std::list< itk::Index< ${d} > >;
-")
-  ADD_PYTHON_CONFIG_TEMPLATE("list" "std::list" "listIndex${d}" "itk::Index< ${d} >")
-endforeach()
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/stdlistitkIndex.i.in
-  ${CMAKE_CURRENT_BINARY_DIR}/stdlistitkIndex.i
-  @ONLY
-  )
-set(WRAPPER_SWIG_LIBRARY_FILES ${WRAPPER_SWIG_LIBRARY_FILES}
-  "${CMAKE_CURRENT_BINARY_DIR}/stdlistitkIndex.i")
-
-itk_wrap_class("itk::Image" POINTER)
-  foreach(d ${ITK_WRAP_IMAGE_DIMS})
-    itk_wrap_template("listitkIndex${d}${d}" "std::list< itk::Index< ${d} > >, ${d}")
-  endforeach(d)
-itk_end_wrap_class()
-
 itk_wrap_class("itk::Spectra1DSupportWindowImageFilter" POINTER_WITH_2_SUPERCLASSES)
   itk_wrap_image_filter("${WRAP_ITK_INT}" 1)
 itk_end_wrap_class()

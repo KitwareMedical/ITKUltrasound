@@ -9,6 +9,7 @@ endif()
 itk_wrap_module(Ultrasound)
 set(WRAPPER_SUBMODULE_ORDER
   itkCurvilinearArraySpecialCoordinatesImage
+  itkImageUltrasound # Extra itk::Image wrappings for SupportWindow filters
   itkCurvilinearArraySpecialCoordinatesImageFilters
   itkAttenuationImageFilter
   itkBlockMatchingMetricImageFilter
@@ -16,13 +17,14 @@ set(WRAPPER_SUBMODULE_ORDER
   itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilter
   itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter
   itkSpectra1DSupportWindowImageFilter
+  itkSpectra1DSupportWindowToMaskImageFilter
   itkFrequencyDomain1DFilterFunction
   itkFrequencyDomain1DImageFilter
   itkRegionFromReferenceImageFilter
   itkAnalyticSignalImageFilter
   itkBModeImageFilter
   itkSpeckleReducingAnisotropicDiffusionImageFilter
-  itkImageToImageFilter # Extra wrappings for Spectra1D filters
+  itkImageToImageFilterUltrasound # Extra wrappings for Spectra1D filters
   itkSpectra1DAveragingImageFilter
   itkSpectra1DNormalizeImageFilter
 )
