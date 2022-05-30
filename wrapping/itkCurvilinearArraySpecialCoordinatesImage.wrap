@@ -1,7 +1,8 @@
 itk_wrap_include("list")
 itk_wrap_include("complex")
 
-itk_wrap_class("itk::CurvilinearArraySpecialCoordinatesImage" POINTER_WITH_SUPERCLASS)
+# Wrap underlying class hierarchy
+itk_wrap_class("itk::SpecialCoordinatesImage" POINTER)
   foreach(d ${ITK_WRAP_IMAGE_DIMS})
     foreach(t ${WRAP_ITK_SCALAR})
       itk_wrap_template("${ITKM_${t}}${d}" "${ITKT_${t}}, ${d}")
@@ -12,110 +13,61 @@ itk_wrap_class("itk::CurvilinearArraySpecialCoordinatesImage" POINTER_WITH_SUPER
   endforeach()
 itk_end_wrap_class()
 
-itk_wrap_include("itkImageSource.h")
-itk_wrap_class("itk::ImageSource" POINTER)
-  foreach(d ${ITK_WRAP_IMAGE_DIMS})
-    foreach(real_type ${WRAP_ITK_SCALAR})
-      itk_wrap_template("CASCI${ITKM_${real_type}}${d}" "itk::CurvilinearArraySpecialCoordinatesImage<${ITKT_${real_type}},${d}>")
-    endforeach()
-    foreach(complex_type ${WRAP_ITK_COMPLEX_REAL})
-      itk_wrap_template("CASCI${ITKM_${complex_type}}${d}" "itk::CurvilinearArraySpecialCoordinatesImage<${ITKT_${complex_type}},${d}>")
-    endforeach()
-  endforeach()
-itk_end_wrap_class()
 
-itk_wrap_include("itkCastImageFilter.h")
-itk_wrap_class("itk::CastImageFilter" POINTER_WITH_2_SUPERCLASSES)
-  foreach(d ${ITK_WRAP_IMAGE_DIMS})
-    foreach(t1 ${WRAP_ITK_SCALAR})
-      foreach(t2 ${WRAP_ITK_SCALAR})
-        itk_wrap_template("CASCI${ITKM_${t1}}${d}CASCI${ITKM_${t2}}${d}"
-          "itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t1}}, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t2}}, ${d} >")
-        itk_wrap_template("CASCI${ITKM_${t1}}${d}I${ITKM_${t2}}${d}"
-          "itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t1}}, ${d} >, itk::Image< ${ITKT_${t2}}, ${d} >")
-      endforeach()
-    endforeach()
-  endforeach()
-itk_end_wrap_class()
+# Explicitly override template method wrappings so that implicit
+# scalar type is always `double` for greatest precision.
+# Adds wrapping overrides to `itkCurvilinearArraySpecialCoordinatesImage_ext.i` configured with
+# CMake for input to SWIG wrapping generation.
+# See `DECL_PYTHON_IMAGEBASE_CLASS` definition in `ITK/Wrapping/Generators/Python/PyBase/pyBase.i`
+# for precedent.
+string(APPEND ITK_WRAP_PYTHON_SWIG_EXT "
+%inline %{
+#include \"itkContinuousIndexSwigInterface.h\"
+%}
 
-itk_wrap_include("itkRescaleIntensityImageFilter.h")
-itk_wrap_class("itk::RescaleIntensityImageFilter" POINTER_WITH_2_SUPERCLASSES)
+%define DECL_PYTHON_CURVILINEARARRAYSPECIALCOORDINATESIMAGE_CLASS(swig_name, template_params)
+
+  %extend swig_name {
+      itkIndex##template_params TransformPhysicalPointToIndex(const itkPointD##template_params & point ) {
+          itkIndex##template_params idx;
+          self->TransformPhysicalPointToIndex<double>( point, idx );
+          return idx;
+        }
+
+      itkContinuousIndexD##template_params TransformPhysicalPointToContinuousIndex(const itkPointD##template_params & point ) {
+          itkContinuousIndexD##template_params idx;
+          self->TransformPhysicalPointToContinuousIndex<double>( point, idx );
+          return idx;
+      }
+
+      itkPointD##template_params TransformContinuousIndexToPhysicalPoint(const itkContinuousIndexD##template_params & idx ) {
+          itkPointD##template_params point;
+          self->TransformContinuousIndexToPhysicalPoint<double>( idx, point );
+          return point;
+      }
+
+      itkPointD##template_params TransformIndexToPhysicalPoint(const itkIndex##template_params & idx ) {
+          itkPointD##template_params point;
+          self->TransformIndexToPhysicalPoint<double>( idx, point );
+          return point;
+      }
+  }
+
+%enddef
+")
+
+# Wrap class for real and complex pixel types
+itk_wrap_class("itk::CurvilinearArraySpecialCoordinatesImage" POINTER_WITH_SUPERCLASS)
   foreach(d ${ITK_WRAP_IMAGE_DIMS})
     foreach(t ${WRAP_ITK_SCALAR})
-      foreach(ut ${WRAP_ITK_INT})
-        itk_wrap_template("I${ITKM_${t}}${d}CASCI${ITKM_${ut}}${d}"
-          "itk::Image< ${ITKT_${t}}, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${ut}}, ${d} >")
-      endforeach()
+      itk_wrap_template("${ITKM_${t}}${d}" "${ITKT_${t}}, ${d}")
+      string(APPEND ITK_WRAP_PYTHON_SWIG_EXT "DECL_PYTHON_CURVILINEARARRAYSPECIALCOORDINATESIMAGE_CLASS(${WRAPPER_SWIG_NAME}${ITKM_${t}}${d}, ${d})\n")
     endforeach()
-  endforeach()
-itk_end_wrap_class()
-
-itk_wrap_class("itk::ImageToImageFilter" POINTER)
-  foreach(d ${ITK_WRAP_IMAGE_DIMS})
-    foreach(t ${WRAP_ITK_SCALAR})
-      foreach(ut ${WRAP_ITK_INT})
-        itk_wrap_template("I${ITKM_${t}}${d}CASCI${ITKM_${ut}}${d}"
-          "itk::Image< ${ITKT_${t}}, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${ut}}, ${d} >")
-      endforeach()
-      foreach(t2 ${WRAP_ITK_SCALAR})
-        itk_wrap_template("CASCI${ITKM_${t}}${d}CASCI${ITKM_${t2}}${d}"
-          "itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t2}}, ${d} >")
-      endforeach()
-    endforeach()
-
-    foreach(rt ${WRAP_ITK_REAL})
-      foreach(ct ${WRAP_ITK_COMPLEX_REAL})
-        itk_wrap_template("CASCI${ITKM_${rt}}${d}CASCI${ITKM_${ct}}${d}"
-        "itk::CurvilinearArraySpecialCoordinatesImage<  ${ITKT_${rt}}, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage<  ${ITKT_${ct}}, ${d} >")
-        itk_wrap_template("CASCI${ITKM_${ct}}${d}CASCI${ITKM_${rt}}${d}"
-        "itk::CurvilinearArraySpecialCoordinatesImage<  ${ITKT_${ct}}, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage<  ${ITKT_${rt}}, ${d} >")
-      endforeach()
-    endforeach()
-
     foreach(t3 ${WRAP_ITK_COMPLEX_REAL})
-      itk_wrap_template("CASCI${ITKM_${t3}}${d}CASCI${ITKM_${t3}}${d}"
-        "itk::CurvilinearArraySpecialCoordinatesImage<  ${ITKT_${t3}}, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage<  ${ITKT_${t3}}, ${d} >")
+      itk_wrap_template("${ITKM_${t3}}${d}" "${ITKT_${t3}}, ${d}")
+      string(APPEND ITK_WRAP_PYTHON_SWIG_EXT "DECL_PYTHON_CURVILINEARARRAYSPECIALCOORDINATESIMAGE_CLASS(${WRAPPER_SWIG_NAME}${ITKM_${t3}}${d}, ${d})\n")
     endforeach()
   endforeach()
 itk_end_wrap_class()
 
-itk_wrap_class("itk::ImageFileReader" POINTER_WITH_SUPERCLASS)
-  foreach(d ${ITK_WRAP_IMAGE_DIMS})
-    foreach(t ${WRAP_ITK_SCALAR})
-      itk_wrap_template("CASCI${ITKM_${t}}${d}"
-        "itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >")
-    endforeach()
-  endforeach()
-itk_end_wrap_class()
-
-itk_wrap_class("itk::ImageFileWriter" POINTER)
-  foreach(d ${ITK_WRAP_IMAGE_DIMS})
-    foreach(t ${WRAP_ITK_SCALAR})
-      itk_wrap_template("CASCI${ITKM_${t}}${d}"
-        "itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >")
-    endforeach()
-  endforeach()
-itk_end_wrap_class()
-
-#itk_wrap_include("itkResampleImageFilter.h")
-#itk_wrap_class("itk::ResampleImageFilter" POINTER_WITH_2_SUPERCLASSES)
-#  foreach(d ${ITK_WRAP_IMAGE_DIMS})
-#    foreach(t1 ${WRAP_ITK_SCALAR})
-#      foreach(t2 ${WRAP_ITK_SCALAR})
-#        itk_wrap_template("CASCI${ITKM_${t1}}${d}I${ITKM_${t2}}${d}"
-#          "itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t1}}, ${d} >, itk::Image< ${ITKT_${t2}}, ${d} >")
-#      endforeach()
-#    endforeach()
-#  endforeach()
-#itk_end_wrap_class()
-
-itk_wrap_include("itkSpectra1DSupportWindowToMaskImageFilter.h")
-itk_wrap_class("itk::Spectra1DSupportWindowToMaskImageFilter" POINTER_WITH_2_SUPERCLASSES)
-  foreach(d ${ITK_WRAP_IMAGE_DIMS})
-    foreach(t ${WRAP_ITK_INT})
-      itk_wrap_template("IlistitkIndex${d}${d}CASCI${ITKM_${t}}${d}"
-        "itk::Image< std::list< itk::Index< ${d} > >, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >")
-    endforeach()
-  endforeach()
-itk_end_wrap_class()
-
+# Then wrap consuming filters in itkCurvilinearArraySpecialCoordinatesImageFilters.wrap
