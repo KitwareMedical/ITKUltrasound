@@ -1,6 +1,9 @@
 name: Test notebooks
 
-on: [push,pull_request]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   nbmake:
