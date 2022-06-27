@@ -5,6 +5,7 @@ on: [push,pull_request]
 env:
   itk-git-tag: "d6acfd26bfcdec606d605beb1301bddfb17c05a6"
   itk-wheel-tag: "v5.3rc04"
+  ITKMeshToPolyData-git-tag: v0.8.2
   ITKBSplineGradient-git-tag: v0.2.4
   ITKHigherOrderAccurateGradient-git-tag: v1.1.0
   ITKSplitComponents-git-tag: v2.0.4
@@ -60,7 +61,7 @@ jobs:
         cd ..
         mkdir ITK-build
         cd ITK-build
-        cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake-build-type }} -DBUILD_TESTING:BOOL=OFF -DModule_SplitComponents:BOOL=ON -DModule_BSplineGradient:BOOL=ON -DModule_Strain:BOOL=ON -DModule_HigherOrderAccurateGradient:BOOL=ON -GNinja ../ITK
+        cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake-build-type }} -DBUILD_TESTING:BOOL=OFF -DModule_MeshToPolyData:BOOL=ON -DModule_SplitComponents:BOOL=ON -DModule_BSplineGradient:BOOL=ON -DModule_Strain:BOOL=ON -DModule_HigherOrderAccurateGradient:BOOL=ON -GNinja ../ITK
         ninja
 
     - name: Build ITK
@@ -70,7 +71,7 @@ jobs:
         mkdir ITK-build
         cd ITK-build
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake-build-type }} -DBUILD_TESTING:BOOL=OFF -DModule_SplitComponents:BOOL=ON -DModule_BSplineGradient:BOOL=ON -DModule_Strain:BOOL=ON -DModule_HigherOrderAccurateGradient:BOOL=ON -GNinja ../ITK
+        cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake-build-type }} -DBUILD_TESTING:BOOL=OFF -DModule_MeshToPolyData:BOOL=ON -DModule_SplitComponents:BOOL=ON -DModule_BSplineGradient:BOOL=ON -DModule_Strain:BOOL=ON -DModule_HigherOrderAccurateGradient:BOOL=ON -GNinja ../ITK
         ninja
       shell: cmd
 
@@ -166,15 +167,26 @@ jobs:
     - name: 'Build 🐍 Python 📦 package'
       run: |
         export ITK_PACKAGE_VERSION=${{ env.itk-wheel-tag }}
+        pwd
+        echo "Building ITK external module dependencies"
+        git clone https://github.com/InsightSoftwareConsortium/ITKMeshToPolyData.git
+        cp ./dockcross-manylinux-download-cache-and-build-module-wheels.sh ./ITKMeshToPolyData
+        pushd ITKMeshToPolyData
+        git checkout ${{env.ITKMeshToPolyData-git-tag}}
+        ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
+        popd
+        cp ITKMeshToPolyData/include/* include/
+        rm ./ITKMeshToPolyData/ITKPythonBuilds-linux.tar.zst
+        mv ./ITKMeshToPolyData/ITKPythonPackage .
         git clone https://github.com/InsightSoftwareConsortium/ITKBSplineGradient.git
         cp ./dockcross-manylinux-download-cache-and-build-module-wheels.sh ./ITKBSplineGradient
         pushd ITKBSplineGradient
         git checkout ${{env.ITKBSplineGradient-git-tag}}
+        ln -s ../ITKPythonPackage
+        ln -s ./ITKPythonPackage/oneTBB-prefix
         ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
         popd
         cp ITKBSplineGradient/include/* include/
-        rm ./ITKBSplineGradient/ITKPythonBuilds-linux.tar.zst
-        mv ./ITKBSplineGradient/ITKPythonPackage .
         git clone https://github.com/InsightSoftwareConsortium/ITKHigherOrderAccurateGradient.git
         pushd ITKHigherOrderAccurateGradient
         git checkout ${{env.ITKHigherOrderAccurateGradient-git-tag}}
@@ -199,6 +211,7 @@ jobs:
         ./ITKPythonPackage/scripts/dockcross-manylinux-build-module-wheels.sh cp${{ matrix.python-version }}
         popd
         cp ITKStrain/include/* include/
+        echo "Building ITKUltrasound module wheels"
         pwd
         ls -l
         du -sh ./* | sort -hr | head -n 20
@@ -235,6 +248,16 @@ jobs:
       run: |
         export ITK_PACKAGE_VERSION=${{ env.itk-wheel-tag }}
         export MACOSX_DEPLOYMENT_TARGET=10.9
+        pwd
+        echo "Building ITK external module dependencies"
+        git clone https://github.com/InsightSoftwareConsortium/ITKMeshToPolyData
+        cp ./macpython-download-cache-and-build-module-wheels.sh ITKMeshToPolyData/
+        pushd ITKMeshToPolyData
+        git checkout ${{env.ITKMeshToPolyData-git-tag}}
+        ./macpython-download-cache-and-build-module-wheels.sh
+        popd
+        cp ITKMeshToPolyData/include/* include/
+        rm ./ITKMeshToPolyData/ITKPythonBuilds-macosx.tar.zst
         git clone https://github.com/InsightSoftwareConsortium/ITKBSplineGradient
         cp ./macpython-download-cache-and-build-module-wheels.sh ITKBSplineGradient/
         pushd ITKBSplineGradient
@@ -261,6 +284,7 @@ jobs:
         /Users/svc-dashboard/D/P/ITKPythonPackage/scripts/macpython-build-module-wheels.sh
         popd
         cp ITKStrain/include/* include/
+        echo "Building ITKUltrasound module wheels"
         /Users/svc-dashboard/D/P/ITKPythonPackage/scripts/macpython-build-module-wheels.sh
 
     - name: Publish Python package as GitHub Artifact
@@ -301,6 +325,8 @@ jobs:
         7z x doxygen-1.8.11.windows.bin.zip -o/c/P/doxygen -aoa -r
         curl -L "https://data.kitware.com/api/v1/file/5bbf87ba8d777f06b91f27d6/download/grep-win.zip" -o "grep-win.zip"
         7z x grep-win.zip -o/c/P/grep -aoa -r
+        pwd
+        git clone https://github.com/InsightSoftwareConsortium/ITKMeshToPolyData.git
         git clone https://github.com/InsightSoftwareConsortium/ITKBSplineGradient.git
         git clone https://github.com/InsightSoftwareConsortium/ITKHigherOrderAccurateGradient.git
         git clone https://github.com/InsightSoftwareConsortium/ITKSplitComponents.git
@@ -314,6 +340,13 @@ jobs:
         set PATH=C:\P\grep;%PATH%
         set CC=cl.exe
         set CXX=cl.exe
+        pwd
+        echo "Building ITK external module dependencies"
+        cd ITKMeshToPolyData
+        "C:\Program Files\Git\bin\git.exe" checkout ${{env.ITKMeshToPolyData-git-tag}}
+        C:\Python3${{ matrix.python-version-minor }}-x64\python.exe C:\P\IPP\scripts\windows_build_module_wheels.py --py-envs "3${{ matrix.python-version-minor }}-x64" --no-cleanup
+        cd ..
+        copy ITKMeshToPolyData/include/* include/
         cd ITKBSplineGradient
         "C:\Program Files\Git\bin\git.exe" checkout ${{env.ITKBSplineGradient-git-tag}}
         C:\Python3${{ matrix.python-version-minor }}-x64\python.exe C:\P\IPP\scripts\windows_build_module_wheels.py --py-envs "3${{ matrix.python-version-minor }}-x64" --no-cleanup
@@ -334,6 +367,7 @@ jobs:
         C:\Python3${{ matrix.python-version-minor }}-x64\python.exe C:\P\IPP\scripts\windows_build_module_wheels.py --py-envs "3${{ matrix.python-version-minor }}-x64" --no-cleanup
         cd ..
         copy ITKStrain/include/* include/
+        echo "Building ITKUltrasound module wheels"
         C:\Python3${{ matrix.python-version-minor }}-x64\python.exe C:\P\IPP\scripts\windows_build_module_wheels.py --py-envs "3${{ matrix.python-version-minor }}-x64" --no-cleanup
 
     - name: Publish Python package as GitHub Artifact
