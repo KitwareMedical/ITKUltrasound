@@ -18,6 +18,7 @@ itk_module(Ultrasound
     ${_fft_depends}
   COMPILE_DEPENDS
     SplitComponents
+    MeshToPolyData
     BSplineGradient
     HigherOrderAccurateGradient
     Strain
