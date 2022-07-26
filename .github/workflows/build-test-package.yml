@@ -3,13 +3,13 @@ name: Build, test, package
 on: [push,pull_request]
 
 env:
-  itk-git-tag: "d6acfd26bfcdec606d605beb1301bddfb17c05a6"
-  itk-wheel-tag: "v5.3rc04"
-  ITKMeshToPolyData-git-tag: v0.8.2
-  ITKBSplineGradient-git-tag: v0.2.4
-  ITKHigherOrderAccurateGradient-git-tag: v1.1.0
-  ITKSplitComponents-git-tag: v2.0.4
-  ITKStrain-git-tag: v0.3.3
+  itk-git-tag: "v5.3rc04"
+  itk-wheel-tag: "v5.3rc04.post1"
+  ITKMeshToPolyData-git-tag: v0.8.3
+  ITKBSplineGradient-git-tag: v0.2.7
+  ITKHigherOrderAccurateGradient-git-tag: v1.1.3
+  ITKSplitComponents-git-tag: v2.0.7
+  ITKStrain-git-tag: v0.3.7
 
 jobs:
   build-test-cxx:
