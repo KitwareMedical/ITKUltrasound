@@ -3,13 +3,13 @@ name: Build, test, package
 on: [push,pull_request]
 
 env:
-  itk-git-tag: "835dc01388d22c4b4c9a46b01dbdfe394ec23511"
-  itk-wheel-tag: "v5.3rc04.post2"
-  ITKMeshToPolyData-git-tag: v0.8.4
-  ITKBSplineGradient-git-tag: v0.2.8
-  ITKHigherOrderAccurateGradient-git-tag: v1.1.4
-  ITKSplitComponents-git-tag: v2.0.8
-  ITKStrain-git-tag: v0.3.8
+  itk-git-tag: "171fb2ba33a87041f99328a2f26612ff33aa9cc8"
+  itk-wheel-tag: "v5.3rc04.post3"
+  ITKMeshToPolyData-git-tag: v0.9.1
+  ITKBSplineGradient-git-tag: v0.2.9
+  ITKHigherOrderAccurateGradient-git-tag: v1.1.5
+  ITKSplitComponents-git-tag: v2.0.9
+  ITKStrain-git-tag: v0.3.9
 
 jobs:
   build-test-cxx:
@@ -17,9 +17,9 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        os: [ubuntu-18.04, windows-2019, macos-10.15]
+        os: [ubuntu-20.04, windows-2019, macos-11]
         include:
-          - os: ubuntu-18.04
+          - os: ubuntu-20.04
             c-compiler: "gcc"
             cxx-compiler: "g++"
             cmake-build-type: "MinSizeRel"
@@ -27,7 +27,7 @@ jobs:
             c-compiler: "cl.exe"
             cxx-compiler: "cl.exe"
             cmake-build-type: "Release"
-          - os: macos-10.15
+          - os: macos-11
             c-compiler: "clang"
             cxx-compiler: "clang++"
             cmake-build-type: "MinSizeRel"
@@ -167,6 +167,7 @@ jobs:
     - name: 'Build 🐍 Python 📦 package'
       run: |
         export ITK_PACKAGE_VERSION=${{ env.itk-wheel-tag }}
+        export TARBALL_SPECIALIZATION="-manylinux_2_28"
         pwd
         echo "Building ITK external module dependencies"
         git clone https://github.com/InsightSoftwareConsortium/ITKMeshToPolyData.git
@@ -176,7 +177,7 @@ jobs:
         ./dockcross-manylinux-download-cache-and-build-module-wheels.sh cp${{ matrix.python-version }}
         popd
         cp ITKMeshToPolyData/include/* include/
-        rm ./ITKMeshToPolyData/ITKPythonBuilds-linux.tar.zst
+        rm -f ./ITKMeshToPolyData/ITKPythonBuilds-linux.tar.zst
         mv ./ITKMeshToPolyData/ITKPythonPackage .
         git clone https://github.com/InsightSoftwareConsortium/ITKBSplineGradient.git
         cp ./dockcross-manylinux-download-cache-and-build-module-wheels.sh ./ITKBSplineGradient
@@ -225,7 +226,7 @@ jobs:
         path: dist
 
   build-macos-python-packages:
-    runs-on: macos-10.15
+    runs-on: macos-11
     strategy:
       max-parallel: 2
 
@@ -234,7 +235,7 @@ jobs:
 
     - name: 'Specific XCode version'
       run: |
-        sudo xcode-select -s "/Applications/Xcode_11.7.app"
+        sudo xcode-select -s "/Applications/Xcode_13.2.1.app"
 
     - name: Get specific version of CMake, Ninja
       uses: lukka/get-cmake@v3.18.3
@@ -257,7 +258,7 @@ jobs:
         ./macpython-download-cache-and-build-module-wheels.sh
         popd
         cp ITKMeshToPolyData/include/* include/
-        rm ./ITKMeshToPolyData/ITKPythonBuilds-macosx.tar.zst
+        rm -f ./ITKMeshToPolyData/ITKPythonBuilds-macosx.tar.zst
         git clone https://github.com/InsightSoftwareConsortium/ITKBSplineGradient
         cp ./macpython-download-cache-and-build-module-wheels.sh ITKBSplineGradient/
         pushd ITKBSplineGradient
@@ -265,7 +266,7 @@ jobs:
         ./macpython-download-cache-and-build-module-wheels.sh
         popd
         cp ITKBSplineGradient/include/* include/
-        rm ./ITKBSplineGradient/ITKPythonBuilds-macosx.tar.zst
+        rm -f ./ITKBSplineGradient/ITKPythonBuilds-macosx.tar.zst
         git clone https://github.com/InsightSoftwareConsortium/ITKHigherOrderAccurateGradient.git
         pushd ITKHigherOrderAccurateGradient
         git checkout ${{env.ITKHigherOrderAccurateGradient-git-tag}}
@@ -381,7 +382,7 @@ jobs:
       - build-linux-python-packages
       - build-macos-python-packages
       - build-windows-python-packages
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
 
     steps:
     - name: Download Python Packages
