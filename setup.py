@@ -42,7 +42,7 @@ setup(
     url=r'https://www.insight-journal.org/browse/publication/722',
     install_requires=[
         r'itk>=5.3rc04.post3',
-        r'itk-meshtopolydata>=0.9.1'
+        r'itk-meshtopolydata>=0.9.1',
         r'itk-bsplinegradient>=0.2.9',
         r'itk-higherorderaccurategradient>=1.1.5',
         r'itk-splitcomponents>=2.0.9',
