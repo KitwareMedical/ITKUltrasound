@@ -5,7 +5,7 @@ from skbuild import setup
 
 setup(
     name='itk-ultrasound',
-    version='0.5.8',
+    version='0.5.9',
     author='Matthew McCormick',
     author_email='matt.mccormick@kitware.com',
     packages=['itk'],
