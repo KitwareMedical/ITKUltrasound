@@ -3,13 +3,14 @@ name: Build, test, package
 on: [push,pull_request]
 
 env:
-  itk-git-tag: "171fb2ba33a87041f99328a2f26612ff33aa9cc8"
-  itk-wheel-tag: "v5.3rc04.post3"
-  ITKMeshToPolyData-git-tag: v0.9.1
-  ITKBSplineGradient-git-tag: v0.2.9
-  ITKHigherOrderAccurateGradient-git-tag: v1.1.5
-  ITKSplitComponents-git-tag: v2.0.9
-  ITKStrain-git-tag: v0.3.9
+  itk-git-tag: "v5.3.0"
+  itk-wheel-tag: "v5.3.0"
+  ITKMeshToPolyData-git-tag: "v0.10.0"
+  ITKBSplineGradient-git-tag: "v0.3.0"
+  ITKHigherOrderAccurateGradient-git-tag: "v1.2.0"
+  ITKSplitComponents-git-tag: "v2.1.0"
+  ITKStrain-git-tag: "v0.4.0"
+  ITKPythonPackage-git-tag: "03391ad738438661fff40bfe37a7cfabd171b9b1"
 
 jobs:
   build-test-cxx:
@@ -17,13 +18,13 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        os: [ubuntu-20.04, windows-2019, macos-11]
+        os: [ubuntu-20.04, windows-2022, macos-11]
         include:
           - os: ubuntu-20.04
             c-compiler: "gcc"
             cxx-compiler: "g++"
             cmake-build-type: "MinSizeRel"
-          - os: windows-2019
+          - os: windows-2022
             c-compiler: "cl.exe"
             cxx-compiler: "cl.exe"
             cmake-build-type: "Release"
@@ -46,7 +47,7 @@ jobs:
         python -m pip install ninja
 
     - name: Get specific version of CMake, Ninja
-      uses: lukka/get-cmake@v3.18.3
+      uses: lukka/get-cmake@v3.22.2
 
     - name: Download ITK
       run: |
@@ -56,7 +57,7 @@ jobs:
         git checkout ${{ env.itk-git-tag }}
 
     - name: Build ITK
-      if: matrix.os != 'windows-2019'
+      if: matrix.os != 'windows-2022'
       run: |
         cd ..
         mkdir ITK-build
@@ -65,12 +66,12 @@ jobs:
         ninja
 
     - name: Build ITK
-      if: matrix.os == 'windows-2019'
+      if: matrix.os == 'windows-2022'
       run: |
         cd ..
         mkdir ITK-build
         cd ITK-build
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
         cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake-build-type }} -DBUILD_TESTING:BOOL=OFF -DModule_MeshToPolyData:BOOL=ON -DModule_SplitComponents:BOOL=ON -DModule_BSplineGradient:BOOL=ON -DModule_Strain:BOOL=ON -DModule_HigherOrderAccurateGradient:BOOL=ON -GNinja ../ITK
         ninja
       shell: cmd
@@ -124,14 +125,14 @@ jobs:
         cat dashboard.cmake
 
     - name: Build and test
-      if: matrix.os != 'windows-2019'
+      if: matrix.os != 'windows-2022'
       run: |
         ctest --output-on-failure -j 2 -V -S dashboard.cmake
 
     - name: Build and test
-      if: matrix.os == 'windows-2019'
+      if: matrix.os == 'windows-2022'
       run: |
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
         ctest --output-on-failure -j 2 -V -S dashboard.cmake
       shell: cmd
 
@@ -140,7 +141,7 @@ jobs:
     strategy:
       max-parallel: 2
       matrix:
-        python-version: [37, 38, 39, 310]
+        python-version: ["37", "38", "39", "310", "311"]
 
     steps:
     - uses: actions/checkout@v2
@@ -159,15 +160,23 @@ jobs:
         sudo rm -rf "$AGENT_TOOLSDIRECTORY"
         df -h
 
+    - name: 'Fetch build dependencies'
+      shell: bash
+      run: |
+        sudo apt install zstd
+        unzstd --version
+
     - name: 'Fetch build script'
       run: |
-        curl -L https://raw.githubusercontent.com/InsightSoftwareConsortium/ITKPythonPackage/master/scripts/dockcross-manylinux-download-cache-and-build-module-wheels.sh -O
+        curl -L https://raw.githubusercontent.com/InsightSoftwareConsortium/ITKPythonPackage/${{ env.ITKPythonPackage-git-tag }}/scripts/dockcross-manylinux-download-cache-and-build-module-wheels.sh -O
         chmod u+x dockcross-manylinux-download-cache-and-build-module-wheels.sh
 
     - name: 'Build 🐍 Python 📦 package'
       run: |
         export ITK_PACKAGE_VERSION=${{ env.itk-wheel-tag }}
-        export TARBALL_SPECIALIZATION="-manylinux_2_28"
+        export ITKPYTHONPACKAGE_TAG=${{ env.ITKPythonPackage-git-tag }}
+        export MANYLINUX_VERSION="_2_28"
+        echo "Building for manylinux specialization ${MANYLINUX_VERSION}"
         pwd
         echo "Building ITK external module dependencies"
         git clone https://github.com/InsightSoftwareConsortium/ITKMeshToPolyData.git
@@ -238,16 +247,17 @@ jobs:
         sudo xcode-select -s "/Applications/Xcode_13.2.1.app"
 
     - name: Get specific version of CMake, Ninja
-      uses: lukka/get-cmake@v3.18.3
+      uses: lukka/get-cmake@v3.22.2
 
     - name: 'Fetch build script'
       run: |
-        curl -L https://raw.githubusercontent.com/InsightSoftwareConsortium/ITKPythonPackage/master/scripts/macpython-download-cache-and-build-module-wheels.sh -O
+        curl -L https://raw.githubusercontent.com/InsightSoftwareConsortium/ITKPythonPackage/${{ env.ITKPythonPackage-git-tag }}/scripts/macpython-download-cache-and-build-module-wheels.sh -O
         chmod u+x macpython-download-cache-and-build-module-wheels.sh
 
     - name: 'Build 🐍 Python 📦 package'
       run: |
         export ITK_PACKAGE_VERSION=${{ env.itk-wheel-tag }}
+        export ITKPYTHONPACKAGE_TAG=${{ env.ITKPythonPackage-git-tag }}
         export MACOSX_DEPLOYMENT_TARGET=10.9
         pwd
         echo "Building ITK external module dependencies"
@@ -295,19 +305,25 @@ jobs:
         path: dist
 
   build-windows-python-packages:
-    runs-on: windows-2019
+    runs-on: windows-2022
     strategy:
       max-parallel: 2
       matrix:
-        python-version-minor: [7, 8, 9, 10]
+        python-version-minor: ["7", "8", "9", "10", "11"]
 
     steps:
     - name: Get specific version of CMake, Ninja
-      uses: lukka/get-cmake@v3.18.3
+      uses: lukka/get-cmake@v3.22.2
 
     - uses: actions/checkout@v2
       with:
         path: "im"
+
+    - name: 'Reduce source path length'
+      shell: bash
+      run: |
+        # Move checked-out source to a shorter path to avoid Windows path length issues
+        mv im ../../
 
     - name: 'Install Python'
       run: |
@@ -318,7 +334,6 @@ jobs:
     - name: 'Fetch build dependencies'
       shell: bash
       run: |
-        mv im ../../
         cd ../../im
         curl -L "https://github.com/InsightSoftwareConsortium/ITKPythonBuilds/releases/download/${{ env.itk-wheel-tag }}/ITKPythonBuilds-windows.zip" -o "ITKPythonBuilds-windows.zip"
         7z x ITKPythonBuilds-windows.zip -o/c/P -aoa -r
@@ -326,6 +341,19 @@ jobs:
         7z x doxygen-1.8.11.windows.bin.zip -o/c/P/doxygen -aoa -r
         curl -L "https://data.kitware.com/api/v1/file/5bbf87ba8d777f06b91f27d6/download/grep-win.zip" -o "grep-win.zip"
         7z x grep-win.zip -o/c/P/grep -aoa -r
+
+        if [[ -n ${{ env.ITKPythonPackage-git-tag }} ]]; then
+          echo "Updating ITKPythonPackage build scripts to ${{ env.ITKPythonPackage-git-tag }}"
+          pushd /c/P/IPP
+          git remote add InsightSoftwareConsortium https://github.com/InsightSoftwareConsortium/ITKPythonPackage.git --tags
+          git fetch InsightSoftwareConsortium
+          git checkout ${{ env.ITKPythonPackage-git-tag }}
+          git status
+          popd
+        else
+          echo "Using ITKPythonPackage scripts included with ITKPythonBuilds archive"
+        fi
+
         pwd
         git clone https://github.com/InsightSoftwareConsortium/ITKMeshToPolyData.git
         git clone https://github.com/InsightSoftwareConsortium/ITKBSplineGradient.git
@@ -337,7 +365,7 @@ jobs:
       shell: cmd
       run: |
         cd ../../im
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
         set PATH=C:\P\grep;%PATH%
         set CC=cl.exe
         set CXX=cl.exe
