@@ -6,4 +6,5 @@ zarr
 xarray
 pandas
 seaborn
-sklearn
+scikit-learn>=1.1.3
+
