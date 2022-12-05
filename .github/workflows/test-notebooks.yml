@@ -11,13 +11,11 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        os: [ubuntu-18.04, macos-10.15]
+        os: [ubuntu-20.04, macos-11]
 
     steps:
-    - uses: actions/checkout@v1
-
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
       with:
         python-version: '3.9'
     - name: Install build dependencies
@@ -26,7 +24,8 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install -r ./.binder/requirements.txt -v
         python -m pip install nbmake[html]
-    - uses: "treebeardtech/nbmake-action@v0.2"
-      with:
-        path: "./examples/"
-        path-output: .
+    - name: Test Example Notebooks
+      run: |
+        pushd examples
+        python -m pytest --nbmake -v
+
