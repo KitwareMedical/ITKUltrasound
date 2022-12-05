@@ -1,4 +1,4 @@
-itk-ultrasound>=0.5.0
+itk-ultrasound>=0.6.0
 itkwidgets
 matplotlib
 requests
