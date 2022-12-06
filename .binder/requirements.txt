@@ -1,4 +1,4 @@
-itk-ultrasound>=0.5.0
+itk-ultrasound>=0.6.0
 itkwidgets
 matplotlib
 requests
@@ -6,4 +6,5 @@ zarr
 xarray
 pandas
 seaborn
-sklearn
+scikit-learn>=1.1.3
+
