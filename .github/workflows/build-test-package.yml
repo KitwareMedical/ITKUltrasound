@@ -7,6 +7,7 @@ jobs:
     uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-cxx.yml@30c37d7e056c9bf450738fde055d04111f0f8b1a
     with:
       itk-module-deps: 'MeshToPolyData@v0.10.0:BSplineGradient@v0.3.0:HigherOrderAccurateGradient@v1.2.0:SplitComponents@v2.1.0:Strain@v0.4.0'
+      warnings-to-ignore: "\"pointer is null\" \"in a call to non-static member function\""
       
   python-build-workflow:
     uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-package-python.yml@30c37d7e056c9bf450738fde055d04111f0f8b1a
