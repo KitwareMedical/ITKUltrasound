@@ -4,13 +4,13 @@ on: [push,pull_request]
 
 jobs:
   cxx-build-workflow:
-    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-cxx.yml@30c37d7e056c9bf450738fde055d04111f0f8b1a
+    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-cxx.yml@f2191a014a93c0d0e7b9e7ffb32d2e1118fb2876
     with:
       itk-module-deps: 'MeshToPolyData@v0.10.0:BSplineGradient@v0.3.0:HigherOrderAccurateGradient@v1.2.0:SplitComponents@v2.1.0:Strain@v0.4.0'
       warnings-to-ignore: "\"pointer is null\" \"in a call to non-static member function\""
       
   python-build-workflow:
-    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-package-python.yml@30c37d7e056c9bf450738fde055d04111f0f8b1a
+    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-package-python.yml@f2191a014a93c0d0e7b9e7ffb32d2e1118fb2876
     with:
       itk-module-deps: 'InsightSoftwareConsortium/ITKMeshToPolyData@v0.10.0:InsightSoftwareConsortium/ITKBSplineGradient@v0.3.0:InsightSoftwareConsortium/ITKHigherOrderAccurateGradient@v1.2.0:InsightSoftwareConsortium/ITKSplitComponents@v2.1.0:KitwareMedical/ITKStrain@v0.4.0'
     secrets:
