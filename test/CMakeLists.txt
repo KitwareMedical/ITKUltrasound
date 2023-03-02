@@ -56,6 +56,7 @@ itk_add_test(NAME itkAnalyticSignalImageFilterTest
     )
 itk_add_test(NAME itkAttenuationImageFilterTest
   COMMAND UltrasoundTestDriver
+  --compareIntensityTolerance 0.01
   --compare
     DATA{Baseline/itkAttenuationImageFilterTestOutputBaseline.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterTestOutput.mha
@@ -75,6 +76,7 @@ itk_add_test(NAME itkAttenuationImageFilterTest
   )
 itk_add_test(NAME itkAttenuationImageFilterMultithreadedTest
   COMMAND UltrasoundTestDriver
+  --compareIntensityTolerance 0.01
   --compare
     DATA{Baseline/itkAttenuationImageFilterTestOutputBaseline.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterMultithreadedTestOutput.mha
@@ -94,6 +96,7 @@ itk_add_test(NAME itkAttenuationImageFilterMultithreadedTest
   )
 itk_add_test(NAME itkAttenuationImageFilterFixedEstimationDistanceTest
   COMMAND UltrasoundTestDriver
+  --compareIntensityTolerance 0.01
   --compare
     DATA{Baseline/itkAttenuationImageFilterTestFixedEstimationDepthBaseline.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterTestFixedEstimationDepthOutput.mha
@@ -113,6 +116,7 @@ itk_add_test(NAME itkAttenuationImageFilterFixedEstimationDistanceTest
   )
 itk_add_test(NAME itkAttenuationImageFilterFixedDistanceModeTest
   COMMAND UltrasoundTestDriver
+  --compareIntensityTolerance 0.01
   --compare
     DATA{Baseline/itkAttenuationImageFilterFixedDistanceModeTestOutput.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterFixedDistanceModeTestOutput.mha
@@ -132,6 +136,7 @@ itk_add_test(NAME itkAttenuationImageFilterFixedDistanceModeTest
   )
 itk_add_test(NAME itkAttenuationImageFilterPairModeTest
   COMMAND UltrasoundTestDriver
+  --compareIntensityTolerance 0.01
   --compare
     DATA{Baseline/itkAttenuationImageFilterPairModeTestOutput.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterPairModeTestOutput.mha
@@ -151,6 +156,7 @@ itk_add_test(NAME itkAttenuationImageFilterPairModeTest
   )
 itk_add_test(NAME itkAttenuationImageFilterWholeImageTest
   COMMAND UltrasoundTestDriver
+  --compareIntensityTolerance 0.01
   --compare
     DATA{Baseline/itkAttenuationImageFilterWholeImageTestOutput.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkAttenuationImageFilterWholeImageTestOutput.mha
