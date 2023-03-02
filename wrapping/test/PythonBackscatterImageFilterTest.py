@@ -20,11 +20,11 @@
 import itk
 import argparse
 
-parser = argparse.ArgumentParser(description="Estimate back-scatter coefficient.")
-parser.add_argument("-i", "--input-image", help="Input image(s)", required=True)
-parser.add_argument("-a", "--average_image", required=True)
-parser.add_argument("-s", "--slope_image", required=True)
-parser.add_argument("-n", "--intercept_image", required=True)
+parser = argparse.ArgumentParser(description="Estimate three back-scatter coefficients.")
+parser.add_argument("-i", "--input-image", required=True)
+parser.add_argument("-a", "--average-image", required=True)
+parser.add_argument("-s", "--slope-image", required=True)
+parser.add_argument("-n", "--intercept-image", required=True)
 args = parser.parse_args()
 
 itk.auto_progress(2)
