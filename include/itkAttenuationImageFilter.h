@@ -115,7 +115,37 @@ public:
 
   /** Output mask image represents output region for analysis
    *  after padding is applied */
-  itkGetConstMacro(OutputMaskImage, TMaskImage *);
+  virtual const MaskImageType *
+  GetOutputMaskImage() const
+  {
+    return dynamic_cast<const MaskImageType *>(this->ProcessObject::GetOutput(1));
+  }
+  virtual MaskImageType *
+  GetOutputMaskImage()
+  {
+    return dynamic_cast<MaskImageType *>(this->ProcessObject::GetOutput(1));
+  }
+
+  MaskImageType *
+  GetOutput(unsigned int idx)
+  {
+    if (idx == 0)
+    {
+      // Pythonic interface invokes this in a for loop because filter has multiple outputs
+      return reinterpret_cast<MaskImageType *>(this->GetOutput());
+    }
+    else if (idx != 1)
+    {
+      itkExceptionMacro("This filter has only two outputs");
+    }
+    return this->GetOutputMaskImage();
+  }
+
+  TOutputImage *
+  GetOutput()
+  {
+    return this->Superclass::GetOutput();
+  }
 
   /** Mode of computation (0=all pairs, 1=first and last, 2=fixed distance).
    *
@@ -217,6 +247,13 @@ public:
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
+  /** Standard itk::ProcessObject subclass method. */
+  using DataObjectPointer = DataObject::Pointer;
+  using DataObjectPointerArraySizeType = ProcessObject::DataObjectPointerArraySizeType;
+  using Superclass::MakeOutput;
+  DataObjectPointer
+  MakeOutput(DataObjectPointerArraySizeType idx) override;
+
 protected:
   AttenuationImageFilter();
   ~AttenuationImageFilter() override = default;
@@ -286,10 +323,6 @@ private:
   mutable const MaskImageType * m_ThreadedInputMaskImage;
 
   unsigned int m_LastScanlineIndex = 0;
-
-  /** Output mask image may be eroded via m_PadUpperBounds and m_PadLowerBounds
-   *  along scan line direction */
-  MaskImagePointer m_OutputMaskImage = MaskImageType::New();
 };
 } // end namespace itk
 
