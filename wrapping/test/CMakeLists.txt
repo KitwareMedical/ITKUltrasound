@@ -58,3 +58,19 @@ itk_python_add_test(NAME PythonBackscatterImageFilterTest0
     -s ${ITK_TEST_OUTPUT_DIR}/PythonBackscatterImageFilterTest1.mha
     -n ${ITK_TEST_OUTPUT_DIR}/PythonBackscatterImageFilterTest2.mha
   )
+
+itk_python_add_test(NAME PythonAttenuationImageFilterTest
+  TEST_DRIVER_ARGS
+  --compareIntensityTolerance 0.01
+  --compare
+    DATA{${test_baseline_dir}/itkAttenuationImageFilterTestOutputBaseline.mha}
+    ${ITK_TEST_OUTPUT_DIR}/PythonAttenuationImageFilterTestOutput.mha
+  --compare
+    DATA{${test_baseline_dir}/itkAttenuationImageFilterTestMaskOutput.mha}
+    ${ITK_TEST_OUTPUT_DIR}/PythonAttenuationImageFilterTestMaskOutput.mha
+  COMMAND PythonAttenuationImageFilterTest.py
+    -i DATA{${test_input_dir}/UnfusedRF-a0-spectra-cropped.mhd,UnfusedRF-a0-spectra-cropped.raw}
+    -m DATA{${test_input_dir}/UnfusedRF-a0-spectra-label_1-cropped.mhd,UnfusedRF-a0-spectra-label_1-cropped.raw}
+    -a ${ITK_TEST_OUTPUT_DIR}/PythonAttenuationImageFilterTestOutput.mha
+    -o ${ITK_TEST_OUTPUT_DIR}/PythonAttenuationImageFilterTestMaskOutput.mha
+  )
