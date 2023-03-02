@@ -129,6 +129,8 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
   // Verify output
   itk::WriteImage(attenuationFilter->GetOutput(), outputImagePath, false);
 
+  assert(attenuationFilter->GetOutputMaskImage() == attenuationFilter->GetOutput(1));
+
   // Verify mask output after erosion
   if (outputMaskImagePath != "")
   {

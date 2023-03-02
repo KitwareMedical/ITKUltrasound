@@ -36,7 +36,23 @@ template <typename TInputImage, typename TOutputImage, typename TMaskImage>
 AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::AttenuationImageFilter()
 {
   this->SetNumberOfRequiredInputs(1);
+  this->SetNumberOfRequiredOutputs(2);
+  this->SetNthOutput(0, this->MakeOutput(0));
+  this->SetNthOutput(1, this->MakeOutput(1));
   this->DynamicMultiThreadingOff();
+}
+
+template <typename TInputImage, typename TOutputImage, typename TMaskImage>
+auto
+AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::MakeOutput(
+  DataObjectPointerArraySizeType idx)
+  ->DataObjectPointer
+{
+  if (idx == 1)
+  {
+    return TMaskImage::New().GetPointer();
+  }
+  return Superclass::MakeOutput(idx);
 }
 
 template <typename TInputImage, typename TOutputImage, typename TMaskImage>
@@ -118,6 +134,10 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::BeforeThreadedGen
   this->GetOutput()->Allocate();
   this->GetOutput()->FillBuffer(0.0f);
 
+  // Output mask image may be eroded via m_PadUpperBounds and m_PadLowerBounds
+  // along scan line direction
+  MaskImageType * outputMaskImage = this->GetOutputMaskImage();
+
   // Initialize output mask image
   const InputImageType * input = this->GetInput();
   const MaskImageType *  inputMaskImage = this->GetInputMaskImage();
@@ -125,18 +145,18 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::BeforeThreadedGen
   auto region = input->GetLargestPossibleRegion();
   if (inputMaskImage != nullptr)
   {
-    m_OutputMaskImage->CopyInformation(inputMaskImage);
+    outputMaskImage->CopyInformation(inputMaskImage);
     region = inputMaskImage->GetLargestPossibleRegion();
-    m_OutputMaskImage->SetRegions(region);
-    m_OutputMaskImage->Allocate();
-    m_OutputMaskImage->FillBuffer(0);
+    outputMaskImage->SetRegions(region);
+    outputMaskImage->Allocate();
+    outputMaskImage->FillBuffer(0);
   }
   else
   {
-    m_OutputMaskImage->CopyInformation(input);
-    m_OutputMaskImage->SetRegions(region);
-    m_OutputMaskImage->Allocate();
-    m_OutputMaskImage->FillBuffer(1);
+    outputMaskImage->CopyInformation(input);
+    outputMaskImage->SetRegions(region);
+    outputMaskImage->Allocate();
+    outputMaskImage->FillBuffer(1);
   }
   m_LastScanlineIndex = region.GetIndex(m_Direction) + region.GetSize(m_Direction) - 1;
 
@@ -177,6 +197,7 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::ThreadedGenerateD
   const InputImageType * input = this->GetInput();
   OutputImageType *      output = this->GetOutput();
   const MaskImageType *  inputMaskImage = this->GetInputMaskImage();
+  MaskImageType *        outputMaskImage = this->GetOutputMaskImage();
 
   ImageLinearConstIteratorWithIndex<TInputImage> it(input, regionForThread);
   it.SetDirection(m_Direction);
@@ -261,7 +282,7 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::ThreadedGenerateD
               if (inputMaskImage != nullptr && (m_ConsiderNegativeAttenuations || output->GetPixel(start) >= 0.0))
               {
                 // Dynamically generate the output mask with values corresponding to input
-                m_OutputMaskImage->SetPixel(start, inputMaskImage->GetPixel(start));
+                outputMaskImage->SetPixel(start, inputMaskImage->GetPixel(start));
               }
 
               ++start[m_Direction];
@@ -284,8 +305,8 @@ AttenuationImageFilter<TInputImage, TOutputImage, TMaskImage>::ThreadedGenerateD
             // Only set mask for valid estimates
             if (inputMaskImage != nullptr && (m_ConsiderNegativeAttenuations || estimatedAttenuation >= 0.0))
             {
-              m_OutputMaskImage->SetPixel(start, inputMaskImage->GetPixel(start));
-              m_OutputMaskImage->SetPixel(target, inputMaskImage->GetPixel(target));
+              outputMaskImage->SetPixel(start, inputMaskImage->GetPixel(start));
+              outputMaskImage->SetPixel(target, inputMaskImage->GetPixel(target));
             }
           }
           else
