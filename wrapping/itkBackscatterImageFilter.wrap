@@ -1,0 +1,9 @@
+itk_wrap_include("itkVectorImage.h")
+itk_wrap_class("itk::BackscatterImageFilter" POINTER)
+  foreach(d ${ITK_WRAP_IMAGE_DIMS})
+    foreach(rt ${WRAP_ITK_REAL})
+      itk_wrap_template("VI${ITKM_${rt}}${d}I${ITKM_${rt}}${d}"
+        "itk::VectorImage<${ITKT_${rt}}, ${d}>, itk::Image<${ITKT_${rt}}, ${d}>")
+    endforeach()
+  endforeach()
+itk_end_wrap_class()
