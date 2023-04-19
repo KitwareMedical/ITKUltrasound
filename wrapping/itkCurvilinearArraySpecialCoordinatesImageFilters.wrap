@@ -92,18 +92,87 @@ itk_wrap_class("itk::RescaleIntensityImageFilter" POINTER_WITH_2_SUPERCLASSES)
   endforeach()
 itk_end_wrap_class()
 
-itk_wrap_include("itkResampleImageFilter.h")
-itk_wrap_class("itk::ResampleImageFilter" POINTER)
-  itk_wrap_template("CASCIF2IF2"
-    "itk::CurvilinearArraySpecialCoordinatesImage< float, 2 >, itk::Image< float, 2 >")
-itk_end_wrap_class()
-
 itk_wrap_include("itkSpectra1DSupportWindowToMaskImageFilter.h")
 itk_wrap_class("itk::Spectra1DSupportWindowToMaskImageFilter" POINTER_WITH_2_SUPERCLASSES)
   foreach(d ${ITK_WRAP_IMAGE_DIMS})
     foreach(t ${WRAP_ITK_INT})
       itk_wrap_template("IlistitkIndex${d}${d}CASCI${ITKM_${t}}${d}"
         "itk::Image< std::list< itk::Index< ${d} > >, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >")
+    endforeach()
+  endforeach()
+itk_end_wrap_class()
+
+# The rest is needed for ResampleImageFilter and interpolator functions
+set(resample_filter_dimensions 2 3)
+set(resample_filter_pixel_types "F")
+if(ITK_WRAP_unsigned_char)
+  list(APPEND resample_filter_pixel_types "UC")
+endif()
+itk_wrap_include("itkResampleImageFilter.h")
+itk_wrap_class("itk::ResampleImageFilter" POINTER)
+  foreach(d ${resample_filter_dimensions})
+    foreach(t ${resample_filter_pixel_types})
+      itk_wrap_template("CASCI${ITKM_${t}}${d}I${ITKM_${t}}${d}"
+        "itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >, itk::Image< ${ITKT_${t}}, ${d} >")
+    endforeach()
+  endforeach()
+itk_end_wrap_class()
+
+itk_wrap_class("itk::ImageFunction" POINTER)
+  foreach(d ${resample_filter_dimensions})
+    foreach(t ${resample_filter_pixel_types})
+      itk_wrap_template("CASCI${ITKM_${t}}${d}${ITKM_D}"
+        "itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >, ${ITKT_D}, ${ITKT_D}")
+    endforeach()
+  endforeach()
+itk_end_wrap_class()
+
+itk_wrap_class("itk::InterpolateImageFunction" POINTER)
+  foreach(d ${resample_filter_dimensions})
+    foreach(t ${resample_filter_pixel_types})
+      itk_wrap_template("CASCI${ITKM_${t}}${d}${ITKM_D}" "itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >, ${ITKT_D}")
+    endforeach()
+  endforeach()
+itk_end_wrap_class()
+
+itk_wrap_class("itk::NearestNeighborInterpolateImageFunction" POINTER)
+  foreach(d ${resample_filter_dimensions})
+    foreach(t ${resample_filter_pixel_types})
+      itk_wrap_template("CASCI${ITKM_${t}}${d}${ITKM_D}"
+        "itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >, ${ITKT_D}")
+    endforeach()
+  endforeach()
+itk_end_wrap_class()
+
+itk_wrap_class("itk::LinearInterpolateImageFunction" POINTER)
+  foreach(d ${resample_filter_dimensions})
+    foreach(t ${resample_filter_pixel_types})
+      itk_wrap_template("CASCI${ITKM_${t}}${d}${ITKM_D}"
+        "itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >, ${ITKT_D}")
+    endforeach()
+  endforeach()
+itk_end_wrap_class()
+
+itk_wrap_class("itk::GaussianInterpolateImageFunction" POINTER)
+  foreach(d ${resample_filter_dimensions})
+    foreach(t ${resample_filter_pixel_types})
+      itk_wrap_template("CASCI${ITKM_${t}}${d}${ITKM_D}"
+        "itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >, ${ITKT_D}")
+    endforeach()
+  endforeach()
+itk_end_wrap_class()
+
+itk_wrap_include("itkWindowedSincInterpolateImageFunction.h")
+set(window_functions "Hamming" "Cosine" "Welch" "Lanczos")
+set(radii 2 3)
+itk_wrap_class("itk::WindowedSincInterpolateImageFunction" POINTER)
+  foreach(d ${resample_filter_dimensions})
+    foreach(t ${resample_filter_pixel_types})
+      foreach(r ${radii}) # radius
+        foreach(function ${window_functions})
+          itk_wrap_template("CASCI${ITKM_${t}}${d}${r}${function}" "itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >, ${r}, itk::Function::${function}WindowFunction< ${r} >")
+        endforeach()
+      endforeach()
     endforeach()
   endforeach()
 itk_end_wrap_class()
