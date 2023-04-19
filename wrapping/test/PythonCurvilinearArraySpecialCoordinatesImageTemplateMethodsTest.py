@@ -71,9 +71,20 @@ transformed_continuous_index = image.TransformPhysicalPointToContinuousIndex(poi
 print(f'Transformed continuous index: {continuous_index}')
 assert transformed_continuous_index == continuous_index, f'Output {transformed_continuous_index} differs from expectation {continuous_index}'
 
-# Verify resampling works with curvilinear image input
+print("Verify resampling works with curvilinear image input")
 output_size = [800] * dimension
 output_spacing = [0.15] * dimension
 output_origin = [output_size[0] * output_spacing[0] / -2.0,
                  radius_start * math.cos(math.pi / 4.0)]
 _ = itk.resample_image_filter(image, size=output_size, output_spacing=output_spacing, output_origin=output_origin)
+
+print("Verify resampling works with curvilinear image and GaussianInterpolateImageFunction")
+interpolator = itk.GaussianInterpolateImageFunction[image_type, itk.D].New()
+interpolator.SetSigma( output_spacing );
+interpolator.SetAlpha( 3.0 * max(output_spacing) );
+_ = itk.resample_image_filter(image, size=output_size, output_spacing=output_spacing, output_origin=output_origin, interpolator=interpolator)
+
+print("Verify resampling works with curvilinear image and WindowedSincInterpolateImageFunction")
+WindowType = itk.LanczosWindowFunction[dimension]
+interpolator = itk.WindowedSincInterpolateImageFunction[image_type, dimension, WindowType].New()
+_ = itk.resample_image_filter(image, size=output_size, output_spacing=output_spacing, output_origin=output_origin, interpolator=interpolator)

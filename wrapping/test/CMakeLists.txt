@@ -40,6 +40,10 @@ itk_python_add_test(NAME PythonCurvilinearArraySpecialCoordinatesImageTemplateMe
   COMMAND PythonCurvilinearArraySpecialCoordinatesImageTemplateMethodsTest.py
   )
 
+itk_python_expression_add_test(NAME PythonInstantiateGaussianInterpolateImageFunction
+  EXPRESSION "iFunc = itk.GaussianInterpolateImageFunction[itk.CurvilinearArraySpecialCoordinatesImage[itk.UC, 2], itk.D].New()"
+  )
+
 itk_python_add_test(NAME PythonBackscatterImageFilterTest0
   TEST_DRIVER_ARGS
   --compareIntensityTolerance 0.01
