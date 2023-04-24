@@ -44,6 +44,20 @@ itk_python_expression_add_test(NAME PythonInstantiateGaussianInterpolateImageFun
   EXPRESSION "iFunc = itk.GaussianInterpolateImageFunction[itk.CurvilinearArraySpecialCoordinatesImage[itk.UC, 2], itk.D].New()"
   )
 
+itk_python_add_test(NAME PythonCurvilinearResampleTest
+  TEST_DRIVER_ARGS
+  --compareIntensityTolerance 1
+  --compare
+    DATA{${test_baseline_dir}/itkCurvilinearArraySpecialCoordinatesImageTest1.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkCurvilinearArraySpecialCoordinatesImageTestPython.mha
+  COMMAND PythonCurvilinearResample.py
+    -i DATA{${test_input_dir}/curvilinear_envelope.mha}
+    -o ${ITK_TEST_OUTPUT_DIR}/itkCurvilinearArraySpecialCoordinatesImageTestPython.mha
+    --lateral-angular-separation 0.00862832
+    --radius-sample-size 0.0513434 
+    --first-sample-distance 26.4
+  )
+
 itk_python_add_test(NAME PythonBackscatterImageFilterTest0
   TEST_DRIVER_ARGS
   --compareIntensityTolerance 0.01
