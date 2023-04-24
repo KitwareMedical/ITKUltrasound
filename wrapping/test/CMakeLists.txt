@@ -5,8 +5,8 @@ list(FIND ITK_WRAP_IMAGE_DIMS 3 wrap_3_index)
 if(wrap_3_index GREATER -1)
     itk_python_add_test(NAME PythonBModeImageFilterTestTiming
       TEST_DRIVER_ARGS
-      --compare ${ITK_TEST_OUTPUT_DIR}/PythonBModeImageFilterTestTiming.mha
-        DATA{${test_baseline_dir}/itkBModeImageFilterTestTimingBaseline.mha}
+      --compare DATA{${test_baseline_dir}/itkBModeImageFilterTestTimingBaseline.mha}
+      ${ITK_TEST_OUTPUT_DIR}/PythonBModeImageFilterTestTiming.mha
       COMMAND PythonBModeImageFilterTestTiming.py
         DATA{${test_input_dir}/uniform_phantom_8.9_MHz.mha}
         ${ITK_TEST_OUTPUT_DIR}/PythonBModeImageFilterTestTiming.mha
@@ -35,7 +35,7 @@ itk_python_add_test(NAME PythonSpectra1DNormalizeImageFilterTest
     DATA{${test_input_dir}/spectra_pixel_image.mha}
     ${ITK_TEST_OUTPUT_DIR}/itkSpectra1DNormalizeImageFilterTest.mha
   )
-  
+
 itk_python_add_test(NAME PythonCurvilinearArraySpecialCoordinatesImageTemplateMethodsTest
   COMMAND PythonCurvilinearArraySpecialCoordinatesImageTemplateMethodsTest.py
   )
