@@ -88,6 +88,8 @@ template <typename TPixel, unsigned int VDimension>
 class ITK_TEMPLATE_EXPORT CurvilinearArraySpecialCoordinatesImage : public SpecialCoordinatesImage<TPixel, VDimension>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(CurvilinearArraySpecialCoordinatesImage);
+
   /** Standard class type alias */
   using Self = CurvilinearArraySpecialCoordinatesImage;
   using Superclass = SpecialCoordinatesImage<TPixel, VDimension>;
@@ -463,10 +465,6 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  CurvilinearArraySpecialCoordinatesImage(const Self &); // purposely not implemented
-  void
-  operator=(const Self &); // purposely not implemented
-
   double m_LateralAngularSeparation; // in radians
   double m_RadiusSampleSize;
   double m_FirstSampleDistance;
