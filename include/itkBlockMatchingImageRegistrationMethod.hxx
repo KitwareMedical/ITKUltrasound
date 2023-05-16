@@ -169,8 +169,6 @@ ImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementIm
   fixedRegion.SetSize(fixedSize);
   FixedRegionType fixedLargestPossibleRegion = m_FixedImage->GetLargestPossibleRegion();
 
-  CoordRepType coord;
-
   if (!m_UseStreaming)
   {
     m_FixedImage->Update();
@@ -187,8 +185,8 @@ ImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementIm
 
   for (it.GoToBegin(), searchIt.GoToBegin(); !it.IsAtEnd(); ++it, ++searchIt)
   {
-    output->TransformIndexToPhysicalPoint(it.GetIndex(), coord);
-    m_FixedImage->TransformPhysicalPointToIndex(coord, fixedIndex);
+    CoordRepType coord = output->template TransformIndexToPhysicalPoint<TCoordRep>(it.GetIndex());
+    fixedIndex = m_FixedImage->TransformPhysicalPointToIndex(coord);
     for (unsigned int i = 0; i < ImageDimension; ++i)
     {
       fixedIndex[i] -= m_Radius[i];

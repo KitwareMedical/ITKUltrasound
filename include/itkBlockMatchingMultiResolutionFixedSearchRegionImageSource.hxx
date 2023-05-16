@@ -107,6 +107,7 @@ MultiResolutionFixedSearchRegionImageSource<TFixedImage, TMovingImage, TDisplace
   IndexType    startIndex = this->m_MovingImage->GetLargestPossibleRegion().GetIndex();
   IndexType    endIndex;
   IndexType    closestIndex;
+  using PointValueType = typename MovingImageType::PointValueType;
 
   RadiusType radius;
   for (i = 0; i < this->m_SearchRegionRadiusSchedule.cols(); ++i)
@@ -123,8 +124,8 @@ MultiResolutionFixedSearchRegionImageSource<TFixedImage, TMovingImage, TDisplace
     for (it.GoToBegin(); !it.IsAtEnd(); ++it)
     {
       index = it.GetIndex();
-      outputPtr->TransformIndexToPhysicalPoint(index, point);
-      this->m_MovingImage->TransformPhysicalPointToIndex(point, index);
+      point = outputPtr->template TransformIndexToPhysicalPoint<PointValueType>(index);
+      index = this->m_MovingImage->TransformPhysicalPointToIndex(point);
       region.SetIndex(index);
       region.SetSize(unitySize);
       region.PadByRadius(radius);
@@ -143,9 +144,9 @@ MultiResolutionFixedSearchRegionImageSource<TFixedImage, TMovingImage, TDisplace
     for (it.GoToBegin(), dispIt.GoToBegin(); !it.IsAtEnd(); ++it, ++dispIt)
     {
       index = it.GetIndex();
-      outputPtr->TransformIndexToPhysicalPoint(index, point);
+      point = outputPtr->template TransformIndexToPhysicalPoint<PointValueType>(index);
       // resample displacement image
-      this->m_MovingImage->TransformPhysicalPointToIndex(point + dispIt.Get(), index);
+      index = this->m_MovingImage->TransformPhysicalPointToIndex(point + dispIt.Get());
       region.SetIndex(index);
       region.SetSize(unitySize);
       region.PadByRadius(radius);

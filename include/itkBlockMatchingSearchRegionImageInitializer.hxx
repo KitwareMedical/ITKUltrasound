@@ -163,8 +163,8 @@ SearchRegionImageInitializer<TFixedImage, TMovingImage>::DynamicThreadedGenerate
   for (it.GoToBegin(); !it.IsAtEnd(); ++it)
   {
     index = it.GetIndex();
-    outputPtr->TransformIndexToPhysicalPoint(index, point);
-    m_MovingImage->TransformPhysicalPointToIndex(point, index);
+    point = outputPtr->template TransformIndexToPhysicalPoint<typename MovingImageType::PointValueType>(index);
+    index = m_MovingImage->TransformPhysicalPointToIndex(point);
     region.SetIndex(index);
     region.SetSize(unitySize);
     region.PadByRadius(m_SearchRegionRadius);

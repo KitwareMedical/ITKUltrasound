@@ -227,10 +227,9 @@ BayesianRegularizationDisplacementCalculator<TMetricImage, TDisplacementImage>::
   IndexType    postRightIndex = postLeftIndex + postRegion.GetSize();
   unsigned int dim;
   unsigned int padding;
-  PointType    point;
-  IndexType    index;
-  postImage->TransformIndexToPhysicalPoint(postLeftIndex, point);
-  priorImage->TransformPhysicalPointToIndex(point + shift, index);
+  using PointValueType = typename PointType::ValueType;
+  PointType point = postImage->template TransformIndexToPhysicalPoint<PointValueType>(postLeftIndex);
+  IndexType index = priorImage->TransformPhysicalPointToIndex(point + shift);
   for (dim = 0; dim < ImageDimension; dim++)
   {
     if (index[dim] < priorLeftIndex[dim])
@@ -246,8 +245,8 @@ BayesianRegularizationDisplacementCalculator<TMetricImage, TDisplacementImage>::
         upperBoundPad[dim] = padding;
     }
   }
-  postImage->TransformIndexToPhysicalPoint(postRightIndex, point);
-  priorImage->TransformPhysicalPointToIndex(point + shift, index);
+  point = postImage->template TransformIndexToPhysicalPoint<PointValueType>(postRightIndex);
+  index = priorImage->TransformPhysicalPointToIndex(point + shift);
   for (dim = 0; dim < ImageDimension; dim++)
   {
     if (index[dim] < priorLeftIndex[dim])
@@ -277,8 +276,8 @@ BayesianRegularizationDisplacementCalculator<TMetricImage, TDisplacementImage>::
   postRegion = postImage->GetBufferedRegion();
   MetricImageIteratorType postIt(postImage, postRegion);
 
-  postImage->TransformIndexToPhysicalPoint(postRegion.GetIndex(), point);
-  paddedPrior->TransformPhysicalPointToIndex(point + shift, index);
+  point = postImage->template TransformIndexToPhysicalPoint<PointValueType>(postRegion.GetIndex());
+  index = paddedPrior->TransformPhysicalPointToIndex(point + shift);
   RegionType priorRegion;
   priorRegion.SetIndex(index);
   priorRegion.SetSize(postRegion.GetSize());
