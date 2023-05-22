@@ -39,7 +39,7 @@ reference = reader.GetOutput() # This VIF2, which is what we need
 print("Running the filter")
 result = itk.spectra1_d_normalize_image_filter(input, reference_image=reference)
 
-print(f"Writing resulting image into file: {sys.argv[2]}")
-itk.imwrite(result, sys.argv[2], compression=False)
+print(f"Writing resulting image into file: {sys.argv[3]}")
+itk.imwrite(result, sys.argv[3], compression=False)
 
 print("Test finished")
