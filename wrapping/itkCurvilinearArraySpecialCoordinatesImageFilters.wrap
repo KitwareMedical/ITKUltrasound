@@ -1,10 +1,11 @@
 # ITK image filters wrapped for ITKUltrasound `itk::CurvilinearArraySpecialCoordinatesImage` inputs.
-# Must be wrapped in a separate file after `itkCurvilinearArraySpecialCoordinates.wrap` so that
+# Must be wrapped in a separate file after `itkCurvilinearArraySpecialCoordinatesImage.wrap` so that
 # SWIG does not implicitly define erroneous overrides for template methods such as
 # `TransformPhysicalPointToContinuousIndex`, etc.
 
-# See `WRAPPER_SUBMODULE_ORDER` in CMakeLists.txt for where `itkCASCIFilters.wrap` is set to
-# always be wrapped after `itkCurvilinearArraySpecialCoordinatesImage.wrap`.
+# See `WRAPPER_SUBMODULE_ORDER` in CMakeLists.txt for where
+# `itkCurvilinearArraySpecialCoordinatesImageFilters.wrap` is set to
+# be wrapped after `itkCurvilinearArraySpecialCoordinatesImage.wrap`.
 
 itk_wrap_include("itkCurvilinearArraySpecialCoordinatesImage.h")
 itk_wrap_class("itk::ImageSource" POINTER)
