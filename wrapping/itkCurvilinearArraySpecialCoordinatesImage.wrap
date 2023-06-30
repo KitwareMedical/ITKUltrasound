@@ -29,27 +29,19 @@ string(APPEND ITK_WRAP_PYTHON_SWIG_EXT "
 
   %extend swig_name {
       itkIndex##template_params TransformPhysicalPointToIndex(const itkPointD##template_params & point ) {
-          itkIndex##template_params idx;
-          self->TransformPhysicalPointToIndex<double>( point, idx );
-          return idx;
+          return self->TransformPhysicalPointToIndex<double>( point );
         }
 
       itkContinuousIndexD##template_params TransformPhysicalPointToContinuousIndex(const itkPointD##template_params & point ) {
-          itkContinuousIndexD##template_params idx;
-          self->TransformPhysicalPointToContinuousIndex<double>( point, idx );
-          return idx;
+          return self->TransformPhysicalPointToContinuousIndex<double>( point );
       }
 
       itkPointD##template_params TransformContinuousIndexToPhysicalPoint(const itkContinuousIndexD##template_params & idx ) {
-          itkPointD##template_params point;
-          self->TransformContinuousIndexToPhysicalPoint<double>( idx, point );
-          return point;
+          return self->TransformContinuousIndexToPhysicalPoint<double>( idx );
       }
 
       itkPointD##template_params TransformIndexToPhysicalPoint(const itkIndex##template_params & idx ) {
-          itkPointD##template_params point;
-          self->TransformIndexToPhysicalPoint<double>( idx, point );
-          return point;
+          return self->TransformIndexToPhysicalPoint<double>( idx );
       }
   }
 
