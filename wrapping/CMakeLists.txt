@@ -11,6 +11,7 @@ set(WRAPPER_SUBMODULE_ORDER
   itkCurvilinearArraySpecialCoordinatesImage
   itkImageUltrasound # Extra itk::Image wrappings for SupportWindow filters
   itkCurvilinearArraySpecialCoordinatesImageFilters
+  itkPhasedArray3DSpecialCoordinatesImage # CASCI needs to come before
   itkAttenuationImageFilter
   itkBlockMatchingMetricImageFilter
   itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter
