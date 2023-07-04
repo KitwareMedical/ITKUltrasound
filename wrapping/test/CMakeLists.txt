@@ -40,7 +40,7 @@ itk_python_add_test(NAME PythonCurvilinearArraySpecialCoordinatesImageTemplateMe
   COMMAND PythonCurvilinearArraySpecialCoordinatesImageTemplateMethodsTest.py
   )
 
-itk_python_expression_add_test(NAME PythonInstantiateGaussianInterpolateImageFunction
+itk_python_expression_add_test(NAME PythonInstantiateGaussianInterpolateImageFunctionCASCI
   EXPRESSION "iFunc = itk.GaussianInterpolateImageFunction[itk.CurvilinearArraySpecialCoordinatesImage[itk.UC, 2], itk.D].New()"
   )
 
@@ -56,6 +56,58 @@ itk_python_add_test(NAME PythonCurvilinearResampleTest
     --lateral-angular-separation 0.00862832
     --radius-sample-size 0.0513434 
     --first-sample-distance 26.4
+  )
+
+itk_python_expression_add_test(NAME PythonInstantiateGaussianInterpolateImageFunctionPA3DSCI
+  EXPRESSION "iFunc = itk.GaussianInterpolateImageFunction[itk.PhasedArray3DSpecialCoordinatesImage[itk.F], itk.D].New()"
+  )
+
+itk_python_add_test(NAME PythonPhasedArray3DResampleNearestTest
+  TEST_DRIVER_ARGS
+  --compareIntensityTolerance 1
+  --compare
+    DATA{${test_baseline_dir}/ScanConvertPhasedArray3DITKNearestNeighborTestOutput.mha}
+    ${ITK_TEST_OUTPUT_DIR}/ScanConvertPhasedArray3DITKNearestNeighborTestOutput.mha
+  COMMAND PythonPhasedArray3DResample.py
+    -i DATA{${test_input_dir}/ScanConvertPhasedArray3DTestInput.mha}
+    -o ${ITK_TEST_OUTPUT_DIR}/ScanConvertPhasedArray3DITKNearestNeighborTestOutput.mha
+    --azimuth-angular-separation 0.0872665
+    --elevation-angular-separation 0.0174533
+    --radius-sample-size 0.2
+    --first-sample-distance 8.0
+    --interpolation-type nearest
+  )
+
+itk_python_add_test(NAME PythonPhasedArray3DResampleLinearTest
+  TEST_DRIVER_ARGS
+  --compareIntensityTolerance 1
+  --compare
+    DATA{${test_baseline_dir}/ScanConvertPhasedArray3DTestOutput.mha}
+    ${ITK_TEST_OUTPUT_DIR}/ScanConvertPhasedArray3DTestOutput.mha
+  COMMAND PythonPhasedArray3DResample.py
+    -i DATA{${test_input_dir}/ScanConvertPhasedArray3DTestInput.mha}
+    -o ${ITK_TEST_OUTPUT_DIR}/ScanConvertPhasedArray3DTestOutput.mha
+    --azimuth-angular-separation 0.0872665
+    --elevation-angular-separation 0.0174533
+    --radius-sample-size 0.2
+    --first-sample-distance 8.0
+    # --interpolation-type linear  # linear is the default
+  )
+
+itk_python_add_test(NAME PythonPhasedArray3DResampleSincTest
+  TEST_DRIVER_ARGS
+  --compareIntensityTolerance 1
+  --compare
+    DATA{${test_baseline_dir}/ScanConvertPhasedArray3DITKWindowedSincTestOutput.mha}
+    ${ITK_TEST_OUTPUT_DIR}/ScanConvertPhasedArray3DITKWindowedSincTestOutput.mha
+  COMMAND PythonPhasedArray3DResample.py
+    -i DATA{${test_input_dir}/ScanConvertPhasedArray3DTestInput.mha}
+    -o ${ITK_TEST_OUTPUT_DIR}/ScanConvertPhasedArray3DITKWindowedSincTestOutput.mha
+    --azimuth-angular-separation 0.0872665
+    --elevation-angular-separation 0.0174533
+    --radius-sample-size 0.2
+    --first-sample-distance 8.0
+    --interpolation-type sinc
   )
 
 itk_python_add_test(NAME PythonBackscatterImageFilterTest0
