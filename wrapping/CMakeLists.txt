@@ -8,7 +8,6 @@ endif()
 
 itk_wrap_module(Ultrasound)
 set(WRAPPER_SUBMODULE_ORDER
-  itkSpecialCoordinatesImage
   itkCurvilinearArraySpecialCoordinatesImage
   itkCurvilinearArraySpecialCoordinatesImageFilters
   itkSliceSeriesSpecialCoordinatesImage
