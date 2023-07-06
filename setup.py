@@ -41,7 +41,7 @@ setup(
     keywords='ITK InsightToolkit ultrasound imaging',
     url=r'https://www.insight-journal.org/browse/publication/722',
     install_requires=[
-        r'itk>=5.3.0',
+        r'itk>=5.4.0',
         r'itk-meshtopolydata>=0.10.0',
         r'itk-bsplinegradient>=0.2.10',
         r'itk-higherorderaccurategradient>=1.2.0',
