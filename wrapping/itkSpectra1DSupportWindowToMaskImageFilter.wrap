@@ -1,6 +1,8 @@
 itk_wrap_include("list")
 itk_wrap_include("itkIndex.h")
 itk_wrap_include("itkImage.h")
+itk_wrap_include("itkPhasedArray3DSpecialCoordinatesImage.h")
+itk_wrap_include("itkCurvilinearArraySpecialCoordinatesImage.h")
 
 itk_wrap_class("itk::Spectra1DSupportWindowToMaskImageFilter" POINTER_WITH_2_SUPERCLASSES)
   foreach(d ${ITK_WRAP_IMAGE_DIMS})
@@ -8,4 +10,14 @@ itk_wrap_class("itk::Spectra1DSupportWindowToMaskImageFilter" POINTER_WITH_2_SUP
       itk_wrap_template("IlistitkIndex${d}${d}${ITKM_I${t}${d}}" "itk::Image< std::list< itk::Index< ${d} > >, ${d} >, ${ITKT_I${t}${d}}")
     endforeach(t)
   endforeach(d)
+  foreach(t ${WRAP_ITK_INT})
+    itk_wrap_template("IlistitkIndex33PA3DSCI${ITKM_${t}}"
+      "itk::Image< std::list< itk::Index< 3 > >, 3 >, itk::PhasedArray3DSpecialCoordinatesImage< ${ITKT_${t}} >")
+  endforeach()
+  foreach(d ${ITK_WRAP_IMAGE_DIMS})
+    foreach(t ${WRAP_ITK_INT})
+      itk_wrap_template("IlistitkIndex${d}${d}CASCI${ITKM_${t}}${d}"
+        "itk::Image< std::list< itk::Index< ${d} > >, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >")
+    endforeach()
+  endforeach()
 itk_end_wrap_class()

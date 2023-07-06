@@ -93,16 +93,6 @@ itk_wrap_class("itk::RescaleIntensityImageFilter" POINTER_WITH_2_SUPERCLASSES)
   endforeach()
 itk_end_wrap_class()
 
-itk_wrap_include("itkSpectra1DSupportWindowToMaskImageFilter.h")
-itk_wrap_class("itk::Spectra1DSupportWindowToMaskImageFilter" POINTER_WITH_2_SUPERCLASSES)
-  foreach(d ${ITK_WRAP_IMAGE_DIMS})
-    foreach(t ${WRAP_ITK_INT})
-      itk_wrap_template("IlistitkIndex${d}${d}CASCI${ITKM_${t}}${d}"
-        "itk::Image< std::list< itk::Index< ${d} > >, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >")
-    endforeach()
-  endforeach()
-itk_end_wrap_class()
-
 # The rest is needed for ResampleImageFilter and interpolator functions
 set(resample_filter_dimensions 2 3)
 set(resample_filter_pixel_types "F")
