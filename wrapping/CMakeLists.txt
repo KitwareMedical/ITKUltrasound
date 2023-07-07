@@ -11,6 +11,8 @@ set(WRAPPER_SUBMODULE_ORDER
   itkSpecialCoordinatesImage
   itkCurvilinearArraySpecialCoordinatesImage
   itkCurvilinearArraySpecialCoordinatesImageFilters
+  itkSliceSeriesSpecialCoordinatesImage
+  itkSliceSeriesSpecialCoordinatesImageFilters
   itkAttenuationImageFilter
   itkBlockMatchingMetricImageFilter
   itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter
@@ -18,7 +20,7 @@ set(WRAPPER_SUBMODULE_ORDER
   itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter
   itkImageUltrasound # must come before Spectra1DSupportWindow
   itkSpectra1DSupportWindowImageFilter
-  itkSpectra1DSupportWindowToMaskImageFilter  # must come after CASCI
+  itkSpectra1DSupportWindowToMaskImageFilter  # must come after CASCI SSSCI
   itkFrequencyDomain1DFilterFunction
   itkFrequencyDomain1DImageFilter
   itkRegionFromReferenceImageFilter

@@ -58,6 +58,21 @@ itk_python_add_test(NAME PythonCurvilinearResampleTest
     --first-sample-distance 26.4
   )
 
+itk_python_expression_add_test(NAME PythonInstantiateGaussianInterpolateImageFunctionSSSCI
+  EXPRESSION "iFunc = itk.GaussianInterpolateImageFunction[itk.SliceSeriesSpecialCoordinatesImage[itk.Image[itk.UC, 2], itk.Euler3DTransform[itk.D]], itk.D].New()"
+  )
+
+itk_python_add_test(NAME PythonSliceSeriesResampleTest
+  TEST_DRIVER_ARGS
+  --compareIntensityTolerance 1
+  --compare
+    DATA{${test_baseline_dir}/ScanConvertSliceSeriesTestOutput.mha}
+    ${ITK_TEST_OUTPUT_DIR}/itkSliceSeriesSpecialCoordinatesImageTestPython.mha
+  COMMAND PythonSliceSeriesResample.py
+    -i DATA{${test_input_dir}/bmode_p59.hdf5}
+    -o ${ITK_TEST_OUTPUT_DIR}/itkSliceSeriesSpecialCoordinatesImageTestPython.mha
+  )
+
 itk_python_expression_add_test(NAME PythonInstantiateGaussianInterpolateImageFunctionPA3DSCI
   EXPRESSION "iFunc = itk.GaussianInterpolateImageFunction[itk.PhasedArray3DSpecialCoordinatesImage[itk.F], itk.D].New()"
   )

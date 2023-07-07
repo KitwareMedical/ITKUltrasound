@@ -47,7 +47,7 @@ itk_wrap_class("itk::ImageToImageFilter" POINTER)
   endforeach()
 itk_end_wrap_class()
 
-itk_wrap_class("itk::ImageFileReader" POINTER_WITH_SUPERCLASS)
+itk_wrap_class("itk::ImageFileReader" POINTER)
   foreach(t ${WRAP_ITK_SCALAR})
     itk_wrap_template("PA3DSCI${ITKM_${t}}"
       "itk::PhasedArray3DSpecialCoordinatesImage< ${ITKT_${t}} >")

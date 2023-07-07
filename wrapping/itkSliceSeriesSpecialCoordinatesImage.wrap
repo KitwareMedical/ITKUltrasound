@@ -1,0 +1,51 @@
+itk_wrap_include("itkEuler3DTransform.h")
+
+# Explicitly override template method wrappings so that implicit
+# scalar type is always `double` for greatest precision.
+# Adds wrapping overrides to `itkSliceSeriesSpecialCoordinatesImage_ext.i` configured with
+# CMake for input to SWIG wrapping generation.
+# See `DECL_PYTHON_IMAGEBASE_CLASS` definition in `ITK/Wrapping/Generators/Python/PyBase/pyBase.i`
+# for precedent.
+string(APPEND ITK_WRAP_PYTHON_SWIG_EXT "
+%inline %{
+#include \"itkContinuousIndexSwigInterface.h\"
+%}
+
+%define DECL_PYTHON_SLICESERIESSPECIALCOORDINATESIMAGE_CLASS(swig_name, template_params)
+
+  %extend swig_name {
+      itkIndex##template_params TransformPhysicalPointToIndex(const itkPointD##template_params & point ) {
+          return self->TransformPhysicalPointToIndex<double>( point );
+        }
+
+      itkContinuousIndexD##template_params TransformPhysicalPointToContinuousIndex(const itkPointD##template_params & point ) {
+          return self->TransformPhysicalPointToContinuousIndex<double>( point );
+      }
+
+      itkPointD##template_params TransformContinuousIndexToPhysicalPoint(const itkContinuousIndexD##template_params & idx ) {
+          return self->TransformContinuousIndexToPhysicalPoint<double>( idx );
+      }
+
+      itkPointD##template_params TransformIndexToPhysicalPoint(const itkIndex##template_params & idx ) {
+          return self->TransformIndexToPhysicalPoint<double>( idx );
+      }
+  }
+
+%enddef
+")
+
+# Wrap class for UC and F. Dimension is always 3 (slice dimension 2).
+itk_wrap_class("itk::SliceSeriesSpecialCoordinatesImage" POINTER_WITH_SUPERCLASS)
+  if(ITK_WRAP_unsigned_char)
+    set(SSSCI_template_params "itk::Image<unsigned char, 2>, itk::Euler3DTransform<double>")
+    itk_wrap_template("IUC3E3D" ${SSSCI_template_params})
+    string(APPEND ITK_WRAP_PYTHON_SWIG_EXT "DECL_PYTHON_SLICESERIESSPECIALCOORDINATESIMAGE_CLASS(${WRAPPER_SWIG_NAME}IUC3E3D, 3)\n")
+  endif()
+  if(ITK_WRAP_float)
+    set(SSSCI_template_params "itk::Image<float, 2>, itk::Euler3DTransform<double>")
+    itk_wrap_template("IF3E3D" ${SSSCI_template_params})
+    string(APPEND ITK_WRAP_PYTHON_SWIG_EXT "DECL_PYTHON_SLICESERIESSPECIALCOORDINATESIMAGE_CLASS(${WRAPPER_SWIG_NAME}IF3E3D, 3)\n")
+  endif()
+itk_end_wrap_class()
+
+# Then wrap consuming filters in itkSliceSeriesSpecialCoordinatesImageFilters.wrap

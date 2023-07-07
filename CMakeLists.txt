@@ -1,6 +1,10 @@
 project(Ultrasound)
 cmake_minimum_required(VERSION 3.16.3)
 
+if(POLICY CMP0135)
+  cmake_policy(SET CMP0135 NEW)
+endif()
+
 set(Ultrasound_LIBRARIES Ultrasound)
 
 if(NOT ITK_SOURCE_DIR)
