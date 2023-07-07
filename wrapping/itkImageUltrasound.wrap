@@ -4,6 +4,7 @@
 
 itk_wrap_include("list")
 itk_wrap_include("itkIndex.h")
+
 set(TEMPLATE_LIST_INDEX "")
 foreach(d ${ITK_WRAP_IMAGE_DIMS})
   set(TEMPLATE_LIST_INDEX "${TEMPLATE_LIST_INDEX}

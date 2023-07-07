@@ -8,17 +8,17 @@ endif()
 
 itk_wrap_module(Ultrasound)
 set(WRAPPER_SUBMODULE_ORDER
+  itkSpecialCoordinatesImage
   itkCurvilinearArraySpecialCoordinatesImage
-  itkImageUltrasound # Extra itk::Image wrappings for SupportWindow filters
   itkCurvilinearArraySpecialCoordinatesImageFilters
-  itkPhasedArray3DSpecialCoordinatesImage # CASCI needs to come before
   itkAttenuationImageFilter
   itkBlockMatchingMetricImageFilter
   itkBlockMatchingNormalizedCrossCorrelationMetricImageFilter
   itkBlockMatchingNormalizedCrossCorrelationFFTMetricImageFilter
   itkBlockMatchingNormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter
+  itkImageUltrasound # must come before Spectra1DSupportWindow
   itkSpectra1DSupportWindowImageFilter
-  itkSpectra1DSupportWindowToMaskImageFilter
+  itkSpectra1DSupportWindowToMaskImageFilter  # must come after CASCI
   itkFrequencyDomain1DFilterFunction
   itkFrequencyDomain1DImageFilter
   itkRegionFromReferenceImageFilter
