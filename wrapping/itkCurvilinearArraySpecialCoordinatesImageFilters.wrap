@@ -51,7 +51,7 @@ itk_wrap_class("itk::ImageToImageFilter" POINTER)
   endforeach()
 itk_end_wrap_class()
 
-itk_wrap_class("itk::ImageFileReader" POINTER_WITH_SUPERCLASS)
+itk_wrap_class("itk::ImageFileReader" POINTER)
   foreach(d ${ITK_WRAP_IMAGE_DIMS})
     foreach(t ${WRAP_ITK_SCALAR})
       itk_wrap_template("CASCI${ITKM_${t}}${d}"
@@ -89,16 +89,6 @@ itk_wrap_class("itk::RescaleIntensityImageFilter" POINTER_WITH_2_SUPERCLASSES)
         itk_wrap_template("I${ITKM_${t}}${d}CASCI${ITKM_${ut}}${d}"
           "itk::Image< ${ITKT_${t}}, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${ut}}, ${d} >")
       endforeach()
-    endforeach()
-  endforeach()
-itk_end_wrap_class()
-
-itk_wrap_include("itkSpectra1DSupportWindowToMaskImageFilter.h")
-itk_wrap_class("itk::Spectra1DSupportWindowToMaskImageFilter" POINTER_WITH_2_SUPERCLASSES)
-  foreach(d ${ITK_WRAP_IMAGE_DIMS})
-    foreach(t ${WRAP_ITK_INT})
-      itk_wrap_template("IlistitkIndex${d}${d}CASCI${ITKM_${t}}${d}"
-        "itk::Image< std::list< itk::Index< ${d} > >, ${d} >, itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >")
     endforeach()
   endforeach()
 itk_end_wrap_class()
