@@ -271,8 +271,8 @@ public:
     {
       slicePoint[ii] = nextPoint[ii];
     }
-    ContinuousIndex<TIndexRep, SliceImageType::ImageDimension> sliceIndex;
-    this->m_SliceImage->TransformPhysicalPointToContinuousIndex(slicePoint, sliceIndex);
+    ContinuousIndex<TIndexRep, SliceImageType::ImageDimension> sliceIndex =
+      this->m_SliceImage->TransformPhysicalPointToContinuousIndex<TIndexRep, TCoordRep>(slicePoint);
     for (unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii)
     {
       index[ii] = sliceIndex[ii];
@@ -400,8 +400,7 @@ public:
     {
       slicePoint[ii] = nextPoint[ii];
     }
-    typename SliceImageType::IndexType sliceIndex;
-    this->m_SliceImage->TransformPhysicalPointToIndex(slicePoint, sliceIndex);
+    typename SliceImageType::IndexType sliceIndex = this->m_SliceImage->TransformPhysicalPointToIndex(slicePoint);
     for (unsigned int ii = 0; ii < SliceImageType::ImageDimension; ++ii)
     {
       index[ii] = sliceIndex[ii];
