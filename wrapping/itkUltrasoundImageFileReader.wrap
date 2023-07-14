@@ -1,0 +1,21 @@
+itk_wrap_include("itkCurvilinearArraySpecialCoordinatesImage.h")
+itk_wrap_include("itkSliceSeriesSpecialCoordinatesImage.h")
+itk_wrap_include("itkEuler3DTransform.h")
+
+itk_wrap_class("itk::UltrasoundImageFileReader" POINTER)
+  foreach(d ${ITK_WRAP_IMAGE_DIMS})
+    foreach(t ${WRAP_ITK_SCALAR})
+      itk_wrap_template("CASCI${ITKM_${t}}${d}"
+        "itk::CurvilinearArraySpecialCoordinatesImage< ${ITKT_${t}}, ${d} >")
+    endforeach()
+  endforeach()
+
+  if(ITK_WRAP_unsigned_char)
+    set(SSSCI_template "itk::SliceSeriesSpecialCoordinatesImage<itk::Image<unsigned char, 2>, itk::Euler3DTransform<double>>")
+    itk_wrap_template("SSSCIUC3E3D" "${SSSCI_template}")
+  endif()
+  if(ITK_WRAP_float)
+    set(SSSCI_template "itk::SliceSeriesSpecialCoordinatesImage<itk::Image<float, 2>, itk::Euler3DTransform<double>>")
+    itk_wrap_template("SSSCIF3E3D" "${SSSCI_template}")
+  endif()
+itk_end_wrap_class()
