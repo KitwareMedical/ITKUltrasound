@@ -72,7 +72,7 @@ public:
   itkStaticConstMacro(OutputImageDimension, unsigned int, Superclass::OutputImageDimension);
   itkStaticConstMacro(ImageDimension, unsigned int, Superclass::OutputImageDimension);
 
-  using ReferenceImageType = ImageBase<itkGetStaticConstMacro(ImageDimension)>;
+  using ReferenceImageType = ImageBase<Self::ImageDimension>;
 
   /** Copy the output information from another Image. */
   void
