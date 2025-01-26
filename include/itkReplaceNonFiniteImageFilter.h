@@ -113,7 +113,7 @@ public:
   itkNewMacro(Self);
 
   /** Runtime information support. */
-  itkTypeMacro(ReplaceNonFiniteImageFilter, UnaryFunctorImageFilter);
+  itkOverrideGetNameOfClassMacro(ReplaceNonFiniteImageFilter);
 
 protected:
   ReplaceNonFiniteImageFilter() = default;

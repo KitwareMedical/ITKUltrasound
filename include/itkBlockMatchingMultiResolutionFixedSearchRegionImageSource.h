@@ -87,7 +87,7 @@ public:
   using DisplacementResamplerPointer = typename DisplacementResamplerType::Pointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MultiResolutionFixedSearchRegionImageSource, MultiResolutionSearchRegionImageSource);
+  itkOverrideGetNameOfClassMacro(MultiResolutionFixedSearchRegionImageSource);
 
   /** New macro for creation of through a Smart Pointer. */
   itkNewMacro(Self);

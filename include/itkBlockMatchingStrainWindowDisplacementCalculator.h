@@ -74,7 +74,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(StrainWindowDisplacementCalculator, MetricImageToDisplacementCalculator);
+  itkOverrideGetNameOfClassMacro(StrainWindowDisplacementCalculator);
 
   using DisplacementImageType = typename Superclass::DisplacementImageType;
   using RegionType = typename DisplacementImageType::RegionType;

@@ -78,7 +78,7 @@ public:
   itkStaticConstMacro(ImageDimension, unsigned int, TDisplacementImage::ImageDimension);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(BayesianRegularizationDisplacementCalculator, MetricImageToDisplacementCalculator);
+  itkOverrideGetNameOfClassMacro(BayesianRegularizationDisplacementCalculator);
 
   using MetricImageType = typename Superclass::MetricImageType;
   using MetricImagePointerType = typename Superclass::MetricImagePointerType;

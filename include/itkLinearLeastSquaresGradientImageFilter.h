@@ -72,7 +72,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(LinearLeastSquaresGradientImageFilter, ImageToImageFilter);
+  itkOverrideGetNameOfClassMacro(LinearLeastSquaresGradientImageFilter);
 
   /** Image type alias support. */
   using InputPixelType = typename InputImageType::PixelType;

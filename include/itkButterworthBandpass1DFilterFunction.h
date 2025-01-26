@@ -33,7 +33,7 @@ public:
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
-  itkTypeMacro(ButterworthBandpass1DFilterFunction, FrequencyDomain1DFilterFunction);
+  itkOverrideGetNameOfClassMacro(ButterworthBandpass1DFilterFunction);
   itkNewMacro(Self);
 
   double

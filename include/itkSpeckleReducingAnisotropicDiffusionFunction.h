@@ -67,7 +67,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods) */
-  itkTypeMacro(SpeckleReducingAnisotropicDiffusionFunction, ScalarAnisotropicDiffusionFunction);
+  itkOverrideGetNameOfClassMacro(SpeckleReducingAnisotropicDiffusionFunction);
 
   /** Inherit some parameters from the superclass type. */
   using ImageType = typename Superclass::ImageType;

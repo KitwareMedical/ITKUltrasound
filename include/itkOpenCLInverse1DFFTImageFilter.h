@@ -65,7 +65,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(OpenCLInverse1DFFTImageFilter, FFT1DComplexConjugateToRealImageFilter);
+  itkOverrideGetNameOfClassMacro(OpenCLInverse1DFFTImageFilter);
 
   SizeValueType
   GetSizeGreatestPrimeFactor() const override

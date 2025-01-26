@@ -62,7 +62,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(OptimizingInterpolationDisplacementCalculator, MetricImageToDisplacementCalculator);
+  itkOverrideGetNameOfClassMacro(OptimizingInterpolationDisplacementCalculator);
 
   using MetricImageType = typename Superclass::MetricImageType;
   using MetricImagePointerType = typename Superclass::MetricImagePointerType;
@@ -125,7 +125,7 @@ public:
 
     using Pointer = SmartPointer<Self>;
 
-    itkTypeMacro(OptimizingInterpolationCostFunction, SingleValuedCostFunction);
+    itkOverrideGetNameOfClassMacro(OptimizingInterpolationCostFunction);
 
     itkNewMacro(Self);
 

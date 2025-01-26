@@ -73,7 +73,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(SearchRegionImageInitializer, ImageSource);
+  itkOverrideGetNameOfClassMacro(SearchRegionImageInitializer);
 
   /** Set the fixed image. */
   void

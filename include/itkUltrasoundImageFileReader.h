@@ -58,7 +58,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(UltrasoundImageFileReader, ImageFileReader);
+  itkOverrideGetNameOfClassMacro(UltrasoundImageFileReader);
 
   using OutputImageType = TOutputImage;
   using OutputImagePixelType = typename Superclass::OutputImagePixelType;

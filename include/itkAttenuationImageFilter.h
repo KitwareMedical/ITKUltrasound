@@ -86,7 +86,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(AttenuationImageFilter, ImageToImageFilter);
+  itkOverrideGetNameOfClassMacro(AttenuationImageFilter);
 
   /** Image type alias support */
   static constexpr unsigned int ImageDimension = TInputImage::ImageDimension;
