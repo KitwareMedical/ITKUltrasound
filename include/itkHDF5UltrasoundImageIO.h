@@ -65,7 +65,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(HDF5UltrasoundImageIO, StreamingImageIOBase);
+  itkOverrideGetNameOfClassMacro(HDF5UltrasoundImageIO);
 
   virtual bool
   CanReadFile(const char * fileNameToRead) override;

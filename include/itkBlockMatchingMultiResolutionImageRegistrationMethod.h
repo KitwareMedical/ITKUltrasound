@@ -100,7 +100,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MultiResolutionImageRegistrationMethod, ImageSource);
+  itkOverrideGetNameOfClassMacro(MultiResolutionImageRegistrationMethod);
 
   /** Type of the Fixed image multiresolution pyramid. */
   using FixedImagePyramidType = MultiResolutionPyramidImageFilter<FixedImageType, FixedImageType>;

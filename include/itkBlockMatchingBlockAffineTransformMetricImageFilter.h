@@ -55,7 +55,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(BlockAffineTransformMetricImageFilter, MetricImageFilter);
+  itkOverrideGetNameOfClassMacro(BlockAffineTransformMetricImageFilter);
 
   itkNewMacro(Self);
 

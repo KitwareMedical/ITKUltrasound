@@ -240,7 +240,7 @@ public:
   itkNewMacro(Self);
 
   /** Runtime information support. */
-  itkTypeMacro(BoxSigmaSqrtNMinusOneImageFilter, BoxImageFilter);
+  itkOverrideGetNameOfClassMacro(BoxSigmaSqrtNMinusOneImageFilter);
 
   /** Image related type alias. */
   using InputImageType = TInputImage;

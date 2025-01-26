@@ -51,7 +51,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ImageToImageMetricMetricImageFilter, MetricImageFilter);
+  itkOverrideGetNameOfClassMacro(ImageToImageMetricMetricImageFilter);
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);

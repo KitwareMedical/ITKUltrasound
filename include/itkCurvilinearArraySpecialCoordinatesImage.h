@@ -101,7 +101,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(CurvilinearArraySpecialCoordinatesImage, SpecialCoordinatesImage);
+  itkOverrideGetNameOfClassMacro(CurvilinearArraySpecialCoordinatesImage);
 
   /** Pixel type alias support. Used to declare pixel type in filters
    * or other operations. */

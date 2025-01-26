@@ -79,7 +79,7 @@ public:
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
-  itkTypeMacro(Spectra1DImageFilter, ImageToImageFilter);
+  itkOverrideGetNameOfClassMacro(Spectra1DImageFilter);
   itkNewMacro(Self);
 
   /** Set/get the input image describing support windows for local spectra

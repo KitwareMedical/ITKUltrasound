@@ -110,7 +110,7 @@ public:
   using IndexType = typename DisplacementCalculatorSuperclass::IndexType;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MultiResolutionThresholdBoundingBoxSearchRegionImageSource, MultiResolutionFixedSearchRegionImageSource);
+  itkOverrideGetNameOfClassMacro(MultiResolutionThresholdBoundingBoxSearchRegionImageSource);
 
   /** New macro for creation of through a Smart Pointer is not used because of
    * ambiguities with LightObject. */

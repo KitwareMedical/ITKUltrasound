@@ -101,7 +101,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ImageRegistrationMethod, ImageSource);
+  itkOverrideGetNameOfClassMacro(ImageRegistrationMethod);
 
   /** Type of the point use for determing the location in the fixed image of a
    * block's center. */

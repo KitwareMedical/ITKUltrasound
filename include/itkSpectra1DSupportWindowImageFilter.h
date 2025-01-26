@@ -73,7 +73,7 @@ public:
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
-  itkTypeMacro(Spectra1DSupportWindowImageFilter, ImageToImageFilter);
+  itkOverrideGetNameOfClassMacro(Spectra1DSupportWindowImageFilter);
   itkNewMacro(Self);
 
   /** Set/Get the nominal size of the FFT.  This will be truncated at the

@@ -70,7 +70,7 @@ public:
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
-  itkTypeMacro(AnalyticSignalImageFilter, ImageToImageFilter);
+  itkOverrideGetNameOfClassMacro(AnalyticSignalImageFilter);
   itkNewMacro(Self);
 
   using FrequencyFilterType = FrequencyDomain1DImageFilter<OutputImageType, OutputImageType>;

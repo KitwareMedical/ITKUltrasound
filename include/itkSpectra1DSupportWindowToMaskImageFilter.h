@@ -46,7 +46,7 @@ public:
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
-  itkTypeMacro(Spectra1DSupportWindowToMaskImageFilter, ImageToImageFilter);
+  itkOverrideGetNameOfClassMacro(Spectra1DSupportWindowToMaskImageFilter);
   itkNewMacro(Self);
 
   /** Set/Get the index of the support window to create the mask for. */

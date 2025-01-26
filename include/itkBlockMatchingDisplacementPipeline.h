@@ -95,7 +95,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(DisplacementPipeline, ImageToImageFilter);
+  itkOverrideGetNameOfClassMacro(DisplacementPipeline);
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

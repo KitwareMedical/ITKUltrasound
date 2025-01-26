@@ -64,7 +64,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MetricImageFilter, ImageToImageFilter);
+  itkOverrideGetNameOfClassMacro(MetricImageFilter);
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, TFixedImage::ImageDimension);

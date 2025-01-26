@@ -57,7 +57,7 @@ public:
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
-  itkTypeMacro(Spectra1DAveragingImageFilter, ImageToImageFilter);
+  itkOverrideGetNameOfClassMacro(Spectra1DAveragingImageFilter);
   itkNewMacro(Self);
 
 #ifdef ITK_USE_CONCEPT_CHECKING

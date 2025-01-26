@@ -84,7 +84,7 @@ public:
   using InputIndexType = typename InputImageType::IndexType;
 
   /** Run-time type information (and related methods) */
-  itkTypeMacro(BModeImageFilter, ImageToImageFilter);
+  itkOverrideGetNameOfClassMacro(BModeImageFilter);
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

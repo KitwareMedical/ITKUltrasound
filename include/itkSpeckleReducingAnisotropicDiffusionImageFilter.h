@@ -65,7 +65,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time class information. */
-  itkTypeMacro(SpeckleReducingAnisotropicDiffusionImageFilter, AnisotropicDiffusionImageFilter);
+  itkOverrideGetNameOfClassMacro(SpeckleReducingAnisotropicDiffusionImageFilter);
 
   /** Extract information from the superclass. */
   using UpdateBufferType = typename Superclass::UpdateBufferType;

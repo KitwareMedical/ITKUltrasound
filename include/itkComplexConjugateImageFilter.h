@@ -80,7 +80,7 @@ public:
   itkNewMacro(Self);
 
   /** Runtime information support. */
-  itkTypeMacro(ComplexConjugateImageFilter, UnaryFunctorImageFilter);
+  itkOverrideGetNameOfClassMacro(ComplexConjugateImageFilter);
 
   using InputPixelType = typename TInputImage::PixelType;
   using OutputPixelType = typename TOutputImage::PixelType;

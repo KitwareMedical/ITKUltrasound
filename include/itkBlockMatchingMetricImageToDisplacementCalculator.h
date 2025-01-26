@@ -67,7 +67,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MetricImageToDisplacementCalculator, Object);
+  itkOverrideGetNameOfClassMacro(MetricImageToDisplacementCalculator);
 
   /** Type of the metric image (input pixels). */
   using MetricImageType = TMetricImage;

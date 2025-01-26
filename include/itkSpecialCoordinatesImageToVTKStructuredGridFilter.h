@@ -48,7 +48,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(SpecialCoordinatesImageToVTKStructuredGridFilter, ProcessObject);
+  itkOverrideGetNameOfClassMacro(SpecialCoordinatesImageToVTKStructuredGridFilter);
 
   using InputImageType = TInputImage;
 

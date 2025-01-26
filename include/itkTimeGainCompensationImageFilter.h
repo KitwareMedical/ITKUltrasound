@@ -50,7 +50,7 @@ public:
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
-  itkTypeMacro(TimeGainCompensationImageFilter, ImageToImageFilter);
+  itkOverrideGetNameOfClassMacro(TimeGainCompensationImageFilter);
   itkNewMacro(Self);
 
   using GainType = Array2D<double>;
