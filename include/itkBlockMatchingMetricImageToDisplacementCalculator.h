@@ -58,7 +58,7 @@ template <typename TMetricImage, typename TDisplacementImage>
 class ITK_TEMPLATE_EXPORT MetricImageToDisplacementCalculator : public Object
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(MetricImageToDisplacementCalculator);
+  ITK_DISALLOW_COPY_AND_MOVE(MetricImageToDisplacementCalculator);
 
   /** Standard class type alias. */
   using Self = MetricImageToDisplacementCalculator;

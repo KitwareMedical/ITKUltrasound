@@ -46,7 +46,7 @@ template <typename TOutputImage>
 class ITK_TEMPLATE_EXPORT UltrasoundImageFileReader : public ImageFileReader<TOutputImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(UltrasoundImageFileReader);
+  ITK_DISALLOW_COPY_AND_MOVE(UltrasoundImageFileReader);
 
   /** Standard class type alias.   */
   using Self = UltrasoundImageFileReader;

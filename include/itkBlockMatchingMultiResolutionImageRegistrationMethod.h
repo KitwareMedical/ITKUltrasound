@@ -55,7 +55,7 @@ template <typename TFixedImage,
 class ITK_TEMPLATE_EXPORT MultiResolutionImageRegistrationMethod : public ImageSource<TDisplacementImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionImageRegistrationMethod);
+  ITK_DISALLOW_COPY_AND_MOVE(MultiResolutionImageRegistrationMethod);
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, TDisplacementImage::ImageDimension);

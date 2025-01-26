@@ -56,7 +56,7 @@ template <typename TInputImage, typename TOutputImage>
 class ITK_TEMPLATE_EXPORT AnalyticSignalImageFilter : public ImageToImageFilter<TInputImage, TOutputImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(AnalyticSignalImageFilter);
+  ITK_DISALLOW_COPY_AND_MOVE(AnalyticSignalImageFilter);
 
   /** Standard class type alias. */
   using InputImageType = TInputImage;

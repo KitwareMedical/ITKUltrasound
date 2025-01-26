@@ -48,7 +48,7 @@ class ITK_TEMPLATE_EXPORT NormalizedCrossCorrelationMetricImageFilter
   : public MetricImageFilter<TFixedImage, TMovingImage, TMetricImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(NormalizedCrossCorrelationMetricImageFilter);
+  ITK_DISALLOW_COPY_AND_MOVE(NormalizedCrossCorrelationMetricImageFilter);
 
   /** Standard class type alias. */
   using Self = NormalizedCrossCorrelationMetricImageFilter;

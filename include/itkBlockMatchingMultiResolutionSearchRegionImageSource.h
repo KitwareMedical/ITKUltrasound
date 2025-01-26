@@ -55,7 +55,7 @@ class ITK_TEMPLATE_EXPORT MultiResolutionSearchRegionImageSource
   : public ImageSource<Image<typename TMovingImage::RegionType, TMovingImage::ImageDimension>>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionSearchRegionImageSource);
+  ITK_DISALLOW_COPY_AND_MOVE(MultiResolutionSearchRegionImageSource);
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, TMovingImage::ImageDimension);

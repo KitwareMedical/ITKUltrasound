@@ -59,7 +59,7 @@ class ITK_TEMPLATE_EXPORT StrainWindowDisplacementCalculator
   : public MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(StrainWindowDisplacementCalculator);
+  ITK_DISALLOW_COPY_AND_MOVE(StrainWindowDisplacementCalculator);
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, TDisplacementImage::ImageDimension);

@@ -55,7 +55,7 @@ class ITK_TEMPLATE_EXPORT Spectra1DSupportWindowImageFilter
                               Image<std::list<typename TInputImage::IndexType>, TInputImage::ImageDimension>>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(Spectra1DSupportWindowImageFilter);
+  ITK_DISALLOW_COPY_AND_MOVE(Spectra1DSupportWindowImageFilter);
 
   itkStaticConstMacro(ImageDimension, unsigned int, TInputImage::ImageDimension);
 

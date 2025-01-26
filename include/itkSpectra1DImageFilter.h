@@ -63,7 +63,7 @@ template <typename TInputImage, typename TSupportWindowImage, typename TOutputIm
 class ITK_TEMPLATE_EXPORT Spectra1DImageFilter : public ImageToImageFilter<TInputImage, TOutputImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(Spectra1DImageFilter);
+  ITK_DISALLOW_COPY_AND_MOVE(Spectra1DImageFilter);
 
   itkStaticConstMacro(ImageDimension, unsigned int, TInputImage::ImageDimension);
 

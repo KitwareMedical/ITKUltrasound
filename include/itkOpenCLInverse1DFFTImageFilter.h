@@ -47,7 +47,7 @@ template <typename TInputImage,
 class ITK_TEMPLATE_EXPORT OpenCLInverse1DFFTImageFilter : public Inverse1DFFTImageFilter<TInputImage, TOutputImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(OpenCLInverse1DFFTImageFilter);
+  ITK_DISALLOW_COPY_AND_MOVE(OpenCLInverse1DFFTImageFilter);
   using TPixel = typename NumericTraits<typename TInputImage::PixelType>::ValueType;
 
   using Self = OpenCLInverse1DFFTImageFilter;

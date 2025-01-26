@@ -36,7 +36,7 @@ template <typename TInputImage>
 class ITK_TEMPLATE_EXPORT SpecialCoordinatesImageToVTKStructuredGridFilter : public ProcessObject
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(SpecialCoordinatesImageToVTKStructuredGridFilter);
+  ITK_DISALLOW_COPY_AND_MOVE(SpecialCoordinatesImageToVTKStructuredGridFilter);
 
   /** Standard class type alias. */
   using Self = SpecialCoordinatesImageToVTKStructuredGridFilter;

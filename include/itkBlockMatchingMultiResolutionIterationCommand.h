@@ -39,7 +39,7 @@ template <typename TMultiResolutionMethod>
 class MultiResolutionIterationCommand : public Command
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionIterationCommand);
+  ITK_DISALLOW_COPY_AND_MOVE(MultiResolutionIterationCommand);
 
   using Self = MultiResolutionIterationCommand;
   using Superclass = Command;

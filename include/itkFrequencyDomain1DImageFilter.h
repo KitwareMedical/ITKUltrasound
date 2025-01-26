@@ -41,7 +41,7 @@ template <typename TInputImage, typename TOutputImage = TInputImage>
 class ITK_TEMPLATE_EXPORT FrequencyDomain1DImageFilter : public ImageToImageFilter<TInputImage, TOutputImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(FrequencyDomain1DImageFilter);
+  ITK_DISALLOW_COPY_AND_MOVE(FrequencyDomain1DImageFilter);
 
   /** Standard class type alias. */
   using InputImageType = TInputImage;

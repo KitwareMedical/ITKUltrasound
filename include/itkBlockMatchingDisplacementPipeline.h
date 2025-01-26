@@ -69,7 +69,7 @@ class ITK_TEMPLATE_EXPORT DisplacementPipeline
                               Image<Vector<TMetricPixel, VImageDimension>, VImageDimension>>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(DisplacementPipeline);
+  ITK_DISALLOW_COPY_AND_MOVE(DisplacementPipeline);
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, VImageDimension);

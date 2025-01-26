@@ -54,7 +54,7 @@ class MetaDataDictionary;
 class Ultrasound_EXPORT HDF5UltrasoundImageIO : public StreamingImageIOBase
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(HDF5UltrasoundImageIO);
+  ITK_DISALLOW_COPY_AND_MOVE(HDF5UltrasoundImageIO);
 
   /** Standard class type alias. */
   using Self = HDF5UltrasoundImageIO;

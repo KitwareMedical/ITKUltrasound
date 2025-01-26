@@ -42,7 +42,7 @@ class ITK_TEMPLATE_EXPORT MultiResolutionMinMaxSearchRegionImageSource
   : public MultiResolutionSearchRegionImageSource<TFixedImage, TMovingImage, TDisplacementImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionMinMaxSearchRegionImageSource);
+  ITK_DISALLOW_COPY_AND_MOVE(MultiResolutionMinMaxSearchRegionImageSource);
 
   /** Standard class type alias. */
   using Self = MultiResolutionMinMaxSearchRegionImageSource;

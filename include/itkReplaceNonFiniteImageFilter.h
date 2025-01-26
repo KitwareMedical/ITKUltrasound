@@ -97,7 +97,7 @@ class ReplaceNonFiniteImageFilter
       Functor::ReplaceNonFinite<typename TInputImage::PixelType, typename TOutputImage::PixelType>>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(ReplaceNonFiniteImageFilter);
+  ITK_DISALLOW_COPY_AND_MOVE(ReplaceNonFiniteImageFilter);
 
   /** Standard class type alias. */
   using Self = ReplaceNonFiniteImageFilter;

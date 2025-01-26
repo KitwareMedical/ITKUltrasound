@@ -46,7 +46,7 @@ template <typename TInputImage,
 class ITK_TEMPLATE_EXPORT OpenCLForward1DFFTImageFilter : public Forward1DFFTImageFilter<TInputImage, TOutputImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(OpenCLForward1DFFTImageFilter);
+  ITK_DISALLOW_COPY_AND_MOVE(OpenCLForward1DFFTImageFilter);
   using TPixel = typename TInputImage::PixelType;
 
   using Self = OpenCLForward1DFFTImageFilter;

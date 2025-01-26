@@ -55,7 +55,7 @@ template <typename TFixedImage, typename TMovingImage, typename TMetricImage>
 class ITK_TEMPLATE_EXPORT MetricImageFilter : public ImageToImageFilter<TFixedImage, TMetricImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(MetricImageFilter);
+  ITK_DISALLOW_COPY_AND_MOVE(MetricImageFilter);
 
   /** Standard class type alias. */
   using Self = MetricImageFilter;

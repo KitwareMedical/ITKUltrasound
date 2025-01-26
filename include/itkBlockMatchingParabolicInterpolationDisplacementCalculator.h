@@ -40,7 +40,7 @@ class ITK_TEMPLATE_EXPORT ParabolicInterpolationDisplacementCalculator
   : public MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(ParabolicInterpolationDisplacementCalculator);
+  ITK_DISALLOW_COPY_AND_MOVE(ParabolicInterpolationDisplacementCalculator);
 
   /** Standard class type alias. */
   using Self = ParabolicInterpolationDisplacementCalculator;

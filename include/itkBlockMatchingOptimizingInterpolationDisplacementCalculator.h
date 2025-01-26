@@ -47,7 +47,7 @@ class ITK_TEMPLATE_EXPORT OptimizingInterpolationDisplacementCalculator
   : public MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(OptimizingInterpolationDisplacementCalculator);
+  ITK_DISALLOW_COPY_AND_MOVE(OptimizingInterpolationDisplacementCalculator);
 
   /** Standard class type alias. */
   using Self = OptimizingInterpolationDisplacementCalculator;

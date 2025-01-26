@@ -37,7 +37,7 @@ template <typename TMultiResolutionMethod>
 class MultiResolutionSearchRegionWriterCommand : public MultiResolutionIterationCommand<TMultiResolutionMethod>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionSearchRegionWriterCommand);
+  ITK_DISALLOW_COPY_AND_MOVE(MultiResolutionSearchRegionWriterCommand);
 
   using Self = MultiResolutionSearchRegionWriterCommand;
   using Superclass = MultiResolutionIterationCommand<TMultiResolutionMethod>;

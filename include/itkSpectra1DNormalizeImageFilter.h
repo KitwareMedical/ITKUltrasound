@@ -34,7 +34,7 @@ template <typename TInputImage, typename TReferenceImage>
 class ITK_TEMPLATE_EXPORT Spectra1DNormalizeImageFilter : public ImageToImageFilter<TInputImage, TInputImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(Spectra1DNormalizeImageFilter);
+  ITK_DISALLOW_COPY_AND_MOVE(Spectra1DNormalizeImageFilter);
 
   /** Standard class type alias. */
   using InputImageType = TInputImage;

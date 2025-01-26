@@ -43,7 +43,7 @@ class ITK_TEMPLATE_EXPORT MultiResolutionFixedSearchRegionImageSource
   : public MultiResolutionSearchRegionImageSource<TFixedImage, TMovingImage, TDisplacementImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionFixedSearchRegionImageSource);
+  ITK_DISALLOW_COPY_AND_MOVE(MultiResolutionFixedSearchRegionImageSource);
 
   /** Standard class type alias. */
   using Self = MultiResolutionFixedSearchRegionImageSource;
