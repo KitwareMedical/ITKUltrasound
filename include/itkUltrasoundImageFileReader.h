@@ -63,7 +63,7 @@ public:
   using OutputImageType = TOutputImage;
   using OutputImagePixelType = typename Superclass::OutputImagePixelType;
 
-  itkStaticConstMacro(ImageDimension, unsigned int, OutputImageType::ImageDimension);
+  static constexpr unsigned int ImageDimension = OutputImageType::ImageDimension;
 
 protected:
   UltrasoundImageFileReader();

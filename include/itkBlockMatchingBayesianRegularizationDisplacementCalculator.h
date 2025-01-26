@@ -75,7 +75,7 @@ public:
   itkNewMacro(Self);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, TDisplacementImage::ImageDimension);
+  static constexpr unsigned int ImageDimension = TDisplacementImage::ImageDimension;
 
   /** Run-time type information (and related methods). */
   itkOverrideGetNameOfClassMacro(BayesianRegularizationDisplacementCalculator);

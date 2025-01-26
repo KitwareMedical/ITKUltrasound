@@ -42,7 +42,7 @@ public:
   using OutputImageRegionType = typename OutputImageType::RegionType;
   using ReferenceImageType = TReferenceImage;
 
-  itkStaticConstMacro(ImageDimension, unsigned int, InputImageType::ImageDimension);
+  static constexpr unsigned int ImageDimension = InputImageType::ImageDimension;
 
   using Self = Spectra1DNormalizeImageFilter;
   using Superclass = ImageToImageFilter<InputImageType, OutputImageType>;

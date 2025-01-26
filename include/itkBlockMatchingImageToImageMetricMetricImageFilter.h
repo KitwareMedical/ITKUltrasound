@@ -54,7 +54,7 @@ public:
   itkOverrideGetNameOfClassMacro(ImageToImageMetricMetricImageFilter);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
+  static constexpr unsigned int ImageDimension = Superclass::ImageDimension;
 
   /** Type of the Moving image. */
   using MovingImageType = typename Superclass::MovingImageType;

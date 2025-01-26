@@ -32,7 +32,7 @@ template <typename TInputImage, typename TOutputImage>
 class ITK_TEMPLATE_EXPORT Spectra1DSupportWindowToMaskImageFilter : public ImageToImageFilter<TInputImage, TOutputImage>
 {
 public:
-  itkStaticConstMacro(ImageDimension, unsigned int, TInputImage::ImageDimension);
+  static constexpr unsigned int ImageDimension = TInputImage::ImageDimension;
 
   using InputImageType = TInputImage;
   using OutputImageType = TOutputImage;

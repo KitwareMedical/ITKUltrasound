@@ -58,7 +58,7 @@ public:
   ITK_DISALLOW_COPY_AND_MOVE(MultiResolutionSearchRegionImageSource);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, TMovingImage::ImageDimension);
+  static constexpr unsigned int ImageDimension = TMovingImage::ImageDimension;
 
   /** Type of the fixed image. */
   using FixedImageType = TFixedImage;

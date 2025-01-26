@@ -81,7 +81,7 @@ public:
   using PointType = typename DisplacementImageType::PointType;
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, TDisplacementImage::ImageDimension);
+  static constexpr unsigned int ImageDimension = TDisplacementImage::ImageDimension;
 
   /** Type of an image of center points of the fixed image blocks. */
   using CenterPointsImageType = itk::Image<PointType, ImageDimension>;

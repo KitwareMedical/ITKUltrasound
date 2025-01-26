@@ -72,7 +72,7 @@ public:
   ITK_DISALLOW_COPY_AND_MOVE(DisplacementPipeline);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, VImageDimension);
+  static constexpr unsigned int ImageDimension = VImageDimension;
 
   using FixedPixelType = TFixedPixel;
   using FixedImageType = Image<TFixedPixel, ImageDimension>;

@@ -67,7 +67,7 @@ public:
   itkOverrideGetNameOfClassMacro(MetricImageFilter);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, TFixedImage::ImageDimension);
+  static constexpr unsigned int ImageDimension = TFixedImage::ImageDimension;
 
   /**  Type of the Fixed image. */
   using FixedImageType = TFixedImage;

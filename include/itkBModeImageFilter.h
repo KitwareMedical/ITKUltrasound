@@ -63,7 +63,7 @@ public:
   using InputImageType = TInputImage;
 
   /** Dimension of the input and output images. */
-  itkStaticConstMacro(ImageDimension, unsigned int, TInputImage::ImageDimension);
+  static constexpr unsigned int ImageDimension = TInputImage::ImageDimension;
 
   /** Typedef support for the input image scalar value type. */
   using InputPixelType = typename InputImageType::PixelType;

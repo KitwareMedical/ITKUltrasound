@@ -48,7 +48,7 @@ public:
   using OutputImageType = TOutputImage;
   using OutputImageRegionType = typename OutputImageType::RegionType;
 
-  itkStaticConstMacro(ImageDimension, unsigned int, InputImageType::ImageDimension);
+  static constexpr unsigned int ImageDimension = InputImageType::ImageDimension;
 
   using Self = FrequencyDomain1DImageFilter;
   using Superclass = ImageToImageFilter<InputImageType, OutputImageType>;

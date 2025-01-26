@@ -55,7 +55,7 @@ public:
   using StructuredGridPointerType = vtkSmartPointer<vtkStructuredGrid>;
   using DecoratedStructuredGridPointerType = SimpleDataObjectDecorator<StructuredGridPointerType>;
 
-  itkStaticConstMacro(ImageDimension, unsigned int, InputImageType::ImageDimension);
+  static constexpr unsigned int ImageDimension = InputImageType::ImageDimension;
 
 
   using Superclass::SetInput;

@@ -62,7 +62,7 @@ public:
   ITK_DISALLOW_COPY_AND_MOVE(StrainWindowDisplacementCalculator);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, TDisplacementImage::ImageDimension);
+  static constexpr unsigned int ImageDimension = TDisplacementImage::ImageDimension;
 
   /** Standard class type alias. */
   using Self = StrainWindowDisplacementCalculator;

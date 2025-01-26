@@ -61,7 +61,7 @@ public:
   ITK_DISALLOW_COPY_AND_MOVE(ImageRegistrationMethod);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, TDisplacementImage::ImageDimension);
+  static constexpr unsigned int ImageDimension = TDisplacementImage::ImageDimension;
 
   /** Type of the fixed image. */
   using FixedImageType = TFixedImage;

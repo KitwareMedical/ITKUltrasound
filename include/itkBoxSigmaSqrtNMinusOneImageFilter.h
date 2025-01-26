@@ -254,8 +254,8 @@ public:
   using OutputPixelType = typename TOutputImage::PixelType;
 
   /** Image related type alias. */
-  itkStaticConstMacro(OutputImageDimension, unsigned int, TOutputImage::ImageDimension);
-  itkStaticConstMacro(InputImageDimension, unsigned int, TInputImage::ImageDimension);
+  static constexpr unsigned int OutputImageDimension = TOutputImage::ImageDimension;
+  static constexpr unsigned int InputImageDimension = TInputImage::ImageDimension;
 
 
 #ifdef ITK_USE_CONCEPT_CHECKING
