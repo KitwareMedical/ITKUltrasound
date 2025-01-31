@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "itk-ultrasound"
-version = "0.7.0"
+version = "0.7.1"
 description = "Filters for use with the Insight Toolkit (ITK) that may be particularly useful for the reconstruction and analysis of ultrasound images."
 readme = "README.rst"
 license = {file = "LICENSE"}
