@@ -4,14 +4,14 @@ on: [push,pull_request]
 
 jobs:
   cxx-build-workflow:
-    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-cxx.yml@edd0a4350396f533e9ec3755ed6c5af5ddfedb97
+    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-cxx.yml@v5.4.2
     with:
-      itk-module-deps: 'MeshToPolyData@v0.10.0:BSplineGradient@v0.3.0:HigherOrderAccurateGradient@v1.2.0:SplitComponents@v2.1.0:Strain@v0.4.0'
-      warnings-to-ignore: "\"pointer is null\" \"in a call to non-static member function\""
+      itk-module-deps: 'MeshToPolyData@7c9812527af5e061510ed5f5709da191a50e122a:BSplineGradient@73dcf827d76bbf2a36d08784d421b234fb630c80:HigherOrderAccurateGradient@v1.3.0:SplitComponents@v2.2.0:Strain@1397eb6b4ce6d0e789af8ecc2fbe6cdf889e63ab'
+      warnings-to-ignore: "\"pointer is null\" \"in a call to non-static member function\" \"ignoring duplicate libraries\""
       
   python-build-workflow:
-    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-package-python.yml@edd0a4350396f533e9ec3755ed6c5af5ddfedb97
+    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-package-python.yml@v5.4.2
     with:
-      itk-module-deps: 'InsightSoftwareConsortium/ITKMeshToPolyData@v0.10.0:InsightSoftwareConsortium/ITKBSplineGradient@v0.3.0:InsightSoftwareConsortium/ITKHigherOrderAccurateGradient@v1.2.0:InsightSoftwareConsortium/ITKSplitComponents@v2.1.0:KitwareMedical/ITKStrain@v0.4.0'
+      itk-module-deps: 'InsightSoftwareConsortium/ITKMeshToPolyData@7c9812527af5e061510ed5f5709da191a50e122a:InsightSoftwareConsortium/ITKBSplineGradient@73dcf827d76bbf2a36d08784d421b234fb630c80:InsightSoftwareConsortium/ITKHigherOrderAccurateGradient@v1.3.0:InsightSoftwareConsortium/ITKSplitComponents@v2.2.0:KitwareMedical/ITKStrain@1397eb6b4ce6d0e789af8ecc2fbe6cdf889e63ab'
     secrets:
       pypi_password: ${{ secrets.pypi_password }}
