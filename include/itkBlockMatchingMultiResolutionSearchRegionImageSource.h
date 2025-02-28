@@ -55,10 +55,10 @@ class ITK_TEMPLATE_EXPORT MultiResolutionSearchRegionImageSource
   : public ImageSource<Image<typename TMovingImage::RegionType, TMovingImage::ImageDimension>>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionSearchRegionImageSource);
+  ITK_DISALLOW_COPY_AND_MOVE(MultiResolutionSearchRegionImageSource);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, TMovingImage::ImageDimension);
+  static constexpr unsigned int ImageDimension = TMovingImage::ImageDimension;
 
   /** Type of the fixed image. */
   using FixedImageType = TFixedImage;
@@ -96,7 +96,7 @@ public:
   using DisplacementResamplerPointer = typename DisplacementResamplerType::Pointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MultiResolutionSearchRegionImageSource, ImageSource);
+  itkOverrideGetNameOfClassMacro(MultiResolutionSearchRegionImageSource);
 
   /** Set the fixed image. */
   void

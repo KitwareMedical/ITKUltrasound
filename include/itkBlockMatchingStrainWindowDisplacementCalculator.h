@@ -59,10 +59,10 @@ class ITK_TEMPLATE_EXPORT StrainWindowDisplacementCalculator
   : public MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(StrainWindowDisplacementCalculator);
+  ITK_DISALLOW_COPY_AND_MOVE(StrainWindowDisplacementCalculator);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, TDisplacementImage::ImageDimension);
+  static constexpr unsigned int ImageDimension = TDisplacementImage::ImageDimension;
 
   /** Standard class type alias. */
   using Self = StrainWindowDisplacementCalculator;
@@ -74,7 +74,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(StrainWindowDisplacementCalculator, MetricImageToDisplacementCalculator);
+  itkOverrideGetNameOfClassMacro(StrainWindowDisplacementCalculator);
 
   using DisplacementImageType = typename Superclass::DisplacementImageType;
   using RegionType = typename DisplacementImageType::RegionType;

@@ -37,7 +37,7 @@ template <typename TInputImage, typename TOutputImage = TInputImage>
 class ITK_TEMPLATE_EXPORT Spectra1DAveragingImageFilter : public ImageToImageFilter<TInputImage, TOutputImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(Spectra1DAveragingImageFilter);
+  ITK_DISALLOW_COPY_AND_MOVE(Spectra1DAveragingImageFilter);
 
   static constexpr unsigned int InputImageDimension = TInputImage::ImageDimension;
   static constexpr unsigned int OutputImageDimension = TOutputImage::ImageDimension;
@@ -57,7 +57,7 @@ public:
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
-  itkTypeMacro(Spectra1DAveragingImageFilter, ImageToImageFilter);
+  itkOverrideGetNameOfClassMacro(Spectra1DAveragingImageFilter);
   itkNewMacro(Self);
 
 #ifdef ITK_USE_CONCEPT_CHECKING

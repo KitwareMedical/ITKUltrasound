@@ -55,7 +55,7 @@ template <typename TFixedImage, typename TMovingImage, typename TMetricImage>
 class ITK_TEMPLATE_EXPORT MetricImageFilter : public ImageToImageFilter<TFixedImage, TMetricImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(MetricImageFilter);
+  ITK_DISALLOW_COPY_AND_MOVE(MetricImageFilter);
 
   /** Standard class type alias. */
   using Self = MetricImageFilter;
@@ -64,10 +64,10 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MetricImageFilter, ImageToImageFilter);
+  itkOverrideGetNameOfClassMacro(MetricImageFilter);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, TFixedImage::ImageDimension);
+  static constexpr unsigned int ImageDimension = TFixedImage::ImageDimension;
 
   /**  Type of the Fixed image. */
   using FixedImageType = TFixedImage;

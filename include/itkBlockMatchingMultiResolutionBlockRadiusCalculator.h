@@ -47,10 +47,10 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MultiResolutionBlockRadiusCalculator, Object);
+  itkOverrideGetNameOfClassMacro(MultiResolutionBlockRadiusCalculator);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, TFixedImage::ImageDimension);
+  static constexpr unsigned int ImageDimension = TFixedImage::ImageDimension;
 
   /** Type of the fixed image type. */
   using FixedImageType = TFixedImage;

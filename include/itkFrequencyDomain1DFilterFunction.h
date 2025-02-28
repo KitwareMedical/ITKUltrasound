@@ -44,7 +44,7 @@ public:
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
-  itkTypeMacro(FrequencyDomain1DFilterFunction, Object);
+  itkOverrideGetNameOfClassMacro(FrequencyDomain1DFilterFunction);
   itkNewMacro(Self);
 
 

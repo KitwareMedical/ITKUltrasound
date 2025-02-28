@@ -36,7 +36,7 @@ namespace itk
 class Ultrasound_EXPORT HDF5UltrasoundImageIOFactory : public ObjectFactoryBase
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(HDF5UltrasoundImageIOFactory);
+  ITK_DISALLOW_COPY_AND_MOVE(HDF5UltrasoundImageIOFactory);
 
   /** Standard class type alias. */
   using Self = HDF5UltrasoundImageIOFactory;
@@ -55,7 +55,7 @@ public:
   itkFactorylessNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(HDF5UltrasoundImageIOFactory, ObjectFactoryBase);
+  itkOverrideGetNameOfClassMacro(HDF5UltrasoundImageIOFactory);
 
   /** Register one factory of this type  */
   static void

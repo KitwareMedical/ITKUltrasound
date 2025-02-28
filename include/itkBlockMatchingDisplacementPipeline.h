@@ -69,10 +69,10 @@ class ITK_TEMPLATE_EXPORT DisplacementPipeline
                               Image<Vector<TMetricPixel, VImageDimension>, VImageDimension>>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(DisplacementPipeline);
+  ITK_DISALLOW_COPY_AND_MOVE(DisplacementPipeline);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, VImageDimension);
+  static constexpr unsigned int ImageDimension = VImageDimension;
 
   using FixedPixelType = TFixedPixel;
   using FixedImageType = Image<TFixedPixel, ImageDimension>;
@@ -95,7 +95,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(DisplacementPipeline, ImageToImageFilter);
+  itkOverrideGetNameOfClassMacro(DisplacementPipeline);
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

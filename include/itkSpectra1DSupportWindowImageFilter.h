@@ -55,9 +55,9 @@ class ITK_TEMPLATE_EXPORT Spectra1DSupportWindowImageFilter
                               Image<std::list<typename TInputImage::IndexType>, TInputImage::ImageDimension>>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(Spectra1DSupportWindowImageFilter);
+  ITK_DISALLOW_COPY_AND_MOVE(Spectra1DSupportWindowImageFilter);
 
-  itkStaticConstMacro(ImageDimension, unsigned int, TInputImage::ImageDimension);
+  static constexpr unsigned int ImageDimension = TInputImage::ImageDimension;
 
   using InputImageType = TInputImage;
   using IndexType = typename InputImageType::IndexType;
@@ -73,7 +73,7 @@ public:
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
-  itkTypeMacro(Spectra1DSupportWindowImageFilter, ImageToImageFilter);
+  itkOverrideGetNameOfClassMacro(Spectra1DSupportWindowImageFilter);
   itkNewMacro(Self);
 
   /** Set/Get the nominal size of the FFT.  This will be truncated at the

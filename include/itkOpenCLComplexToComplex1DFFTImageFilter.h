@@ -46,7 +46,7 @@ class ITK_TEMPLATE_EXPORT OpenCLComplexToComplex1DFFTImageFilter
   : public ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(OpenCLComplexToComplex1DFFTImageFilter);
+  ITK_DISALLOW_COPY_AND_MOVE(OpenCLComplexToComplex1DFFTImageFilter);
   using TPixel = typename NumericTraits<typename TInputImage::PixelType>::ValueType;
 
   using Self = OpenCLComplexToComplex1DFFTImageFilter;
@@ -64,7 +64,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(OpenCLComplexToComplex1DFFTImageFilter, FFT1DComplexToComplexImageFilter);
+  itkOverrideGetNameOfClassMacro(OpenCLComplexToComplex1DFFTImageFilter);
 
   SizeValueType
   GetSizeGreatestPrimeFactor() const override

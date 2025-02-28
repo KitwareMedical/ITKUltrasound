@@ -63,7 +63,7 @@ class ITK_TEMPLATE_EXPORT BayesianRegularizationDisplacementCalculator
   : public MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(BayesianRegularizationDisplacementCalculator);
+  ITK_DISALLOW_COPY_AND_MOVE(BayesianRegularizationDisplacementCalculator);
 
   /** Standard class type alias. */
   using Self = BayesianRegularizationDisplacementCalculator;
@@ -75,10 +75,10 @@ public:
   itkNewMacro(Self);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, TDisplacementImage::ImageDimension);
+  static constexpr unsigned int ImageDimension = TDisplacementImage::ImageDimension;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(BayesianRegularizationDisplacementCalculator, MetricImageToDisplacementCalculator);
+  itkOverrideGetNameOfClassMacro(BayesianRegularizationDisplacementCalculator);
 
   using MetricImageType = typename Superclass::MetricImageType;
   using MetricImagePointerType = typename Superclass::MetricImagePointerType;

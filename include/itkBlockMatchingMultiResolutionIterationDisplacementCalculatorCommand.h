@@ -38,7 +38,7 @@ class MultiResolutionIterationDisplacementCalculatorCommand
   : public MultiResolutionIterationCommand<TMultiResolutionMethod>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionIterationDisplacementCalculatorCommand);
+  ITK_DISALLOW_COPY_AND_MOVE(MultiResolutionIterationDisplacementCalculatorCommand);
 
   using Self = MultiResolutionIterationDisplacementCalculatorCommand;
   using Superclass = MultiResolutionIterationCommand<TMultiResolutionMethod>;

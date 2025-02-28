@@ -46,7 +46,7 @@ template <typename TOutputImage>
 class ITK_TEMPLATE_EXPORT UltrasoundImageFileReader : public ImageFileReader<TOutputImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(UltrasoundImageFileReader);
+  ITK_DISALLOW_COPY_AND_MOVE(UltrasoundImageFileReader);
 
   /** Standard class type alias.   */
   using Self = UltrasoundImageFileReader;
@@ -58,12 +58,12 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(UltrasoundImageFileReader, ImageFileReader);
+  itkOverrideGetNameOfClassMacro(UltrasoundImageFileReader);
 
   using OutputImageType = TOutputImage;
   using OutputImagePixelType = typename Superclass::OutputImagePixelType;
 
-  itkStaticConstMacro(ImageDimension, unsigned int, OutputImageType::ImageDimension);
+  static constexpr unsigned int ImageDimension = OutputImageType::ImageDimension;
 
 protected:
   UltrasoundImageFileReader();

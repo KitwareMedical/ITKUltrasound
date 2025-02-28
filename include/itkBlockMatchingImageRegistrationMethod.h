@@ -58,10 +58,10 @@ class ITK_TEMPLATE_EXPORT ImageRegistrationMethod
                               TDisplacementImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(ImageRegistrationMethod);
+  ITK_DISALLOW_COPY_AND_MOVE(ImageRegistrationMethod);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, TDisplacementImage::ImageDimension);
+  static constexpr unsigned int ImageDimension = TDisplacementImage::ImageDimension;
 
   /** Type of the fixed image. */
   using FixedImageType = TFixedImage;
@@ -101,7 +101,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ImageRegistrationMethod, ImageSource);
+  itkOverrideGetNameOfClassMacro(ImageRegistrationMethod);
 
   /** Type of the point use for determing the location in the fixed image of a
    * block's center. */

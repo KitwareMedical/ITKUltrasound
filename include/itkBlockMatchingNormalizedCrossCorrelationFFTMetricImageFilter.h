@@ -58,10 +58,10 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(NormalizedCrossCorrelationFFTMetricImageFilter, NormalizedCrossCorrelationMetricImageFilter);
+  itkOverrideGetNameOfClassMacro(NormalizedCrossCorrelationFFTMetricImageFilter);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, TFixedImage::ImageDimension);
+  static constexpr unsigned int ImageDimension = TFixedImage::ImageDimension;
 
   /** Type of the fixed image. */
   using FixedImageType = typename Superclass::FixedImageType;

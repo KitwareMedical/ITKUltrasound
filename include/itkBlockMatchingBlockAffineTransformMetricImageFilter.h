@@ -55,12 +55,12 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(BlockAffineTransformMetricImageFilter, MetricImageFilter);
+  itkOverrideGetNameOfClassMacro(BlockAffineTransformMetricImageFilter);
 
   itkNewMacro(Self);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
+  static constexpr unsigned int ImageDimension = Superclass::ImageDimension;
 
   /** Type of the fixed image. */
   using FixedImageType = typename Superclass::FixedImageType;
@@ -86,7 +86,7 @@ public:
   using TransformType = AffineTransform<MetricImagePixelType, ImageDimension>;
 
   /** Type of the interpolator. */
-  itkStaticConstMacro(SincWindowRadius, unsigned int, 4);
+  static constexpr unsigned int SincWindowRadius = 4;
   using SincWindowType = Function::LanczosWindowFunction<SincWindowRadius>;
   using SincWindowBoundaryConditionType = ZeroFluxNeumannBoundaryCondition<FixedImageType>;
   using InterpolatorType = WindowedSincInterpolateImageFunction<FixedImageType,

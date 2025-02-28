@@ -50,13 +50,13 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information ( and related methods ). */
-  itkTypeMacro(MultiResolutionFixedBlockRadiusCalculator, MultiResolutionBlockRadiusCalculator);
+  itkOverrideGetNameOfClassMacro(MultiResolutionFixedBlockRadiusCalculator);
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
+  static constexpr unsigned int ImageDimension = Superclass::ImageDimension;
 
   /** Type of the fixed image. */
   using FixedImageType = typename Superclass::FixedImageType;

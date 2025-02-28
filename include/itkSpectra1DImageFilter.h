@@ -63,9 +63,9 @@ template <typename TInputImage, typename TSupportWindowImage, typename TOutputIm
 class ITK_TEMPLATE_EXPORT Spectra1DImageFilter : public ImageToImageFilter<TInputImage, TOutputImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(Spectra1DImageFilter);
+  ITK_DISALLOW_COPY_AND_MOVE(Spectra1DImageFilter);
 
-  itkStaticConstMacro(ImageDimension, unsigned int, TInputImage::ImageDimension);
+  static constexpr unsigned int ImageDimension = TInputImage::ImageDimension;
 
   using InputImageType = TInputImage;
   using SupportWindowImageType = TSupportWindowImage;
@@ -79,7 +79,7 @@ public:
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
-  itkTypeMacro(Spectra1DImageFilter, ImageToImageFilter);
+  itkOverrideGetNameOfClassMacro(Spectra1DImageFilter);
   itkNewMacro(Self);
 
   /** Set/get the input image describing support windows for local spectra

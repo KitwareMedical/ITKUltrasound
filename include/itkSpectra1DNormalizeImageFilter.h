@@ -34,7 +34,7 @@ template <typename TInputImage, typename TReferenceImage>
 class ITK_TEMPLATE_EXPORT Spectra1DNormalizeImageFilter : public ImageToImageFilter<TInputImage, TInputImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(Spectra1DNormalizeImageFilter);
+  ITK_DISALLOW_COPY_AND_MOVE(Spectra1DNormalizeImageFilter);
 
   /** Standard class type alias. */
   using InputImageType = TInputImage;
@@ -42,14 +42,14 @@ public:
   using OutputImageRegionType = typename OutputImageType::RegionType;
   using ReferenceImageType = TReferenceImage;
 
-  itkStaticConstMacro(ImageDimension, unsigned int, InputImageType::ImageDimension);
+  static constexpr unsigned int ImageDimension = InputImageType::ImageDimension;
 
   using Self = Spectra1DNormalizeImageFilter;
   using Superclass = ImageToImageFilter<InputImageType, OutputImageType>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
-  itkTypeMacro(Spectra1DNormalizeImageFilter, ImageToImageFilter);
+  itkOverrideGetNameOfClassMacro(Spectra1DNormalizeImageFilter);
   itkNewMacro(Self);
 
   void

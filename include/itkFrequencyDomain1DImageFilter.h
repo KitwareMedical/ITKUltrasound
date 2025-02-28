@@ -41,21 +41,21 @@ template <typename TInputImage, typename TOutputImage = TInputImage>
 class ITK_TEMPLATE_EXPORT FrequencyDomain1DImageFilter : public ImageToImageFilter<TInputImage, TOutputImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(FrequencyDomain1DImageFilter);
+  ITK_DISALLOW_COPY_AND_MOVE(FrequencyDomain1DImageFilter);
 
   /** Standard class type alias. */
   using InputImageType = TInputImage;
   using OutputImageType = TOutputImage;
   using OutputImageRegionType = typename OutputImageType::RegionType;
 
-  itkStaticConstMacro(ImageDimension, unsigned int, InputImageType::ImageDimension);
+  static constexpr unsigned int ImageDimension = InputImageType::ImageDimension;
 
   using Self = FrequencyDomain1DImageFilter;
   using Superclass = ImageToImageFilter<InputImageType, OutputImageType>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
-  itkTypeMacro(FrequencyDomain1DImageFilter, ImageToImageFilter);
+  itkOverrideGetNameOfClassMacro(FrequencyDomain1DImageFilter);
   itkNewMacro(Self);
 
 

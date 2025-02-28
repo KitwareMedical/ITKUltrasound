@@ -240,7 +240,7 @@ public:
   itkNewMacro(Self);
 
   /** Runtime information support. */
-  itkTypeMacro(BoxSigmaSqrtNMinusOneImageFilter, BoxImageFilter);
+  itkOverrideGetNameOfClassMacro(BoxSigmaSqrtNMinusOneImageFilter);
 
   /** Image related type alias. */
   using InputImageType = TInputImage;
@@ -254,15 +254,15 @@ public:
   using OutputPixelType = typename TOutputImage::PixelType;
 
   /** Image related type alias. */
-  itkStaticConstMacro(OutputImageDimension, unsigned int, TOutputImage::ImageDimension);
-  itkStaticConstMacro(InputImageDimension, unsigned int, TInputImage::ImageDimension);
+  static constexpr unsigned int OutputImageDimension = TOutputImage::ImageDimension;
+  static constexpr unsigned int InputImageDimension = TInputImage::ImageDimension;
 
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   /** Begin concept checking */
   itkConceptMacro(SameDimension,
-                  (Concept::SameDimension<itkGetStaticConstMacro(InputImageDimension),
-                                          itkGetStaticConstMacro(OutputImageDimension)>));
+                  (Concept::SameDimension<Self::InputImageDimension,
+                                          Self::OutputImageDimension)>);
 
 
   /** End concept checking */

@@ -101,7 +101,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(CurvilinearArraySpecialCoordinatesImage, SpecialCoordinatesImage);
+  itkOverrideGetNameOfClassMacro(CurvilinearArraySpecialCoordinatesImage);
 
   /** Pixel type alias support. Used to declare pixel type in filters
    * or other operations. */
@@ -135,7 +135,7 @@ public:
    * templated over image type (as opposed to being templated over pixel type
    * and dimension) when they need compile time access to the dimension of
    * the image. */
-  itkStaticConstMacro(ImageDimension, unsigned int, VDimension);
+  static constexpr unsigned int ImageDimension = VDimension;
 
   /** Index type alias support. An index is used to access pixel values. */
   using IndexType = typename Superclass::IndexType;

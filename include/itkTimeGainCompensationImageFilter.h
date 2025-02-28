@@ -38,7 +38,7 @@ template <typename TInputImage, typename TOutputImage = TInputImage>
 class ITK_TEMPLATE_EXPORT TimeGainCompensationImageFilter : public ImageToImageFilter<TInputImage, TOutputImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(TimeGainCompensationImageFilter);
+  ITK_DISALLOW_COPY_AND_MOVE(TimeGainCompensationImageFilter);
 
   /** Standard class type alias. */
   using InputImageType = TInputImage;
@@ -50,7 +50,7 @@ public:
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
-  itkTypeMacro(TimeGainCompensationImageFilter, ImageToImageFilter);
+  itkOverrideGetNameOfClassMacro(TimeGainCompensationImageFilter);
   itkNewMacro(Self);
 
   using GainType = Array2D<double>;

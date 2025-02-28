@@ -48,7 +48,7 @@ class ITK_TEMPLATE_EXPORT NormalizedCrossCorrelationMetricImageFilter
   : public MetricImageFilter<TFixedImage, TMovingImage, TMetricImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(NormalizedCrossCorrelationMetricImageFilter);
+  ITK_DISALLOW_COPY_AND_MOVE(NormalizedCrossCorrelationMetricImageFilter);
 
   /** Standard class type alias. */
   using Self = NormalizedCrossCorrelationMetricImageFilter;
@@ -57,10 +57,10 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(NormalizedCrossCorrelationMetricImageFilter, MetricImageFilter);
+  itkOverrideGetNameOfClassMacro(NormalizedCrossCorrelationMetricImageFilter);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
+  static constexpr unsigned int ImageDimension = Superclass::ImageDimension;
 
   /** Type of the fixed image. */
   using FixedImageType = typename Superclass::FixedImageType;

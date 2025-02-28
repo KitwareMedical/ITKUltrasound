@@ -47,7 +47,7 @@ class ITK_TEMPLATE_EXPORT OptimizingInterpolationDisplacementCalculator
   : public MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(OptimizingInterpolationDisplacementCalculator);
+  ITK_DISALLOW_COPY_AND_MOVE(OptimizingInterpolationDisplacementCalculator);
 
   /** Standard class type alias. */
   using Self = OptimizingInterpolationDisplacementCalculator;
@@ -56,13 +56,13 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
+  static constexpr unsigned int ImageDimension = Superclass::ImageDimension;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(OptimizingInterpolationDisplacementCalculator, MetricImageToDisplacementCalculator);
+  itkOverrideGetNameOfClassMacro(OptimizingInterpolationDisplacementCalculator);
 
   using MetricImageType = typename Superclass::MetricImageType;
   using MetricImagePointerType = typename Superclass::MetricImagePointerType;
@@ -125,7 +125,7 @@ public:
 
     using Pointer = SmartPointer<Self>;
 
-    itkTypeMacro(OptimizingInterpolationCostFunction, SingleValuedCostFunction);
+    itkOverrideGetNameOfClassMacro(OptimizingInterpolationCostFunction);
 
     itkNewMacro(Self);
 

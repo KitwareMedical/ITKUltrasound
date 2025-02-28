@@ -55,10 +55,10 @@ template <typename TFixedImage,
 class ITK_TEMPLATE_EXPORT MultiResolutionImageRegistrationMethod : public ImageSource<TDisplacementImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionImageRegistrationMethod);
+  ITK_DISALLOW_COPY_AND_MOVE(MultiResolutionImageRegistrationMethod);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, TDisplacementImage::ImageDimension);
+  static constexpr unsigned int ImageDimension = TDisplacementImage::ImageDimension;
 
   /** Type of the fixed image. */
   using FixedImageType = TFixedImage;
@@ -100,7 +100,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MultiResolutionImageRegistrationMethod, ImageSource);
+  itkOverrideGetNameOfClassMacro(MultiResolutionImageRegistrationMethod);
 
   /** Type of the Fixed image multiresolution pyramid. */
   using FixedImagePyramidType = MultiResolutionPyramidImageFilter<FixedImageType, FixedImageType>;

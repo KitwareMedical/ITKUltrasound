@@ -40,7 +40,7 @@ class ITK_TEMPLATE_EXPORT ParabolicInterpolationDisplacementCalculator
   : public MetricImageToDisplacementCalculator<TMetricImage, TDisplacementImage>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(ParabolicInterpolationDisplacementCalculator);
+  ITK_DISALLOW_COPY_AND_MOVE(ParabolicInterpolationDisplacementCalculator);
 
   /** Standard class type alias. */
   using Self = ParabolicInterpolationDisplacementCalculator;
@@ -49,13 +49,13 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
+  static constexpr unsigned int ImageDimension = Superclass::ImageDimension;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ParabolicInterpolationDisplacementCalculator, MetricImageToDisplacementCalculator);
+  itkOverrideGetNameOfClassMacro(ParabolicInterpolationDisplacementCalculator);
 
   using MetricImageType = typename Superclass::MetricImageType;
   using MetricImagePointerType = typename Superclass::MetricImagePointerType;

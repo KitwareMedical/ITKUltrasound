@@ -43,7 +43,7 @@ template <typename TMultiResolutionMethod>
 class MultiResolutionIterationObserver : public MultiResolutionIterationCommand<TMultiResolutionMethod>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(MultiResolutionIterationObserver);
+  ITK_DISALLOW_COPY_AND_MOVE(MultiResolutionIterationObserver);
 
   using Self = MultiResolutionIterationObserver;
   using Superclass = MultiResolutionIterationCommand<TMultiResolutionMethod>;

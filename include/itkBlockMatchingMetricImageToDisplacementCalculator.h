@@ -58,7 +58,7 @@ template <typename TMetricImage, typename TDisplacementImage>
 class ITK_TEMPLATE_EXPORT MetricImageToDisplacementCalculator : public Object
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(MetricImageToDisplacementCalculator);
+  ITK_DISALLOW_COPY_AND_MOVE(MetricImageToDisplacementCalculator);
 
   /** Standard class type alias. */
   using Self = MetricImageToDisplacementCalculator;
@@ -67,7 +67,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MetricImageToDisplacementCalculator, Object);
+  itkOverrideGetNameOfClassMacro(MetricImageToDisplacementCalculator);
 
   /** Type of the metric image (input pixels). */
   using MetricImageType = TMetricImage;
@@ -81,7 +81,7 @@ public:
   using PointType = typename DisplacementImageType::PointType;
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, TDisplacementImage::ImageDimension);
+  static constexpr unsigned int ImageDimension = TDisplacementImage::ImageDimension;
 
   /** Type of an image of center points of the fixed image blocks. */
   using CenterPointsImageType = itk::Image<PointType, ImageDimension>;

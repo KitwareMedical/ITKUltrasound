@@ -36,7 +36,7 @@ template <typename TInputImage>
 class ITK_TEMPLATE_EXPORT SpecialCoordinatesImageToVTKStructuredGridFilter : public ProcessObject
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(SpecialCoordinatesImageToVTKStructuredGridFilter);
+  ITK_DISALLOW_COPY_AND_MOVE(SpecialCoordinatesImageToVTKStructuredGridFilter);
 
   /** Standard class type alias. */
   using Self = SpecialCoordinatesImageToVTKStructuredGridFilter;
@@ -48,14 +48,14 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(SpecialCoordinatesImageToVTKStructuredGridFilter, ProcessObject);
+  itkOverrideGetNameOfClassMacro(SpecialCoordinatesImageToVTKStructuredGridFilter);
 
   using InputImageType = TInputImage;
 
   using StructuredGridPointerType = vtkSmartPointer<vtkStructuredGrid>;
   using DecoratedStructuredGridPointerType = SimpleDataObjectDecorator<StructuredGridPointerType>;
 
-  itkStaticConstMacro(ImageDimension, unsigned int, InputImageType::ImageDimension);
+  static constexpr unsigned int ImageDimension = InputImageType::ImageDimension;
 
 
   using Superclass::SetInput;

@@ -63,7 +63,7 @@ public:
   using InputImageType = TInputImage;
 
   /** Dimension of the input and output images. */
-  itkStaticConstMacro(ImageDimension, unsigned int, TInputImage::ImageDimension);
+  static constexpr unsigned int ImageDimension = TInputImage::ImageDimension;
 
   /** Typedef support for the input image scalar value type. */
   using InputPixelType = typename InputImageType::PixelType;
@@ -84,7 +84,7 @@ public:
   using InputIndexType = typename InputImageType::IndexType;
 
   /** Run-time type information (and related methods) */
-  itkTypeMacro(BModeImageFilter, ImageToImageFilter);
+  itkOverrideGetNameOfClassMacro(BModeImageFilter);
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

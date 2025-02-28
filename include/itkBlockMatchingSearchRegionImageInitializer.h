@@ -43,10 +43,10 @@ class ITK_TEMPLATE_EXPORT SearchRegionImageInitializer
   : public ImageSource<Image<typename TMovingImage::RegionType, TMovingImage::ImageDimension>>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(SearchRegionImageInitializer);
+  ITK_DISALLOW_COPY_AND_MOVE(SearchRegionImageInitializer);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, TMovingImage::ImageDimension);
+  static constexpr unsigned int ImageDimension = TMovingImage::ImageDimension;
 
   /** Type of the fixed image. */
   using FixedImageType = TFixedImage;
@@ -73,7 +73,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(SearchRegionImageInitializer, ImageSource);
+  itkOverrideGetNameOfClassMacro(SearchRegionImageInitializer);
 
   /** Set the fixed image. */
   void

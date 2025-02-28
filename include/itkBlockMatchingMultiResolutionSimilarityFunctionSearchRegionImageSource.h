@@ -82,7 +82,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int, TMovingImage::ImageDimension);
+  static constexpr unsigned int ImageDimension = TMovingImage::ImageDimension;
 
   /** Type of the fixed image. */
   using FixedImageType = TFixedImage;
@@ -138,7 +138,7 @@ public:
   using RadiusFactorType = FixedArray<double, ImageDimension>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MultiResolutionSimilarityFunctionSearchRegionImageSource, MultiResolutionFixedSearchRegionImageSource);
+  itkOverrideGetNameOfClassMacro(MultiResolutionSimilarityFunctionSearchRegionImageSource);
 
   /** New macro for creation of through a Smart Pointer is not used because of
    * ambiguities with LightObject. */
