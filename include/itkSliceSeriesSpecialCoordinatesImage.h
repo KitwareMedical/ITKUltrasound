@@ -473,7 +473,6 @@ public:
       if (index[ImageDimension - 1] < largestIndex[ImageDimension - 1])
       {
         point[ImageDimension - 1] = index[ImageDimension - 1] - largestIndex[ImageDimension - 1];
-        point = transform->TransformPoint(point);
         return;
       }
 
@@ -482,7 +481,6 @@ public:
       {
         point[ImageDimension - 1] =
           index[ImageDimension - 1] - largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1;
-        point = transform->TransformPoint(point);
       }
       return;
     }
@@ -500,7 +498,6 @@ public:
       if (index[ImageDimension - 1] < largestIndex[ImageDimension - 1])
       {
         point[ImageDimension - 1] = index[ImageDimension - 1] - largestIndex[ImageDimension - 1];
-        point = transform->TransformPoint(point);
         return;
       }
 
@@ -509,7 +506,6 @@ public:
       {
         point[ImageDimension - 1] =
           index[ImageDimension - 1] - largestIndex[ImageDimension - 1] + largestSize[ImageDimension - 1] - 1;
-        point = transform->TransformPoint(point);
       }
       return;
     }
