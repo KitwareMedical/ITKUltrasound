@@ -108,7 +108,7 @@ Spectra1DNormalizeImageFilter<TInputImage, TReferenceImage>::DynamicThreadedGene
   {
     while (!iIt.IsAtEndOfLine())
     {
-      ind1[0] = iIt.GetIndex()[0]; // set the index along the depth dimension
+      ind1[0] = iIt.ComputeIndex()[0]; // set the index along the depth dimension
 
       oIt.Set(ElementWiseDivide(iIt.Get(), reference->GetPixel(ind1)));
 

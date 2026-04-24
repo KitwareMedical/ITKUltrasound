@@ -104,7 +104,7 @@ BackscatterImageFilter<TInputImage, TOutputImage>::DynamicThreadedGenerateData(c
   {
     while (!it.IsAtEndOfLine())
     {
-      InputIndexType index = it.GetIndex();
+      InputIndexType index = it.ComputeIndex();
 
       // Pass output pixel references directly
       ComputeBackscatter(

@@ -179,7 +179,7 @@ Spectra1DAveragingImageFilter<TInputImage, TOutputImage>::GenerateData()
       {
         while (!iIt.IsAtEndOfLine())
         {
-          ind1[0] = iIt.GetIndex()[0]; // set the index along the depth dimension
+          ind1[0] = iIt.ComputeIndex()[0]; // set the index along the depth dimension
 
           OutputPixelType p = output->GetPixel(ind1);
           p += iIt.Get();
