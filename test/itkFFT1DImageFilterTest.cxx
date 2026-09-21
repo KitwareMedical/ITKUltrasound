@@ -25,8 +25,17 @@
 #include "itkForward1DFFTImageFilter.h"
 #include "itkInverse1DFFTImageFilter.h"
 
-#include "itkVnlForward1DFFTImageFilter.h"
-#include "itkVnlInverse1DFFTImageFilter.h"
+#if ITK_VERSION_MAJOR >= 6
+#  include "itkPocketFFTForward1DFFTImageFilter.h"
+#  include "itkPocketFFTInverse1DFFTImageFilter.h"
+#  define ITKULTRASOUND_FORWARD_1DFFT PocketFFTForward1DFFTImageFilter
+#  define ITKULTRASOUND_INVERSE_1DFFT PocketFFTInverse1DFFTImageFilter
+#else
+#  include "itkVnlForward1DFFTImageFilter.h"
+#  include "itkVnlInverse1DFFTImageFilter.h"
+#  define ITKULTRASOUND_FORWARD_1DFFT VnlForward1DFFTImageFilter
+#  define ITKULTRASOUND_INVERSE_1DFFT VnlInverse1DFFTImageFilter
+#endif
 #if defined(ITK_USE_FFTWD) || defined(ITK_USE_FFTWF)
 #  include "itkFFTWForward1DFFTImageFilter.h"
 #  include "itkFFTWInverse1DFFTImageFilter.h"
@@ -115,8 +124,8 @@ itkFFT1DImageFilterTest(int argc, char * argv[])
   }
   else if (backend == 1)
   {
-    using FFTForwardType = itk::VnlForward1DFFTImageFilter<ImageType, ComplexImageType>;
-    using FFTInverseType = itk::VnlInverse1DFFTImageFilter<ComplexImageType, ImageType>;
+    using FFTForwardType = itk::ITKULTRASOUND_FORWARD_1DFFT<ImageType, ComplexImageType>;
+    using FFTInverseType = itk::ITKULTRASOUND_INVERSE_1DFFT<ComplexImageType, ImageType>;
     return doTest<FFTForwardType, FFTInverseType>(argv[1], argv[2]);
   }
   else if (backend == 2)

@@ -24,7 +24,13 @@
 #include "itkImageFileWriter.h"
 
 #include "itkInverse1DFFTImageFilter.h"
-#include "itkVnlInverse1DFFTImageFilter.h"
+#if ITK_VERSION_MAJOR >= 6
+#  include "itkPocketFFTInverse1DFFTImageFilter.h"
+#  define ITKULTRASOUND_INVERSE_1DFFT PocketFFTInverse1DFFTImageFilter
+#else
+#  include "itkVnlInverse1DFFTImageFilter.h"
+#  define ITKULTRASOUND_INVERSE_1DFFT VnlInverse1DFFTImageFilter
+#endif
 #if defined(ITK_USE_FFTWD) || defined(ITK_USE_FFTWF)
 #  include "itkFFTWInverse1DFFTImageFilter.h"
 #endif
@@ -108,7 +114,7 @@ itkInverse1DFFTImageFilterTest(int argc, char * argv[])
   }
   else if (backend == 1)
   {
-    using FFTInverseType = itk::VnlInverse1DFFTImageFilter<ComplexImageType, ImageType>;
+    using FFTInverseType = itk::ITKULTRASOUND_INVERSE_1DFFT<ComplexImageType, ImageType>;
     return doTest<FFTInverseType>(argv[1], argv[2]);
   }
   else if (backend == 2)

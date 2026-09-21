@@ -25,7 +25,13 @@
 #include "itkImageFileWriter.h"
 
 #include "itkForward1DFFTImageFilter.h"
-#include "itkVnlForward1DFFTImageFilter.h"
+#if ITK_VERSION_MAJOR >= 6
+#  include "itkPocketFFTForward1DFFTImageFilter.h"
+#  define ITKULTRASOUND_FORWARD_1DFFT PocketFFTForward1DFFTImageFilter
+#else
+#  include "itkVnlForward1DFFTImageFilter.h"
+#  define ITKULTRASOUND_FORWARD_1DFFT VnlForward1DFFTImageFilter
+#endif
 #if defined(ITK_USE_FFTWD) || defined(ITK_USE_FFTWF)
 #  include "itkFFTWForward1DFFTImageFilter.h"
 #endif
@@ -113,7 +119,7 @@ itkForward1DFFTImageFilterTest(int argc, char * argv[])
   }
   else if (backend == 1)
   {
-    using FFTForwardType = itk::VnlForward1DFFTImageFilter<ImageType, ComplexImageType>;
+    using FFTForwardType = itk::ITKULTRASOUND_FORWARD_1DFFT<ImageType, ComplexImageType>;
     return doTest<FFTForwardType>(argv[1], argv[2]);
   }
   else if (backend == 2)

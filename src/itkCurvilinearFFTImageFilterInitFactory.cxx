@@ -19,9 +19,23 @@
 
 #include "itkObjectFactoryBase.h"
 #include "itkFFTImageFilterFactory.h"
-#include "itkVnlComplexToComplex1DFFTImageFilter.h"
-#include "itkVnlForward1DFFTImageFilter.h"
-#include "itkVnlInverse1DFFTImageFilter.h"
+#include "itkMacro.h"
+
+#if ITK_VERSION_MAJOR >= 6
+#  include "itkPocketFFTComplexToComplex1DFFTImageFilter.h"
+#  include "itkPocketFFTForward1DFFTImageFilter.h"
+#  include "itkPocketFFTInverse1DFFTImageFilter.h"
+#  define ITKULTRASOUND_COMPLEX_TO_COMPLEX_1DFFT PocketFFTComplexToComplex1DFFTImageFilter
+#  define ITKULTRASOUND_FORWARD_1DFFT PocketFFTForward1DFFTImageFilter
+#  define ITKULTRASOUND_INVERSE_1DFFT PocketFFTInverse1DFFTImageFilter
+#else
+#  include "itkVnlComplexToComplex1DFFTImageFilter.h"
+#  include "itkVnlForward1DFFTImageFilter.h"
+#  include "itkVnlInverse1DFFTImageFilter.h"
+#  define ITKULTRASOUND_COMPLEX_TO_COMPLEX_1DFFT VnlComplexToComplex1DFFTImageFilter
+#  define ITKULTRASOUND_FORWARD_1DFFT VnlForward1DFFTImageFilter
+#  define ITKULTRASOUND_INVERSE_1DFFT VnlInverse1DFFTImageFilter
+#endif
 
 #include "itkCurvilinearArraySpecialCoordinatesImage.h"
 #include "itkCurvilinearFFTImageFilterInitFactory.h"
@@ -37,21 +51,23 @@ void
 CurvilinearFFTImageFilterInitFactory::RegisterFactories()
 {
   // Curvilinear -> Curvilinear
-  itk::ObjectFactoryBase::RegisterFactory(FFTImageFilterFactory<VnlComplexToComplex1DFFTImageFilter,
+  itk::ObjectFactoryBase::RegisterFactory(FFTImageFilterFactory<ITKULTRASOUND_COMPLEX_TO_COMPLEX_1DFFT,
                                                                 itk::CurvilinearArraySpecialCoordinatesImage,
                                                                 itk::CurvilinearArraySpecialCoordinatesImage>::New());
-  itk::ObjectFactoryBase::RegisterFactory(FFTImageFilterFactory<VnlForward1DFFTImageFilter,
+  itk::ObjectFactoryBase::RegisterFactory(FFTImageFilterFactory<ITKULTRASOUND_FORWARD_1DFFT,
                                                                 itk::CurvilinearArraySpecialCoordinatesImage,
                                                                 itk::CurvilinearArraySpecialCoordinatesImage>::New());
-  itk::ObjectFactoryBase::RegisterFactory(FFTImageFilterFactory<VnlInverse1DFFTImageFilter,
+  itk::ObjectFactoryBase::RegisterFactory(FFTImageFilterFactory<ITKULTRASOUND_INVERSE_1DFFT,
                                                                 itk::CurvilinearArraySpecialCoordinatesImage,
                                                                 itk::CurvilinearArraySpecialCoordinatesImage>::New());
   // Curvilinear -> Image
-  itk::ObjectFactoryBase::RegisterFactory(
-    FFTImageFilterFactory<VnlForward1DFFTImageFilter, itk::CurvilinearArraySpecialCoordinatesImage, itk::Image>::New());
+  itk::ObjectFactoryBase::RegisterFactory(FFTImageFilterFactory<ITKULTRASOUND_FORWARD_1DFFT,
+                                                                itk::CurvilinearArraySpecialCoordinatesImage,
+                                                                itk::Image>::New());
   // Image -> Curvilinear
-  itk::ObjectFactoryBase::RegisterFactory(
-    FFTImageFilterFactory<VnlInverse1DFFTImageFilter, itk::Image, itk::CurvilinearArraySpecialCoordinatesImage>::New());
+  itk::ObjectFactoryBase::RegisterFactory(FFTImageFilterFactory<ITKULTRASOUND_INVERSE_1DFFT,
+                                                                itk::Image,
+                                                                itk::CurvilinearArraySpecialCoordinatesImage>::New());
 }
 
 // Undocumented API used to register during static initialization.
