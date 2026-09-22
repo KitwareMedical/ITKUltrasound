@@ -22,8 +22,14 @@
 #include "itkDefaultConvertPixelTraits.h"
 #include "itkImageRegionConstIterator.h"
 
-#include "vnl/algo/vnl_fft_base.h"
-#include "vnl/algo/vnl_fft_1d.h"
+#include "itkMacro.h"
+
+#if ITK_VERSION_MAJOR >= 6
+#  include "itk_pocketfft.h"
+#else
+#  include "vnl/algo/vnl_fft_base.h"
+#  include "vnl/algo/vnl_fft_1d.h"
+#endif
 
 #include <utility>
 
@@ -116,7 +122,30 @@ private:
   using SpectraLinesContainerType = std::list<SpectraLineType>;
   using SupportWindowType = typename SupportWindowImageType::PixelType;
   using InputImageIteratorType = ImageRegionConstIterator<InputImageType>;
+#if ITK_VERSION_MAJOR >= 6
+  // exp(+i) and no normalization, matching what vnl_fft_1d::bwd_transform computed.
+  struct FFT1DType
+  {
+    explicit FFT1DType(SizeValueType length)
+      : m_Length(length)
+    {}
+
+    void
+    bwd_transform(vnl_vector<std::complex<ScalarType>> & signal) const
+    {
+      const itk::detail::pocketfft::shape_t  shape{ static_cast<std::size_t>(m_Length) };
+      const itk::detail::pocketfft::stride_t stride{ static_cast<std::ptrdiff_t>(sizeof(std::complex<ScalarType>)) };
+      const itk::detail::pocketfft::shape_t  axes{ 0 };
+      itk::detail::pocketfft::c2c(
+        shape, stride, stride, axes, true, signal.data_block(), signal.data_block(), ScalarType{ 1 });
+    }
+
+  private:
+    SizeValueType m_Length;
+  };
+#else
   using FFT1DType = vnl_fft_1d<ScalarType>;
+#endif
 
   using Spectra1DSupportWindowFilterType = Spectra1DSupportWindowImageFilter<InputImageType>;
   using FFT1DSizeType = typename Spectra1DSupportWindowFilterType::FFT1DSizeType;

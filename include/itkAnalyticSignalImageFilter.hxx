@@ -19,8 +19,15 @@
 #define itkAnalyticSignalImageFilter_hxx
 
 
-#include "itkVnlForward1DFFTImageFilter.h"
-#include "itkVnlComplexToComplex1DFFTImageFilter.h"
+#include "itkMacro.h"
+
+#if ITK_VERSION_MAJOR >= 6
+#  include "itkPocketFFTForward1DFFTImageFilter.h"
+#  include "itkPocketFFTComplexToComplex1DFFTImageFilter.h"
+#else
+#  include "itkVnlForward1DFFTImageFilter.h"
+#  include "itkVnlComplexToComplex1DFFTImageFilter.h"
+#endif
 
 #if defined(ITK_USE_FFTWD) || defined(ITK_USE_FFTWF)
 #  include "itkFFTWForward1DFFTImageFilter.h"
