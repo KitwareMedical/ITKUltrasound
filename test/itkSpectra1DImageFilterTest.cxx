@@ -27,10 +27,10 @@
 int
 itkSpectra1DImageFilterTest(int argc, char * argv[])
 {
-  if (argc < 3)
+  if (argc < 4)
   {
     std::cerr << "Usage: " << argv[0];
-    std::cerr << " inputImage outputImage";
+    std::cerr << " inputImage referenceSpectra outputImage";
     std::cerr << std::endl;
     return EXIT_FAILURE;
   }
