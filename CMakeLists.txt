@@ -35,8 +35,9 @@ if(ITKUltrasound_USE_clFFT)
   ")
 endif()
 
-# required VTK version
-find_package(VTK NO_MODULE QUIET)
+# Optional VTK support. Keep version in sync with itk-module-init.cmake.
+set(ITKUltrasound_VTK_MINIMUM_VERSION 9.1)
+find_package(VTK ${ITKUltrasound_VTK_MINIMUM_VERSION} NO_MODULE QUIET)
 set(itkultrasound_use_vtk_default OFF)
 if(VTK_FOUND)
   set(itkultrasound_use_vtk_default ON)
@@ -45,62 +46,29 @@ option(ITKUltrasound_USE_VTK "Build ITKUltrasound filters that require VTK." ${i
 mark_as_advanced(ITKUltrasound_USE_VTK)
 
 if(ITKUltrasound_USE_VTK)
-  find_package(VTK NO_MODULE REQUIRED)
-
-  # Add compiler flags needed to use VTK.
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${VTK_REQUIRED_C_FLAGS}")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${VTK_REQUIRED_CXX_FLAGS}")
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${VTK_REQUIRED_EXE_LINKER_FLAGS}")
-  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${VTK_REQUIRED_SHARED_LINKER_FLAGS}")
-  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${VTK_REQUIRED_MODULE_LINKER_FLAGS}")
-
-  vtk_module_config(Ultrasound_VTK
-    vtkCommonDataModel
-    vtkIOLegacy
+  find_package(VTK ${ITKUltrasound_VTK_MINIMUM_VERSION} NO_MODULE REQUIRED
+    COMPONENTS
+      CommonCore
+      CommonDataModel
+      IOLegacy # vtkStructuredGridWriter, used by the tests
     )
 
-  list(APPEND Ultrasound_LIBRARIES ${VTK_LIBRARIES})
+  # itkSpecialCoordinatesImageToVTKStructuredGridFilter is header-only, so
+  # consumers of this module need VTK's usage requirements.
+  list(APPEND Ultrasound_LIBRARIES VTK::CommonCore VTK::CommonDataModel)
 
-  # The VTK DICOMParser and vtkmetaio includes conflict with the ITK
-  # versions. Here we remove them from the include directories.
-  #
-  string(REGEX REPLACE "[^;]*MetaIO;"
-           "" Ultrasound_VTK_INCLUDE_DIRS "${Ultrasound_VTK_INCLUDE_DIRS}")
-  string(REGEX REPLACE "[^;]*vtkmetaio;"
-           "" Ultrasound_VTK_INCLUDE_DIRS "${Ultrasound_VTK_INCLUDE_DIRS}")
-  string(REGEX REPLACE "[^;]*DICOMParser;"
-           "" Ultrasound_VTK_INCLUDE_DIRS "${Ultrasound_VTK_INCLUDE_DIRS}")
-
-  # Set up the include and library dirs needed for the module
-  # Use append syntax to avoid overwriting possible clFFT-related content
-  list(APPEND Ultrasound_SYSTEM_INCLUDE_DIRS ${Ultrasound_VTK_INCLUDE_DIRS})
-  list(APPEND Ultrasound_SYSTEM_LIBRARY_DIRS ${Ultrasound_VTK_LIBRARY_DIRS})
-
-  # Add preprocessor definitions needed to use VTK.
-  set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS ${Ultrasound_VTK_DEFINITIONS})
-
-  set(Ultrasound_EXPORT_CODE_INSTALL "
-  set(VTK_DIR \"${VTK_DIR}\")
-
-  find_package(VTK NO_MODULE REQUIRED)
-
-  vtk_module_config(Ultrasound_VTK
-    vtkCommonDataModel
-    )
-
-  set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS \${Ultrasound_VTK_DEFINITIONS})
-  ")
-  set(Ultrasound_EXPORT_CODE_BUILD "
-  if(NOT ITK_BINARY_DIR)
+  # Make the VTK targets available to projects that use this module.
+  # Append, so that the clFFT-related export code above is preserved.
+  string(APPEND Ultrasound_EXPORT_CODE_INSTALL "
+  if(NOT TARGET VTK::CommonDataModel)
     set(VTK_DIR \"${VTK_DIR}\")
-
-    find_package(VTK NO_MODULE REQUIRED)
-
-    vtk_module_config(Ultrasound_VTK
-      vtkCommonDataModel
-      )
-
-    set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS \${Ultrasound_VTK_DEFINITIONS})
+    find_package(VTK ${ITKUltrasound_VTK_MINIMUM_VERSION} NO_MODULE REQUIRED COMPONENTS CommonCore CommonDataModel)
+  endif()
+  ")
+  string(APPEND Ultrasound_EXPORT_CODE_BUILD "
+  if(NOT ITK_BINARY_DIR AND NOT TARGET VTK::CommonDataModel)
+    set(VTK_DIR \"${VTK_DIR}\")
+    find_package(VTK ${ITKUltrasound_VTK_MINIMUM_VERSION} NO_MODULE REQUIRED COMPONENTS CommonCore CommonDataModel)
   endif()
   ")
 endif() # ITKUltrasound_USE_VTK

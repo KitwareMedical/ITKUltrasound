@@ -38,9 +38,14 @@ if(ITKUltrasound_USE_VTK)
     itkSpecialCoordinatesImageToVTKStructuredGridFilterTest.cxx
     itkSpecialCoordinatesImageToVTKStructuredGridFilterSliceSeriesTest.cxx
     )
+  list(APPEND Ultrasound-Test_LIBRARIES VTK::IOLegacy)
 endif()
 
 CreateTestDriver(Ultrasound "${Ultrasound-Test_LIBRARIES}" "${UltrasoundTests}")
+if(ITKUltrasound_USE_VTK)
+  vtk_module_autoinit(TARGETS UltrasoundTestDriver
+    MODULES VTK::CommonCore VTK::CommonDataModel VTK::IOLegacy)
+endif()
 
 itk_add_test(NAME itkAnalyticSignalImageFilterTest
   COMMAND UltrasoundTestDriver
