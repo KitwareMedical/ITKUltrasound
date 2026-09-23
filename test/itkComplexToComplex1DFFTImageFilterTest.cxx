@@ -25,7 +25,13 @@
 #include "itkImageFileWriter.h"
 
 #include "itkComplexToComplex1DFFTImageFilter.h"
-#include "itkVnlComplexToComplex1DFFTImageFilter.h"
+#if ITK_VERSION_MAJOR >= 6
+#  include "itkPocketFFTComplexToComplex1DFFTImageFilter.h"
+#  define ITKULTRASOUND_COMPLEX_TO_COMPLEX_1DFFT PocketFFTComplexToComplex1DFFTImageFilter
+#else
+#  include "itkVnlComplexToComplex1DFFTImageFilter.h"
+#  define ITKULTRASOUND_COMPLEX_TO_COMPLEX_1DFFT VnlComplexToComplex1DFFTImageFilter
+#endif
 #if defined(ITK_USE_FFTWD) || defined(ITK_USE_FFTWF)
 #  include "itkFFTWComplexToComplex1DFFTImageFilter.h"
 #endif
@@ -114,7 +120,7 @@ itkComplexToComplex1DFFTImageFilterTest(int argc, char * argv[])
   }
   else if (backend == 1)
   {
-    using FFTInverseType = itk::VnlComplexToComplex1DFFTImageFilter<ComplexImageType, ComplexImageType>;
+    using FFTInverseType = itk::ITKULTRASOUND_COMPLEX_TO_COMPLEX_1DFFT<ComplexImageType, ComplexImageType>;
     return doTest<FFTInverseType>(argv[1], argv[2]);
   }
   else if (backend == 2)
