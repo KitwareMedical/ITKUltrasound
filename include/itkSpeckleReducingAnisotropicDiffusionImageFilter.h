@@ -87,8 +87,8 @@ public:
 
 protected:
   SpeckleReducingAnisotropicDiffusionImageFilter()
-    : m_Q0(1.0)
-    , m_Rho(0.2)
+    : m_Rho(0.2)
+    , m_Q0(1.0)
   {
     typename SpeckleReducingAnisotropicDiffusionFunction<UpdateBufferType>::Pointer p =
       SpeckleReducingAnisotropicDiffusionFunction<UpdateBufferType>::New();

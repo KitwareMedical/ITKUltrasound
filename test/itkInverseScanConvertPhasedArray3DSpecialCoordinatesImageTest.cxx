@@ -40,7 +40,6 @@ itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest(int argc, char * a
   using RealImageType = itk::Image<RealPixelType, Dimension>;
   using InputImageType = itk::Image<PixelType, Dimension>;
   using OutputImageType = itk::PhasedArray3DSpecialCoordinatesImage<PixelType>;
-  using CoordRepType = double;
 
 
   using SourceType = itk::GaborImageSource<RealImageType>;
@@ -100,8 +99,8 @@ itkInverseScanConvertPhasedArray3DSpecialCoordinatesImageTest(int argc, char * a
 
   OutputImageType::Pointer phasedArraySampledData = resampler->GetOutput();
 
-  const double azimuthAngularSeparation = 5.0 * vnl_math::pi / 180.0;
-  const double elevationAngularSeparation = 1.0 * vnl_math::pi / 180.0;
+  const double azimuthAngularSeparation = 5.0 * itk::Math::pi / 180.0;
+  const double elevationAngularSeparation = 1.0 * itk::Math::pi / 180.0;
   const double radiusSampleSize = 0.2;
   const double firstSampleDistance = 8.0;
   phasedArraySampledData->SetAzimuthAngularSeparation(azimuthAngularSeparation);

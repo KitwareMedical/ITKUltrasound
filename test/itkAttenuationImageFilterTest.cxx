@@ -145,7 +145,7 @@ itkAttenuationImageFilterTest(int argc, char * argv[])
     auto maxCalculator = MaxType::New();
     maxCalculator->SetImage(maskImage);
     maxCalculator->ComputeMaximum();
-    LabelType maxMaskValue = maxCalculator->GetMaximum();
+    maxMaskValue = maxCalculator->GetMaximum();
     if (maxMaskValue == 0)
     {
       std::cerr << "The mask is empty!" << std::endl;

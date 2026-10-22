@@ -52,7 +52,7 @@ itkCurvilinearArraySpecialCoordinatesImageTest(int argc, char * argv[])
 
   SpecialCoordinatesImageType::Pointer        curvilinearArrayImage = reader->GetOutput();
   const SpecialCoordinatesImageType::SizeType inputSize = curvilinearArrayImage->GetLargestPossibleRegion().GetSize();
-  const double lateralAngularSeparation = (vnl_math::pi / 2.0 + 0.5) / (inputSize[1] - 1);
+  const double lateralAngularSeparation = (itk::Math::pi / 2.0 + 0.5) / (inputSize[1] - 1);
   std::cout << "lateral angular separation: " << lateralAngularSeparation << std::endl;
   curvilinearArrayImage->SetLateralAngularSeparation(lateralAngularSeparation);
   const double radiusStart = 26.4;
@@ -98,7 +98,7 @@ itkCurvilinearArraySpecialCoordinatesImageTest(int argc, char * argv[])
   resampler->SetOutputSpacing(outputSpacing);
   SpecialCoordinatesImageType::PointType outputOrigin;
   outputOrigin[0] = outputSize[0] * outputSpacing[0] / -2.0;
-  outputOrigin[1] = radiusStart * std::cos(vnl_math::pi / 4.0);
+  outputOrigin[1] = radiusStart * std::cos(itk::Math::pi / 4.0);
   outputOrigin[2] = reader->GetOutput()->GetOrigin()[2];
   resampler->SetOutputOrigin(outputOrigin);
 

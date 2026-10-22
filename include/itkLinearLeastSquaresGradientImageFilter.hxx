@@ -134,8 +134,8 @@ LinearLeastSquaresGradientImageFilter<TInputImage, TOperatorValueType, TOutputVa
   vnl_matrix<OperatorValueType> A(maxConsistentCount, 2);
   A.set_column(1, NumericTraits<OperatorValueType>::One);
   vnl_vector<OperatorValueType> y(maxConsistentCount);
-  for (unsigned int i = 0, nitIdx = s.start() + maxConsistentIdx * s.stride(); i < maxConsistentCount;
-       ++i, nitIdx += s.stride())
+  nitIdx = s.start() + maxConsistentIdx * s.stride();
+  for (unsigned int i = 0; i < maxConsistentCount; ++i, nitIdx += s.stride())
   {
     A[i][0] = i;
     y[i] = nit.GetPixel(nitIdx);

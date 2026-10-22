@@ -167,15 +167,16 @@ SliceSeriesSpecialCoordinatesImage<TSliceImage, TTransform, TPixel, VDimension>:
 
 template <typename TSliceImage, typename TTransform, typename TPixel, unsigned int VDimension>
 void
-SliceSeriesSpecialCoordinatesImage<TSliceImage, TTransform, TPixel, VDimension>::Graft(const DataObject * data)
+SliceSeriesSpecialCoordinatesImage<TSliceImage, TTransform, TPixel, VDimension>::Graft(
+  const ImageBase<VDimension> * image)
 {
   // call the superclass' implementation
-  Superclass::Graft(data);
+  Superclass::Graft(image);
 
-  if (data)
+  if (image)
   {
-    // Attempt to cast data to a SliceSeriesSpecialCoordinatesImage
-    const Self * const imgData = dynamic_cast<const Self *>(data);
+    // Attempt to cast image to a SliceSeriesSpecialCoordinatesImage
+    const Self * const imgData = dynamic_cast<const Self *>(image);
 
     if (imgData)
     {
@@ -185,7 +186,7 @@ SliceSeriesSpecialCoordinatesImage<TSliceImage, TTransform, TPixel, VDimension>:
     else
     {
       // pointer could not be cast back down
-      itkExceptionMacro(<< "itk::Image::Graft() cannot cast " << typeid(data).name() << " to "
+      itkExceptionMacro(<< "itk::Image::Graft() cannot cast " << typeid(image).name() << " to "
                         << typeid(const Self *).name());
     }
   }

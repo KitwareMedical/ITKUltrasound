@@ -50,39 +50,16 @@ GetType()
   itkGenericExceptionMacro(<< "Type not handled "
                            << "in HDF5 File: " << typeid(TScalar).name());
 }
-#define GetH5TypeSpecialize(CXXType, H5Type) \
-  template <>                                \
-  H5::PredType GetType<CXXType>()            \
-  {                                          \
-    return H5Type;                           \
-  }
 
-GetH5TypeSpecialize(float, H5::PredType::NATIVE_FLOAT) GetH5TypeSpecialize(double, H5::PredType::NATIVE_DOUBLE)
+template <>
+H5::PredType
+GetType<double>()
+{
+  return H5::PredType::NATIVE_DOUBLE;
+}
 
-  GetH5TypeSpecialize(char, H5::PredType::NATIVE_CHAR) GetH5TypeSpecialize(unsigned char, H5::PredType::NATIVE_UCHAR)
-
-    GetH5TypeSpecialize(short int, H5::PredType::NATIVE_SHORT)
-      GetH5TypeSpecialize(short unsigned int, H5::PredType::NATIVE_USHORT)
-
-        GetH5TypeSpecialize(int, H5::PredType::NATIVE_INT) GetH5TypeSpecialize(unsigned int, H5::PredType::NATIVE_UINT)
-
-          GetH5TypeSpecialize(long int, H5::PredType::NATIVE_LONG)
-            GetH5TypeSpecialize(long unsigned int, H5::PredType::NATIVE_ULONG)
-
-#if defined(_MSC_VER) && defined(ITK_USE_64BITS_IDS) && ((ULLONG_MAX != ULONG_MAX) || (LLONG_MAX != LONG_MAX))
-              GetH5TypeSpecialize(long long int, H5::PredType::NATIVE_LLONG)
-                GetH5TypeSpecialize(unsigned long long int, H5::PredType::NATIVE_ULLONG)
-#endif
-
-/* The following types are not implmented.  This comment serves
- * to indicate that the full complement of possible H5::PredType
- * types are not implemented int the ITK IO reader/writer
- * GetH5TypeSpecialize(bool,              H5::PredType::NATIVE_HBOOL)
- */
-
-#undef GetH5TypeSpecialize
-
-                  inline IOComponentEnum PredTypeToComponentType(const H5::DataType & type)
+inline IOComponentEnum
+PredTypeToComponentType(const H5::DataType & type)
 {
   if (type == H5::PredType::NATIVE_UCHAR)
   {
@@ -151,102 +128,6 @@ GetH5TypeSpecialize(float, H5::PredType::NATIVE_FLOAT) GetH5TypeSpecialize(doubl
     }
   }
   itkGenericExceptionMacro(<< "unsupported data type " << type.fromClass());
-}
-
-H5::PredType
-ComponentToPredType(IOComponentEnum cType)
-{
-  switch (cType)
-  {
-    case IOComponentEnum::UCHAR:
-      return H5::PredType::NATIVE_UCHAR;
-    case IOComponentEnum::CHAR:
-      return H5::PredType::NATIVE_CHAR;
-    case IOComponentEnum::USHORT:
-      return H5::PredType::NATIVE_USHORT;
-    case IOComponentEnum::SHORT:
-      return H5::PredType::NATIVE_SHORT;
-    case IOComponentEnum::UINT:
-      return H5::PredType::NATIVE_UINT;
-    case IOComponentEnum::INT:
-      return H5::PredType::NATIVE_INT;
-    case IOComponentEnum::ULONG:
-      return H5::PredType::NATIVE_ULONG;
-    case IOComponentEnum::ULONGLONG:
-      return H5::PredType::NATIVE_ULLONG;
-    case IOComponentEnum::LONG:
-      return H5::PredType::NATIVE_LONG;
-    case IOComponentEnum::LONGLONG:
-      return H5::PredType::NATIVE_LLONG;
-    case IOComponentEnum::FLOAT:
-      return H5::PredType::NATIVE_FLOAT;
-    case IOComponentEnum::DOUBLE:
-      return H5::PredType::NATIVE_DOUBLE;
-    case IOComponentEnum::LDOUBLE:
-      return H5::PredType::NATIVE_LDOUBLE;
-    case IOComponentEnum::UNKNOWNCOMPONENTTYPE:
-      itkGenericExceptionMacro(<< "unsupported IOComponentType" << cType);
-  }
-
-  itkGenericExceptionMacro(<< "unsupported IOComponentType" << cType);
-}
-
-std::string
-ComponentToString(IOComponentEnum cType)
-{
-  std::string rval;
-  switch (cType)
-  {
-    case IOComponentEnum::UCHAR:
-      rval = "UCHAR";
-      break;
-    case IOComponentEnum::CHAR:
-      rval = "CHAR";
-      break;
-    case IOComponentEnum::USHORT:
-      rval = "USHORT";
-      break;
-    case IOComponentEnum::SHORT:
-      rval = "SHORT";
-      break;
-    case IOComponentEnum::UINT:
-      rval = "UINT";
-      break;
-    case IOComponentEnum::INT:
-      rval = "INT";
-      break;
-    case IOComponentEnum::ULONG:
-      rval = "ULONG";
-      break;
-    case IOComponentEnum::LONG:
-      rval = "LONG";
-      break;
-    case IOComponentEnum::FLOAT:
-      rval = "FLOAT";
-      break;
-    case IOComponentEnum::DOUBLE:
-      rval = "DOUBLE";
-      break;
-    case IOComponentEnum::LDOUBLE:
-      rval = "LDOUBLE";
-      break;
-    default:
-      itkGenericExceptionMacro(<< "unsupported IOComponentType" << cType);
-  }
-  return rval;
-}
-
-// Function:    H5Object::doesAttrExist
-///\brief       test for existence of attribut
-///\param       name - IN: Name of the attribute
-///\return      true if attribute exists, false otherwise
-///\exception   none
-// Programmer   Kent Williams 2011
-//--------------------------------------------------------------------------
-static bool
-doesAttrExist(const H5::H5Object & object, const char * const name)
-{
-  return (H5Aexists(object.getId(), name) > 0 ? true : false);
 }
 
 } // end anonymous namespace
@@ -504,7 +385,7 @@ HDF5UltrasoundImageIO ::Read(void * buffer)
 
 
 bool
-HDF5UltrasoundImageIO ::CanWriteFile(const char * FileNameToWrite)
+HDF5UltrasoundImageIO ::CanWriteFile(const char * itkNotUsed(FileNameToWrite))
 {
   return false;
 }
@@ -517,7 +398,7 @@ HDF5UltrasoundImageIO ::WriteImageInformation()
 }
 
 void
-HDF5UltrasoundImageIO ::Write(const void * buffer)
+HDF5UltrasoundImageIO ::Write(const void * itkNotUsed(buffer))
 {
   return;
 }

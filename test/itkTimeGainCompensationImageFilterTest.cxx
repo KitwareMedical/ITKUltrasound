@@ -105,7 +105,7 @@ itkTimeGainCompensationImageFilterTest(int argc, char * argv[])
   RealImageType::Pointer curvilinearArrayImage = bmodeFilter->GetOutput();
   curvilinearArrayImage->DisconnectPipeline();
   const RealImageType::SizeType inputSize = curvilinearArrayImage->GetLargestPossibleRegion().GetSize();
-  const double                  lateralAngularSeparation = (vnl_math::pi / 2.0 + 0.5) / (inputSize[1] - 1);
+  const double                  lateralAngularSeparation = (itk::Math::pi / 2.0 + 0.5) / (inputSize[1] - 1);
   curvilinearArrayImage->SetLateralAngularSeparation(lateralAngularSeparation);
   const double radiusStart = 7.0;
   const double radiusStop = 112.5;
@@ -124,7 +124,7 @@ itkTimeGainCompensationImageFilterTest(int argc, char * argv[])
   resampler->SetOutputSpacing(outputSpacing);
   RealImageType::PointType outputOrigin;
   outputOrigin[0] = outputSize[0] * outputSpacing[0] / -2.0;
-  outputOrigin[1] = radiusStart * std::cos(vnl_math::pi / 4.0);
+  outputOrigin[1] = radiusStart * std::cos(itk::Math::pi / 4.0);
   resampler->SetOutputOrigin(outputOrigin);
 
   using OutputImageType = itk::Image<unsigned char, Dimension>;
