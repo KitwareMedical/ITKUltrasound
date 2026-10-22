@@ -97,14 +97,14 @@ protected:
   template <typename TIn, typename TOut>
   std::enable_if_t<!std::is_same<InputImageType, VectorImage<InputScalarType, TIn::ImageDimension>>::value &&
                    std::is_same<OutputImageType, VectorImage<OutputScalarType, TOut::ImageDimension>>::value>
-  PrepareOutput(TIn * in, TOut * out)
+  PrepareOutput(TIn * itkNotUsed(in), TOut * itkNotUsed(out))
   {
     this->GetOutput()->SetVectorLength(TIn::PixelType::Dimension);
   }
   template <typename TIn, typename TOut>
   std::enable_if_t<std::is_same<InputImageType, VectorImage<InputScalarType, TIn::ImageDimension>>::value &&
                    std::is_same<OutputImageType, VectorImage<OutputScalarType, TOut::ImageDimension>>::value>
-  PrepareOutput(TIn * in, TOut * out)
+  PrepareOutput(TIn * in, TOut * itkNotUsed(out))
   {
     this->GetOutput()->SetVectorLength(in->GetVectorLength());
   }

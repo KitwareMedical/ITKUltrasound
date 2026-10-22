@@ -66,9 +66,8 @@ Spectra1DSupportWindowImageFilter<TInputImage>::DynamicThreadedGenerateData(
   const InputImageType * input = this->GetInput();
 
   const typename InputImageType::RegionType & inputLargestRegion = input->GetLargestPossibleRegion();
-  using IndexType = typename OutputImageType::IndexType;
-  const IndexType largestIndexStart = inputLargestRegion.GetIndex();
-  IndexType       largestIndexStop = largestIndexStart + inputLargestRegion.GetSize();
+  const IndexType                             largestIndexStart = inputLargestRegion.GetIndex();
+  IndexType                                   largestIndexStop = largestIndexStart + inputLargestRegion.GetSize();
   for (unsigned int dim = 0; dim < ImageDimension; ++dim)
   {
     largestIndexStop[dim] -= 1;

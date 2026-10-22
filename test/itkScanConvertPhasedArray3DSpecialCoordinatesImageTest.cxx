@@ -56,7 +56,6 @@ itkScanConvertPhasedArray3DSpecialCoordinatesImageTest(int argc, char * argv[])
   using PixelType = unsigned char;
   using InputImageType = itk::PhasedArray3DSpecialCoordinatesImage<PixelType>;
   using OutputImageType = itk::Image<PixelType, Dimension>;
-  using CoordRepType = double;
 
 
   using ReaderType = itk::ImageFileReader<InputImageType>;

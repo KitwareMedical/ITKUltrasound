@@ -68,7 +68,6 @@ itkSliceSeriesSpecialCoordinatesImageTest(int argc, char * argv[])
   SliceSeriesImageType::Pointer image = reader->GetOutput();
   image->SetSliceImage(sliceImage);
 
-  double                   elevationAngle = 0.0;
   const itk::SizeValueType numberOfSlices = image->GetLargestPossibleRegion().GetSize()[Dimension - 1];
   for (itk::SizeValueType sliceIndex = 0; sliceIndex < numberOfSlices; ++sliceIndex)
   {

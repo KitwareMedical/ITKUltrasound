@@ -52,7 +52,6 @@ doTest(const char * inputImage, const char * outputImage)
   const unsigned int direction = 1;
 
   using ImageType = typename FFTForwardType::InputImageType;
-  using ComplexImageType = typename FFTInverseType::InputImageType;
 
   using ReaderType = itk::ImageFileReader<ImageType>;
   typename ReaderType::Pointer reader = ReaderType::New();

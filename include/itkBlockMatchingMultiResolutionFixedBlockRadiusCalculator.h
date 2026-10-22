@@ -71,7 +71,7 @@ public:
   itkGetConstReferenceMacro(Radius, RadiusType);
 
   const RadiusType &
-  Compute(unsigned long level) override
+  Compute(unsigned long itkNotUsed(level)) override
   {
     return m_Radius;
   }

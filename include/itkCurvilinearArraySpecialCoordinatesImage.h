@@ -20,7 +20,7 @@
 
 #include "itkSpecialCoordinatesImage.h"
 #include "itkPoint.h"
-#include "vnl/vnl_math.h"
+#include "itkMath.h"
 #include "itkNeighborhoodAccessorFunctor.h"
 
 namespace itk
@@ -184,8 +184,9 @@ public:
    * simply calls CopyInformation() and copies the region ivars.
    * The implementation here refers to the superclass' implementation
    * and then copies over the pixel container. */
-  virtual void
-  Graft(const DataObject * data) override;
+  void
+  Graft(const ImageBase<VDimension> * image) override;
+  using Superclass::Graft;
 
   /** \brief Get the continuous index from a physical point
    *
@@ -456,7 +457,7 @@ protected:
   CurvilinearArraySpecialCoordinatesImage()
   {
     m_RadiusSampleSize = 1;
-    m_LateralAngularSeparation = 1 * (2.0 * vnl_math::pi / 360.0); // 1 degree
+    m_LateralAngularSeparation = 1 * (2.0 * Math::pi / 360.0); // 1 degree
     m_FirstSampleDistance = 0;
   }
   ~CurvilinearArraySpecialCoordinatesImage() override = default;
