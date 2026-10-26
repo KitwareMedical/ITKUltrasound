@@ -40,8 +40,6 @@ compareBuffers(TInImage1 * baseline, TInImage2 * test)
   }
 
   itk::IdentifierType differentPixels = 0;
-  itk::IdentifierType linePixels = baseline->GetLargestPossibleRegion().GetSize()[0];
-  itk::IdentifierType lineCount = pixelCount / linePixels;
 
   using InputPixelType1 = typename TInImage1::PixelType;
   using InputPixelType2 = typename TInImage2::PixelType;
@@ -69,10 +67,7 @@ compareBuffers(TInImage1 * baseline, TInImage2 * test)
 
 template <typename TInImage, typename TReferenceImage>
 int
-doTest(const char *                  inFileName,
-       const char *                  refFileName,
-       const char *                  outFileName,
-       itk::SmartPointer<TInImage> & output)
+doTest(const char * inFileName, const char * refFileName, itk::SmartPointer<TInImage> & output)
 {
   using AverageFilterType = itk::Spectra1DNormalizeImageFilter<TInImage, TReferenceImage>;
   auto averageFilter = AverageFilterType::New();
@@ -92,7 +87,7 @@ doTest(const char *                  inFileName,
 
 template <typename TInImage, typename TReferenceImage>
 itk::SmartPointer<TInImage>
-createReference(const char * inFileName, const char * refFileName, const char * outFileName)
+createReference(const char * inFileName, const char * refFileName)
 {
   using AverageFilterType = itk::Spectra1DNormalizeImageFilter<TInImage, TReferenceImage>;
   auto averageFilter = AverageFilterType::New();
@@ -142,38 +137,38 @@ itkSpectra1DNormalizeImageFilterTest(int argc, char * argv[])
   typename IV2d::Pointer testIV2d;
 
   // create reference result - all other images will be compared to this one
-  typename IV2f::Pointer reference = createReference<IV2f, IV1f>(inFileName, refFileName, outFileName);
+  typename IV2f::Pointer reference = createReference<IV2f, IV1f>(inFileName, refFileName);
 
   // now test different dimensionality
-  returnCount += doTest<VI3f, VI2f>(inFileName, refFileName, outFileName, testVI3);
-  returnCount += doTest<VI3f, VI1f>(inFileName, refFileName, outFileName, testVI3);
+  returnCount += doTest<VI3f, VI2f>(inFileName, refFileName, testVI3);
+  returnCount += doTest<VI3f, VI1f>(inFileName, refFileName, testVI3);
 
   // test all 4 combinations (VI x IV) with same dimensionality
-  returnCount += doTest<VI2f, VI2f>(inFileName, refFileName, outFileName, testVI2);
+  returnCount += doTest<VI2f, VI2f>(inFileName, refFileName, testVI2);
   // compareBuffers(reference.GetPointer(), testVI2.GetPointer()); // does not compile
-  returnCount += doTest<VI2f, IV2f>(inFileName, refFileName, outFileName, testVI2);
+  returnCount += doTest<VI2f, IV2f>(inFileName, refFileName, testVI2);
   // compareBuffers(reference.GetPointer(), testVI2.GetPointer()); // does not compile
-  returnCount += doTest<IV2f, VI2f>(inFileName, refFileName, outFileName, testIV2);
+  returnCount += doTest<IV2f, VI2f>(inFileName, refFileName, testIV2);
   compareBuffers(reference.GetPointer(), testIV2.GetPointer());
-  returnCount += doTest<IV2f, IV2f>(inFileName, refFileName, outFileName, testIV2);
+  returnCount += doTest<IV2f, IV2f>(inFileName, refFileName, testIV2);
   compareBuffers(reference.GetPointer(), testIV2.GetPointer());
 
   // all (VI x IV) combinations with dimensionality 2 -> 1
-  returnCount += doTest<VI2f, VI1f>(inFileName, refFileName, outFileName, testVI2);
+  returnCount += doTest<VI2f, VI1f>(inFileName, refFileName, testVI2);
   ITK_TRY_EXPECT_NO_EXCEPTION(itk::WriteImage(testVI2, outFileName, false));
-  returnCount += doTest<VI2f, IV1f>(inFileName, refFileName, outFileName, testVI2);
+  returnCount += doTest<VI2f, IV1f>(inFileName, refFileName, testVI2);
   // compareBuffers(reference.GetPointer(), testVI2.GetPointer()); // does not compile
-  returnCount += doTest<IV2f, VI1f>(inFileName, refFileName, outFileName, testIV2);
+  returnCount += doTest<IV2f, VI1f>(inFileName, refFileName, testIV2);
   compareBuffers(reference.GetPointer(), testIV2.GetPointer());
-  returnCount += doTest<IV2f, IV1f>(inFileName, refFileName, outFileName, testIV2);
+  returnCount += doTest<IV2f, IV1f>(inFileName, refFileName, testIV2);
   compareBuffers(reference.GetPointer(), testIV2.GetPointer());
 
   // test float/double
-  returnCount += doTest<VI2d, IV1f>(inFileName, refFileName, outFileName, testVI2d);
+  returnCount += doTest<VI2d, IV1f>(inFileName, refFileName, testVI2d);
   // compareBuffers(reference.GetPointer(), testVI2d.GetPointer()); // does not compile
 
   // the next line requires ITK 5.3 or later
-  returnCount += doTest<IV2d, IV1f>(inFileName, refFileName, outFileName, testIV2d);
+  returnCount += doTest<IV2d, IV1f>(inFileName, refFileName, testIV2d);
   compareBuffers(reference.GetPointer(), testIV2d.GetPointer());
 
   ITK_TRY_EXPECT_NO_EXCEPTION(itk::WriteImage(reference, outFileName, false));

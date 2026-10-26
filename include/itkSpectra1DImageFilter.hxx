@@ -197,8 +197,7 @@ Spectra1DImageFilter<TInputImage, TSupportWindowImage, TOutputImage>::ThreadedGe
   OutputIteratorType outputIt(output, outputRegionForThread);
   outputIt.SetDirection(1);
 
-  const MetaDataDictionary & dict = supportWindowImage->GetMetaDataDictionary();
-  PerThreadData &            perThreadData = this->m_PerThreadDataContainer[threadId];
+  PerThreadData & perThreadData = this->m_PerThreadDataContainer[threadId];
   this->AddLineWindow(perThreadData.ComplexVector.size(), perThreadData.LineWindowMap);
 
   SpectraLinesContainerType spectraLines;

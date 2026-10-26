@@ -199,10 +199,7 @@ AnalyticSignalImageFilter<TInputImage, TOutputImage>::GenerateData()
   multiThreader->template ParallelizeImageRegionRestrictDirection<ImageDimension>(
     direction,
     output->GetRequestedRegion(),
-    [this, dubSize, even, input](const typename OutputImageType::RegionType & lambdaRegion) {
-      OutputImageType *  output = this->GetOutput();
-      const unsigned int direction = this->GetDirection();
-
+    [dubSize, even, input, output, direction](const typename OutputImageType::RegionType & lambdaRegion) {
       using InputIteratorType = ImageLinearConstIteratorWithIndex<typename FFTRealToComplexType::OutputImageType>;
       using OutputIteratorType = ImageLinearIteratorWithIndex<OutputImageType>;
       InputIteratorType  inputIt(input, lambdaRegion);

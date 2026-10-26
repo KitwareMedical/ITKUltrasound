@@ -89,8 +89,8 @@ NormalizedCrossCorrelationNeighborhoodIteratorMetricImageFilter<TFixedImage, TMo
   MetricImageRegionType               metricRegion;
   typename MovingImageType::IndexType fitIndex;
   using MetricConstIteratorType = ImageRegionConstIterator<MetricImageType>;
-  using BoundaryConditionType = ConstantBoundaryCondition<MetricImageType>;
-  BoundaryConditionType boundaryCondition;
+  using MetricBoundaryConditionType = ConstantBoundaryCondition<MetricImageType>;
+  MetricBoundaryConditionType boundaryCondition;
   boundaryCondition.SetConstant(NumericTraits<MetricImagePixelType>::Zero);
   using NeighborhoodIteratorType = ConstNeighborhoodIterator<MetricImageType>;
 

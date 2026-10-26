@@ -184,15 +184,15 @@ CurvilinearArraySpecialCoordinatesImage<TPixel, VDimension>::CopyInformation(con
 
 template <typename TPixel, unsigned int VDimension>
 void
-CurvilinearArraySpecialCoordinatesImage<TPixel, VDimension>::Graft(const DataObject * data)
+CurvilinearArraySpecialCoordinatesImage<TPixel, VDimension>::Graft(const ImageBase<VDimension> * image)
 {
   // call the superclass' implementation
-  Superclass::Graft(data);
+  Superclass::Graft(image);
 
-  if (data)
+  if (image)
   {
-    // Attempt to cast data to a CurvilinearArraySpecialCoordinatesImage
-    const Self * const imgData = dynamic_cast<const Self *>(data);
+    // Attempt to cast image to a CurvilinearArraySpecialCoordinatesImage
+    const Self * const imgData = dynamic_cast<const Self *>(image);
 
     if (imgData)
     {
@@ -202,7 +202,7 @@ CurvilinearArraySpecialCoordinatesImage<TPixel, VDimension>::Graft(const DataObj
     else
     {
       // pointer could not be cast back down
-      itkExceptionMacro(<< "itk::Image::Graft() cannot cast " << typeid(data).name() << " to "
+      itkExceptionMacro(<< "itk::Image::Graft() cannot cast " << typeid(image).name() << " to "
                         << typeid(const Self *).name());
     }
   }

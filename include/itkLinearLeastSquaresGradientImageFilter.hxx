@@ -23,7 +23,11 @@
 #include "itkImageRegionIterator.h"
 
 #include "itkMath.h"
-#include "vnl/algo/vnl_svd.h"
+#if __has_include("itkBridgeMathSVD.h")
+#  include "itkBridgeMathSVD.h"
+#else
+#  include "vnl/algo/vnl_svd.h"
+#endif
 
 namespace itk
 {
@@ -134,14 +138,18 @@ LinearLeastSquaresGradientImageFilter<TInputImage, TOperatorValueType, TOutputVa
   vnl_matrix<OperatorValueType> A(maxConsistentCount, 2);
   A.set_column(1, NumericTraits<OperatorValueType>::One);
   vnl_vector<OperatorValueType> y(maxConsistentCount);
-  for (unsigned int i = 0, nitIdx = s.start() + maxConsistentIdx * s.stride(); i < maxConsistentCount;
-       ++i, nitIdx += s.stride())
+  nitIdx = s.start() + maxConsistentIdx * s.stride();
+  for (unsigned int i = 0; i < maxConsistentCount; ++i, nitIdx += s.stride())
   {
     A[i][0] = i;
     y[i] = nit.GetPixel(nitIdx);
   }
 
+#if __has_include("itkBridgeMathSVD.h")
+  return static_cast<TOutputValueType>(bridge::Math::SVD(A).Solve(y, OperatorValueType{ 0 })[0]);
+#else
   return static_cast<TOutputValueType>(vnl_svd<OperatorValueType>(A).solve(y)[0]);
+#endif
 }
 
 template <typename TInputImage, typename TOperatorValueType, typename TOutputValueType>

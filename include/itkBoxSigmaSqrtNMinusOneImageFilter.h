@@ -40,7 +40,6 @@ BoxSigmaSqrtNMinusOneCalculatorFunction(const TInputImage *                     
   using SizeType = typename TInputImage::SizeType;
   using IndexType = typename TInputImage::IndexType;
   using OffsetType = typename TInputImage::OffsetType;
-  using OffsetValueType = typename TInputImage::OffsetValueType;
   using OutputImageType = TOutputImage;
   using OutputPixelType = typename TOutputImage::PixelType;
   using InputPixelType = typename TInputImage::PixelType;

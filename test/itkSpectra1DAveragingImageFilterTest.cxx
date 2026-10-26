@@ -125,14 +125,12 @@ itkSpectra1DAveragingImageFilterTest(int argc, char * argv[])
     std::cerr << std::endl;
     return EXIT_FAILURE;
   }
-  const char * inFileName = argv[2];
 
   const unsigned Channels = 31;
 
   int returnCount = 0;
 
 
-  using IV3f = itk::Image<itk::Vector<float, Channels>, 3>;
   using IV2f = itk::Image<itk::Vector<float, Channels>, 2>;
   using IV1f = itk::Image<itk::Vector<float, Channels>, 1>;
   using VI3f = itk::VectorImage<float, 3>;

@@ -10,7 +10,7 @@ jobs:
       warnings-to-ignore: "\"pointer is null\" \"in a call to non-static member function\" \"ignoring duplicate libraries\""
       
   python-build-workflow:
-    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-package-python.yml@v5.4.7
+    uses: InsightSoftwareConsortium/ITKRemoteModuleBuildTestPackageAction/.github/workflows/build-test-package-python.yml@main
     with:
       itk-wheel-tag: 'v5.4.7'
       itk-python-package-tag: 'v5.4.7'

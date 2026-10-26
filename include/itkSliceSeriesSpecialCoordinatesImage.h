@@ -174,8 +174,9 @@ public:
    * simply calls CopyInformation() and copies the region ivars.
    * The implementation here refers to the superclass' implementation
    * and then copies over the pixel container. */
-  virtual void
-  Graft(const DataObject * data) override;
+  void
+  Graft(const ImageBase<VDimension> * image) override;
+  using Superclass::Graft;
 
   /** \brief Get the continuous index from a physical point
    *
@@ -457,8 +458,8 @@ public:
     {
       point[ii] += slicePoint[ii];
     }
-    using PointType = Point<TCoordRep, VDimension>;
-    PointType             lowerPoint;
+    using CoordRepPointType = Point<TCoordRep, VDimension>;
+    CoordRepPointType     lowerPoint;
     const IndexValueType  floor = Math::Floor<IndexValueType, TIndexRep>(index[ImageDimension - 1]);
     const IndexValueType  ceil = Math::Ceil<IndexValueType, TIndexRep>(index[ImageDimension - 1]);
     const TransformType * transform = this->GetSliceTransform(floor);
@@ -486,7 +487,7 @@ public:
     }
 
     transform = this->GetSliceTransform(ceil);
-    PointType upperPoint;
+    CoordRepPointType upperPoint;
     if (transform != nullptr)
     {
       upperPoint = transform->TransformPoint(point);

@@ -130,12 +130,7 @@ FrequencyDomain1DImageFilter<TInputImage, TOutputImage>::GenerateData()
   multiThreader->template ParallelizeImageRegionRestrictDirection<ImageDimension>(
     direction,
     output->GetRequestedRegion(),
-    [this](const typename OutputImageType::RegionType & lambdaRegion) {
-      // get pointers to the input and output
-      const InputImageType * input = this->GetInput();
-      OutputImageType *      output = this->GetOutput();
-      const unsigned int     direction = this->GetDirection();
-
+    [this, input, output, direction](const typename OutputImageType::RegionType & lambdaRegion) {
       using InputIteratorType = ImageLinearConstIteratorWithIndex<OutputImageType>;
       using OutputIteratorType = ImageLinearIteratorWithIndex<OutputImageType>;
       InputIteratorType  inputIt(input, lambdaRegion);
