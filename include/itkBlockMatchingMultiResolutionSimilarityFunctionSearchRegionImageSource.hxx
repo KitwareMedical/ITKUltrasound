@@ -231,7 +231,8 @@ MultiResolutionSimilarityFunctionSearchRegionImageSource<
   TMetricImage,
   TDisplacementImage,
   TFunctor,
-  TInterpolatorPrecisionType>::ThreadedGenerateData(const OutputRegionType & outputRegion, ThreadIdType threadID)
+  TInterpolatorPrecisionType>::ThreadedGenerateData(const OutputRegionType & outputRegion,
+                                                    ThreadIdType             itkNotUsed(threadID))
 {
   OutputImageType * outputPtr = this->GetOutput();
   if (!outputPtr)

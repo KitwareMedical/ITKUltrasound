@@ -51,7 +51,8 @@ class UltrasoundImageFileReaderDispatch
 public:
   using ImageType = TImage;
   static void
-  ExtractMetaData(TImage * image) {};
+  ExtractMetaData(TImage * itkNotUsed(image))
+  {}
 };
 
 

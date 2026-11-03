@@ -240,7 +240,7 @@ MultiResolutionThresholdBoundingBoxSearchRegionImageSource<
   TFixedImage,
   TMovingImage,
   TMetricImage,
-  TDisplacementImage>::ThreadedGenerateData(const OutputRegionType & outputRegion, ThreadIdType threadID)
+  TDisplacementImage>::ThreadedGenerateData(const OutputRegionType & outputRegion, ThreadIdType itkNotUsed(threadID))
 {
   OutputImageType * outputPtr = this->GetOutput();
   if (!outputPtr)
