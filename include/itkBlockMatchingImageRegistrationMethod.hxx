@@ -167,7 +167,6 @@ ImageRegistrationMethod<TFixedImage, TMovingImage, TMetricImage, TDisplacementIm
     fixedSize[i] = m_Radius[i] * 2 + 1;
   }
   fixedRegion.SetSize(fixedSize);
-  FixedRegionType fixedLargestPossibleRegion = m_FixedImage->GetLargestPossibleRegion();
 
   if (!m_UseStreaming)
   {

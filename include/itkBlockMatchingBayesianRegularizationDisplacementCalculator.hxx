@@ -343,9 +343,6 @@ BayesianRegularizationDisplacementCalculator<TMetricImage, TDisplacementImage>::
   MetricImagePointerType      postImage;
   MetricImagePointerType      priorImage;
   m_CurrentIteration = 0;
-  // Hack to make the SplitRequestedRegion method operate on the face list
-  // regions;
-  const RegionType requestedRegion = this->m_DisplacementImage->GetRequestedRegion();
   while (m_CurrentIteration < this->m_MaximumIterations && m_MeanChange > m_MeanChangeThreshold)
   {
     // We evoke iteration events starting from 0,
